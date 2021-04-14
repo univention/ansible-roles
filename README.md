@@ -7,7 +7,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 In order to create a new role, execute:
 
 ```shell
-ansible-galaxy init <name-of-role>
+ansible-galaxy init --offline <name-of-role>
 ```
 
 *Replace <name-of-role> with an appropriate name of your role **without** `<`,`>`.*
