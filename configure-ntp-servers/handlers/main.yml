@@ -1,0 +1,7 @@
+---
+# handlers file for configure-ntp-servers
+
+- name: "Restart ntpd"
+  service:
+    name: "ntp"
+    state: "restarted"
