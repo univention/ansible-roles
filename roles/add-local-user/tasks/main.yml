@@ -41,7 +41,7 @@
     - add_local_user_user_deployment_key
 
 - name: "Allow user to log in (UCR)"
-  univention_config_registry:
+  univention.ansible_modules.univention_config_registry:
     kvlist:
       - key: "auth/sshd/user/{{ add_local_user_user['name'] }}"
         value: "yes"

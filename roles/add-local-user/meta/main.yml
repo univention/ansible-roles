@@ -42,5 +42,8 @@ galaxy_info:
     - bootstrap
     - user
 
-dependencies: []
+dependencies:
+  - src: git+https://git.knut.univention.de/univention/internal/ansible-modules.git
+    version: feature/create_a_collection
+    name: univention.ansible_modules
   
