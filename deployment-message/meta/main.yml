@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: deployment-message
   author: Dominik Kaminski
   description: DevOps Engineer (ext.)
   company: Univention GmbH

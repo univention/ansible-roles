@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: configure-ntp-servers
   author: Dominik Kaminski
   description: DevOps Engineer (ext.)
   company: Univention GmbH

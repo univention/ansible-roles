@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: add-local-user
   author: Dominik Kaminski
   description: DevOps Engineer (ext.)
   company: Univention GmbH
