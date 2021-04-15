@@ -42,6 +42,5 @@ galaxy_info:
     - bootstrap
     - ntp
 
-dependencies:
-  - univention_config_registry
+dependencies: []
   
