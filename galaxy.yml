@@ -6,10 +6,10 @@
 namespace: univention
 
 # The name of the collection. Has the same character restrictions as 'namespace'
-name: ansible_roles
+name: ucs_roles
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 1.0.0
+version: 0.0.1
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -46,7 +46,7 @@ tags:
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
 dependencies:
-  "univention.ansible_modules": "1.0.0"
+  "univention.ucs_modules": ">=0.0.1"
 
 # The URL of the originating SCM repository
 repository: https://git.knut.univention.de/univention/customers/dataport/deployment/ansible-roles.git
