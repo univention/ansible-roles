@@ -46,9 +46,7 @@ tags:
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
 dependencies:
-  - src: git+https://git.knut.univention.de/univention/internal/ansible-modules.git
-    version: feature/create_a_collection
-    name: univention.ansible_modules
+  "univention.ansible_modules": "1.0.0"
 
 # The URL of the originating SCM repository
 repository: https://git.knut.univention.de/univention/customers/dataport/deployment/ansible-roles.git
