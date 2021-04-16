@@ -43,6 +43,5 @@ galaxy_info:
     - bootstrap
     - user
 
-dependencies:
-  - univention.ucs_modules
+dependencies: []
   

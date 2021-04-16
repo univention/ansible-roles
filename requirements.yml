@@ -1,4 +1,0 @@
-collections:
-  - name: https://git.knut.univention.de/univention/internal/ansible-modules.git
-    type: git
-    version: feature/create_a_collection
