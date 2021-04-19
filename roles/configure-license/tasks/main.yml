@@ -12,6 +12,21 @@
 
     - name: "Get license from license server"
       block:
+        - name: "Check if all vars are set"
+          ansible.builtin.assert:
+            that:
+              - configure_license_validity|length > 0
+              - configure_license_shop_password|length > 0
+              - configure_license_shop_id|length > 0
+              - configure_license_shop_username|length > 0
+              - configure_license_max_users|length > 0
+              - configure_license_organization|length > 0
+              - configure_license_email_address|length > 0
+              - configure_license_basedn|length > 0
+            fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags configure_license_server_license_check_preconditions"
+          tags:
+            - configure_license_server_license_check_preconditions
+
         - name: "Get license end date"
           ansible.builtin.command: "date -u -d '+{{ configure_license_validity }}' '+%d.%m.%Y'"
           register: configure_license_validity_date

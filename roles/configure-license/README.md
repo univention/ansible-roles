@@ -8,6 +8,15 @@ Requirements
 
 none
 
+File Structure
+--------------
+
+```text
+files/
+ |
+ +-- license_client.py
+```
+
 Role Variables
 --------------
 
