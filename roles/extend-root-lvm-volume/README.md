@@ -1,4 +1,4 @@
-Role Name
+Extend root LVM volume
 =========
 
 Extend the root volume to all available space. Helpful when using a prebuild image and additional space is required.
