@@ -11,7 +11,7 @@ none
 Role Variables
 --------------
 
-`custom_facts_templates`(list): filename(s) of templates which should be applied; default: `["deployment.fact.j2", "hotfixes.fact.j2"]`
+- `custom_facts_templates`(list): filename(s) of templates which should be applied; default: `["deployment.fact.j2", "hotfixes.fact.j2"]`
 
 Dependencies
 ------------
