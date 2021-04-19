@@ -6,7 +6,8 @@ This role configures NTP timeservers.
 Requirements
 ------------
 
-- univention_config_registry
+- univention.ucs_modules
+  - univention_config_registry
 
 Role Variables
 --------------
@@ -26,9 +27,10 @@ Example Playbook
 License
 -------
 
-BSD
+GNU General Public License v3.0
 
 Author Information
 ------------------
 
 Univention GmbH
+www.univention.com
