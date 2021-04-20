@@ -1,0 +1,12 @@
+---
+# handlers file for hardening
+
+- name: "Restart apache"
+  ansible.builtin.service:
+    name: "apache2"
+    state: "restarted"
+
+- name: "Restart sshd"
+  ansible.builtin.service:
+    name: "ssh"
+    state: "restarted"

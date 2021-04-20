@@ -1,0 +1,4 @@
+---
+# defaults file for hardening
+
+hardening_disable_http: true
