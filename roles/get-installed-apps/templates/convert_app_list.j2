@@ -1,0 +1,7 @@
+{% for appversion in get_installed_apps_installed_apps_list['parsed']['univention_app_list']|default([]) %}
+{% set app = appversion.split('=', 1) %}
+- key: {{ app[0] }}
+  value: {{app[1] }}
+{% else %}
+[]
+{% endfor %}
