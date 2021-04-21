@@ -17,7 +17,7 @@
 
         - name: "Set keycloak password"
           ansible.builtin.set_fact:
-            keycloak_password: "{{ configure_keycloak_client_oidc_broker_secret }}"
+            configure_keycloak_client_keycloak_password: "{{ configure_keycloak_client_oidc_broker_secret }}"
           no_log: true
       when: "configure_keycloak_client_keycloak_password is undefined or configure_keycloak_client_keycloak_password|length == 0"
       tags:
