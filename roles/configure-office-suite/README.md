@@ -31,9 +31,10 @@ Example Playbook
 License
 -------
 
-BSD
+GNU General Public License v3.0
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Univention GmbH
+www.univention.com
