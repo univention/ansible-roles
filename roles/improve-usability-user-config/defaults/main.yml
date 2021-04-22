@@ -1,0 +1,6 @@
+---
+# defaults file for improve-usability-user-config
+
+improve_usability_user_config_basedn: ""
+improve_usability_user_config_external_hostname: ""
+improve_usability_user_config_install_apps: []
