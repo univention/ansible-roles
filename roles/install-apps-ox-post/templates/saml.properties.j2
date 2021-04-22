@@ -1,0 +1,149 @@
+# Configuration of SAML UCS properties
+# Please refer to: https://documentation.open-xchange.com/components/middleware/config/7.10.1/#mode=search&term=open-xchange-saml-ucs
+
+# If UCS SAMLBackend is enabled
+com.openexchange.saml.ucs.enabled = true
+
+# The id inside the saml authnResponse which holds the userinformation
+#com.openexchange.saml.ucs.id = mailPrimaryAddress
+com.openexchange.saml.ucs.id = uid
+
+# URL of where the users are redirected after logout
+com.openexchange.saml.ucs.logoutRedirectUrl = /univention/portal/
+
+# The URL to redirect to in case the SAML back-end fails to look up the authenticated user. When left empty or not set, an HTTP 500 error page is sent instead.
+#com.openexchange.saml.ucs.failureRedirect
+
+# The URL to redirect to in case the SAML back-end has an error, when the user logs out. When left empty or not set, the value of com.openexchange.saml.ucs.failure.redirect is used.
+#com.openexchange.saml.ucs.logoutFailureRedirect
+
+# The full path to a Java keyStore containing the IdPs certificate.
+com.openexchange.saml.ucs.keyStore = /etc/ssl/certs/java/cacerts
+#com.openexchange.saml.ucs.keyStore = /root/my-keystore.jks
+
+# Password to open the keyStore.
+com.openexchange.saml.ucs.keyStorePass = {{ install_apps_ox_post_ox_keystore_passphrase }}
+
+# The alias of the IdP certificate entry within the keyStore.
+#com.openexchange.saml.ucs.certAlias = Univention_Corporate_Server_Root_CA_(ID=ImIfa9H9)
+com.openexchange.saml.ucs.certAlias = {{ ansible_fqdn }}
+
+# The alias of the signingKey entry within the keyStore.
+#com.openexchange.saml.ucs.signingKeyAlias
+
+# The password of the signingKey entry within the keyStore.
+#com.openexchange.saml.ucs.signingKeyPassword
+
+# The alias of the decryptionKey entry within the keyStore.
+#com.openexchange.saml.ucs.decryptionKeyAlias
+
+# The password of the decryptionKey entry within the keystore.
+#com.openexchange.saml.ucs.decryptionKeyPassword
+
+
+# Configuration of the SAML core feature.
+
+# Must be set to 'true' to enable the feature, otherwise it is fully deactivated.
+#
+# Default: false
+com.openexchange.saml.enabled = true
+
+# Whether the SPs metadata XML shall be made available via HTTP. The according
+# servlet will then be available under 'http(s)://{hostname}/{prefix}/saml/metadata'.
+#
+# Default: false
+#com.openexchange.saml.enableMetadataService = false
+com.openexchange.saml.enableMetadataService = true
+
+# Whether the single logout profile is enabled.
+#
+# Default: false
+com.openexchange.saml.enableSingleLogout = false
+
+# Sets the entity ID of the service provider.
+#
+# This property is mandatory.
+# Default: <empty>
+com.openexchange.saml.entityID = https://{{ ansible_fqdn }}/appsuite/
+
+# Sets the human-readable name of the service provider.
+#
+# This property is mandatory.
+# Default: <empty>
+com.openexchange.saml.providerName = Open-Xchange Service Provider
+
+# Sets the URL of the local assertion consumer service (ACS). This value is used within
+# authentication requests, compared against Destination attributes in IdP responses
+# and will be contained in the service providers metadata XML. The according endpoint
+# is always registered with '{prefix}/saml/acs' as servlet alias.
+#
+# This property is mandatory.
+# Default: <empty>
+# Example: https://appsuite.example.com/appsuite/api/saml/acs
+com.openexchange.saml.acsURL = https://{{ ansible_fqdn }}/appsuite/api/saml/acs
+
+# Sets the URL of the local single logout service. This value is compared against Destination
+# attributes in IdP responses and will be contained in the service providers metadata XML.
+# The according endpoint is always registered with '{prefix}/saml/sls' as servlet alias.
+#
+# This property is mandatory if 'com.openexchange.saml.enableSingleLogout' is 'true'.
+# Default: <empty>
+# Example: https://appsuite.example.com/appsuite/api/saml/sls
+com.openexchange.saml.slsURL = https://{{ ansible_fqdn }}/appsuite/api/saml/sls
+
+# The binding via which logout responses shall be sent to the IdP on IdP-initiated single
+# logout flows. Must be 'http-redirect' or 'http-post'.
+#
+# This property is mandatory if 'com.openexchange.saml.enableSingleLogout' is 'true'.
+# Default: http-redirect
+com.openexchange.saml.logoutResponseBinding = http-redirect
+
+# The HTML template to use when logout responses are sent to the IdP via HTTP POST.
+# The template must be located in '/opt/open-xchange/templates'.
+#
+# This property is mandatory if 'com.openexchange.saml.enableSingleLogout' is 'true'
+# and 'com.openexchange.saml.logoutResponseBinding' is set to 'http-post'.
+# Default: saml.logout.response.html.tmpl
+com.openexchange.saml.logoutResponseTemplate = saml.logout.response.html.tmpl
+
+# The entity ID of the IdP. It will be used to validate the 'Issuer' elements of SAML responses.
+#
+# This property is mandatory.
+# Default: <empty>
+com.openexchange.saml.idpEntityID = https://{{ ansible_fqdn }}/simplesamlphp/saml2/idp/metadata.php
+
+# The URL of the IdP endpoint where authentication requests are to be sent to.
+#
+# This property is mandatory.
+# Default: <empty>
+com.openexchange.saml.idpAuthnURL = https://{{ ansible_fqdn }}/simplesamlphp/saml2/idp/SSOService.php
+
+# The URL of the IdP endpoint where logout requests are to be sent to.
+#
+# This property is mandatory if 'com.openexchange.saml.enableSingleLogout' is 'true'.
+# Default: <empty>
+com.openexchange.saml.idpLogoutURL = https://{{ ansible_fqdn }}/simplesamlphp/saml2/idp/SingleLogoutService.php
+
+# It is possible to enable a special kind of auto login mechanism that allows user agents to
+# re-use an existing OX session if it was created during the same browser session. If enabled,
+# a special cookie will be set, which is linked to the OX session and bound to the browser sessions
+# life time. The advantage of this mechanism is, that sessions are simply re-entered if the user
+# refreshes his browser window. He is then also able to open more than one tab of OX App Suite
+# at the same time. This mechanism can only re-use sticky sessions, i.e. it is mandatory that the
+# requests are always routed to the same backend for a certain session.
+#
+# --- SECURITY WARNING ---
+# Enabling this setting is not compliant to the SAML specification as it bypasses the IdP in
+# certain cases. Additionally in scenarios where a public device is used, a foreign user might
+# take over a formerly authenticated users session if that user forgets to log out and doesn't
+# close his web browser (even if he closes the App Suite tab). As no login screen is displayed
+# by OX in SAML environments, the user is even not able to decide, whether the application shall
+# remember him or not.
+#
+# Default: false
+com.openexchange.saml.enableAutoLogin = false
+
+# Whether unsolicited responses will be accepted or not.
+#
+# Default: true
+com.openexchange.saml.allowUnsolicitedResponses = true
