@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: configure-office-suite
-  author: Dominik Kaminski
-  description: DevOps Engineer (ext.)
+  author: Team Phoenix
+  description: Phoenix-Werkstatt
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the
