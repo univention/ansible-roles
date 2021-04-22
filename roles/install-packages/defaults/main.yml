@@ -1,0 +1,7 @@
+---
+# defaults file for install-packages
+
+install_packages_app_version_map: {}
+install_packages_temp_pw_file: ""
+install_packages_force_package_upgrade: false
+install_packages_install_apps: []
