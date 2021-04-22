@@ -1,0 +1,48 @@
+---
+# tasks file for configure-saml-single-server
+
+- name: "Set basic UCR config variables"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      ucs/server/sso/autoregistraton: "no"
+      saml/idp/entityID: "https://{{ configure_saml_single_server_external_hostname }}/simplesamlphp/saml2/idp/metadata.php"
+      saml/idp/certificate/privatekey: "/etc/simplesamlphp/{{ configure_saml_single_server_external_hostname }}-idp-certificate.key"
+      saml/idp/certificate/certificate: "/etc/simplesamlphp/{{ configure_saml_single_server_external_hostname }}-idp-certificate.crt"
+      ucs/server/sso/fqdn: "{{ configure_saml_single_server_external_hostname }}"
+      umc/saml/sp-server: "{{ configure_saml_single_server_external_hostname }}"
+      ucs/server/sso/virtualhost: "false"
+      apache2/ssl/certificate: "/etc/univention/ssl/{{ configure_saml_single_server_external_hostname }}/cert.pem"
+      apache2/ssl/key: "/etc/univention/ssl/{{ configure_saml_single_server_external_hostname }}/private.key"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_run_saml_configuration_script
+
+- name: "Run Univention saml join script"
+  ansible.builtin.command: >
+    univention-run-join-scripts --force
+    {% if ucs_setup_server_type == "backup" %}
+    -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
+    {% endif %}
+    --run-scripts 91univention-saml.inst
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_saml_join_script
+
+- name: "Set UCR idp server variable"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/saml/idp-server: "https://{{ configure_saml_single_server_external_hostname }}/simplesamlphp/saml2/idp/metadata.php"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_idp_ucr_variable
+
+- name: "Run Univention management console join script"
+  ansible.builtin.command: >
+    univention-run-join-scripts --force
+    {% if ucs_setup_server_type == "backup" %}
+    -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
+    {% endif %}
+    --run-scripts 92univention-management-console-web-server.inst
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_management_console_script
