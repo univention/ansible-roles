@@ -1,0 +1,4 @@
+---
+# defaults file for install-apps-ox-pre
+
+install_apps_ox_pre_external_hostname: ""
