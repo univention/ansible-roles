@@ -20,7 +20,7 @@
 - name: "Run Univention saml join script"
   ansible.builtin.command: >
     univention-run-join-scripts --force
-    {% if ucs_setup_server_type == "backup" %}
+    {% if configure_saml_single_server_type == "backup" %}
     -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
     {% endif %}
     --run-scripts 91univention-saml.inst
@@ -39,7 +39,7 @@
 - name: "Run Univention management console join script"
   ansible.builtin.command: >
     univention-run-join-scripts --force
-    {% if ucs_setup_server_type == "backup" %}
+    {% if configure_saml_single_server_type == "backup" %}
     -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
     {% endif %}
     --run-scripts 92univention-management-console-web-server.inst
