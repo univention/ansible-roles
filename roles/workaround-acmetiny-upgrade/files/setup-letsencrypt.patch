@@ -1,0 +1,21 @@
+00c100,101
+<     wget --no-verbose -O - "https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem" > "$DIR_LE/intermediate.pem"
+---
+>     wget --no-verbose -O - "https://letsencrypt.org/certs/fakeleintermediatex1.pem" > "$DIR_LE/intermediate.pem"
+>     wget --no-verbose -O - "https://letsencrypt.org/certs/fakelerootx1.pem" > "$DIR_LE/root.pem"
+104,106c105,106
+< if [ ! -f "/usr/local/share/ca-certificates/lets-encrypt.crt" ] ; then
+<     ln -s "$DIR_LE/intermediate.pem" /usr/local/share/ca-certificates/lets-encrypt.crt
+< fi
+---
+> ln -sf "$DIR_LE/intermediate.pem" /usr/local/share/ca-certificates/lets-encrypt-inter.crt
+> ln -sf "$DIR_LE/root.pem" /usr/local/share/ca-certificates/lets-encrypt.crt
+110,113c110,112
+< if ! is_ucr_true letsencrypt/staging ; then
+<   prepare_file "$DIR_LE/signed_chain.crt" 0644 letsencrypt:root
+<   run-parts --verbose "$DIR_LE/setup.d/"
+< fi
+---
+> prepare_file "$DIR_LE/signed_chain.crt" 0644 letsencrypt:root
+> run-parts --verbose "$DIR_LE/setup.d/"
+> 

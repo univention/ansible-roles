@@ -1,0 +1,3 @@
+---
+# defaults file for workaround-acmetiny-upgrade
+workaround_acmetiny_upgrade_temp_dir: ""

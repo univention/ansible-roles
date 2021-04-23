@@ -1,0 +1,23 @@
+58,61c58,60
+< if ! is_ucr_true letsencrypt/staging ; then
+<     # on success (script didn't stop) use correct filename
+<     mv -f "$TMPFN" "$DIR_LE/signed_chain.crt"
+<     chmod 0644 "$DIR_LE/signed_chain.crt"
+---
+> # on success (script didn't stop) use correct filename
+> mv -f "$TMPFN" "$DIR_LE/signed_chain.crt"
+> chmod 0644 "$DIR_LE/signed_chain.crt"
+63,64c62,63
+<     # create backup
+<     cp "$DIR_LE/signed_chain.crt" "$DIR_LE/signed_chain.crt_$(date +%Y%m%d-%H%M%S)"
+---
+> # create backup
+> cp "$DIR_LE/signed_chain.crt" "$DIR_LE/signed_chain.crt_$(date +%Y%m%d-%H%M%S)"
+66c65
+<     echo "Certificate refreshed at $(date)"
+---
+> echo "Certificate refreshed at $(date)"
+68,70d66
+< else
+<     echo "Certificate refreshed at $(date) from the staging endpoint. You can now deactivate the staging option in Let's Encrypt's app settings to get a valid certificate."
+< fi
