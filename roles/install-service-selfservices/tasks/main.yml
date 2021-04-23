@@ -1,0 +1,51 @@
+---
+# tasks file for install-service-selfservices
+
+- name: "Install New Portal app"
+  ansible.builtin.import_role:
+    name: install-packages
+  vars:
+    install_packages_app_version_map: "{{ install_service_selfservice_service_version_map }}"
+    install_packages_temp_pw_file: "{{ install_service_selfservice_temp_file }}"
+    install_packages_force_package_upgrade: "{{ install_service_selfservice_force_package_upgrade }}"
+    install_packages_install_apps:
+      - "self-service-backend"
+      - "self-service"
+  tags:
+    - install_service_selfservice
+    - install_service_selfservice_install_app
+
+- name: "Install self service mail"
+  vars:
+    install_service_selfservice_fqdn: "{{ install_service_selfservice_external_hostname }}"
+  ansible.builtin.template:
+    dest: "/usr/share/univention-self-service/email_bodies/{{ item|basename }}"
+    src: "{{ item }}"
+  loop: "{{ query('fileglob', 'files/selfservice-mails/*') }}"
+  tags:
+    - install_service_selfservice
+    - install_service_selfservice_install_service_mails
+
+- name: "Configure Univention Config Registry"
+  vars:
+    install_service_selfservice_attributes: 'jpegPhoto,e-mail,roomnumber,departmentNumber,country,homeTelephoneNumber,mobileTelephoneNumber,homePostalAddress'
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      self-service/udm_attributes: "{{ install_service_selfservice_attributes }}"
+      self-service/ldap_attributes: "{{ install_service_selfservice_attributes }}"
+      umc/self-service/profiledata/enabled: "true"
+      umc/self-service/passwordreset/token_validity_period: 172800
+      umc/self-service/passwordreset/email/text_file: "/usr/share/univention-self-service/email_bodies/phoenix_passwordreset_email_body.txt"
+  tags:
+    - install_service_selfservice
+    - install_service_selfservice_configure_ucr
+
+- name: "Set frame ancestor for portal"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/self-service/content-security-policy/frame-ancestors: "'self'"
+  when: "'new_portal' in install_service_selfservice_install_services"
+  notify: "Restart apache"
+  tags:
+    - install_service_selfservice
+    - install_service_selfservice_configure_portal_frame
