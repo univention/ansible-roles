@@ -36,7 +36,6 @@
     - install_lets_encrypt
     - install_lets_encrypt_install_letsencrypt
 
-
 - name: "Configure lets encrypt (UCR)"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -44,6 +43,7 @@
       letsencrypt/services/apache2: true
       letsencrypt/services/postfix: true
       letsencrypt/services/dovecot: true
+      letsencrypt/staging: "{{ install_lets_encrypt_use_letsencrypt_staging }}"
   notify:
     - "Restart apache"
     - "Restart dovecot"
