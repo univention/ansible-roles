@@ -1,0 +1,3 @@
+---
+# defaults file for umc-permissions
+umc_permissions_basedn: ""
