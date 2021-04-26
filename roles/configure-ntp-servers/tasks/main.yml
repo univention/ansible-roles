@@ -2,7 +2,7 @@
 # tasks file for configure-ntp-servers
 
 - name: "Configure NTP servers"
-  univention_config_registry:
+  univention.ucs_modules.univention_config_registry:
     kvlist:
       - key: "timeserver{{ '' if index == 0 else index+1 }}"
         value: "{{ item }}"
