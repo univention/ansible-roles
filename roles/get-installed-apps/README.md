@@ -6,7 +6,7 @@ This role sets a fact with installed univention apps.
 Requirements
 ------------
 
-- ansible.netcommon
+- ansible.utils
   - cli_parse
 
 Role Variables

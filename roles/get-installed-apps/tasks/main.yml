@@ -2,7 +2,7 @@
 # tasks file for get-installed-apps
 
 - name: "Get app list"
-  ansible.netcommon.cli_parse:
+  ansible.utils.cli_parse:
     command: "univention-app info"
     parser:
       name: "ansible.netcommon.native"
