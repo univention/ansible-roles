@@ -23,8 +23,7 @@ Role Variables
 Dependencies
 ------------
 
-- univention.ucs_roles
-  - workaround-acmetiny-upgrade
+none
 
 Example Playbook
 ----------------

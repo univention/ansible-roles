@@ -21,8 +21,7 @@ Role Variables
 Dependencies
 ------------
 
-- univention.ucs_roles
-  - install-packages
+none
 
 Example Playbook
 ----------------

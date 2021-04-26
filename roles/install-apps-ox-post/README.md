@@ -23,8 +23,7 @@ Role Variables
 Dependencies
 ------------
 
-- univention.ucs_roles
-  - force-package-list-update
+none
 
 Example Playbook
 ----------------

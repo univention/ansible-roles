@@ -220,7 +220,7 @@
       register: "configure_keycloak_kcadm_create_mapper_output"
       failed_when:
         - "configure_keycloak_kcadm_create_mapper_output.rc == 1"
-        - "'Protocol mapper exists' not in kcadm_create_mapper_output.stderr"
+        - "'Protocol mapper exists' not in configure_keycloak_kcadm_create_mapper_output.stderr"
   delegate_to: "{{ configure_keycloak_keycloak_server }}"
   tags:
     - keycloak_config

@@ -16,8 +16,7 @@ none
 Dependencies
 ------------
 
-- univention.ucs_roles
-  - get-installed-apps
+none
 
 Example Playbook
 ----------------
