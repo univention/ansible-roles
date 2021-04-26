@@ -2,7 +2,7 @@
 # tasks file for install-apps-ox-post
 
 - name: "Update package list"
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: force-package-list-update
   tags:
     - install_apps_ox_post

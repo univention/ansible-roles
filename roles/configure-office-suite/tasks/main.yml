@@ -15,7 +15,7 @@
     install_packages_temp_pw_file: "{{ configure_office_suite_temp_pw_file }}"
     install_packages_install_apps:
       - "{{ configure_office_suite_office_suite }}"
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: install-packages
 
   tags:

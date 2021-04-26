@@ -2,14 +2,14 @@
 # tasks file for install-lets-encrypt
 
 - name: "Update package list"
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: force-package-list-update
   tags:
     - install_lets_encrypt
     - install_lets_encrypt_update_packages
 
 - name: "Remove letsencrypt"
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: remove-packages
   vars:
     remove_packages_temp_pw_file: "{{ install_lets_encrypt_temp_pw_file }}"
@@ -21,10 +21,10 @@
     remove_packages_app_version_map: "{{ install_lets_encrypt_service_version_map }}"
   tags:
     - install_lets_encrypt
-    - install_lets_encrypt_remove letsencrypt
+    - install_lets_encrypt_remove_letsencrypt
 
 - name: "Install letsencrypt"
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: install-packages
   vars:
     install_packages_temp_pw_file: "{{ install_lets_encrypt_temp_pw_file }}"
@@ -112,7 +112,7 @@
     - install_lets_encrypt__flush_handlers
 
 - name: "Run letsencrypt staging workaround"
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: workaround-acmetiny-upgrade
   vars:
     workaround_acmetiny_upgrade_temp_dir: "{{ install_lets_encrypt_temp_dir }}"

@@ -2,7 +2,7 @@
 # tasks file for install-service-new-portal
 
 - name: "Install New Portal app"
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: install-packages
   vars:
     install_packages_app_version_map: "{{ install_service_new_portal_service_version_map }}"

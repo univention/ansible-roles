@@ -44,7 +44,7 @@
     - force_package_list_update
 
 - name: "Update installed applications list"
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: get-installed-apps
   tags:
     - force_package_list_update_get_installed_apps
