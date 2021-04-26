@@ -22,7 +22,7 @@
     key: "{{ add_local_user_user['sshkey'] }}"
     manage_dir: true
     state: "present"
-  when: "'sshkey' in user"
+  when: "'sshkey' in add_local_user_user"
   tags:
     - add_local_user
     - add_local_user_user
@@ -31,10 +31,10 @@
 - name: "Install authorized_key for that user (key file)"
   ansible.posix.authorized_key:
     user: "{{ add_local_user_user['name'] }}"
-    key: "{{ lookup('file', user['sshkey_file']) }}"
+    key: "{{ lookup('file', add_local_user_user['sshkey_file']) }}"
     manage_dir: true
     state: "present"
-  when: "'sshkey_file' in user and 'sshkey' not in user"
+  when: "'sshkey_file' in add_local_user_user and 'sshkey' not in add_local_user_user"
   tags:
     - add_local_user
     - add_local_user_user
