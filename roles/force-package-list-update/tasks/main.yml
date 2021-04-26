@@ -43,13 +43,6 @@
     - force_package_list_update_univention_app_update
     - force_package_list_update
 
-- name: "Update installed applications list"
-  ansible.builtin.include_role:
-    name: get-installed-apps
-  tags:
-    - force_package_list_update_get_installed_apps
-    - force_package_list_update
-
 - name: "Refresh facts"
   ansible.builtin.setup:
   tags:

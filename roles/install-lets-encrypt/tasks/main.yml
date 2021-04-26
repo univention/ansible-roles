@@ -8,6 +8,13 @@
     - install_lets_encrypt
     - install_lets_encrypt_update_packages
 
+- name: "Update installed applications list"
+  ansible.builtin.include_role:
+    name: get-installed-apps
+  tags:
+    - install_lets_encrypt_get_installed_apps
+    - install_lets_encrypt
+
 - name: "Remove letsencrypt"
   ansible.builtin.include_role:
     name: remove-packages

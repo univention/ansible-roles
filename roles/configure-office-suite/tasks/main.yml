@@ -38,7 +38,7 @@
           - "onlyoffice"
           - "DocumentServerUrl"
           - "--value=https://{{ ansible_fqdn }}/onlyoffice-documentserver"
-      when: "'nextcloud' in ucs_setup_install_apps"
+      when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
         - configure_office_suite_only_office_nextcloud
         - configure_office_suite_only_office_nextcloud_document_server
@@ -57,7 +57,7 @@
           - "onlyoffice"
           - "defFormats"
           - "--value={{ configure_office_suite_onlyoffice_formats|to_json }}"
-      when: "'nextcloud' in ucs_setup_install_apps"
+      when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
         - configure_office_suite_only_office_nextcloud
         - configure_office_suite_only_office_nextcloud_fileformat
@@ -83,7 +83,7 @@
           - "richdocuments"
           - "disable_certificate_verification"
           - "--value=yes"
-      when: "'nextcloud' in ucs_setup_install_apps"
+      when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
         - configure_office_suite_collabora_online_nextcloud
         - configure_office_suite_collabora_online_nextcloud_disable_certificate_validation
@@ -97,7 +97,7 @@
           - "--set"
           - "collabora/online/keyfile={{ configure_office_suite_collabora_license_key }}"
       notify: "Restart collabora-online"
-      when: "'nextcloud' in ucs_setup_install_apps"
+      when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
         - configure_office_suite_collabora_online_nextcloud
         - configure_office_suite_collabora_online_nextcloud_collabora_license_key

@@ -77,7 +77,7 @@
     - name: "Copy pre-prepared license file to server"
       ansible.builtin.copy:
         dest: "{{ configure_license_temp_dir.path }}/license.ldif"
-        src: "{{ ucs_setup_license_file }}"
+        src: "{{ configure_license_file }}"
       when:
         - "configure_license_type == 'local_license'"
         - "configure_license_file|default(false)"

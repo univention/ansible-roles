@@ -17,6 +17,7 @@ Role Variables
 - `configure_office_suite_collabora_license_key`(string): Include a valid license for collabora-online.
 - `configure_office_suite_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
 - `configure_office_suite_temp_pw_file`(map): Tempfile object where univention app password is stored.
+- `configure_office_suite_install_apps`(list): A list of applications to install.
 
 Dependencies
 ------------
