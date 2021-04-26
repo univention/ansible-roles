@@ -25,7 +25,7 @@
       community.general.parted:
         device: "/dev/{{ extend_root_lvm_volume_lvm_disk }}"
         number: 3
-        part_start: "{{ extend_root_lvm_volume_disk_device_info.partitions[extend_root_lvm_existing_lvm_partition_number].end + 1 }}MiB"
+        part_start: "{{ extend_root_lvm_volume_disk_device_info.partitions[extend_root_lvm_volume_existing_lvm_partition_number].end + 1 }}MiB"
         part_end: "100%"
         flags: [lvm]
         state: "present"
