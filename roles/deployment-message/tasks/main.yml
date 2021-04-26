@@ -19,7 +19,6 @@
     file: "version_info.yml"
     name: "deployment_message_custom_fact_deployment"
   ignore_errors: true
-  when: "'ucs-setup' not in ucs_setup_custom_fact_deployment"
   tags:
     - deployment_message
     - deployment_message_version_info
