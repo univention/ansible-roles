@@ -115,7 +115,7 @@
   ansible.builtin.import_role:
     name: workaround-acmetiny-upgrade
   vars:
-    workaround_acmetiny_upgrade_temp_dir: "{{ install_lets_encrypt_temp_pw_file }}"
+    workaround_acmetiny_upgrade_temp_dir: "{{ install_lets_encrypt_temp_dir }}"
   when:
     - "install_lets_encrypt_implement_ugly_letsencrypt_workaround|bool"
     - "install_lets_encrypt_use_letsencrypt_staging|bool"
