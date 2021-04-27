@@ -12,7 +12,6 @@ Role Variables
 --------------
 
 - `cleanup_portal_basedn`(string): The LDAP base domain name.
-- `cleanup_portal_portal_dn`(string): The Portal domain name.
 - `cleanup_portal_install_services`(list): A list of services to install.
 - `cleanup_portal_domain_admin_group`(string): default: `"cn=Domain Admins,cn=groups,{{ cleanup_portal_basedn }}"`.
 - `cleanup_portal_portal_dn`(string): default: `"cn=portals,cn=univention,{{ cleanup_portal_basedn }}"`.

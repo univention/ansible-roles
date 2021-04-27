@@ -1,7 +1,6 @@
 ---
 # defaults file for cleanup-portal
 cleanup_portal_basedn: ""
-cleanup_portal_portal_dn: ""
 cleanup_portal_install_services: []
 cleanup_portal_domain_admin_group: "cn=Domain Admins,cn=groups,{{ cleanup_portal_basedn }}"
 cleanup_portal_portal_dn: "cn=portals,cn=univention,{{ cleanup_portal_basedn }}"

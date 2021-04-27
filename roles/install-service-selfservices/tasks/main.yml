@@ -17,7 +17,7 @@
 
 - name: "Install self service mail"
   vars:
-    install_service_selfservice_fqdn: "{{ install_service_selfservice_external_hostname }}"
+    fqdn: "{{ install_service_selfservice_external_hostname }}"
   ansible.builtin.template:
     dest: "/usr/share/univention-self-service/email_bodies/{{ item|basename }}"
     src: "{{ item }}"

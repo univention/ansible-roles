@@ -9,7 +9,7 @@
     install_packages_temp_pw_file: "{{ install_service_new_portal_temp_file }}"
     install_packages_force_package_upgrade: "{{ install_service_new_portal_force_package_upgrade }}"
     install_packages_install_apps:
-      - "new_portal"
+      - "univention-portal"
   tags:
     - install_service_new_portal
     - install_service_new_portal_install_app
