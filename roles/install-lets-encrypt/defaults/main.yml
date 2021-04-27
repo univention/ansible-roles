@@ -5,5 +5,6 @@ install_lets_encrypt_implement_ugly_letsencrypt_workaround: false
 install_lets_encrypt_temp_pw_file: {}
 install_lets_encrypt_temp_dir: {}
 install_lets_encrypt_service_version_map: {}
+install_lets_encrypt_service_name_list: {}
 install_lets_encrypt_force_package_upgrade: false
 install_lets_encrypt_external_hostname: ""

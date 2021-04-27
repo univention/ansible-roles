@@ -16,6 +16,7 @@ Role Variables
 - `remove_packages_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_packages_app_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false
 - `remove_packages_remove_apps`(list): A list of applications to install.
 - `remove_packages_app_version_map`(map): A map of packages with/without version to be removed.
+- `remove_packages_service_name_list`(list): A list containing application names to be installed.
 
 Dependencies
 ------------
