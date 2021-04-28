@@ -1,2 +1,9 @@
 ---
 # tasks file for install-apps-ox-pre
+
+- name: "Set default mail domain to host's FQDN"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      mail/default/domains: "{{ install_apps_ox_pre_external_hostname }}"
+  tags:
+    - install_apps_ox_pre
