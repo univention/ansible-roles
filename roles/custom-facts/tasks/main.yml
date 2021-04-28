@@ -28,3 +28,12 @@
   tags:
     - custom_facts
     - custom_facts_deployment
+
+- name: "Set custom facts"
+  ansible.builtin.copy:
+    src: files/ucr.fact
+    dest: /etc/ansible/facts.d/ucr.fact
+    mode: "0755"
+  notify:
+    - "re-read local facts"
+  check_mode: no

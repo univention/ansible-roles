@@ -32,6 +32,8 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/saml/idp-server: "https://{{ configure_saml_single_server_external_hostname }}/simplesamlphp/saml2/idp/metadata.php"
+  register: configure_saml_single_server_idp_output
+  failed_when: configure_saml_single_server_idp_output.rc > 0
   tags:
     - configure_saml_single_server
     - configure_saml_single_server_idp_ucr_variable

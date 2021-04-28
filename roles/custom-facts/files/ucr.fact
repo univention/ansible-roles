@@ -1,0 +1,31 @@
+#!/bin/sh
+''':'
+if type python2 >/dev/null 2>/dev/null; then
+  exec python2 "$0" "$@"
+fi
+exit
+'''
+
+import json
+
+def read_config_registry():
+    try:
+        from univention.config_registry.backend import ConfigRegistry
+    except ImportError, e:
+        return
+
+    ucr = ConfigRegistry()
+    ucr.load()
+
+    all_vars = {}
+    for key in ucr:
+        all_vars[key] = ucr[key]
+
+    return all_vars
+
+facts = read_config_registry()
+print(json.dumps(facts, sort_keys=True))
+
+# Local Variables:
+# mode: python
+# End:

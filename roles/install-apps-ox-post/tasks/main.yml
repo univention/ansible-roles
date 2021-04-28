@@ -111,10 +111,10 @@
       community.crypto.openssl_pkcs12:
         action: "export"
         path: "{{ install_apps_ox_post_cert_temp_dir.path }}/temp_output.p12"
-        certificate_path: "/etc/simplesamlphp/{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}-idp-certificate.crt"
-        privatekey_path: "/etc/simplesamlphp/{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}-idp-certificate.key"
+        certificate_path: "/etc/simplesamlphp/{{ install_apps_ox_post_external_hostname }}-idp-certificate.crt"
+        privatekey_path: "/etc/simplesamlphp/{{ install_apps_ox_post_external_hostname }}-idp-certificate.key"
         other_certificates: "/etc/univention/ssl/ucsCA/CAcert.pem"
-        friendly_name: "{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}"
+        friendly_name: "{{ install_apps_ox_post_external_hostname }}"
         passphrase: "{{ install_apps_ox_post_ox_keystore_passphrase }}"
       tags:
         - iinstall_apps_ox_post_cert_idp_certificate
@@ -123,20 +123,20 @@
       community.general.java_cert:
         pkcs12_path: "{{ install_apps_ox_post_cert_temp_dir.path }}/temp_output.p12"
         pkcs12_password: "{{ install_apps_ox_post_ox_keystore_passphrase }}"
-        pkcs12_alias: "{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}"
+        pkcs12_alias: "{{ install_apps_ox_post_external_hostname }}"
         keystore_create: true
         keystore_type: "JKS"
         keystore_path: "{{ install_apps_ox_post_cert_temp_dir.path }}/my-keystore.jks"
         keystore_pass: "{{ install_apps_ox_post_ox_keystore_passphrase }}"
-        cert_alias: "{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}"
+        cert_alias: "{{ install_apps_ox_post_external_hostname }}"
         state: "present"
       tags:
         - install_apps_ox_post_cert_idp_certificate_import
 
     - name: "Export keystore into a temporary format"
       ansible.builtin.command: >
-        keytool -export -alias "{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}"
-        -file "{{ install_apps_ox_post_cert_temp_dir.path }}/{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}.cer"
+        keytool -export -alias "{{ install_apps_ox_post_external_hostname }}"
+        -file "{{ install_apps_ox_post_cert_temp_dir.path }}/{{ install_apps_ox_post_external_hostname }}.cer"
         -keystore "{{ install_apps_ox_post_cert_temp_dir.path }}/my-keystore.jks"
         -deststorepass "{{ install_apps_ox_post_ox_keystore_passphrase }}"
       tags:
@@ -163,8 +163,8 @@
 
     - name: "Import temporary file into system keystore"
       community.general.java_cert:
-        cert_path: "{{ install_apps_ox_post_cert_temp_dir.path }}/{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}.cer"
-        cert_alias: "{{ ansible_local['ucr']['ucs/server/sso/fqdn'] }}"
+        cert_path: "{{ install_apps_ox_post_cert_temp_dir.path }}/{{ install_apps_ox_post_external_hostname }}.cer"
+        cert_alias: "{{ install_apps_ox_post_external_hostname }}"
         keystore_type: "JKS"
         keystore_path: "/etc/ssl/certs/java/cacerts"
         keystore_pass: "{{ install_apps_ox_post_ox_keystore_passphrase }}"

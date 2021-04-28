@@ -27,7 +27,7 @@
       - "mailAlternativeAddress=webmaster@{{ improve_usability_user_config_external_hostname }}"
       - "--set"
       - "firstname=Addison"
-  when: "'ox' in improve_usability_user_config_install_apps"
+  when: "'oxseforucs' in improve_usability_user_config_install_apps"
   tags:
     - improve_usability_user_config
     - improve_usability_user_config_make_admin_ox_user
@@ -102,7 +102,7 @@
           directory/manager/web/modules/users/user/wizard/property/invite/default: "true"
       tags:
         - improve_usability_user_config
-  when: "'ox' in improve_usability_user_config_install_apps"
+  when: "'oxseforucs' in improve_usability_user_config_install_apps"
   tags:
     - improve_usability_user_config
     - improve_usability_user_config_user_template
