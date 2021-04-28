@@ -4,8 +4,18 @@
 
 - name: "Get derived admin password"
   ansible.builtin.set_fact:
-    ucs_join_root_password: '{{ ucs_join_derive_root_password_prefix + "@" + inventory_hostname.split("-")[-1] }}'
+    ucs_join_final_root_password: '{{ ucs_join_derive_root_password_prefix + "@" + inventory_hostname.split("-")[-1] }}'
   when: "ucs_join_derive_root_password_from_hostname|bool"
+  no_log: true
+  tags:
+    - always
+    - ucs_join
+    - ucs_join_derive_admin_password
+
+- name: "Use preconfigured root password"
+  ansible.builtin.set_fact:
+    ucs_join_final_root_password: '{{ ucs_join_root_password }}'
+  when: "not ucs_join_derive_root_password_from_hostname|bool"
   no_log: true
   tags:
     - always
