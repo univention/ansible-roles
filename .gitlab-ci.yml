@@ -10,6 +10,8 @@ stages:
 #    entrypoint: [""]
 #  before_script:
 #    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+#  except:
+#    - tags
 #  script:
 #    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/build --dockerfile ${CI_PROJECT_DIR}/ci/build/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --build-arg ANSIBLE_VERSION=${ANSIBLE_VERSION} --skip-tls-verify
 #  stage: .pre
@@ -26,6 +28,8 @@ stages:
 #    entrypoint: [""]
 #  before_script:
 #    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+#  except:
+#    - tags
 #  script:
 #    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/release --dockerfile ${CI_PROJECT_DIR}/ci/release/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --skip-tls-verify
 #  stage: .pre
@@ -71,9 +75,9 @@ publish:
     expire_in: 14 days
   before_script:
     - sed -i "/version. [0-9]\.[0-9]\.[0-9]/s/[0-9]\.[0-9]\.[0-9]/$RELEASE_VERSION/" galaxy.yml
-  image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:main
+  image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG}
   only:
-    - tags
+    - main
   script:
     - ansible-galaxy collection build
     - ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} univention-ucs_roles-${RELEASE_VERSION}.tar.gz
