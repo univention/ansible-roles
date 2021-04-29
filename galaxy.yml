@@ -9,7 +9,7 @@ namespace: univention
 name: ucs_roles
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 0.0.1
+version: 0.0.0
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -28,7 +28,7 @@ description: Ansible roles for bootstraping Univention UCS
 # Either a single license or a list of licenses for content inside of a collection. Ansible Galaxy currently only
 # accepts L(SPDX,https://spdx.org/licenses/) licenses. This key is mutually exclusive with 'license_file'
 license:
-- AGPLv3
+- GPL-3.0-or-later
 
 # The path to the license file for the collection. This path is relative to the root of the collection. This key is
 # mutually exclusive with 'license'
@@ -49,7 +49,7 @@ dependencies:
   "univention.ucs_modules": ">=0.0.1"
 
 # The URL of the originating SCM repository
-repository: https://git.knut.univention.de/univention/customers/dataport/deployment/ansible-roles.git
+#repository:
 
 # The URL to any online docs
 #documentation: http://docs.example.com
