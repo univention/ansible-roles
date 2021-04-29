@@ -38,13 +38,14 @@ prepare:
   before_script:
     - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt > /usr/local/share/ca-certificates/ucs-root-ca.crt
     - update-ca-certificates
-    - curl https://git.knut.univention.de -vvv || true
   image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
   script:
-    - semantic-release --dry-run --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'
+    #- semantic-release --dry-run --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'
+    - semantic-release --dry-run --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab"
   stage: prepare
   variables:
-    NODE_TLS_REJECT_UNAUTHORIZED: "0"
+    #NODE_TLS_REJECT_UNAUTHORIZED: "0"
+    NODE_EXTRA_CA_CERTS: "/usr/local/share/ca-certificates/ucs-root-ca.crt"
 
 build:
   artifacts:
