@@ -5,7 +5,7 @@ release:
   image: node:12-buster-slim
   stage: release
   before_script:
-    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
+    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates curl
     - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt
     - npm install -g semantic-release @semantic-release/gitlab
   script:
