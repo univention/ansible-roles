@@ -22,21 +22,21 @@ stages:
 #  variables:
 #    ANSIBLE_VERSION: 2.10.7
 #
-#release_ci_image:
-#  image:
-#    name: gcr.io/kaniko-project/executor:debug
-#    entrypoint: [""]
-#  before_script:
-#    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
-#  except:
-#    - tags
-#  script:
-#    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/release --dockerfile ${CI_PROJECT_DIR}/ci/release/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --skip-tls-verify
-#  stage: .pre
-#  only:
-#    changes:
-#      - ci/release/*
-#      - .gitlab-ci.yml
+release_ci_image:
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  before_script:
+    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+  except:
+    - tags
+  script:
+    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/release --dockerfile ${CI_PROJECT_DIR}/ci/release/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --skip-tls-verify
+  stage: .pre
+  only:
+    changes:
+      - ci/release/*
+      - .gitlab-ci.yml
 
 .common-semantic-release:
   before_script:
@@ -56,7 +56,7 @@ prepare:
     - tags
   extends: .common-semantic-release
   script:
-    - echo RELEASE_VERSION=$(semantic-release --dry-run --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab,@semantic-release/release-notes-generator" | grep -oP "Published release [0-9]+\.[0-9]+\.[0-9]+ on" | grep -oP "[0-9]+\.[0-9]+\.[0-9]+") > ${CI_PROJECT_DIR}/deploy.env
+    - echo RELEASE_VERSION=$(semantic-release --dry-run --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab" | grep -oP "Published release [0-9]+\.[0-9]+\.[0-9]+ on" | grep -oP "[0-9]+\.[0-9]+\.[0-9]+") > ${CI_PROJECT_DIR}/deploy.env
     - cat ${CI_PROJECT_DIR}/deploy.env
   stage: prepare
 
@@ -65,7 +65,7 @@ release:
   only:
     - main
   script:
-    - semantic-release --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab"
+    - semantic-release --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab,@semantic-release/release-notes-generator,@semantic-release/changelog"
   stage: release
 
 publish:
