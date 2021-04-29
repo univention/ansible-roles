@@ -102,10 +102,14 @@
         - configure_office_suite_collabora_online_nextcloud
         - configure_office_suite_collabora_online_nextcloud_collabora_license_key
 
-    - name: "Flush handlers to restart collabora"
-      ansible.builtin.meta: flush_handlers
-
   when: configure_office_suite_office_suite == "collabora-online"
   tags:
     - configure_office_suite
     - configure_office_suite_collabora_online
+
+- name: "Flush handlers to restart collabora"
+  ansible.builtin.meta: flush_handlers
+  tags:
+    - configure_office_suite
+    - configure_office_suite_flush_handlers
+
