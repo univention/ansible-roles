@@ -18,7 +18,7 @@ build_ci_image:
       - ci/build/*
       - .gitlab-ci.yml
   variables:
-    MIN_ANSIBLE_VERSION: 2.10.7
+    ANSIBLE_VERSION: 2.10.7
 
 release_ci_image:
   image:
