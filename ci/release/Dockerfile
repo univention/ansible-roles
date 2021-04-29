@@ -14,8 +14,6 @@ RUN apt-get update -qq \
  && apt-get upgrade -y \
  # Install semantic release
  && npm install -g semantic-release @semantic-release/gitlab \
- && apt-get -y purge \
-     curl \
   && apt-get -y autoremove \
   && apt-get -y clean \
   && rm -rf /var/lib/apt/lists/* \
