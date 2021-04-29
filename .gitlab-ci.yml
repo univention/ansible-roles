@@ -44,6 +44,7 @@ prepare:
   image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
   script:
     - echo RELEASE_VERSION=$(semantic-release --dry-run --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab" | grep -oP "Published release [0-9]+\.[0-9]+\.[0-9]+ on" | grep -oP "[0-9]+\.[0-9]+\.[0-9]+") > ${CI_PROJECT_DIR}/deploy.env
+    - cat ${CI_PROJECT_DIR}/deploy.env
   stage: prepare
   variables:
     NODE_EXTRA_CA_CERTS: "/usr/local/share/ca-certificates/ucs-root-ca.crt"
@@ -54,7 +55,8 @@ build:
       - univention-ucs_roles-*
     expire_in: 14 days
   before_script:
-    - sed -i 's%version. [0-9]+\.[0-9]+\.[0-9]+%'"${RELEASE_VERSION}"'%' galaxy.yml
+    - echo $RELEASE_VERSION
+    - sed -i '/version. [0-9]\.[0-9]\.[0-9]/s/[0-9]\.[0-9]\.[0-9]/$RELEASE_VERSION/' galaxy.yml
   image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG}
   script:
     - ansible-galaxy collection build
