@@ -1,0 +1,6 @@
+---
+# defaults file for portal_deactivate_entry
+portal_deactivate_entry_base_dn: ""
+portal_deactivate_entry_portal_dn: "cn=portals,cn=univention,{{ portal_deactivate_entry_base_dn }}"
+portal_deactivate_entry_entries: {}
+portal_deactivate_entry_install_list: []
