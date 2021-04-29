@@ -61,6 +61,9 @@ prepare:
   stage: prepare
 
 release:
+  artifacts:
+    paths:
+      - CHANGELOG.md
   extends: .common-semantic-release
   only:
     - main
