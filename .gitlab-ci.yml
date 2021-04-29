@@ -39,7 +39,8 @@ prepare:
     - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt
   image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
   script:
-    - semantic-release -d -b $CI_COMMIT_REF_NAME
+    - npx --no-install semantic-release --no-ci --dry-run | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+' || true
+    - semantic-release -d -b $CI_COMMIT_REF_NAME --no-ci --plugins ['@semantic-release/commit-analyzer', '@semantic-release/gitlab'] || true
   stage: prepare
 
 build:
