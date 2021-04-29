@@ -39,7 +39,7 @@ prepare:
     - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt
   image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
   script:
-    - semantic-release -d
+    - semantic-release -d -b $CI_COMMIT_REF_NAME
   stage: prepare
 
 build:
