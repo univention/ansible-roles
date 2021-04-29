@@ -1,3 +1,6 @@
+stages:
+  - release
+
 release:
   image: node:12-buster-slim
   stage: release
