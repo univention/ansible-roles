@@ -1,8 +1,8 @@
 stages:
   - .pre
   - prepare
-  - build
   - release
+  - publish
 
 #build_ci_image:
 #  image:
@@ -49,19 +49,6 @@ prepare:
   variables:
     NODE_EXTRA_CA_CERTS: "/usr/local/share/ca-certificates/ucs-root-ca.crt"
 
-build:
-  artifacts:
-    paths:
-      - univention-ucs_roles-*
-    expire_in: 14 days
-  before_script:
-    - echo $RELEASE_VERSION
-    - sed -i '/version. [0-9]\.[0-9]\.[0-9]/s/[0-9]\.[0-9]\.[0-9]/$RELEASE_VERSION/' galaxy.yml
-  image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG}
-  script:
-    - ansible-galaxy collection build
-  stage: build
-
 release:
   before_script:
     - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt > /usr/local/share/ca-certificates/ucs-root-ca.crt
@@ -72,4 +59,16 @@ release:
   script:
     - semantic-release --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab"
   stage: release
-  when: manual
+
+publish:
+  artifacts:
+    paths:
+      - univention-ucs_roles-*
+    expire_in: 14 days
+  before_script:
+    - sed -i "/version. [0-9]\.[0-9]\.[0-9]/s/[0-9]\.[0-9]\.[0-9]/$RELEASE_VERSION/" galaxy.yml
+  image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG}
+  script:
+    - ansible-galaxy collection build
+    - ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY}
+  stage: publish
