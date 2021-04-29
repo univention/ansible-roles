@@ -54,7 +54,8 @@ build:
 
 release:
   before_script:
-    - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt
+    - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt > /usr/local/share/ca-certificates/ucs-root-ca.crt
+    - update-ca-certificates
   image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
   only:
     - main
