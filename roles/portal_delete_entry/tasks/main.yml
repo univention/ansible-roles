@@ -1,0 +1,32 @@
+---
+# tasks file for portal_delete_entry
+
+- name: "Check if entry that is about to be deactivated exists to begin with"
+  ansible.builtin.command: >
+    udm portals/entry list
+    --position "cn=entry,{{ entry['dn']|default(portal_delete_entry_portal_dn) }}"
+    --filter "cn={{ entry['name'] }}"
+  loop: "{{ portal_delete_entry_entries|selectattr('state', 'defined')|selectattr('state', 'equalto', 'absent')|list|default([])|flatten }}"
+  loop_control:
+    loop_var: "entry"
+  register: portal_delete_entry_entries
+  when:
+    - ('only' not in entry) or
+        ('only' in entry and
+          portal_delete_entry_install_list|intersect([entry['only']]|flatten)
+        )
+  tags:
+    - portal_delete_entry
+    - portal_delete_entry_check_entries
+
+- name: "Delete existing portal entry"
+  vars:
+    entry: "{{ item.item }}"
+  ansible.builtin.command: >
+    udm portals/entry delete
+    --dn 'cn={{ entry["name"] }},cn=entry,{{ entry["dn"]|default(portal_delete_entry_portal_dn) }}'
+  ignore_errors: true
+  loop: "{{ portal_delete_entry_entries['results']|default({}) }}"
+  tags:
+    - portal_delete_entry
+    - portal_delete_entry_delete_entry
