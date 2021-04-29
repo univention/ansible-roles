@@ -3,7 +3,7 @@
 
 - name: "Update package list"
   ansible.builtin.include_role:
-    name: force-package-list-update
+    name: force_package_list_update
   tags:
     - install_apps_ox_post
     - install_apps_ox_post_update_packages

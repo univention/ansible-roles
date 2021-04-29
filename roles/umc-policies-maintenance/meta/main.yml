@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: umc-policies-maintenance
+  role_name: umc_policies_maintenance
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

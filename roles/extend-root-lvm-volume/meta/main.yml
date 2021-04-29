@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: extend-root-lvm-volume
+  role_name: extend_root_lvm_volume
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

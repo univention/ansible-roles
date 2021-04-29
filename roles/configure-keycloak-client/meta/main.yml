@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: configure-keycloak-client
+  role_name: configure_keycloak_client
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

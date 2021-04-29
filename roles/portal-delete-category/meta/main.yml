@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: portal-delete-category
+  role_name: portal_delete_category
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

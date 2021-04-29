@@ -3,7 +3,7 @@
 
 - name: "Install New Portal app"
   ansible.builtin.include_role:
-    name: install-packages
+    name: install_packages
   vars:
     install_packages_app_version_map: "{{ install_service_selfservice_service_version_map }}"
     install_packages_temp_pw_file: "{{ install_service_selfservice_temp_file }}"

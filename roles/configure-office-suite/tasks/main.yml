@@ -16,7 +16,7 @@
     install_packages_install_apps:
       - "{{ configure_office_suite_office_suite }}"
   ansible.builtin.include_role:
-    name: install-packages
+    name: install_packages
 
   tags:
     - configure_office_suite

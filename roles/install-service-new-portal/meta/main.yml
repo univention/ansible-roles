@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: install-service-new-portal
+  role_name: install_service_new_portal
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

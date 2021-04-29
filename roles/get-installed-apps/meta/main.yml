@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: get-installed-apps
+  role_name: get_installed_apps
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

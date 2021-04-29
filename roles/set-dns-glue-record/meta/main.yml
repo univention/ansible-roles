@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: set-dns-glue-record
+  role_name: set_dns_glue_record
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

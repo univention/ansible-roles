@@ -3,14 +3,14 @@
 
 - name: "Update package list"
   ansible.builtin.include_role:
-    name: force-package-list-update
+    name: force_package_list_update
   tags:
     - install_packages
     - install_packages_update_packages
 
 - name: "Update installed applications list"
   ansible.builtin.include_role:
-    name: get-installed-apps
+    name: get_installed_apps
   tags:
     - install_packages_get_installed_apps
     - install_packages

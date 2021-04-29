@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: configure-license
+  role_name: configure_license
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

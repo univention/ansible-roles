@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: ucs-add-admin-user
+  role_name: ucs_add_admin_user
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: force-package-list-update
+  role_name: force_package_list_update
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

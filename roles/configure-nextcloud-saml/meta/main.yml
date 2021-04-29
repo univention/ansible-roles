@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: configure-nextcloud-saml
+  role_name: configure_nextcloud_saml
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

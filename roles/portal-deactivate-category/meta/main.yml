@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: portal-deactivate-category
+  role_name: portal_deactivate_category
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

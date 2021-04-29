@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: add-local-user
+  role_name: add_local_user
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH

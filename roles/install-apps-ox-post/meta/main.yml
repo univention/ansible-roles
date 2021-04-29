@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: install-apps-ox-post
+  role_name: install_apps_ox_post
   author: Team Phoenix
   description: Phoenix-Werkstatt
   company: Univention GmbH
