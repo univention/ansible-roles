@@ -1,14 +1,64 @@
 stages:
+  - .pre
+  - prepare
+  - build
   - release
 
-release:
-  image: node:12-buster-slim
-  stage: release
+build_ci_image:
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   before_script:
-    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates curl
-    - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt
-    - npm install -g semantic-release @semantic-release/gitlab
+    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
   script:
-    - semantic-release
+    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/build --dockerfile ${CI_PROJECT_DIR}/ci/build/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --build-arg ANSIBLE_VERSION=${ANSIBLE_VERSION} --skip-tls-verify
+  stage: .pre
+  only:
+    changes:
+      - ci/build/*
+      - .gitlab-ci.yml
+  variables:
+    MIN_ANSIBLE_VERSION: 2.10.7
+
+release_ci_image:
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  before_script:
+    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/release --dockerfile ${CI_PROJECT_DIR}/ci/release/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --skip-tls-verify
+  stage: .pre
+  only:
+    changes:
+      - ci/release/*
+      - .gitlab-ci.yml
+
+prepare:
+  before_script:
+    - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt
+  image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
+  script:
+    - semantic-release -d
+  stage: prepare
+
+build:
+  artifacts:
+    paths:
+      - univention-ucs_roles-*
+    expire_in: 14 days
+  image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG}
+  script:
+    - ansible-galaxy collection build
+  stage: build
+
+release:
+  before_script:
+    - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt
+  image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
   only:
     - main
+  script:
+    - semantic-release
+  stage: release
+  when: manual
