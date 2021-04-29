@@ -41,6 +41,7 @@ stages:
   image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
   stage: prepare
   variables:
+    GIT_STRATEGY: clone
     NODE_EXTRA_CA_CERTS: "/usr/local/share/ca-certificates/ucs-root-ca.crt"
 
 prepare:
@@ -75,3 +76,5 @@ publish:
     - ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} .
     - ansible-galaxy collection build
   stage: publish
+  variables:
+    GIT_DEPTH: "1"
