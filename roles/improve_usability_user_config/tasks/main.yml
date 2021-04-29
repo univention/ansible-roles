@@ -1,5 +1,5 @@
 ---
-# tasks file for improve-usability-user-config
+# tasks file for improve_usability_user_config
 
 - name: "Make Administrator an OX user"
   ansible.builtin.command:

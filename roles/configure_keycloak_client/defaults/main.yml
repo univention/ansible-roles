@@ -1,5 +1,5 @@
 ---
-# defaults file for configure-keycloak-client
+# defaults file for configure_keycloak_client
 
 configure_keycloak_client_oidc_broker_secret: ""
 configure_keycloak_client_keycloak_password: ""

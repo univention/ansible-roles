@@ -1,5 +1,5 @@
 ---
-# tasks file for improve-usability-ui-changes
+# tasks file for improve_usability_ui_changes
 
 - name: "Get portal entries except Anmeldung and Impressum"
   vars:

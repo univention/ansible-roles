@@ -1,5 +1,5 @@
 ---
-# handlers file for install-lets-encrypt
+# handlers file for install_lets_encrypt
 
 - name: "Restart postfix"
   ansible.builtin.service:

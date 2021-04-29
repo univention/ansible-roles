@@ -1,5 +1,5 @@
 ---
-# tasks file for configure-keycloak
+# tasks file for configure_keycloak
 
 - name: "Generate keycloak password"
   become: false

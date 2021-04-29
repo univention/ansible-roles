@@ -1,5 +1,5 @@
 ---
-# tasks file for configure-keycloak-client
+# tasks file for configure_keycloak_client
 
 - name: "Configure UCS server for keycoak auth"
   block:

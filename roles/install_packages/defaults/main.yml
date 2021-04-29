@@ -1,5 +1,5 @@
 ---
-# defaults file for install-packages
+# defaults file for install_packages
 
 install_packages_app_version_map: {}
 install_packages_service_name_list: []

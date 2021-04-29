@@ -1,5 +1,5 @@
 ---
-# tasks file for configure-apps-postfix
+# tasks file for configure_apps_postfix
 
 - name: "Create domain rewrite map"
   ansible.builtin.lineinfile:

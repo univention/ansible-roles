@@ -1,5 +1,5 @@
 ---
-# tasks file for portal-create-entry
+# tasks file for portal_create_entry
 
 - name: "Create entry in portal"
   vars:

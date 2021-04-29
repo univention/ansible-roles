@@ -1,5 +1,5 @@
 ---
-# tasks file for cleanup-portal
+# tasks file for cleanup_portal
 
 - name: "Turn off video conferencing"
   ansible.builtin.command:

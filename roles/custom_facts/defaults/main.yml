@@ -1,5 +1,5 @@
 ---
-# defaults file for custom-facts
+# defaults file for custom_facts
 
 custom_facts_templates:
   - "deployment.fact.j2"

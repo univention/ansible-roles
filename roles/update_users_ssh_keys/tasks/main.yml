@@ -1,5 +1,5 @@
 ---
-# tasks file for update-users-ssh-keys
+# tasks file for update_users_ssh_keys
 
 - name: "Check if all vars are set"
   ansible.builtin.assert:

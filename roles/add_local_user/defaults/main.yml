@@ -1,5 +1,5 @@
 ---
-# defaults file for add-local-user
+# defaults file for add_local_user
 
 add_local_user_user:
   name: "ansible"

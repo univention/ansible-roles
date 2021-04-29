@@ -1,5 +1,5 @@
 ---
-# defaults file for set-dns-glue-record
+# defaults file for set_dns_glue_record
 
 set_dns_glue_record_create_external_hostname_glue_record: true
 set_dns_glue_record_fqdn: ""

@@ -41,6 +41,6 @@ galaxy_info:
     - univention
     - ucs
     - bootstrap
-    - custom-facts
+    - custom
 
 dependencies: []

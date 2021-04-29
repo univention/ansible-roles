@@ -1,5 +1,5 @@
 ---
-# defaults file for install-service-new-portal
+# defaults file for install_service_new_portal
 
 install_service_new_portal_service_version_map: {}
 install_service_new_portal_temp_file: {}

@@ -1,5 +1,5 @@
 ---
-# defaults file for configure-keycloak
+# defaults file for configure_keycloak
 
 configure_keycloak_generate_oidc_broker_secret: true
 configure_keycloak_oidc_broker_secret: ""

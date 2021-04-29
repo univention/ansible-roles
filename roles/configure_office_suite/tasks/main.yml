@@ -1,5 +1,5 @@
 ---
-# tasks file for configure-office-suite
+# tasks file for configure_office_suite
 
 - name: "Assert that provided office suite is a supported value"
   ansible.builtin.assert:

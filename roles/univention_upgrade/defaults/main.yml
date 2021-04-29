@@ -1,3 +1,3 @@
 ---
-# defaults file for univention-upgrade
+# defaults file for univention_upgrade
 univention_upgrade_version: "4.4-99"

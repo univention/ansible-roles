@@ -1,5 +1,5 @@
 ---
-# tasks file for set-dns-glue-record
+# tasks file for set_dns_glue_record
 
 - name: "Implement DNS glue record for external host name"
   block:

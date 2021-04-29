@@ -1,5 +1,5 @@
 ---
-# defaults file for remove-packages
+# defaults file for remove_packages
 
 remove_packages_temp_pw_file: ""
 remove_packages_remove_apps: []

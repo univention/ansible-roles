@@ -1,5 +1,5 @@
 ---
-# defaults file for configure-saml-single-server
+# defaults file for configure_saml_single_server
 
 configure_saml_single_server_external_hostname: ""
 configure_saml_single_admin_user_name: ""

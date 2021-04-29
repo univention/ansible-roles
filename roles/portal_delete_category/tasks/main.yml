@@ -1,5 +1,5 @@
 ---
-# tasks file for portal-delete-category
+# tasks file for portal_delete_category
 
 - name: "Check if category that is about to be deleted exists to begin with"
   ansible.builtin.command: >

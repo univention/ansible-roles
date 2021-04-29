@@ -1,5 +1,5 @@
 ---
-# tasks file for configure-ntp-servers
+# tasks file for configure_ntp_servers
 
 - name: "Configure NTP servers"
   univention.ucs_modules.univention_config_registry:

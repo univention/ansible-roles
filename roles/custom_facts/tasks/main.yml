@@ -1,5 +1,5 @@
 ---
-# tasks file for custom-facts
+# tasks file for custom_facts
 
 - name: "Ensure custom facts script exists"
   ansible.builtin.file:

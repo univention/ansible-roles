@@ -1,5 +1,5 @@
 ---
-# tasks file for configure-apps-nextcloud
+# tasks file for configure_apps_nextcloud
 
 - name: "Copy NextCloud skeleton files to target directory"
   ansible.builtin.copy:

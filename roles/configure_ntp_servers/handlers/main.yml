@@ -1,5 +1,5 @@
 ---
-# handlers file for configure-ntp-servers
+# handlers file for configure_ntp_servers
 
 - name: "Restart ntpd"
   ansible.builtin.service:

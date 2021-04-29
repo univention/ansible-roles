@@ -1,5 +1,5 @@
 ---
-# defaults file for install-lets-encrypt
+# defaults file for install_lets_encrypt
 install_lets_encrypt_use_letsencrypt_staging: false
 install_lets_encrypt_implement_ugly_letsencrypt_workaround: false
 install_lets_encrypt_temp_pw_file: {}

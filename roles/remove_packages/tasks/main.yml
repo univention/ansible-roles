@@ -1,5 +1,5 @@
 ---
-# tasks file for remove-packages
+# tasks file for remove_packages
 
 - name: "Remove Univention app packages"
   vars:

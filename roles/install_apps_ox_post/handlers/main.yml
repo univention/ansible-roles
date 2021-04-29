@@ -1,5 +1,5 @@
 ---
-# handlers file for install-apps-ox-post
+# handlers file for install_apps_ox_post
 
 - name: "Restart dovecot"
   ansible.builtin.service:

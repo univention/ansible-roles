@@ -1,5 +1,5 @@
 ---
-# defaults file for ucs-join
+# defaults file for ucs_join
 
 ucs_join_derive_root_password_from_hostname: true
 ucs_join_derive_root_password_prefix: ""

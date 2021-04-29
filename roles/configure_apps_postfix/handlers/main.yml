@@ -1,5 +1,5 @@
 ---
-# handlers file for configure-apps-postfix
+# handlers file for configure_apps_postfix
 
 - name: "Restart postfix"
   service:

@@ -1,5 +1,5 @@
 ---
-# tasks file for configure-apps-owncloud
+# tasks file for configure_apps_owncloud
 
 - name: "Configure OwnCloud SSO"
   block:

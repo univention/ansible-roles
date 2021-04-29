@@ -1,5 +1,5 @@
 ---
-# defaults file for configure-ntp-servers
+# defaults file for configure_ntp_servers
 
 configure_ntp_servers_timeservers:
   - "ptbtime1.ptb.de"

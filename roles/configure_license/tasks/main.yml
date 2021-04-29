@@ -1,5 +1,5 @@
 ---
-# tasks file for configure-license
+# tasks file for configure_license
 
 - name: "Import License"
   block:

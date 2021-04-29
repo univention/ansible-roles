@@ -1,5 +1,5 @@
 ---
-# tasks file for extend-root-lvm-volume
+# tasks file for extend_root_lvm_volume
 
 - name: "Extend system space to cover the whole disk"
   block:

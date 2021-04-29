@@ -1,5 +1,5 @@
 ---
-# defaults file for deployment-message
+# defaults file for deployment_message
 
 deployment_message_verification_pause_duration: 20
 deployment_message_external_hostname: ""

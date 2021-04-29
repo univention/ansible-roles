@@ -1,5 +1,5 @@
 ---
-# defaults file for configure-office-suite
+# defaults file for configure_office_suite
 
 configure_office_suite_office_suite: "collabora-online"
 configure_office_suite_supported_office_suites:

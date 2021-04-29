@@ -1,5 +1,5 @@
 ---
-# tasks file for get-installed-apps
+# tasks file for get_installed_apps
 
 - name: "Get app list"
   ansible.utils.cli_parse:

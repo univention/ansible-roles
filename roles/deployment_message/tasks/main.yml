@@ -1,5 +1,5 @@
 ---
-# tasks file for deployment-message
+# tasks file for deployment_message
 
 - name: "Check if all vars are set"
   ansible.builtin.assert:

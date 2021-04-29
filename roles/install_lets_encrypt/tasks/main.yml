@@ -1,5 +1,5 @@
 ---
-# tasks file for install-lets-encrypt
+# tasks file for install_lets_encrypt
 
 - name: "Update package list"
   ansible.builtin.include_role:
@@ -24,7 +24,7 @@
     remove_packages_temp_pw_file: "{{ install_lets_encrypt_temp_pw_file }}"
     remove_packages_remove_apps:
       - letsencrypt
-    # var 'get_installed_apps_installed_apps' is set in force-package-list-update > get_installed_apps
+    # var 'get_installed_apps_installed_apps' is set in force_package_list_update > get_installed_apps
     remove_packages_currently_installed_apps: "{{ get_installed_apps_installed_apps }}"
     remove_packages_force_package_upgrade: "{{ install_lets_encrypt_force_package_upgrade }}"
     remove_packages_app_version_map: "{{ install_lets_encrypt_service_version_map }}"
@@ -40,7 +40,7 @@
     install_packages_temp_pw_file: "{{ install_lets_encrypt_temp_pw_file }}"
     install_packages_install_apps:
       - letsencrypt
-    # var 'get_installed_apps_installed_apps' is set in force-package-list-update > get_installed_apps
+    # var 'get_installed_apps_installed_apps' is set in force_package_list_update > get_installed_apps
     remove_packages_currently_installed_apps: "{{ get_installed_apps_installed_apps }}"
     install_packages_force_package_upgrade: "{{ install_lets_encrypt_force_package_upgrade }}"
     install_packages_app_version_map: "{{ install_lets_encrypt_service_version_map }}"

@@ -1,5 +1,5 @@
 ---
-# defaults file for improve-usability-user-config
+# defaults file for improve_usability_user_config
 
 improve_usability_user_config_basedn: ""
 improve_usability_user_config_external_hostname: ""

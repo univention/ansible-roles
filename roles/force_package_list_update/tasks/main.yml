@@ -1,5 +1,5 @@
 ---
-# tasks file for force-package-list-update
+# tasks file for force_package_list_update
 
 - name: "Check if debian package lists need to be recreated"
   ansible.builtin.shell: "grep -Eqs '(Traceback|An error occurred during the repository check)' /etc/apt/sources.list.d/*"

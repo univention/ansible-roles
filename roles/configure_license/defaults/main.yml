@@ -1,5 +1,5 @@
 ---
-# defaults file for configure-license
+# defaults file for configure_license
 
 configure_license_validity: ""
 configure_license_shop_password: ""

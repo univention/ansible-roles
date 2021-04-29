@@ -1,5 +1,5 @@
 ---
-# tasks file for umc-permissions
+# tasks file for umc_permissions
 
 - name: "Hide remaining UMC modules per UCR and empty favorites"
   univention.ucs_modules.univention_config_registry:

@@ -1,5 +1,5 @@
 ---
-# tasks file for ucs-join
+# tasks file for ucs_join
 
 
 - name: "Get derived admin password"

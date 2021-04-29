@@ -1,5 +1,5 @@
 ---
-# defaults file for install-branding
+# defaults file for install_branding
 
 install_branding_customer_repo_name: ""
 install_branding_customer_repo_parts: ""

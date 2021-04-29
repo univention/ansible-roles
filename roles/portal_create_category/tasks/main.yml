@@ -1,5 +1,5 @@
 ---
-# tasks file for portal-create-category
+# tasks file for portal_create_category
 
 - name: "Create portal category"
   ansible.builtin.command: >

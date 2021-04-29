@@ -1,5 +1,5 @@
 ---
-# tasks file for portal-deactivate-category
+# tasks file for portal_deactivate_category
 
 - name: "Check if category that is about to be deactivated exists to begin with"
   ansible.builtin.command: >
