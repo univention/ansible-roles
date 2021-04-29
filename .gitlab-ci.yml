@@ -4,42 +4,42 @@ stages:
   - build
   - release
 
-build_ci_image:
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  before_script:
-    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
-  script:
-    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/build --dockerfile ${CI_PROJECT_DIR}/ci/build/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --build-arg ANSIBLE_VERSION=${ANSIBLE_VERSION} --skip-tls-verify
-  stage: .pre
-  only:
-    changes:
-      - ci/build/*
-      - .gitlab-ci.yml
-  variables:
-    ANSIBLE_VERSION: 2.10.7
-
-release_ci_image:
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  before_script:
-    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
-  script:
-    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/release --dockerfile ${CI_PROJECT_DIR}/ci/release/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --skip-tls-verify
-  stage: .pre
-  only:
-    changes:
-      - ci/release/*
-      - .gitlab-ci.yml
+#build_ci_image:
+#  image:
+#    name: gcr.io/kaniko-project/executor:debug
+#    entrypoint: [""]
+#  before_script:
+#    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+#  script:
+#    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/build --dockerfile ${CI_PROJECT_DIR}/ci/build/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-ansible:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --build-arg ANSIBLE_VERSION=${ANSIBLE_VERSION} --skip-tls-verify
+#  stage: .pre
+#  only:
+#    changes:
+#      - ci/build/*
+#      - .gitlab-ci.yml
+#  variables:
+#    ANSIBLE_VERSION: 2.10.7
+#
+#release_ci_image:
+#  image:
+#    name: gcr.io/kaniko-project/executor:debug
+#    entrypoint: [""]
+#  before_script:
+#    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+#  script:
+#    - /kaniko/executor --context ${CI_PROJECT_DIR}/ci/release --dockerfile ${CI_PROJECT_DIR}/ci/release/Dockerfile --destination artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG} --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg VCS_URL="${CI_PROJECT_URL}" --build-arg VCS_REF="${CI_COMMIT_SHORT_SHA}" --skip-tls-verify
+#  stage: .pre
+#  only:
+#    changes:
+#      - ci/release/*
+#      - .gitlab-ci.yml
 
 prepare:
   before_script:
     - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt
   image: artifacts.knut.univention.de/upx/container-tooling/automation-semantic-release:${CI_COMMIT_REF_SLUG}
   script:
-    - semantic-release --dry-run --branches $CI_COMMIT_REF_NAME | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'
+    - semantic-release --dry-run --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab" | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'
   stage: prepare
 
 build:
@@ -59,6 +59,6 @@ release:
   only:
     - main
   script:
-    - semantic-release
+    - semantic-release --branches $CI_COMMIT_REF_NAME --plugins "@semantic-release/gitlab"
   stage: release
   when: manual
