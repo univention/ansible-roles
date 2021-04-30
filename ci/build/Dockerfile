@@ -6,7 +6,7 @@
 FROM artifacts.knut.univention.de/dockerhub_proxy_cache/library/alpine:edge
 LABEL maintainer="Univention <info@univention.de>"
 
-ARG ANSIBLE_VERSION=2.10.7
+ARG ANSIBLE_VERSION=3.3.0
 
 RUN apk add --update python3 py3-pip py3-wheel bash openssl \
  && apk add --update --virtual build-dependencies openssl-dev python3-dev build-base libffi-dev rust cargo \

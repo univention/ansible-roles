@@ -55,7 +55,7 @@ repository: https://github.com/univention/ansible-modules
 #documentation: http://docs.example.com
 
 # The URL to the homepage of the collection/project
-#homepage: http://example.com
+homepage: https://www.univention.com
 
 # The URL to the collection issue tracker
 issues: https://forge.univention.org
@@ -66,3 +66,4 @@ build_ignore:
   - .gitkeep
   - .gitignore
   - '*.tar.gz'
+  - ci
