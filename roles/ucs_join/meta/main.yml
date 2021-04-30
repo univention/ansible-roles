@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: ucs_join
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Run UCS Join either on master/standalone or backup server.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

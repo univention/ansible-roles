@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: set_dns_glue_record
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Set a DNS Glue NS record.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

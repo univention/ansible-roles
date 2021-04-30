@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: ucs_add_admin_user
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Add an UCS admin user.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

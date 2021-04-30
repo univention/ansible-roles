@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: extend_root_lvm_volume
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Extend root volume to max free disk space.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

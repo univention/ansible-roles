@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: get_installed_apps
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Set fact about currently installed univention apps.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: improve_usability_user_config
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Configure additional settings and default values for user.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

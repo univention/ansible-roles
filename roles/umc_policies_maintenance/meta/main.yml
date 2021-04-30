@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: umc_policies_maintenance
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Set UMC maintenance policy schedule.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

@@ -1,6 +1,6 @@
 galaxy_info:
   role_name: configure_saml_single_server
-  author: Team Phoenix
+  author: Configure SAML Server.
   description: Phoenix-Werkstatt
   company: Univention GmbH
 

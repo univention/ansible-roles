@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: install_service_selfservices
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Intall and configure portal selfservice.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

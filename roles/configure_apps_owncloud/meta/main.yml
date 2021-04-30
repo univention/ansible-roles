@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: configure_apps_owncloud
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Configure default settings for Owncloud.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

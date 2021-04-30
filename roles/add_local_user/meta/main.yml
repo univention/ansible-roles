@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: add_local_user
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Add local user with password or ssh-key.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

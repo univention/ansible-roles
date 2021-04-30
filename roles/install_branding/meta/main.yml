@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: install_branding
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Install customer branding for univention portal.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

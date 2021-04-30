@@ -1,6 +1,6 @@
 galaxy_info:
   role_name: custom_facts
-  author: Team Phoenix
+  author: Obtain and store custom facts about rollout.
   description: Phoenix-Werkstatt
   company: Univention GmbH
 

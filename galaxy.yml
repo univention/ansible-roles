@@ -59,3 +59,10 @@ repository: https://github.com/univention/ansible-modules
 
 # The URL to the collection issue tracker
 issues: https://forge.univention.org
+
+# Ignore irrelevant files
+build_ignore:
+  - .gitlab-ci.yml
+  - .gitkeep
+  - .gitignore
+  - '*.tar.gz'

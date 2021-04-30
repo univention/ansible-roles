@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: install_apps_ox_pre
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Pre-steps for OpenXchange (OX) univention app.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

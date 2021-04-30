@@ -1,7 +1,7 @@
 Cleanup Portal
 =========
 
-A brief description of the role goes here.
+Remove default and unused portal entries.
 
 Requirements
 ------------

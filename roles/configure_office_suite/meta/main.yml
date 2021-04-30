@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: configure_office_suite
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Configure and install office suite in Nextcloud/Owncloud.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

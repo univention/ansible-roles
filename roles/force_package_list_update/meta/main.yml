@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: force_package_list_update
-  author: Team Phoenix
-  description: Phoenix-Werkstatt
+  author: Univention
+  description: Force apt and univention package list cache update.
   company: Univention GmbH
 
   # If the issue tracker for your role is not on github, uncomment the
