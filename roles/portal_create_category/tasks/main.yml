@@ -31,7 +31,7 @@
       - "--dn"
       - "cn=domain,cn=portal,{{ portal_create_category_portal_dn }}"
       - "--append"
-      - "categories=cn={{ category['name'] }},cn=category,{{ portal_dn }}"
+      - "categories=cn={{ category['name'] }},cn=category,{{ portal_create_category_portal_dn }}"
   loop: "{{ portal_create_category_categories|selectattr('state', 'equalto', 'present')|default([])|flatten }}"
   loop_control:
     loop_var: "category"
