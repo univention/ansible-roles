@@ -59,7 +59,7 @@
     'cn=Domain Users,cn=groups,{{ improve_usability_user_config_basedn }}'
     --append
     serviceprovidergroup='SAMLServiceProviderIdentifier=https://{{ improve_usability_user_config_external_hostname }}/nextcloud/apps/user_saml/saml/metadata,cn=saml-serviceprovider,cn=univention,{{ improve_usability_user_config_basedn }}'
-  when: "'nextcloud' in ucs_setup_install_apps"
+  when: "'nextcloud' in improve_usability_user_config_install_apps"
   tags:
     - improve_usability_user_config
     - improve_usability_user_config_nextcloud_auth
