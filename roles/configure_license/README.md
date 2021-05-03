@@ -25,8 +25,6 @@ Role Variables
 - `configure_license_shop_id`(number): Which license shop to use when obtaining a new license for the server.
 - `configure_license_shop_username`(string): The shop's user name, needed for authentication.
 - `configure_license_max_users`(number): How many users to allow on the server.
-- `configure_license_organization`(string): Which organization the license belongs to.
-- `configure_license_email_address`(string): Which email address to register the license to.
 - `configure_license_basedn`(string): The LDAP base domain name.
 - `configure_license_type`(string): Choose one of `local_license` or `server_license`. When choosing `local_license` a license file name has to be provided otherwise choose `server_license` and one is generated; default: `server_license`.
 - `configure_license_file`(string): If `configure_license_type` set to `local_license` then provide license file name here; default: `false`.
