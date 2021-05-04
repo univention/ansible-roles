@@ -1,0 +1,10 @@
+---
+# tasks file for disable_piwik_tracking
+
+- name: "Disable Piwik Tracking"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/web/piwik: "false"
+  when: "disable_piwik_tracking_disable|bool"
+  tags:
+    - disable_piwik_tracking
