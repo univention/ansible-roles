@@ -30,7 +30,7 @@ stages:
   image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:main
   script:
     - ansible-galaxy collection build
-    - ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} univention-ucs_roles-${RELEASE_VERSION}.tar.gz
+    - ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} univention-ucs_roles-${VERSION}.tar.gz
   stage: publish
   variables:
     GIT_DEPTH: "1"
