@@ -101,7 +101,22 @@
           directory/manager/web/modules/users/user/add/default: "cn=Phoenix Sandbox-Benutzer,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}"
           directory/manager/web/modules/users/user/wizard/property/invite/default: "true"
       tags:
-        - improve_usability_user_config
+        - improve_usability_user_config_set_default_user_template
+
+    - name: "Set properties as required"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          directory/manager/web/modules/users/user/properties/mailPrimaryAddress/required: "{{ improve_usability_user_config_mailprimaryaddress_required }}"
+          directory/manager/web/modules/users/user/properties/firstname/required: "{{ improve_usability_user_config_firstname_required }}"
+      tags:
+        - improve_usability_user_config_require_properties
+
+    - name: "Disable wizard"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          directory/manager/web/modules/wizard/disabled: "{{ improve_usability_user_config_wizard_disabled }}"
+      tags:
+        - improve_usability_user_config_disable_wizard
   when: "'oxseforucs' in improve_usability_user_config_install_apps"
   tags:
     - improve_usability_user_config
