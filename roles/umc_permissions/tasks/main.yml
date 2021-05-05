@@ -201,7 +201,7 @@
 - name: "Remove any from passwordreset/blacklist"
   univention.ucs_modules.univention_config_registry:
     keys:
-      umc/self-service/passwordreset/blacklist/groups: ""
+      umc/self-service/passwordreset/blacklist/groups: "{{ umc_permissions_passwordreset_blacklist_groups }}"
   tags:
     - umc_permissions
     - umc_permissions_policy_selfservice_blacklist
