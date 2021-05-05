@@ -43,4 +43,6 @@ publish-mr:
   except:
     - main
     - tags
-  when: manual
+  rules:
+    - if: '${RELEASE_VERSION} =~ /^./'
+      when: manual
