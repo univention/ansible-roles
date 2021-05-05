@@ -16,7 +16,7 @@ stages:
     expire_in: 14 days
   before_script:
     # Check if release has to be build
-    - if [ -z "$RELEASE_VERSION" ]; then return 0; fi
+    - if [ -z "$RELEASE_VERSION" ]; then exit 0; fi
     # Set new semantic-release version
     - if [[ ${CI_COMMIT_BRANCH} != "main" ]];
       then
