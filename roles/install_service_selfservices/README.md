@@ -17,6 +17,8 @@ Role Variables
 - `install_service_selfservice_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_service_selfservice_service_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
 - `install_service_selfservice_external_hostname`(string): The host name that is used to talk to the system.
 - `install_service_selfservice_install_services`(list): A list of services to install.
+- `install_service_selfservice_domain_name`(string): The LDAP base domain name.
+- `install_service_selfservice_password_reset_filename`(string): The name of password reset template.
 
 Dependencies
 ------------

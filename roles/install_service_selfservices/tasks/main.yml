@@ -35,10 +35,28 @@
       self-service/ldap_attributes: "{{ install_service_selfservice_attributes }}"
       umc/self-service/profiledata/enabled: "true"
       umc/self-service/passwordreset/token_validity_period: 172800
-      umc/self-service/passwordreset/email/text_file: "/usr/share/univention-self-service/email_bodies/phoenix_passwordreset_email_body.txt"
   tags:
     - install_service_selfservice
     - install_service_selfservice_configure_ucr
+
+- name: "Configure Univention Config Registry"
+  vars:
+    install_service_selfservice_attributes: 'jpegPhoto,e-mail,roomnumber,departmentNumber,country,homeTelephoneNumber,mobileTelephoneNumber,homePostalAddress'
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/self-service/passwordreset/email/text_file: "/usr/share/univention-self-service/email_bodies/{{ install_service_selfservice_password_reset_filename }}"
+  when: "install_service_selfservice_password_reset_filename|length > 0"
+  tags:
+    - install_service_selfservice
+    - install_service_selfservice_configure_passwortreset_email
+
+- name: "Set sender address"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/self-service/passwordreset/email/sender_address: "Password Reset Service <noreply@{{ install_service_selfservice_domain_name }}>"
+  tags:
+    - install_service_selfservice
+    - install_service_selfservice_configure_passwortreset_sender
 
 - name: "Set frame ancestor for portal"
   univention.ucs_modules.univention_config_registry:
@@ -49,3 +67,4 @@
   tags:
     - install_service_selfservice
     - install_service_selfservice_configure_portal_frame
+
