@@ -1,8 +1,27 @@
 ---
 # tasks file for portal_create_category
 
-- name: "Create portal category"
+- name: "Get a list of already existing categories"
   ansible.builtin.command: >
+    udm portals/category list
+    --position "cn=category,{{ portal_create_category_portal_dn }}"
+  register: portal_create_category_categories_portal_categories
+  tags:
+    - portal_create_category
+    - portal_create_category_check_categories
+
+- name: "Create portal category"
+  vars:
+    portal_create_category_categories_portal_existing: "{{ portal_create_category_categories_portal_categories['stdout_lines']|regex_findall('cn=[a-zA-Z-]+')|map('regex_replace', '^cn=(.*)$', '\\1')|list|unique|lower}}"
+  ansible.builtin.command: >
+    udm portals/category
+    {% if category['name']|lower in portal_create_category_categories_portal_existing %}
+    modify
+    --dn cn={{ category['name'] }},cn=category,{{ portal_create_category_portal_dn }}
+    {% for lang, text in (category['display_name']|default({})).items() %}
+    --append displayName='{{ lang }} "{{ text }}"'
+    {% endfor %}
+    {% else %}
     udm portals/category create
     --ignore_exists
     --position cn=category,{{ portal_create_category_portal_dn }}
@@ -10,6 +29,7 @@
     --append displayName='{{ lang }} "{{ text }}"'
     {% endfor %}
     --set name='{{ category['name'] }}'
+    {% endif %}
   loop: "{{ [portal_create_category_categories|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
       portal_create_category_categories|selectattr('state', 'undefined')|list|default([])|flatten]|flatten }}"
   loop_control:
