@@ -1,15 +1,31 @@
 ---
 # tasks file for portal_create_entry
 
+- name: "Get a list of already existing entries"
+  ansible.builtin.command: >
+    udm portals/entry list
+    --position "cn=entry,{{ portal_create_entry_portal_dn }}"
+  register: portal_create_entry_portal_entries
+  tags:
+    - portal_create_entry
+    - portal_create_entry_check_entries
+
 - name: "Create entry in portal"
   vars:
     portal_create_entry_icon_data: "{{ lookup('file', entry['icon_file'])|string|b64encode
                 if 'icon_file' in entry else
                   None }}"
+    portal_create_entry_portal_entries_existing: "{{ portal_create_entry_portal_entries['stdout_lines']|regex_findall('cn=[a-zA-Z-]+')|map('regex_replace', '^cn=(.*)$', '\\1')|list|unique|lower}}"
   ansible.builtin.command: >
-    udm portals/{{ entry['class']|default('entry') }} create
+    udm portals/{{ entry['class']|default('entry') }}
+    {% if entry['name']|lower in portal_create_entry_portal_entries_existing %}
+    modify
+    --dn cn={{ entry['name'] }},cn={{ entry['class']|default('entry') }},{{ portal_create_entry_portal_dn }}
+    {% else %}
+    create
     --ignore_exists
     --position cn={{ entry['class']|default('entry') }},{{ portal_create_entry_portal_dn }}
+    {% endif %}
     {% if entry['class']|default('entry') == 'entry' %}
     --set activated=TRUE
     {% endif %}
