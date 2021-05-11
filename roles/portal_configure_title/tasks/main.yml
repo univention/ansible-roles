@@ -15,3 +15,18 @@
   tags:
     - portal_configure_title
     - portal_configure_title_set_title
+
+- name: "Append portal titles"
+  ansible.builtin.command:
+    argv:
+      - "udm"
+      - "portals/portal"
+      - "modify"
+      - "--dn"
+      - "cn=domain,cn=portal,cn=portals,cn=univention,{{ portal_create_category_basedn }}"
+      - "--append"
+      - "displayName='{{ item }}'"
+  loop: "{{ portal_configure_title_titles }}"
+  tags:
+    - portal_configure_title
+    - portal_configure_title_append_title
