@@ -1,7 +1,7 @@
 ---
 # tasks file for install_univention
 
-- name: "Install vial univention-install"
+- name: "Install via univention-install"
   ansible.builtin.command: "univention-install --yes {{ install_univention_install_name }}"
   register: install_univention_install
   retries: 10
