@@ -68,7 +68,6 @@
                   None }}"
     portal_create_entry_portal_entries_existing: "{{ portal_create_entry_portal_entries['stdout_lines']|regex_findall('cn=[a-zA-Z-]+')|map('regex_replace', '^cn=(.*)$', '\\1')|list|unique|lower}}"
   ansible.builtin.command: >
-    {% if entry['name']|lower in portal_create_entry_portal_entries_existing %}
     udm portals/{{ entry['class']|default('entry') }}
     modify
     --dn cn={{ entry['name'] }},cn={{ entry['class']|default('entry') }},{{ portal_create_entry_portal_dn }}
@@ -78,14 +77,14 @@
     {% for lang, text in (entry['display_name']|default({})).items() %}
     --append displayName='{{ lang }} "{{ text }}"'
     {% endfor %}
-    {% endif %}
   loop: "{{ [portal_create_entry_entries|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
       portal_create_entry_entries|selectattr('state', 'undefined')|list|default([])|flatten]|flatten }}"
   loop_control:
     loop_var: "entry"
   when: ('only' not in entry) or
         ('only' in entry and
-          portal_create_entry_install_list|intersect([entry['only']]|flatten)
+          portal_create_entry_install_list|intersect([entry['only']]|flatten) and
+          entry['name']|lower in portal_create_entry_portal_entries_existing
         )
   tags:
     - portal_create_entry
