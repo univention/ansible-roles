@@ -30,10 +30,10 @@
     --set activated=TRUE
     {% endif %}
     {% for lang, text in (entry['description']|default({})).items() %}
-    --append description='{{ lang }} "{{ text }}"'
+    --set description='{{ lang }} "{{ text }}"'
     {% endfor %}
     {% for lang, text in (entry['display_name']|default({})).items() %}
-    --append displayName='{{ lang }} "{{ text }}"'
+    --set displayName='{{ lang }} "{{ text }}"'
     {% endfor %}
     {% if portal_create_entry_icon_data != None %}
     --set icon='{{ portal_create_entry_icon_data }}'
@@ -46,6 +46,37 @@
     {% if 'allowed_groups' in entry %}
     {% for allowedgroup in entry['allowed_groups']|default([]) %}
     --set allowedGroups='{{ allowedgroup }}'
+    {% endfor %}
+    {% endif %}
+  loop: "{{ [portal_create_entry_entries|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
+      portal_create_entry_entries|selectattr('state', 'undefined')|list|default([])|flatten]|flatten }}"
+  loop_control:
+    loop_var: "entry"
+  when: ('only' not in entry) or
+        ('only' in entry and
+          portal_create_entry_install_list|intersect([entry['only']]|flatten)
+        )
+  tags:
+    - portal_create_entry
+    - portal_create_entry_create_entry
+
+
+- name: "Update entry in portal"
+  vars:
+    portal_create_entry_icon_data: "{{ lookup('file', entry['icon_file'])|string|b64encode
+                if 'icon_file' in entry else
+                  None }}"
+    portal_create_entry_portal_entries_existing: "{{ portal_create_entry_portal_entries['stdout_lines']|regex_findall('cn=[a-zA-Z-]+')|map('regex_replace', '^cn=(.*)$', '\\1')|list|unique|lower}}"
+  ansible.builtin.command: >
+    {% if entry['name']|lower in portal_create_entry_portal_entries_existing %}
+    udm portals/{{ entry['class']|default('entry') }}
+    modify
+    --dn cn={{ entry['name'] }},cn={{ entry['class']|default('entry') }},{{ portal_create_entry_portal_dn }}
+    {% for lang, text in (entry['description']|default({})).items() %}
+    --append description='{{ lang }} "{{ text }}"'
+    {% endfor %}
+    {% for lang, text in (entry['display_name']|default({})).items() %}
+    --append displayName='{{ lang }} "{{ text }}"'
     {% endfor %}
     {% endif %}
   loop: "{{ [portal_create_entry_entries|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
