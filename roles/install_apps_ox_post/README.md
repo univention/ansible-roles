@@ -19,6 +19,7 @@ Role Variables
 - `install_apps_ox_post_basedn`(string): The LDAP base domain name.
 - `install_apps_ox_post_external_hostname`(string): The host name that is used to talk to the system.
 - `install_apps_ox_post_ox_keystore_passphrase`(string): The passphrase for ox keystore.
+- `install_apps_ox_post_ox_drive_default`(string): Toggle OXDrive by setting `0`for disabled and `1` for enabled; default: `0`.
 
 Dependencies
 ------------
