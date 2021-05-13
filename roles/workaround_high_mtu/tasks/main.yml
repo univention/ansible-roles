@@ -1,0 +1,22 @@
+---
+# tasks file for workaround_high_mtu
+- name: "Handle docker HTTPS issues on high MTU"
+  block:
+    - name: "Patch docker Daemon to MTU 1400"
+      ansible.builtin.file:
+        dest: "/etc/systemd/system/docker.service.d/fixmtu.conf"
+        src: "fixmtu.conf"
+      tags:
+        - workaround_high_mtu_patch_serivce_config
+
+    - name: "Reload docker daemon"
+      ansible.builtin.systemd:
+        daemon_reload: true
+        state: "restarted"
+        name: "docker"
+      tags:
+        - workaround_high_mtu_reload_daemon
+
+  when: "ansible_default_ipv4['mtu'] < 1500"
+  tags:
+    - workaround_high_mtu
