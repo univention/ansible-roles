@@ -1,0 +1,18 @@
+---
+# tasks file for univention_firewall
+
+- name: "Configure Telegraf port in firewall"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      security/packetfilter/tcp/9273/all: "{{ univention_firewall_telegraf }}"
+  when: "univention_firewall_telegraf is defined and univention_firewall_telegraf|length > 0"
+  notify: "Restart univention-firewall"
+  tags:
+    - univention_firewall
+    - univention_firewall_telegraf
+
+- name: "Restart firewall"
+  ansible.builtin.meta: flush_handlers
+  tags:
+    - univention_firewall
+    - univention_firewall_restart
