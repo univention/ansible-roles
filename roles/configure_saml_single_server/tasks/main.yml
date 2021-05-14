@@ -17,6 +17,25 @@
     - configure_saml_single_server
     - configure_saml_single_server_run_saml_configuration_script
 
+- name: "Configure external SAML settings"
+  block:
+    - name: "Allow external SAML Auth in apache"
+      ansible.builtin.template:
+        dest: "/etc/univention/templates/files/etc/apache2/sites-available/ssl.d/99end"
+        src: "99end"
+      tags:
+        - configure_saml_single_server_external_saml_configure_apache
+
+    - name: "Update apache configuration from ucr"
+      ansible.builtin.command: "ucr commit /etc/apache2/sites-available/default-ssl"
+      tags:
+        - cconfigure_saml_single_server_external_saml_update_apache_configuration
+
+  when: "configure_saml_single_server_external"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_external_saml
+
 - name: "Run Univention saml join script"
   ansible.builtin.command: >
     univention-run-join-scripts --force
