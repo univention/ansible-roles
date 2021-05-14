@@ -22,7 +22,7 @@
     --append displayName='{{ lang }} "{{ text }}"'
     {% endfor %}
     {% else %}
-    udm portals/category create
+    create
     --ignore_exists
     --position cn=category,{{ portal_create_category_portal_dn }}
     {% for lang, text in (category['display_name']|default({})).items() %}
