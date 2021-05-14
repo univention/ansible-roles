@@ -24,9 +24,13 @@
     -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
     {% endif %}
     --run-scripts 91univention-saml.inst
+  notify: "Restart apache"
   tags:
     - configure_saml_single_server
     - configure_saml_single_server_saml_join_script
+
+- name: "Flush handlers to restart apache"
+  ansible.builtin.meta: flush_handlers
 
 - name: "Set UCR idp server variable"
   univention.ucs_modules.univention_config_registry:
