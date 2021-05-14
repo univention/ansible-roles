@@ -13,6 +13,8 @@ Role Variables
 --------------
 
 - `install_apps_ox_pre_external_hostname`(string): The host name that is used to talk to the system.
+- `install_apps_ox_pre_mail_domain`(string): The externally managed mail domain.
+- `install_apps_ox_pre_basedn`(string): The LDAP base domain name.
 
 Dependencies
 ------------
