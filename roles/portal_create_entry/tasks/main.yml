@@ -35,7 +35,7 @@
     {% for lang, text in (entry['display_name']|default({})).items() %}
     --set displayName='{{ lang }} "{{ text }}"'
     {% endfor %}
-    {% if portal_create_entry_icon_data != None %}
+    {% if portal_create_entry_icon_data != None and portal_create_entry_icon_data|length > 0 %}
     --set icon='{{ portal_create_entry_icon_data }}'
     {% endif %}
     {% if 'link' in entry %}
