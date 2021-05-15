@@ -41,6 +41,9 @@
     {% if 'link' in entry %}
     --set link='{{ entry['link'] }}'
     {% endif %}
+    {% if 'anonymous' in entry %}
+    --set anonymous='{{ entry['anonymous'] }}'
+    {% endif %}
     --set linkTarget={{ entry['linktarget']|default('useportaldefault') }}
     --set name='{{ entry['name'] }}'
     {% if 'allowed_groups' in entry %}
