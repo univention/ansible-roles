@@ -14,6 +14,7 @@
     udm mail/domain create
     --position "cn=domain,cn=mail,{{ install_apps_ox_pre_basedn }}"
     --set name="{{ install_apps_ox_pre_mail_domain }}"
+    --ignore_exists
   when: "install_apps_ox_pre_mail_domain is defined and
          install_apps_ox_pre_mail_domain|length > 0"
   tags:
