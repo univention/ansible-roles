@@ -1,0 +1,15 @@
+---
+# tasks file for ldapsearch_user
+
+- name: "Create LDAPSearch user for Nextcloud"
+  ansible.builtin.command: >
+    udm users/ldap create
+      --position "cn=users,{{ ldapsearch_user_basedn }}"
+      --set name="ldapsearchnc"
+      --set username="ldapsearchnc"
+      --set lastname="LDAPSearch-Nextcloud"
+      --set password="{{ ldapsearch_user_nextcloud_password }}"
+  when: "'nextcloud' in ldapsearch_user_install_apps"
+  tags:
+    - ldapsearch_user
+    - ldapsearch_user_nextcloud

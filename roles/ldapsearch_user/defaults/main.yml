@@ -1,0 +1,6 @@
+---
+# defaults file for ldapsearch_user
+
+ldapsearch_user_basedn: ""
+ldapsearch_user_nextcloud_password: ""
+ldapsearch_user_install_apps: ""
