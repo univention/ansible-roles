@@ -199,7 +199,7 @@
 - name: "Toogle OXDrive"
   ansible.builtin.command: >
     udm settings/extended_attribute modify
-    --dn "cn=oxDrive,cn=open-xchange,cn=custom attributes,cn=univention,{{ install_apps_ox_post_basedn }}
+    --dn "cn=oxDrive,cn=open-xchange,cn=custom attributes,cn=univention,{{ install_apps_ox_post_basedn }}"
     --set default={{ install_apps_ox_post_ox_drive_default }}
   tags:
     - install_apps_ox_post
