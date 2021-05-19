@@ -198,6 +198,20 @@
     - umc_permissions
     - umc_permissions_allow_groups_add_to_users
 
+- name: "Allow users to be added to groups"
+  ansible.builtin.command:
+    argv:
+      - "udm"
+      - "settings/umc_operationset"
+      - "modify"
+      - "--dn"
+      - "cn=udm-groups,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
+      - "--append"
+      - "operation=udm/syntax/choices:objectType=users/user"
+  tags:
+    - umc_permissions
+    - umc_permissions_allow_users_add_to_groups
+
 - name: "Remove any from passwordreset/blacklist"
   univention.ucs_modules.univention_config_registry:
     keys:
