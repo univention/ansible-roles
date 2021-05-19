@@ -1,0 +1,102 @@
+---
+# tasks file for ox_connector
+
+
+- name: "Set static host entry of ox server"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "hosts/static/{{ ox_connector_soap_server_ip }}"
+        value: "{{ ox_connector_soap_server_name }}"
+  tags:
+    - ox_connector
+    - ox_connector_static_ox_host
+
+- name: "Run UCS install apps: Install Packages"
+  vars:
+    install_packages_app_version_map: "{{ ox_connector_app_version_map }}"
+    install_packages_temp_pw_file: "{{ ox_connector_temp_pw_file }}"
+    install_packages_install_apps: "ox-connector"
+    install_packages_additional_options: >
+      DEFAULT_CONTEXT=1
+      OX_SOAP_SERVER=https://{{ ox_connector_soap_server_name }}/
+      OX_IMAP_SERVER=imap://127.0.0.1:143
+      OX_SMTP_SERVER=smtp://127.0.0.1:26
+      OX_MASTER_ADMIN={{ ox_connector_master_admin }}
+      OX_MASTER_PASSWORD={{ ox_connector_master_password }}
+  ansible.builtin.include_role:
+    name: install_packages
+  tags:
+    - ox_connector
+    - ox_connector_install
+
+- name: "Create ox context"
+  ansible.builtin.command: >
+    udm oxmail/oxcontext create
+    --position "cn=open-xchange,{{ ox_connector_basedn }}"
+    --set contextid=1
+    --set name=Default
+    --ignore_exists
+  tags:
+    - ox_connector
+    - ox_connector_ox_context
+
+- name: "Create ox accessprofile"
+  ansible.builtin.command: >
+    udm oxmail/accessprofile create
+    --position "cn=accessprofiles,cn=open-xchange,{{ ox_connector_basedn }}"
+    --set name=phoenix_standard
+    --set displayName="Phoenix Standard"
+    --set calendar=TRUE
+    --set collectemailaddresses=TRUE
+    --set contacts=TRUE
+    --set delegatetask=TRUE
+    --set editgroup=TRUE
+    --set editpassword=TRUE
+    --set editpublicfolders=TRUE
+    --set editresource=TRUE
+    --set ical=TRUE
+    --set multiplemailaccounts=TRUE
+    --set readcreatesharedfolders=TRUE
+    --set subscription=TRUE
+    --set tasks=TRUE
+    --set vcard=TRUE
+    --set webdav=TRUE
+    --set webmail=TRUE
+    --ignore_exists
+  tags:
+    - ox_connector
+    - ox_connector_add_phoenix_accessprofile
+
+- name: "Remove existing accessprofiles"
+  ansible.builtin.command: >
+    udm oxmail/accessprofile remove
+    --dn="{{ item }},{{ ox_connector_basedn }}"
+    --ignore_not_exists
+  loop:
+    - "cn=webmail,cn=accessprofiles,cn=open-xchange"
+    - "cn=webmail_drive,cn=accessprofiles,cn=open-xchange"
+    - "cn=pim,cn=accessprofiles,cn=open-xchange"
+    - "cn=pim_drive,cn=accessprofiles,cn=open-xchange"
+    - "cn=groupware,cn=accessprofiles,cn=open-xchange"
+    - "cn=premium,cn=accessprofiles,cn=open-xchange"
+  tags:
+    - ox_connector
+    - ox_connector_remove_existing_accessprofiles
+
+- name: "Modify usertemplate"
+  ansible.builtin.command: >
+    udm settings/usertemplate modify
+    --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
+    --set name="Benutzer mit Groupware-Konto"
+    --set oxAccess="phoenix_standard"
+  tags:
+    - ox_connector
+    - ox_connector_modify_usertemplate
+
+- name: "Add default dn to users"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/users/user/add/default: "cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,${{ ox_connector_basedn }}"
+  tags:
+    - ox_connector
+    - ox_connector_default_dn

@@ -1,0 +1,10 @@
+---
+# defaults file for ox_connector
+
+ox_connector_basedn: ""
+ox_connector_app_version_map: ""
+ox_connector_temp_pw_file: ""
+ox_connector_soap_server_name: ""
+ox_connector_soap_server_ip: ""
+ox_connector_master_admin: ""
+ox_connector_master_password: ""
