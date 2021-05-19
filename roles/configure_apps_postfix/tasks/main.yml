@@ -50,6 +50,13 @@
 
 - name: "Set mail relayhost password authentication"
   block:
+    - name: "Enable mail relayauth"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          mail/relayauth: "yes"
+      tags:
+        - configure_apps_postfix_relay_set_auth_enable_relayauth
+
     - name: "Update smtp_auth file"
       ansible.builtin.lineinfile:
         path: "/etc/postfix/smtp_auth"
