@@ -10,7 +10,7 @@
     - configure_keycloak_saml
     - configure_keycloak_saml_modify_domain_users_group
 
-- name: "Create SAML Service prodiver"
+- name: "Create SAML Service provider"
   ansible.builtin.command: >
     udm saml/serviceprovider create
     --position "cn=saml-serviceprovider,cn=univention,{{ configure_keycloak_saml_basedn }}"
