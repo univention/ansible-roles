@@ -85,26 +85,26 @@
       tags:
         - improve_usability_user_config_remove_selfservice
 
-    - name: "Rename user template to 'Phoenix Sandbox-Benutzer'"
+    - name: "Rename user template to 'Phoenix Groupware-Benutzer'"
       ansible.builtin.command: >
         udm settings/usertemplate modify
         --dn
         'cn=open-xchange groupware account,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}'
         --set
-        name='Phoenix Sandbox-Benutzer'
+        name='Phoenix Groupware-Benutzer'
       tags:
         - improve_usability_user_config_remame_user_template
+
+    - name: "Set Phoenix user template as default"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          directory/manager/web/modules/users/user/add/default: "cn=Phoenix Groupware-Benutzer,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}"
+          directory/manager/web/modules/users/user/wizard/property/invite/default: "true"
+      tags:
+        - improve_usability_user_config
+        - improve_usability_user_config_directory_manager_settings
 
   when: "'oxseforucs' in improve_usability_user_config_install_apps"
   tags:
     - improve_usability_user_config
     - improve_usability_user_config_user_template
-
-- name: "Set Phoenix user template as default"
-  univention.ucs_modules.univention_config_registry:
-    keys:
-      directory/manager/web/modules/users/user/add/default: "cn=Phoenix Sandbox-Benutzer,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}"
-      directory/manager/web/modules/users/user/wizard/property/invite/default: "true"
-  tags:
-    - improve_usability_user_config
-    - improve_usability_user_config_directory_manager_settings
