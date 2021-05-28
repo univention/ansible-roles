@@ -1,0 +1,10 @@
+---
+# defaults file for set_dns_glue_record
+
+set_dns_glue_record_create_external_hostname_glue_record: true
+set_dns_glue_record_fqdn: ""
+set_dns_glue_record_domain_name: ""
+set_dns_glue_record_basedn: ""
+set_dns_glue_record_host_name: "{{ set_dns_glue_record_fqdn.split('.')|first }}"
+set_dns_glue_record_superordinate:  "zoneName={{ domain_name }},cn=dns,{{ basedn }}"
+set_dns_glue_record_glue_record_nameserver: ""

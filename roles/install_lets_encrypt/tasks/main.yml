@@ -1,0 +1,145 @@
+---
+# tasks file for install_lets_encrypt
+
+- name: "Update package list"
+  ansible.builtin.include_role:
+    name: force_package_list_update
+  vars:
+    force_package_refresh: true
+  tags:
+    - install_lets_encrypt
+    - install_lets_encrypt_update_packages
+
+- name: "Update installed applications list"
+  ansible.builtin.include_role:
+    name: get_installed_apps
+  tags:
+    - install_lets_encrypt_get_installed_apps
+    - install_lets_encrypt
+
+- name: "Remove letsencrypt"
+  ansible.builtin.include_role:
+    name: remove_packages
+  vars:
+    remove_packages_temp_pw_file: "{{ install_lets_encrypt_temp_pw_file }}"
+    remove_packages_remove_apps:
+      - letsencrypt
+    # var 'get_installed_apps_installed_apps' is set in force_package_list_update > get_installed_apps
+    remove_packages_currently_installed_apps: "{{ get_installed_apps_installed_apps }}"
+    remove_packages_force_package_upgrade: "{{ install_lets_encrypt_force_package_upgrade }}"
+    remove_packages_app_version_map: "{{ install_lets_encrypt_service_version_map }}"
+    remove_packages_app_name_list: "{{ install_lets_encrypt_service_name_list }}"
+  tags:
+    - install_lets_encrypt
+    - install_lets_encrypt_remove_letsencrypt
+
+- name: "Install letsencrypt"
+  ansible.builtin.include_role:
+    name: install_packages
+  vars:
+    install_packages_temp_pw_file: "{{ install_lets_encrypt_temp_pw_file }}"
+    install_packages_install_apps:
+      - letsencrypt
+    # var 'get_installed_apps_installed_apps' is set in force_package_list_update > get_installed_apps
+    remove_packages_currently_installed_apps: "{{ get_installed_apps_installed_apps }}"
+    install_packages_force_package_upgrade: "{{ install_lets_encrypt_force_package_upgrade }}"
+    install_packages_app_version_map: "{{ install_lets_encrypt_service_version_map }}"
+    install_packages_app_name_list: "{{ install_lets_encrypt_service_name_list }}"
+  tags:
+    - install_lets_encrypt
+    - install_lets_encrypt_install_letsencrypt
+
+- name: "Configure lets encrypt (UCR)"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      letsencrypt/domains: "{{ install_lets_encrypt_external_hostname }}"
+      letsencrypt/services/apache2: true
+      letsencrypt/services/postfix: true
+      letsencrypt/services/dovecot: true
+      letsencrypt/staging: "{{ install_lets_encrypt_use_letsencrypt_staging }}"
+  notify:
+    - "Restart apache"
+    - "Restart dovecot"
+    - "Restart postfix"
+  tags:
+    - install_lets_encrypt
+    - install_lets_encrypt_configure_letsencrypt
+
+- name: "Install lets encrypt staging root certificate"
+  vars:
+    install_lets_encrypt_system_certificates_configuration_file: "/etc/ca-certificates.conf"
+    install_lets_encrypt_system_certificates_base_directory: "/usr/share/ca-certificates"
+    install_lets_encrypt_letsencrypt_staging_directory: "lets-encrypt-staging"
+    install_lets_encrypt_letsencrypt_staging_cert_base_url: "https://letsencrypt.org/certs/staging"
+    install_lets_encrypt_letsencrypt_staging_cert_file_name: "letsencrypt-stg-root-x1.pem"
+  block:
+    - name: "Ensure that the ca root certificate storage directory exists"
+      ansible.builtin.file:
+        path: "{{ install_lets_encrypt_system_certificates_base_directory }}/{{ install_lets_encrypt_letsencrypt_staging_directory }}"
+        owner: "root"
+        group: "root"
+        mode: "0755"
+        state: "directory"
+      tags:
+        - install_lets_encrypt_configure_letsencrypt_staging_certificate_cert_dir
+
+    - name: "Fetch Let's Encrypt Staging CA root certificate"
+      ansible.builtin.get_url:
+        url: "{{ install_lets_encrypt_letsencrypt_staging_cert_base_url }}/{{ install_lets_encrypt_letsencrypt_staging_cert_file_name }}"
+        dest: "{{ install_lets_encrypt_system_certificates_base_directory }}/{{ install_lets_encrypt_letsencrypt_staging_directory }}/"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+        checksum: "sha1:98a7b2dc519a9e82d318e9c4a8df5f965bfe5369"
+      register: install_lets_encrypt_fetch_le_staging_root_cert_result
+      retries: 10
+      delay: 10
+      until: "install_lets_encrypt_fetch_le_staging_root_cert_result is succeeded"
+      tags:
+        - install_lets_encrypt_configure_letsencrypt_staging_certificate_fetch_cert
+
+    - name: "Ensure that the encrypt staging root certificate is known to the system"
+      ansible.builtin.lineinfile:
+        path: "{{ install_lets_encrypt_system_certificates_configuration_file }}"
+        line: "{{ install_lets_encrypt_letsencrypt_staging_directory }}/{{ install_lets_encrypt_letsencrypt_staging_cert_file_name }}"
+        regexp: "^{{ install_lets_encrypt_letsencrypt_staging_directory }}"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+        state: "present"
+      notify:
+        - "Update CA certificates"
+        - "Restart openid-connect container"
+      tags:
+        - install_lets_encrypt_configure_letsencrypt_staging_certificate_activate_cert
+
+  when: "install_lets_encrypt_use_letsencrypt_staging|bool"
+  tags:
+    - install_lets_encrypt
+    - install_lets_encrypt_configure_letsencrypt_staging_certificate
+
+- name: "Force service restart after changing the certificates"
+  ansible.builtin.meta: flush_handlers
+  tags:
+    - install_lets_encrypt
+    - install_lets_encrypt__flush_handlers
+
+- name: "Run letsencrypt staging workaround"
+  ansible.builtin.include_role:
+    name: workaround_acmetiny_upgrade
+  vars:
+    workaround_acmetiny_upgrade_temp_dir: "{{ install_lets_encrypt_temp_dir }}"
+  when:
+    - "install_lets_encrypt_implement_ugly_letsencrypt_workaround|bool"
+    - "install_lets_encrypt_use_letsencrypt_staging|bool"
+  tags:
+    - install_lets_encrypt
+    - install_lets_encrypt_letscrypt_workaround
+
+- name: "Run letsencrypt config script"
+  ansible.builtin.command: "/usr/share/univention-letsencrypt/setup-letsencrypt"
+  notify:
+    - "Update CA certificates"
+  tags:
+    - install_lets_encrypt
+    - install_lets_encrypt_run_letsencrypt_config_script

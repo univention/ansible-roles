@@ -1,0 +1,17 @@
+Starting deployment for {{ inventory_hostname }}.
+External hostname: {{ deployment_message_external_hostname }}
+domain name: {{ deployment_message_domain_name }}
+base dn: {{ deployment_message_basedn }}
+
+This server is going to fulfill the following role: {{ "master/standalone" if deployment_message_server_type == 'master' else deployment_message_server_type }}
+
+SAML is going to be configured in {{ "master/standalone" if deployment_message_saml_config_type != "failover" else deployment_message_saml_config_type }} mode.
+
+This host currently is in the following groups: {{ group_names|join(", ") }}
+This deployment uses the following versions:
+{% for key, value in deployment_message_custom_fact_deployment.items()|default([]) %}
+{{ key }}: {{ value }}
+{% endfor %}
+
+We're about to pause for {{ deployment_message_verification_pause_duration }} seconds
+Please verify that this is correct, please press ctrl-c followed by a to abort if it's not

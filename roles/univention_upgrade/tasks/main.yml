@@ -1,0 +1,6 @@
+---
+# tasks file for univention_upgrade
+- name: 'Do univention-upgrade'
+  ansible.builtin.command: "univention-upgrade --ignoressh --ignoreterm --noninteractive --updateto={{ univention_upgrade_version }}"
+  tags:
+    - univention_upgrade

@@ -1,0 +1,9 @@
+---
+# defaults file for add_local_user
+
+add_local_user_user:
+  name: "ansible"
+  comment: "ansible user"
+  password: "{{ 'ansible'|password_hash('sha512') }}"
+
+add_local_user_default_shell: "/bin/bash"

@@ -1,0 +1,110 @@
+---
+# tasks file for improve_usability_user_config
+
+- name: "Make Administrator an OX user"
+  ansible.builtin.command:
+    argv:
+      - "udm"
+      - "users/user"
+      - "modify"
+      - "--dn"
+      - "uid=Administrator,cn=users,{{ improve_usability_user_config_basedn }}"
+      - "--set"
+      - "isOxUser=OK"
+      - "--set"
+      - "mailPrimaryAddress=admin@{{ improve_usability_user_config_external_hostname }}"
+      - "--append"
+      - "mailAlternativeAddress=abuse@{{ improve_usability_user_config_external_hostname }}"
+      - "--append"
+      - "mailAlternativeAddress=hostmaster@{{ improve_usability_user_config_external_hostname }}"
+      - "--append"
+      - "mailAlternativeAddress=postmaster@{{ improve_usability_user_config_external_hostname }}"
+      - "--append"
+      - "mailAlternativeAddress=system-mails@{{ improve_usability_user_config_external_hostname }}"
+      - "--append"
+      - "mailAlternativeAddress=root@{{ improve_usability_user_config_external_hostname }}"
+      - "--append"
+      - "mailAlternativeAddress=webmaster@{{ improve_usability_user_config_external_hostname }}"
+      - "--set"
+      - "firstname=Addison"
+  when: "'oxseforucs' in improve_usability_user_config_install_apps"
+  tags:
+    - improve_usability_user_config
+    - improve_usability_user_config_make_admin_ox_user
+
+- name: "Remove 'self registered' permission from  Administrator"
+  ansible.builtin.command: >
+    udm settings/directory modify
+    --dn 'cn=default containers,cn=univention,{{ improve_usability_user_config_basedn }}'
+    --remove users=cn='self registered users,{{ improve_usability_user_config_basedn }}'
+  tags:
+    - improve_usability_user_config
+    - improve_usability_user_config_selfregistered_permission
+
+- name: "Add SAML Auth to all users"
+  ansible.builtin.command: >
+    udm groups/group modify
+    --dn
+    'cn=Domain Users,cn=groups,{{ improve_usability_user_config_basedn }}'
+    --append
+    serviceprovidergroup='SAMLServiceProviderIdentifier=https://{{ improve_usability_user_config_external_hostname }}/appsuite/,cn=saml-serviceprovider,cn=univention,{{ improve_usability_user_config_basedn }}'
+  tags:
+    - improve_usability_user_config
+    - improve_usability_user_config_saml_auth
+
+- name: "Add NextCloud Auth to all users"
+  ansible.builtin.command: >
+    udm groups/group modify
+    --dn
+    'cn=Domain Users,cn=groups,{{ improve_usability_user_config_basedn }}'
+    --append
+    serviceprovidergroup='SAMLServiceProviderIdentifier=https://{{ improve_usability_user_config_external_hostname }}/nextcloud/apps/user_saml/saml/metadata,cn=saml-serviceprovider,cn=univention,{{ improve_usability_user_config_basedn }}'
+  when: "'nextcloud' in improve_usability_user_config_install_apps"
+  tags:
+    - improve_usability_user_config
+    - improve_usability_user_config_nextcloud_auth
+
+- name: "Modify OX user template"
+  block:
+    - name: "Change primary mail address in OX user template"
+      ansible.builtin.command: >
+        udm settings/usertemplate modify
+        --dn
+        'cn=open-xchange groupware account,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}'
+        --set
+        mailPrimaryAddress='<username>@{{ improve_usability_user_config_external_hostname }}'
+      tags:
+        - improve_usability_user_config_change_primary_mail_address
+
+    # only have one user template (the ox template; call it phoenix)
+    - name: "Remove selfservice user template"
+      ansible.builtin.command: >
+        udm settings/usertemplate remove
+        --dn
+        cn=selfserviceregistrationtemplate,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}
+      tags:
+        - improve_usability_user_config_remove_selfservice
+
+    - name: "Rename user template to 'Phoenix Groupware-Benutzer'"
+      ansible.builtin.command: >
+        udm settings/usertemplate modify
+        --dn
+        'cn=open-xchange groupware account,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}'
+        --set
+        name='Phoenix Groupware-Benutzer'
+      tags:
+        - improve_usability_user_config_remame_user_template
+
+    - name: "Set Phoenix user template as default"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          directory/manager/web/modules/users/user/add/default: "cn=Phoenix Groupware-Benutzer,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}"
+          directory/manager/web/modules/users/user/wizard/property/invite/default: "true"
+      tags:
+        - improve_usability_user_config
+        - improve_usability_user_config_directory_manager_settings
+
+  when: "'oxseforucs' in improve_usability_user_config_install_apps"
+  tags:
+    - improve_usability_user_config
+    - improve_usability_user_config_user_template

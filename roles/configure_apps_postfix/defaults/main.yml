@@ -1,0 +1,10 @@
+---
+# defaults file for configure_apps_postfix
+
+configure_apps_postfix_domain_name: ""
+configure_apps_postfix_external_hostname: ""
+configure_apps_postfix_relay_host: ""
+configure_apps_postfix_relay_port: 25
+configure_apps_postfix_relay_username: ""
+configure_apps_postfix_relay_password: ""
+configure_apps_postfix_use_relay_host: false

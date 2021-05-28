@@ -1,0 +1,8 @@
+---
+# defaults file for portal_create_entry
+portal_create_entry_base_dn: ""
+portal_create_entry_portal_dn: "cn=portals,cn=univention,{{ portal_create_entry_base_dn }}"
+portal_create_entry_entries: []
+portal_create_entry_install_list: []
+portal_create_entry_member_attribute_map: {}
+portal_create_entry_category_map: {}

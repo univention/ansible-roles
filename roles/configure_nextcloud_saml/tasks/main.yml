@@ -1,0 +1,19 @@
+---
+# tasks file for configure_nextcloud_saml
+
+- name: "Configure NextCloud app for single SAML backend"
+  ansible.builtin.command:
+    argv:
+      - "univention-app"
+      - "shell"
+      - "nextcloud"
+      - "sudo"
+      - "-u"
+      - "www-data"
+      - "/var/www/html/occ"
+      - "config:app:set"
+      - "user_saml"
+      - "general-allow_multiple_user_back_ends"
+      - "--value=0"
+  tags:
+    - configure_nextcloud_saml

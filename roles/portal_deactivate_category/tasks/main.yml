@@ -1,0 +1,33 @@
+---
+# tasks file for portal_deactivate_category
+
+- name: "Check if category that is about to be deactivated exists to begin with"
+  ansible.builtin.command: >
+    udm portals/category list
+    --position "cn=category,{{ category['dn']|default(portal_deactivate_category_portal_dn) }}"
+    --filter "cn={{ category['name'] }}"
+  loop: "{{ portal_deactivate_category_categories|selectattr('state', 'defined')|selectattr('state', 'equalto', 'deactivated')|list|default([])|flatten }}"
+  loop_control:
+    loop_var: "category"
+  register: portal_deactivate_category_existing_portal_categories
+  when:
+    - ('only' not in category) or
+        ('only' in category and
+          portal_deactivate_category_install_list|intersect([category['only']]|flatten)
+        )
+  tags:
+    - portal_deactivate_category
+    - portal_deactivate_category_check_categories
+
+- name: "Deactivate existing portal category"
+  vars:
+    category: "{{ item.item }}"
+  ansible.builtin.command: >
+    udm portals/category modify
+    --dn 'cn={{ category["name"] }},cn=category,{{ category["dn"]|default(portal_deactivate_category_portal_dn) }}'
+    --set activated="FALSE"
+  ignore_errors: true
+  loop: "{{ portal_deactivate_category_existing_portal_categories['results']|default({}) }}"
+  tags:
+    - portal_deactivate_category
+    - portal_deactivate_categorydeactivate_category

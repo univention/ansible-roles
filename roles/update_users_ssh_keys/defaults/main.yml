@@ -1,0 +1,4 @@
+---
+# defaults file for update_users_ssh_keys
+
+update_users_ssh_keys_user: ""

@@ -1,0 +1,6 @@
+---
+# defaults file for portal_create_category
+portal_create_category_base_dn: ""
+portal_create_category_portal_dn: "cn=portals,cn=univention,{{ portal_create_category_base_dn }}"
+portal_create_category_categories: []
+portal_create_category_install_list: []

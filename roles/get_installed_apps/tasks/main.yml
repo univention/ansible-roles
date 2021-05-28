@@ -1,0 +1,19 @@
+---
+# tasks file for get_installed_apps
+
+- name: "Get app list"
+  ansible.utils.cli_parse:
+    command: "univention-app info"
+    parser:
+      name: "ansible.netcommon.native"
+  register: get_installed_apps_installed_apps_list
+  tags:
+    - get_installed_apps_cli_parse
+    - get_installed_apps
+
+- name: "Convert app list into '<app>: <version>' dictionary"
+  ansible.builtin.set_fact:
+    get_installed_apps_installed_apps: "{{ lookup('template', 'convert_app_list.j2')|from_yaml|items2dict }}"
+  tags:
+    - get_installed_apps_convert_list_to_dict
+    - get_installed_apps

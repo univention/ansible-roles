@@ -1,0 +1,117 @@
+---
+# tasks file for configure_saml_single_server
+
+- name: "Set basic UCR config variables"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      ucs/server/sso/autoregistraton: "no"
+      saml/idp/entityID: "https://{{ configure_saml_single_server_external_hostname }}/simplesamlphp/saml2/idp/metadata.php"
+      saml/idp/certificate/privatekey: "/etc/simplesamlphp/{{ configure_saml_single_server_external_hostname }}-idp-certificate.key"
+      saml/idp/certificate/certificate: "/etc/simplesamlphp/{{ configure_saml_single_server_external_hostname }}-idp-certificate.crt"
+      ucs/server/sso/fqdn: "{{ configure_saml_single_server_external_hostname }}"
+      umc/saml/sp-server: "{{ configure_saml_single_server_external_hostname }}"
+      ucs/server/sso/virtualhost: "false"
+      apache2/ssl/certificate: "/etc/univention/ssl/{{ configure_saml_single_server_external_hostname }}/cert.pem"
+      apache2/ssl/key: "/etc/univention/ssl/{{ configure_saml_single_server_external_hostname }}/private.key"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_run_saml_configuration_script
+
+- name: "Configure external SAML settings"
+  block:
+    - name: "Allow external SAML Auth in apache"
+      ansible.builtin.template:
+        dest: "/etc/univention/templates/files/etc/apache2/sites-available/ssl.d/99end"
+        src: "99end"
+      tags:
+        - configure_saml_single_server_external_saml_configure_apache
+
+    - name: "Update apache configuration from ucr"
+      ansible.builtin.command: "ucr commit /etc/apache2/sites-available/default-ssl"
+      tags:
+        - configure_saml_single_server_external_saml_update_apache_configuration
+
+  when: "configure_saml_single_server_external"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_external_saml
+
+- name: "Run Univention saml join script"
+  ansible.builtin.command: >
+    univention-run-join-scripts --force
+    {% if configure_saml_single_server_type == "backup" %}
+    -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
+    {% endif %}
+    --run-scripts 91univention-saml.inst
+  notify: "Restart apache"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_saml_join_script
+
+- name: "Flush handlers to restart apache"
+  ansible.builtin.meta: flush_handlers
+
+- name: "Workaround: use local server as host for external address"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "hosts/static/{{ ansible_default_ipv4['address'] }}"
+        value: "{{ configure_saml_single_server_external_hostname }}"
+  when: "configure_saml_single_server_use_workaround_external_idp_server is defined and configure_saml_single_server_use_workaround_external_idp_server|bool"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_workaround_external_idp_server
+
+- name: "Set UCR idp server variable"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/saml/idp-server: "https://{{ configure_saml_single_server_external_hostname }}/simplesamlphp/saml2/idp/metadata.php"
+  register: configure_saml_single_server_idp_output
+  failed_when: "configure_saml_single_server_idp_output.rc is defined and configure_saml_single_server_idp_output.rc > 0"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_idp_ucr_variable
+
+- name: "Workaround: use local server as host for external address"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "hosts/static/{{ ansible_default_ipv4['address'] }}"
+        value: "{{ configure_saml_single_server_external_hostname }}"
+    state: "absent"
+  when: "configure_saml_single_server_use_workaround_external_idp_server is defined and configure_saml_single_server_use_workaround_external_idp_server|bool"
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_workaround_external_idp_server
+
+- name: "Run Univention management console join script"
+  ansible.builtin.command: >
+    univention-run-join-scripts --force
+    {% if configure_saml_single_server_type == "backup" %}
+    -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
+    {% endif %}
+    --run-scripts 92univention-management-console-web-server.inst
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_management_console_script
+
+- name: "Remove default SAML provider"
+  ansible.builtin.command:
+    argv:
+      - "udm"
+      - "saml/serviceprovider"
+      - "remove"
+      - "--dn"
+      - "{{ item }}"
+      - "--ignore_not_exists"
+  loop:
+    - "SAMLServiceProviderIdentifier=openid-connect-provider,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
+    - "SAMLServiceProviderIdentifier=google.com,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
+    - "SAMLServiceProviderIdentifier=https://sp.testshib.org/shibboleth-sp,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
+    - "SAMLServiceProviderIdentifier=https://saml.salesforce.com,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
+  when: >
+    configure_saml_single_server_basedn is defined and
+    configure_saml_single_server_basedn|length > 0 and
+    configure_saml_single_server_remove_default_saml_provider is defined and
+    configure_saml_single_server_remove_default_saml_provider|bool
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_remove_default_saml_provider

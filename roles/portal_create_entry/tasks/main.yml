@@ -1,0 +1,113 @@
+---
+# tasks file for portal_create_entry
+
+- name: "Get a list of already existing entries"
+  ansible.builtin.command: >
+    udm portals/entry list
+    --position "cn=entry,{{ portal_create_entry_portal_dn }}"
+  register: portal_create_entry_portal_entries
+  tags:
+    - portal_create_entry
+    - portal_create_entry_check_entries
+
+- name: "Create entry in portal"
+  vars:
+    portal_create_entry_icon_data: "{{ lookup('file', entry['icon_file'])|string|b64encode
+                if 'icon_file' in entry else
+                  None }}"
+    portal_create_entry_portal_entries_existing: "{{ portal_create_entry_portal_entries['stdout_lines']|regex_findall('cn=[a-zA-Z-]+')|map('regex_replace', '^cn=(.*)$', '\\1')|list|unique|lower}}"
+  ansible.builtin.command: >
+    udm portals/{{ entry['class']|default('entry') }}
+    {% if entry['name']|lower in portal_create_entry_portal_entries_existing %}
+    modify
+    --dn cn={{ entry['name'] }},cn={{ entry['class']|default('entry') }},{{ portal_create_entry_portal_dn }}
+    {% else %}
+    create
+    --ignore_exists
+    --position cn={{ entry['class']|default('entry') }},{{ portal_create_entry_portal_dn }}
+    {% endif %}
+    {% if entry['class']|default('entry') == 'entry' %}
+    --set activated=TRUE
+    {% endif %}
+    {% for lang, text in (entry['description']|default({})).items() %}
+    --set description='{{ lang }} "{{ text }}"'
+    {% endfor %}
+    {% for lang, text in (entry['display_name']|default({})).items() %}
+    --set displayName='{{ lang }} "{{ text }}"'
+    {% endfor %}
+    {% if portal_create_entry_icon_data != None and portal_create_entry_icon_data|length > 0 %}
+    --set icon='{{ portal_create_entry_icon_data }}'
+    {% endif %}
+    {% if 'link' in entry %}
+    --set link='{{ entry['link'] }}'
+    {% endif %}
+    {% if 'anonymous' in entry %}
+    --set anonymous='{{ entry['anonymous'] }}'
+    {% endif %}
+    --set linkTarget={{ entry['linktarget']|default('useportaldefault') }}
+    --set name='{{ entry['name'] }}'
+    {% if 'allowed_groups' in entry %}
+    {% for allowedgroup in entry['allowed_groups']|default([]) %}
+    --set allowedGroups='{{ allowedgroup }}'
+    {% endfor %}
+    {% endif %}
+  loop: "{{ [portal_create_entry_entries|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
+      portal_create_entry_entries|selectattr('state', 'undefined')|list|default([])|flatten]|flatten }}"
+  loop_control:
+    loop_var: "entry"
+  when: ('only' not in entry) or
+        ('only' in entry and
+          portal_create_entry_install_list|intersect([entry['only']]|flatten)
+        )
+  tags:
+    - portal_create_entry
+    - portal_create_entry_create_entry
+
+
+- name: "Update entry in portal"
+  vars:
+    portal_create_entry_icon_data: "{{ lookup('file', entry['icon_file'])|string|b64encode
+                if 'icon_file' in entry else
+                  None }}"
+    portal_create_entry_portal_entries_existing: "{{ portal_create_entry_portal_entries['stdout_lines']|regex_findall('cn=[a-zA-Z-]+')|map('regex_replace', '^cn=(.*)$', '\\1')|list|unique|lower}}"
+  ansible.builtin.command: >
+    udm portals/{{ entry['class']|default('entry') }}
+    modify
+    --dn cn={{ entry['name'] }},cn={{ entry['class']|default('entry') }},{{ portal_create_entry_portal_dn }}
+    {% for lang, text in (entry['description']|default({})).items() %}
+    --append description='{{ lang }} "{{ text }}"'
+    {% endfor %}
+    {% for lang, text in (entry['display_name']|default({})).items() %}
+    --append displayName='{{ lang }} "{{ text }}"'
+    {% endfor %}
+  loop: "{{ [portal_create_entry_entries|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
+      portal_create_entry_entries|selectattr('state', 'undefined')|list|default([])|flatten]|flatten }}"
+  loop_control:
+    loop_var: "entry"
+  when: ('only' not in entry) or
+        ('only' in entry and
+          portal_create_entry_install_list|intersect([entry['only']]|flatten) and
+          entry['name']|lower in portal_create_entry_portal_entries_existing
+        )
+  tags:
+    - portal_create_entry
+    - portal_create_entry_create_entry
+
+- name: "Append entry to portal"
+  vars:
+    portal_create_entry_member_attribute: "{{ portal_create_entry_member_attribute_map[entry['member_attribute']] }}"
+  ansible.builtin.command:
+    argv:
+      - "udm"
+      - "{{ entry['udm_module'] }}"
+      - "modify"
+      - "--dn"
+      - "{{ portal_create_entry_category_map[entry['category']]|default(entry['category']) }},{{ portal_create_entry_portal_dn }}"
+      - "--append"
+      - "{{ portal_create_entry_member_attribute }}=cn={{ entry['name'] }},cn=entry,{{ portal_create_entry_portal_dn }}"
+  loop: "{{ portal_create_entry_entries|selectattr('state', 'equalto', 'present')|default([])|flatten }}"
+  loop_control:
+    loop_var: "entry"
+  tags:
+    - portal_create_entry
+    - portal_create_entry_append_entry

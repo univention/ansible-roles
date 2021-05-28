@@ -1,0 +1,115 @@
+---
+# tasks file for configure_office_suite
+
+- name: "Assert that provided office suite is a supported value"
+  ansible.builtin.assert:
+    that: "configure_office_suite_office_suite in configure_office_suite_supported_office_suites"
+    fail_msg: "You have provided an unsupported office suite. Valid suites are {{ configure_office_suite_supported_office_suites | join(', ') }}"
+  tags:
+    - configure_office_suite
+    - configure_office_suite_precheck
+
+- name: "Run UCS install apps: Install Packages"
+  vars:
+    install_packages_app_version_map: "{{ configure_office_suite_app_version_map }}"
+    install_packages_temp_pw_file: "{{ configure_office_suite_temp_pw_file }}"
+    install_packages_install_apps:
+      - "{{ configure_office_suite_office_suite }}"
+  ansible.builtin.include_role:
+    name: install_packages
+
+  tags:
+    - configure_office_suite
+    - configure_office_suite_install
+
+- name: "Configure onlyoffice"
+  block:
+    - name: "NextCloud: Set DocumentServerUrl"
+      ansible.builtin.command:
+        argv:
+          - "univention-app"
+          - "shell"
+          - "nextcloud"
+          - "sudo"
+          - "-u"
+          - "www-data"
+          - "/var/www/html/occ"
+          - "config:app:set"
+          - "onlyoffice"
+          - "DocumentServerUrl"
+          - "--value=https://{{ ansible_fqdn }}/onlyoffice-documentserver"
+      when: "'nextcloud' in configure_office_suite_install_apps"
+      tags:
+        - configure_office_suite_only_office_nextcloud
+        - configure_office_suite_only_office_nextcloud_document_server
+
+    - name: "NextCloud: Set file formats"
+      ansible.builtin.command:
+        argv:
+          - "univention-app"
+          - "shell"
+          - "nextcloud"
+          - "sudo"
+          - "-u"
+          - "www-data"
+          - "/var/www/html/occ"
+          - "config:app:set"
+          - "onlyoffice"
+          - "defFormats"
+          - "--value={{ configure_office_suite_onlyoffice_formats|to_json }}"
+      when: "'nextcloud' in configure_office_suite_install_apps"
+      tags:
+        - configure_office_suite_only_office_nextcloud
+        - configure_office_suite_only_office_nextcloud_fileformat
+
+  when: configure_office_suite_office_suite == "onlyoffice"
+  tags:
+    - configure_office_suite
+    - configure_office_suite_only_office
+
+- name: "Configure collabora-online"
+  block:
+    - name: "NextCloud: Disable certificate validation for CODE server"
+      ansible.builtin.command:
+        argv:
+          - "univention-app"
+          - "shell"
+          - "nextcloud"
+          - "sudo"
+          - "-u"
+          - "www-data"
+          - "/var/www/html/occ"
+          - "config:app:set"
+          - "richdocuments"
+          - "disable_certificate_verification"
+          - "--value=yes"
+      when: "'nextcloud' in configure_office_suite_install_apps"
+      tags:
+        - configure_office_suite_collabora_online_nextcloud
+        - configure_office_suite_collabora_online_nextcloud_disable_certificate_validation
+
+    - name: "NextCloud: Install Collabora license"
+      ansible.builtin.command:
+        argv:
+          - "univention-app"
+          - "configure"
+          - "collabora-online"
+          - "--set"
+          - "collabora/online/keyfile={{ configure_office_suite_collabora_license_key }}"
+      notify: "Restart collabora-online"
+      when: "'nextcloud' in configure_office_suite_install_apps"
+      tags:
+        - configure_office_suite_collabora_online_nextcloud
+        - configure_office_suite_collabora_online_nextcloud_collabora_license_key
+
+  when: configure_office_suite_office_suite == "collabora-online"
+  tags:
+    - configure_office_suite
+    - configure_office_suite_collabora_online
+
+- name: "Flush handlers to restart collabora"
+  ansible.builtin.meta: flush_handlers
+  tags:
+    - configure_office_suite
+    - configure_office_suite_flush_handlers
+

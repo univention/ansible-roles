@@ -1,0 +1,6 @@
+---
+# handlers file for configure_apps_owncloud
+
+- name: "Restart OwnCloud"
+  ansible.builtin.shell: "univention-app stop owncloud; univention-app start owncloud"
+  ignore_errors: true

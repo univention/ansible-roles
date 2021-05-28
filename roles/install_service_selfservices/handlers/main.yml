@@ -1,0 +1,7 @@
+---
+# handlers file for install_service_selfservices
+
+- name: "Restart apache"
+  ansible.builtin.service:
+    name: "apache2"
+    state: "restarted"

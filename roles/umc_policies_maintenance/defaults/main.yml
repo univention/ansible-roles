@@ -1,0 +1,7 @@
+---
+# defaults file for umc_policies_maintenance
+umc_policies_maintenance_basedn: ""
+umc_policies_maintenance_patchhour: "5"
+umc_policies_maintenance_patchminute: "00"
+umc_policies_maintenance_patchday: "Tuesday"
+umc_policies_maintenance_release_verion: ""

@@ -1,0 +1,16 @@
+
+        ServerName {{ configure_saml_single_server_external_hostname }}
+</VirtualHost>
+<VirtualHost *:443>
+        ServerName {{ configure_saml_single_server_internal_hostname }}
+        IncludeOptional /etc/apache2/ucs-sites.conf.d/*.conf
+        SSLEngine on
+        SSLProxyEngine on
+        SSLProxyCheckPeerCN off
+        SSLProxyCheckPeerName off
+        SSLProxyCheckPeerExpire off
+        SSLCertificateFile /etc/univention/ssl/{{ configure_saml_single_server_internal_hostname }}/cert.pem
+        SSLCertificateKeyFile /etc/univention/ssl/{{ configure_saml_single_server_internal_hostname }}/private.key
+        SSLCACertificateFile /etc/univention/ssl/ucsCA/CAcert.pem
+</VirtualHost>
+</IfModule>

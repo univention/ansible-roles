@@ -1,0 +1,97 @@
+---
+# tasks file for configure_license
+
+- name: "Import License"
+  block:
+    - name: "Create temporary directory"
+      ansible.builtin.tempfile:
+        state: "directory"
+      register: configure_license_temp_dir
+      tags:
+        - configure_license_tempdir
+
+    - name: "Get license from license server"
+      block:
+        - name: "Check if all vars are set"
+          ansible.builtin.assert:
+            that:
+              - configure_license_validity|string|length > 0
+              - configure_license_shop_password|string|length > 0
+              - configure_license_shop_id|string|length > 0
+              - configure_license_shop_username|string|length > 0
+              - configure_license_max_users|string|length > 0
+              - configure_license_basedn|string|length > 0
+            fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags configure_license_server_license_check_preconditions"
+          tags:
+            - configure_license_server_license_check_preconditions
+
+        - name: "Get license end date"
+          ansible.builtin.command: "date -u -d '+{{ configure_license_validity }}' '+%d.%m.%Y'"
+          register: configure_license_validity_date
+          tags:
+            - configure_license_server_license_calculate_end_date
+
+        - name: "Copy license tool to server"
+          ansible.builtin.copy:
+            src: "license_client.py"
+            dest: "{{ configure_license_temp_dir.path }}/license_client.py"
+            mode: 0700
+          tags:
+            - configure_license_server_license_copy_license_to_server
+
+        - name: "Create license.secret file"
+          ansible.builtin.copy:
+            content: "{{ configure_license_shop_password }}"
+            dest: "/etc/license.secret"
+            mode: 0660
+          tags:
+            - configure_license_server_license_copy_shop_secret
+
+        - name: "Acquire a license via license tool"
+          ansible.builtin.command:
+            argv:
+              - "{{ configure_license_temp_dir.path }}/license_client.py"
+              - "--shop"
+              - "{{ configure_license_shop_id }}"
+              - "--username"
+              - "{{ configure_license_shop_username }}"
+              - "-u"
+              - "{{ configure_license_max_users }}"
+              - "-f"
+              - "{{ configure_license_temp_dir.path }}/license.ldif"
+              - "{{ configure_license_basedn }}"
+              - "{{ configure_license_validity_date.stdout_lines[0] }}"
+            creates: "{{ configure_license_temp_dir.path }}/license.ldif"
+          tags:
+            - configure_license_server_license_acquire
+      when: "configure_license_type == 'server_license'"
+      tags:
+        - configure_license_server_license
+
+    - name: "Copy pre-prepared license file to server"
+      ansible.builtin.copy:
+        dest: "{{ configure_license_temp_dir.path }}/license.ldif"
+        src: "{{ configure_license_file }}"
+      when:
+        - "configure_license_type == 'local_license'"
+        - "configure_license_file|default(false)"
+      tags:
+        - configure_license_local_license
+
+    - name: "Import newly created license into UCS"
+      ansible.builtin.command: "univention-license-import {{ configure_license_temp_dir.path }}/license.ldif"
+      tags:
+        - configure_license_run_import
+
+  always:
+    - name: "Make sure that the temporary directory is gone"
+      ansible.builtin.file:
+        path: "{{ configure_license_temp_dir.path }}"
+        state: "absent"
+      tags:
+        - configure_license_tempdir
+        - configure_license_cleanup
+        - cleanup
+  when: "configure_license_server_type|default('master') != 'backup'"
+  tags:
+    - configure_license

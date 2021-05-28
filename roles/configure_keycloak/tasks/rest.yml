@@ -1,0 +1,418 @@
+---
+
+- name: "Configure keycloak server using the REST API"
+  become: false
+  block:
+    - name: "Authenticate to keycloak server (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_base_url }}/realms/{{  configure_keycloak_auth_realm|default('master') }}/protocol/openid-connect/token"
+        method: "POST"
+        body_format: "form-urlencoded"
+        body:
+          username: "{{ configure_keycloak_admin_username }}"
+          password: "{{ configure_keycloak_admin_password }}"
+          realm: "master"
+          grant_type: "password"
+          client_id: "admin-cli"
+        follow_redirects: true
+        validate_certs: false
+      register: configure_keycloak_auth_response
+      run_once: true
+      no_log: true
+      tags:
+        - configure_keycloak_auth
+
+    - name: "Extract auth token from server response (REST)"
+      ansible.builtin.set_fact:
+        configure_keycloak_auth_token: "{{ configure_keycloak_auth_response['json']['access_token'] }}"
+      tags:
+        - configure_keycloak_auth_token
+
+    - name: "Check if host is configured as an IDP on keycloak server (hostname) (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ inventory_hostname }}"
+        method: "GET"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+      register: configure_keycloak_check_host_on_keycloak_output
+      tags:
+        - configure_keycloak_idp_instance
+      ignore_errors: true
+
+    - name: "Remove host's IDP config from keycloak server (hostname) (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ inventory_hostname }}"
+        method: "DELETE"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+        status_code:
+          - 200
+          - 202
+          - 204
+      when: "configure_keycloak_check_host_on_keycloak_output is succeeded"
+      throttle: 1
+      tags:
+        - configure_keycloak_idp_instance
+
+    - name: "Check if host is configured as IDP on keycloak server (FQDN) (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ configure_keycloak_fqdn }}"
+        method: "GET"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+      register: configure_keycloak_check_host_on_keycloak_output
+      tags:
+        - configure_keycloak_idp_instance
+      ignore_errors: true
+
+    - name: "Remove host's IDP config from keycloak server (FQDN) (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ configure_keycloak_fqdn }}"
+        method: "DELETE"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+        status_code:
+          - 200
+          - 202
+          - 204
+      when: "configure_keycloak_check_host_on_keycloak_output is succeeded"
+      throttle: 1
+      tags:
+        - configure_keycloak_idp_instance
+
+    - name: "Get keycloak realm info (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}"
+        method: "GET"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+      register: configure_keycloak_kcadm_realm_output
+      ignore_errors: true
+      tags:
+        - configure_keycloak_realm
+        - configure_keycloak_realm_get_realm_list
+
+    - name: "Create realm (REST)"
+      ansible.builtin.uri:
+        url: "{{ keycloak_base_url }}/realms"
+        method: "POST"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+        status_code:
+          - 200
+          - 201
+          - 202
+        body:
+          id: "{{ configure_keycloak_realm }}"
+          realm: "{{ configure_keycloak_realm }}"
+          enabled: "true"
+          displayName: "{{ configure_keycloak_realm }}"
+          displayNameHtml: '<div class="kc-logo-text"><span>Keycloak {{ configure_keycloak_realm }}</span></div>'
+      when: "configure_keycloak_kcadm_realm_output is failed"
+      throttle: 1
+      tags:
+        - configure_keycloak_realm
+        - configure_keycloak_realm_create_realm
+
+    - name: "Configure our host as an IDP for the {{ configure_keycloak_realm }} realm (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances"
+        method: "POST"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+        body:
+          alias: "{{ configure_keycloak_oidcidp_id }}"
+          displayName: "{{ configure_keycloak_oidcidp_id }} IDP"
+          providerId: "oidc"
+          enabled: "true"
+          config:
+            useJwksUrl: "true"
+            issuer: "https://{{ configure_keycloak_fqdn }}"
+            authorizationUrl: "https://{{ configure_keycloak_fqdn }}/signin/v1/identifier/_/authorize"
+            logoutUrl: "https://{{ configure_keycloak_fqdn }}/signin/v1/identifier/_/endsession"
+            userInfoUrl: "https://{{ configure_keycloak_fqdn }}/konnect/v1/userinfo"
+            tokenUrl: "https://{{ configure_keycloak_fqdn }}/konnect/v1/token"
+            jwksUrl: "https://{{ configure_keycloak_fqdn }}/konnect/v1/jwks.json"
+            validateSignature: "false"
+            clientId: "{{ configure_keycloak_server_id }}"
+            clientSecret: "{{ keycloak_password }}"
+            clientAuthMethod: "client_secret_post"
+            defaultScope: 'openid profile email'
+            syncMode: "IMPORT"
+        status_code:
+          - 200
+          - 201
+          - 202
+      tags:
+        - configure_keycloak_idp_instance
+        - configure_keycloak_idp_instance_create
+
+    - name: "Insert FQDN into CSP list"
+      vars:
+        configure_keycloak_host_url: "https://{{ configure_keycloak_fqdn }}/"
+      block:
+        - name: "Get keycloak realm info (REST)"
+          ansible.builtin.uri:
+            url: "{{ configure_keycloak_realm_base_url }}"
+            method: "GET"
+            body_format: "json"
+            headers:
+              Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+            follow_redirects: true
+            validate_certs: false
+          register: "configure_keycloak_kcadm_realm_output"
+          tags:
+            - configure_keycloak_insert_fqdn_get_realm_list
+
+        - name: "Get current browserSecurityHeaders object (REST)"
+          ansible.builtin.set_fact:
+            configure_keycloak_current_securityheaders_object: "{{ configure_keycloak_kcadm_realm_output['json']['browserSecurityHeaders'] }}"
+            configure_keycloak_current_csp_list: "{{ configure_keycloak_kcadm_realm_output['json']['browserSecurityHeaders']['contentSecurityPolicy'] }}"
+          tags:
+            - configure_keycloak_insert_fqdn_append_host_to_csp_list_set_current_csp_list
+
+        - name: "Check if length is over limit (255 chars)"
+          ansible.builtin.assert:
+            # (length configure_keycloak_current_csp_list) + whitespace + (length configure_keycloak_host_url) <= 255
+            that: "(configure_keycloak_current_csp_list|length) + 1 + (configure_keycloak_host_url|length) <= 255"
+            fail_msg: "Appending host to current CSP list will result in an overflow. Limit is 255 chars."
+          when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
+          tags:
+            - configure_keycloak_insert_fqdn_append_host_to_csp_list_assert_csp_length
+
+        - name: "Append current host to configured CSP list (REST)"
+          vars:
+            configure_keycloak_browsersecurity_changes:
+              contentSecurityPolicy: "{{ configure_keycloak_current_csp_list[-1] }} {{ configure_keycloak_browsersecurity_changes }};"
+              xFrameOptions: ""
+          ansible.builtin.uri:
+            url: "{{ configure_keycloak_realm_base_url }}"
+            method: "POST"
+            body_format: "json"
+            headers:
+              Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+            body:
+              browserSecurityHeaders: "{{ configure_keycloak_current_securityheaders_object|combine(configure_keycloak_browsersecurity_changes) }}"
+            follow_redirects: true
+            validate_certs: false
+            status_code:
+              - 200
+              - 201
+              - 202
+          register: ""
+          when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
+          tags:
+            - configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms
+
+      when: "configure_keycloak_display_matrix_in_iframe|bool"
+      tags:
+        - configure_keycloak_insert_fqdn
+
+    - name: "Get a list of existing import mappings (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ configure_keycloak_oidcidp_id }}/mappers"
+        method: "GET"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+      register: configure_keycloak_idp_import_mappers_list
+      tags:
+        - keycloak_config_username_import_mapping
+
+    - name: "Configure the import mapping for preferred_username (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ configure_keycloak_oidcidp_id }}/mappers"
+        method: "POST"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        body:
+          name: "{{ configure_keycloak_import_mapper_name }}"
+          identityProviderAlias: "{{ configure_keycloak_oidcidp_id }}"
+          identityProviderMapper: "oidc-username-idp-mapper"
+          config:
+            template: "{{ configure_keycloak_oidc_username_template }}"
+            syncMode: "INHERIT"
+        follow_redirects: true
+        validate_certs: false
+        status_code:
+          - 200
+          - 201
+          - 202
+      when: "configure_keycloak_import_mapper_name not in configure_keycloak_idp_import_mappers_list.json|map(attribute='name')|list"
+      tags:
+        - keycloak_config_username_import_mapping
+
+    - name: "Get keycloak clients list (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/clients"
+        method: "GET"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+      ignore_errors: true
+      register: configure_keycloak_kcadm_clients_list_output
+      tags:
+        - keycloak_config_get_clients_list
+
+    - name: "Extract relevant client from list (if any)"
+      ansible.builtin.set_fact:
+        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json|selectattr('clientId', 'equalto', configure_keycloak_client_id)|list)|first|default({}) }}"
+
+    - name: "Check that client secret is set (REST)"
+      ansible.builtin.assert:
+        that:
+          - "configure_keycloak_client_secret is defined"
+          - "configure_keycloak_client_secret|bool"
+        fail_msg: >
+          Client not configured but password not set.
+          We can't continue with keycloak server configureation
+      when: "'id' not in configure_keycloak_configured_client"
+
+    - name: "Check that client callback url is set (REST)"
+      ansible.builtin.assert:
+        that:
+          - "keycloak_client_callback_url|bool"
+        fail_msg: >
+          Client not configured but client callback url not set.
+          We can't continue with keycloak server configureation
+      when: "'id' not in configure_keycloak_configured_client"
+
+    - name: "Create new client (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/clients"
+        method: "POST"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        body:
+          clientAuthenticatorType: "client-secret"
+          clientId: "{{ configure_keycloak_client_id }}"
+          secret: "{{ configure_keycloak_client_secret }}"
+          publicClient: "false"
+          redirectUris:
+            - "{{ configure_keycloak_client_callback_url }}"
+        follow_redirects: true
+        validate_certs: false
+        status_code:
+          - 200
+          - 201
+          - 202
+      when: "'id' not in configure_keycloak_configured_client"
+      tags:
+        - keycloak_config_create_client
+
+    - name: "Get keycloak client info again (after client creation) (REST)"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/clients"
+        method: "GET"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+      register: configure_keycloak_kcadm_client_output_second
+      when: "'id' not in configure_keycloak_configured_client"
+      tags:
+        - keycloak_config_get_client_info
+        - keycloak_config_get_client_info_refresh
+
+    - name: "Refresh kcadm client output variable (REST)"
+      ansible.builtin.set_fact:
+        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json|selectattr('clientId', 'equalto', configure_keycloak_client_id)|list)|first|default({}) }}"
+      when: "not configure_keycloak_kcadm_client_output_second is skipped"
+
+    - name: "Get protocol mapper list (REST)"
+      vars:
+        configure_keycloak_client_uuid: "{{ configure_keycloak_configured_client['id'] }}"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/clients/{{ configure_keycloak_client_uuid }}/protocol-mappers/models"
+        method: "GET"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+      register: configure_keycloak_protocol_mapper_list
+      tags:
+        - keycloak_config_set_sourceidp_note
+
+    - name: "Extract protocol mapper object"
+      ansible.builtin.set_fact:
+        configure_keycloak_protocol_mapper_object: "{{ (configure_keycloak_protocol_mapper_list.json|selectattr('name', 'equalto', configure_keycloak_protocol_mapper_name)|list)|first|default({}) }}"
+
+    - name: "Delete existing protocol-mapper (REST)"
+      vars:
+        client_uuid: "{{ configure_keycloak_configured_client['id'] }}"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/clients/{{ configure_keycloak_client_uuid }}/protocol-mappers/models/{{ configure_keycloak_protocol_mapper_object['id'] }}"
+        method: "DELETE"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        follow_redirects: true
+        validate_certs: false
+        status_code:
+          - 200
+          - 202
+          - 204
+      when: "'id' in configure_keycloak_protocol_mapper_object"
+      tags:
+        - keycloak_config_set_sourceidp_note
+
+    - name: "configure user.session.note to pass 'sourceidp' to the client (REST)"
+      vars:
+        configure_keycloak_client_uuid: "{{ configure_keycloak_configured_client['id'] }}"
+      ansible.builtin.uri:
+        url: "{{ configure_keycloak_realm_base_url }}/clients/{{ configure_keycloak_client_uuid }}/protocol-mappers/models"
+        method: "POST"
+        body_format: "json"
+        headers:
+          Authorization: "Bearer {{ configure_keycloak_auth_token }}"
+        body:
+          name: "{{ configure_keycloak_protocol_mapper_name }}"
+          protocol: "openid-connect"
+          protocolMapper: "oidc-usersessionmodel-note-mapper"
+          consentRequired: False
+          config:
+            'user.session.note': "identity_provider"
+            'id.token.claim': "true"
+            'access.token.claim': "true"
+            'claim.name': "sourceidp"
+            'jsonType.label': "String"
+        follow_redirects: true
+        validate_certs: false
+        status_code:
+          - 200
+          - 201
+          - 202
+      tags:
+        - keycloak_config_set_sourceidp_note
+
+  delegate_to: "{{ configure_keycloak_keycloak_server }}"
+  tags:
+    - keycloak_config

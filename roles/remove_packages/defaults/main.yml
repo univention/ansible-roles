@@ -1,0 +1,9 @@
+---
+# defaults file for remove_packages
+
+remove_packages_temp_pw_file: ""
+remove_packages_remove_apps: []
+remove_packages_currently_installed_apps: []
+remove_packages_force_package_upgrade: false
+remove_packages_app_version_map: {}
+remove_packages_service_name_list: []

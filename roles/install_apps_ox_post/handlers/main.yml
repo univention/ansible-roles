@@ -1,0 +1,13 @@
+---
+# handlers file for install_apps_ox_post
+
+- name: "Restart dovecot"
+  ansible.builtin.service:
+    name: "dovecot"
+    state: "restarted"
+  ignore_errors: true
+
+- name: "Restart OpenXchange"
+  ansible.builtin.service:
+    name: "open-xchange"
+    state: "restarted"

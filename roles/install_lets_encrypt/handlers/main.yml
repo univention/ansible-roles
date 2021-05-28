@@ -1,0 +1,25 @@
+---
+# handlers file for install_lets_encrypt
+
+- name: "Restart postfix"
+  ansible.builtin.service:
+    name: "postfix"
+    state: "restarted"
+
+- name: "Restart apache"
+  ansible.builtin.service:
+    name: "apache2"
+    state: "restarted"
+
+- name: "Restart dovecot"
+  ansible.builtin.service:
+    name: "dovecot"
+    state: "restarted"
+  ignore_errors: true
+
+- name: "Update CA certificates"
+  ansible.builtin.command: "update-ca-certificates"
+
+- name: "Restart openid-connect container"
+  ansible.builtin.command: "univention-app restart openid-connect-provider"
+  ignore_errors: true

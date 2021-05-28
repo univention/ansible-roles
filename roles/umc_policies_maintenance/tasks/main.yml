@@ -1,0 +1,78 @@
+---
+# tasks file for umc_policies_maintenance
+
+- name: "Modify Univention Update Maintenance policies"
+  block:
+    - name: "Edit policies/maintenance"
+      ansible.builtin.command:
+        argv:
+          - "udm"
+          - "policies/maintenance"
+          - "modify"
+          - "--dn"
+          - "cn=app-update-schedule,cn=policies,{{ umc_policies_maintenance_basedn }}"
+          - "--set"
+          - "cron=1"
+          - "--set"
+          - "hour={{ umc_policies_maintenance_patchhour }}"
+          - "--set"
+          - "minute={{ umc_policies_maintenance_patchminute }}"
+          - "--append"
+          - "month=January"
+          - "--append"
+          - "month=February"
+          - "--append"
+          - "month=March"
+          - "--append"
+          - "month=April"
+          - "--append"
+          - "month=May"
+          - "--append"
+          - "month=June"
+          - "--append"
+          - "month=July"
+          - "--append"
+          - "month=August"
+          - "--append"
+          - "month=September"
+          - "--append"
+          - "month=October"
+          - "--append"
+          - "month=November"
+          - "--append"
+          - "month=December"
+          - "--set"
+          - "weekday={{ umc_policies_maintenance_patchday }}"
+      tags:
+        - umc_policies_maintenance_edit_maintenance
+
+    - name: "Set release version to update-policy"
+      ansible.builtin.command:
+        argv:
+          - "udm"
+          - "policies/release"
+          - "modify"
+          - "--dn"
+          - "cn=app-release-update,cn=policies,{{ umc_policies_maintenance_basedn }}"
+          - "--set"
+          - "releaseVersion={{ umc_policies_maintenance_release_verion }}"
+      tags:
+        - umc_policies_maintenance_edit_release
+
+    - name: "Add policy reference to computer object"
+      ansible.builtin.command:
+        argv:
+          - "udm"
+          - "computers/domaincontroller_master"
+          - "modify"
+          - "--dn"
+          - "cn={{ inventory_hostname }},cn=dc,cn=computers,{{ umc_policies_maintenance_basedn }}"
+          - "--policy-reference"
+          - "cn=app-update-schedule,cn=policies,{{ umc_policies_maintenance_basedn }}"
+          - "--policy-reference"
+          - "cn=app-release-update,cn=policies,{{ umc_policies_maintenance_basedn }}"
+      tags:
+        - umc_policies_maintenance_reference
+
+  tags:
+    - umc_policies_maintenance

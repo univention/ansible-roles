@@ -1,0 +1,77 @@
+---
+# tasks file for configure_apps_postfix
+
+- name: "Create domain rewrite map"
+  ansible.builtin.lineinfile:
+    path: "/etc/postfix/generic"
+    line: "/^(.*)@{{ configure_apps_postfix_domain_name }}$/      \\${1}@{{ configure_apps_postfix_external_hostname }}"
+    create: true
+    state: "present"
+  register: configure_apps_postfix_domain_rewrite_task
+  tags:
+    - configure_apps_postfix
+    - configure_apps_postfix_domain_rewrite
+
+- name: "Configure postfix to use the map we're creating"
+  ansible.builtin.lineinfile:
+    path: "/etc/postfix/main.cf.local"
+    line: "smtp_generic_maps = regexp:/etc/postfix/generic"
+    create: true
+    state: "present"
+  tags:
+    - configure_apps_postfix
+    - configure_apps_postfix_use_map
+
+- name: "Compile domain rewrite map"
+  ansible.builtin.command: "postmap /etc/postfix/generic"
+  when: "configure_apps_postfix_domain_rewrite_task.changed|bool"
+  tags:
+    - configure_apps_postfix
+    - configure_apps_postfix_compile_domain_rewrite
+
+- name: "Set mail destination in Univention Config Registry"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      mail/postfix/mydestination: "localhost.$mydomain, localhost"
+  notify: "Restart postfix"
+  tags:
+    - configure_apps_postfix
+    - configure_apps_postfix_set_mail_destination
+
+- name: "Set mail relayhost"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      mail/relayhost: "{{ configure_apps_postfix_relay_host }}:{{ configure_apps_postfix_relay_port }}"
+  notify: "Restart postfix"
+  when: "configure_apps_postfix_use_relay_host"
+  tags:
+    - configure_apps_postfix
+    - configure_apps_postfix_relayhost
+
+- name: "Set mail relayhost password authentication"
+  block:
+    - name: "Enable mail relayauth"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          mail/relayauth: "yes"
+      tags:
+        - configure_apps_postfix_relay_set_auth_enable_relayauth
+
+    - name: "Update smtp_auth file"
+      ansible.builtin.lineinfile:
+        path: "/etc/postfix/smtp_auth"
+        create: true
+        line: "{{ configure_apps_postfix_relay_host }} {{ configure_apps_postfix_relay_username }}:{{ configure_apps_postfix_relay_password }}"
+        mode: "775"
+      tags:
+        - configure_apps_postfix_relay_set_auth_update_file
+
+    - name: "Postmap smtp_auth file"
+      ansible.builtin.command: "postmap /etc/postfix/smtp_auth"
+      tags:
+        - configure_apps_postfix_relay_set_auth_postmap
+
+  when: "configure_apps_postfix_use_relay_host and configure_apps_postfix_relay_username|length > 0 and configure_apps_postfix_relay_password|length > 0"
+  tags:
+    - configure_apps_postfix
+    - configure_apps_postfix_relay_set_auth

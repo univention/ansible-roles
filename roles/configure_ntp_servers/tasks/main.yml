@@ -1,0 +1,15 @@
+---
+# tasks file for configure_ntp_servers
+
+- name: "Configure NTP servers"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "timeserver{{ '' if index == 0 else index+1 }}"
+        value: "{{ item }}"
+  loop: "{{ configure_ntp_servers_timeservers|default([]) }}"
+  loop_control:
+    index_var: index
+  notify: "Restart ntpd"
+  when: "configure_ntp_servers_timeservers|default(false)"
+  tags:
+    - configure_ntp_servers

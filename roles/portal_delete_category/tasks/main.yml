@@ -1,0 +1,31 @@
+---
+# tasks file for portal_delete_category
+
+- name: "Check if category that is about to be deleted exists to begin with"
+  ansible.builtin.command: >
+    udm portals/category list
+    --position "cn=category,{{ category['dn']|default(portal_delete_category_base_dn) }}"
+    --filter "cn={{ category['name'] }}"
+  loop: "{{ portal_delete_category_categories|selectattr('state', 'defined')|selectattr('state', 'equalto', 'absent')|list|default([])|flatten }}"
+  loop_control:
+    loop_var: "category"
+  register: portal_delete_category_existing_portal_categories
+  when:
+    - ('only' not in category) or
+        ('only' in category and
+          portal_delete_category_install_list|intersect([category['only']]|flatten)
+        )
+  tags:
+    - portal_delete_category
+    - portal_delete_category_check_categories
+
+- name: "Delete existing portal category"
+  vars:
+    category: "{{ item.item }}"
+  ansible.builtin.command: >
+    udm portals/category delete
+    --dn 'cn={{ category["name"] }},cn=category,{{ category["dn"]|default(portal_delete_category_base_dn) }}'
+  ignore_errors: true
+  loop: "{{ portal_delete_category_existing_portal_categories['results']|default({}) }}"
+  tags:
+    - portal_delete_category_delete_category

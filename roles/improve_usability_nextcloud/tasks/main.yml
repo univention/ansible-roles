@@ -1,0 +1,22 @@
+---
+# tasks file for improve_usability_nextcloud
+
+- name: "NextCloud: Disable unneeded functionality"
+  ansible.builtin.command:
+    argv:
+      - "univention-app"
+      - "shell"
+      - "nextcloud"
+      - "sudo"
+      - "-u"
+      - "www-data"
+      - "/var/www/html/occ"
+      - "app:disable"
+      - "contacts"
+      - "spreed"
+      - "mail"
+      - "calendar"
+  tags:
+    - improve_usability
+    - improve_usability_nextcloud
+    - improve_usability_nextcloud_disable_functionality

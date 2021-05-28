@@ -1,0 +1,7 @@
+---
+# defaults file for configure_ntp_servers
+
+configure_ntp_servers_timeservers:
+  - "ptbtime1.ptb.de"
+  - "ptbtime2.ptb.de"
+  - "ptbtime3.ptb.de"

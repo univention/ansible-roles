@@ -1,0 +1,52 @@
+---
+# tasks file for add-local-user
+
+- name: "Add a user"
+  ansible.builtin.user:
+    name: "{{ add_local_user_user['name'] }}"
+    comment: "{{ add_local_user_user['comment']|default('') }}"
+    password: "{{ add_local_user_user['password'] }}"
+    shell: "{{ add_local_user_user['shell']|default(add_local_user_default_shell) }}"
+    update_password: "always"
+    groups:
+      - "sudo"
+  no_log: true
+  tags:
+    - add_local_user
+    - add_local_user_user
+    - add_local_user_user_create_user
+
+- name: "Install authorized_key for that user (key string)"
+  ansible.posix.authorized_key:
+    user: "{{ add_local_user_user['name'] }}"
+    key: "{{ add_local_user_user['sshkey'] }}"
+    manage_dir: true
+    state: "present"
+  when: "'sshkey' in add_local_user_user"
+  tags:
+    - add_local_user
+    - add_local_user_user
+    - add_local_user_user_deployment_key
+
+- name: "Install authorized_key for that user (key file)"
+  ansible.posix.authorized_key:
+    user: "{{ add_local_user_user['name'] }}"
+    key: "{{ lookup('file', add_local_user_user['sshkey_file']) }}"
+    manage_dir: true
+    state: "present"
+  when: "'sshkey_file' in add_local_user_user and 'sshkey' not in add_local_user_user"
+  tags:
+    - add_local_user
+    - add_local_user_user
+    - add_local_user_user_deployment_key
+
+- name: "Allow user to log in (UCR)"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "auth/sshd/user/{{ add_local_user_user['name'] }}"
+        value: "yes"
+  tags:
+    - add_local_user
+    - add_local_user_user
+    - add_local_user_user_allow_login
+

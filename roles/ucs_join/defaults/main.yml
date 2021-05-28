@@ -1,0 +1,16 @@
+---
+# defaults file for ucs_join
+
+ucs_join_derive_root_password_from_hostname: true
+ucs_join_derive_root_password_prefix: ""
+ucs_join_server_type: "master"
+ucs_join_master_server: ""
+ucs_join_admin_user_name: ""
+ucs_join_root_password: ""
+ucs_join_hostname: "{{ inventory_hostname }}"
+ucs_join_domain_name: ""
+ucs_join_basedn: ""
+ucs_join_network_config_type: "dhcp"
+ucs_join_network_config_static_ip_config: ""
+ucs_join_network_config_static_dns_servers: []
+ucs_join_network_config_static_gateway: ""

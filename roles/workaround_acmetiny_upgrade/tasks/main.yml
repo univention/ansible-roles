@@ -1,0 +1,82 @@
+---
+# tasks file for workaround_acmetiny_upgrade
+#
+#         _   _                 ____
+# __/\__ | | | | ___ _ __ ___  | __ )  ___
+# \    / | |_| |/ _ \ '__/ _ \ |  _ \ / _ \
+# /_  _\ |  _  |  __/ | |  __/ | |_) |  __/
+#   \/   |_| |_|\___|_|  \___| |____/ \___|
+#
+#    ____
+#    |  _ \ _ __ __ _  __ _  ___  _ __  ___  __/\__
+#    | | | | '__/ _` |/ _` |/ _ \| '_ \/ __| \    /
+#    | |_| | | | (_| | (_| | (_) | | | \__ \ /_  _\
+#    |____/|_|  \__,_|\__, |\___/|_| |_|___/   \/
+#
+# __        __         _                                   _
+# \ \      / /__  _ __| | ____ _ _ __ ___  _   _ _ __   __| |
+#  \ \ /\ / / _ \| '__| |/ / _` | '__/ _ \| | | | '_ \ / _` |
+#   \ V  V / (_) | |  |   < (_| | | | (_) | |_| | | | | (_| |
+#    \_/\_/ \___/|_|  |_|\_\__,_|_|  \___/ \__,_|_| |_|\__,_|
+#
+#      __        __               _
+#      \ \      / /_ _ _ __ _ __ (_)_ __   __ _
+#       \ \ /\ / / _` | '__| '_ \| | '_ \ / _` |
+#        \ V  V / (_| | |  | | | | | | | | (_| |
+#         \_/\_/ \__,_|_|  |_| |_|_|_| |_|\__, |
+#                                         |___/
+#
+- name: "Install unzip & patch"
+  ansible.builtin.apt:
+    name:
+      - "unzip"
+      - "patch"
+    state: "present"
+    update_cache: true
+  tags:
+    - workaround_acmetiny_upgrade
+    - workaround_acmetiny_upgrade_install_dependencies
+
+- name: "Download desired version of acme-tiny"
+  ansible.builtin.get_url:
+    url: "https://github.com/diafygi/acme-tiny/archive/4.1.0.zip"
+    dest: "{{ workaround_acmetiny_upgrade_temp_dir.path }}/acme-4.1.0.zip"
+  tags:
+    - workaround_acmetiny_upgrade
+    - workaround_acmetiny_upgrade_download
+
+- name: "Unzip downloaded acme archive"
+  ansible.builtin.unarchive:
+    src: "{{ workaround_acmetiny_upgrade_temp_dir.path }}/acme-4.1.0.zip"
+    dest: "{{ workaround_acmetiny_upgrade_temp_dir.path }}/"
+    remote_src: true
+  tags:
+    - workaround_acmetiny_upgrade
+    - workaround_acmetiny_upgrade_unzip
+
+- name: "Copy the updated acme-tiny script over the old one"
+  ansible.builtin.copy:
+    src: "{{ workaround_acmetiny_upgrade_temp_dir.path }}/acme-tiny-4.1.0/acme_tiny.py"
+    dest: "/usr/share/univention-letsencrypt/acme_tiny.py"
+    remote_src: true
+  tags:
+    - workaround_acmetiny_upgrade
+    - workaround_acmetiny_upgrade_copy
+
+- name: "Patch setup-letsencrypt"
+  ansible.posix.patch:
+    dest: "/usr/share/univention-letsencrypt/setup-letsencrypt"
+    src: "setup-letsencrypt.patch"
+    state: "present"
+  tags:
+    - workaround_acmetiny_upgrade
+    - workaround_acmetiny_upgrade_patch_setup
+
+- name: "Patch refresh-cert"
+  ansible.posix.patch:
+    dest: "/usr/share/univention-letsencrypt/refresh-cert"
+    src: "refresh-cert.patch"
+    state: "present"
+  tags:
+    - workaround_acmetiny_upgrade
+    - workaround_acmetiny_upgrade_path_refresh

@@ -1,0 +1,12 @@
+[versions]
+{% if ucs_setup_custom_fact_deployment|default(false) %}
+{% for item, version in ucs_setup_custom_fact_deployment.items() %}
+{{ item }} = {{ version }}
+{% endfor %}
+{% else %}
+ucs_setup = MANUAL
+{% endif %}
+
+[date]
+rollout_date = {{ ansible_date_time['date'] }}
+rollout_time = {{ ansible_date_time['time'] }} {{ ansible_date_time['tz'] }}

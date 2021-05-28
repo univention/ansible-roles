@@ -1,0 +1,24 @@
+---
+# defaults file for configure_keycloak
+
+configure_keycloak_generate_oidc_broker_secret: true
+configure_keycloak_oidc_broker_secret: ""
+configure_keycloak_oidcidp_id: "{{ inventory_hostname }}"
+configure_keycloak_server_id: "keycloak"
+configure_keycloak_oidc_username_template: "${CLAIM.preferred_username}_${ALIAS}"
+configure_keycloak_client_callback_url: ""
+configure_keycloak_config_method: "kcadm"
+configure_keycloak_config_type: "dynamic"
+configure_keycloak_keycloak_server: ""
+configure_keycloak_auth_realm: "master"
+configure_keycloak_admin_username: ""
+configure_keycloak_admin_password: ""
+configure_keycloak_realm: "{{ hostvars[inventory_hostname]['ansible_domain'] }}"
+configure_keycloak_fqdn: "{{ hostvars[inventory_hostname]['ansible_fqdn'] }}"
+configure_keycloak_client_id: ""
+configure_keycloak_display_matrix_in_iframe: false
+configure_keycloak_client_secret: false
+configure_keycloak_base_url: "https://{{ configure_keycloak_keycloak_server }}/auth"
+configure_keycloak_realm_base_url: "{{ configure_keycloak_base_url }}/admin/realms/{{ ansible_domain }}"
+configure_keycloak_protocol_mapper_name: "identity-provider-mapper"
+configure_keycloak_import_mapper_name: "append IDP to username"

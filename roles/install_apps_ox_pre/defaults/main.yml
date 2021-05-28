@@ -1,0 +1,6 @@
+---
+# defaults file for install_apps_ox_pre
+
+install_apps_ox_pre_external_hostname: ""
+install_apps_ox_pre_basedn: ""
+install_apps_ox_pre_mail_domain: ""

@@ -1,0 +1,9 @@
+---
+# defaults file for install_branding
+
+install_branding_customer_repo_name: ""
+install_branding_customer_repo_parts: ""
+install_branding_customer_repo_password: ""
+install_branding_customer_repo_server: ""
+install_branding_customer_repo_username: ""
+install_branding_customer_branding_package: ""

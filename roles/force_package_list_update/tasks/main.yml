@@ -1,0 +1,50 @@
+---
+# tasks file for force_package_list_update
+
+- name: "Check if debian package lists need to be recreated"
+  ansible.builtin.shell: "grep -Eqs '(Traceback|An error occurred during the repository check)' /etc/apt/sources.list.d/*"
+  ignore_errors: true
+  register: force_package_list_update_apt_package_list_check_result
+  tags:
+    - force_package_list_update_check
+    - force_package_list_update
+
+- name: "Rebuild debian package lists"
+  ansible.builtin.shell: >
+    ucr commit /etc/apt/sources.list.d/*;
+    ! grep -Eqs '(Traceback|An error occurred during the repository check)' /etc/apt/sources.list.d/*
+  retries: 10
+  delay: 10
+  register: force_package_list_update_ucr_commit_result
+  until: "force_package_list_update_ucr_commit_result is succeeded"
+  when: force_package_list_update_apt_package_list_check_result is succeeded or
+        force_package_refresh|default(false)
+  tags:
+    - force_package_list_update_apt_list_rebuild
+    - force_package_list_update
+
+- name: "Update debian package lists"
+  ansible.builtin.shell: "apt update"
+  retries: 10
+  delay: 10
+  register: force_package_list_apt_update_result
+  until: "force_package_list_apt_update_result.rc == 0"
+  tags:
+    - force_package_list_update_apt_update
+    - force_package_list_update
+
+- name: "Update univention-app package lists"
+  ansible.builtin.shell: "univention-app update"
+  retries: 10
+  delay: 10
+  register: force_package_list_univention_app_update_result
+  until: "force_package_list_univention_app_update_result.rc == 0"
+  tags:
+    - force_package_list_update_univention_app_update
+    - force_package_list_update
+
+- name: "Refresh facts"
+  ansible.builtin.setup:
+  tags:
+    - force_package_list_update_refresh_facts
+    - force_package_list_update

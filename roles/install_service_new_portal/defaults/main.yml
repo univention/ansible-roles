@@ -1,0 +1,6 @@
+---
+# defaults file for install_service_new_portal
+
+install_service_new_portal_service_version_map: {}
+install_service_new_portal_temp_file: {}
+install_service_new_portal_force_package_upgrade: false

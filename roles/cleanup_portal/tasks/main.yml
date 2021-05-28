@@ -1,0 +1,82 @@
+---
+# tasks file for cleanup_portal
+
+- name: "Turn off video conferencing"
+  ansible.builtin.command:
+    argv:
+      - 'udm'
+      - 'portals/entry'
+      - 'modify'
+      - '--dn'
+      - 'cn=Videokonferenzen,cn=entry,cn=portals,cn=univention,{{ cleanup_portal_basedn }}'
+      - '--set'
+      - 'activated=FALSE'
+  tags:
+    - cleanup_portal
+
+- name: "Install Dashboard"
+  block:
+    - name: "Allow Domain Admin group access to dashboard features"
+      ansible.builtin.command:
+        argv:
+          - 'udm'
+          - 'portals/entry'
+          - 'modify'
+          - '--dn'
+          - '{{ item }}'
+          - '--set'
+          - 'allowedGroups={{ cleanup_portal_domain_admin_group }}'
+      loop:
+        - '{{ cleanup_portal_prometheus_dn }}'
+        - '{{ cleanup_portal_admin_dashboard_dn }}'
+      tags:
+        - cleanup_portal_domain_admin_permissions
+
+    - name: "Add portal entries to Administration category"
+      ansible.builtin.command:
+        argv:
+          - 'udm'
+          - 'portals/category'
+          - 'modify'
+          - '--dn'
+          - 'cn=Administration,cn=category,{{ cleanup_portal_portal_dn }}'
+          - '--append'
+          - '{{ cleanup_portal_prometheus_dn }}'
+          - '--append'
+          - '{{ cleanup_portal_admin_dashboard_dn }}'
+      tags:
+        - cleanup_portal_add_portal_entries
+
+    - name: "Remove portal entries from domain admin category"
+      ansible.builtin.command:
+        argv:
+          - 'udm'
+          - 'portals/category'
+          - 'modify'
+          - '--dn'
+          - 'cn=domain-admin,cn=category,{{ cleanup_portal_portal_dn }}'
+          - '--remove'
+          - '{{ cleanup_portal_prometheus_dn }}'
+          - '--remove'
+          - '{{ cleanup_portal_admin_dashboard_dn }}'
+      tags:
+        - cleanup_portal_remove_portal_entries
+
+    - name: "Deactivate portal entries"
+      ansible.builtin.command:
+        argv:
+          - 'udm'
+          - 'portals/entry'
+          - 'modify'
+          - '--dn'
+          - '{{ item }}'
+          - '--set'
+          - 'activated=FALSE'
+      loop:
+        - '{{ cleanup_portal_prometheus_dn }}'
+        - '{{ cleanup_portal_admin_dashboard_dn }}'
+      tags:
+        - cleanup_portal_deactivate_portal_entries
+  when: "'dashboard' in cleanup_portal_install_services"
+  tags:
+    - cleanup_portal

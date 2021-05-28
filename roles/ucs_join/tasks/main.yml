@@ -1,0 +1,87 @@
+---
+# tasks file for ucs_join
+
+
+- name: "Get derived admin password"
+  ansible.builtin.set_fact:
+    ucs_join_final_root_password: '{{ ucs_join_derive_root_password_prefix + "@" + inventory_hostname.split("-")[-1] }}'
+  when: "ucs_join_derive_root_password_from_hostname|bool"
+  no_log: true
+  tags:
+    - always
+    - ucs_join
+    - ucs_join_derive_admin_password
+
+- name: "Use preconfigured root password"
+  ansible.builtin.set_fact:
+    ucs_join_final_root_password: '{{ ucs_join_root_password }}'
+  when: "not ucs_join_derive_root_password_from_hostname|bool"
+  no_log: true
+  tags:
+    - always
+    - ucs_join
+    - ucs_join_derive_admin_password
+
+- name: "Create UCS join profile from template"
+  ansible.builtin.template:
+    src: "profile.j2"
+    dest: "/var/cache/univention-system-setup/profile"
+  no_log: true
+  tags:
+    - ucs_join
+    - ucs_join_create_join_profile
+
+- name: "Carry out UCS join (master/standalone)"
+  ansible.builtin.command: "/usr/lib/univention-system-setup/scripts/setup-join.sh"
+  when: "ucs_join_server_type|default('master') != 'backup'"
+  tags:
+    - ucs_join
+    - ucs_join_run
+    - ucs_join_run_primary
+    - ucs_join_run_standalone
+
+- name: "Carry out UCS join (backup)"
+  block:
+    - name: "Create temporary admin password file"
+      ansible.builtin.tempfile:
+        state: file
+      register: ucs_join_admin_pw_file
+      tags:
+        - ucs_join_admin_pw_file
+
+    - name: "Write admin password into temporary file"
+      ansible.builtin.copy:
+        dest: "{{ ucs_join_admin_pw_file.path }}"
+        content: "{{ hostvars[ucs_join_master_server]['admin_password'] }}"
+        mode: 0600
+      tags:
+        - ucs_join_admin_pw_file
+
+    - name: "Carry out UCS join (backup)"
+      ansible.builtin.command: >
+        /usr/lib/univention-system-setup/scripts/setup-join.sh
+        --dcaccount "{{ ucs_join_admin_user_name }}"
+        --password_file "{{ ucs_join_admin_pw_file.path }}"
+      tags:
+        - ucs_join_run
+        - ucs_join_run_backup
+
+    - name: "Set admin password to master's admin password (backup setup)"
+      ansible.builtin.set_fact:
+        admin_password: "{{ hostvars[ucs_join_master_server]['admin_password'] }}"
+      tags:
+        - ucs_join_backup_set_admin_password
+
+  always:
+    - name: "Make sure that the temporary admin password file is gone"
+      ansible.builtin.file:
+        path: "{{ ucs_join_admin_pw_file.path }}"
+        state: "absent"
+      tags:
+        - ucs_join_cleanup_admin_pw_file
+        - cleanup
+
+  when: "ucs_join_server_type|default('master') == 'backup'"
+  tags:
+    - ucs_join
+    - ucs_join_backup

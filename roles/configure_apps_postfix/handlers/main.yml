@@ -1,0 +1,7 @@
+---
+# handlers file for configure_apps_postfix
+
+- name: "Restart postfix"
+  service:
+    name: "postfix"
+    state: "restarted"

@@ -1,0 +1,39 @@
+---
+# tasks file for custom_facts
+
+- name: "Ensure custom facts script exists"
+  ansible.builtin.file:
+    path: "/etc/ansible/facts.d"
+    state: "directory"
+    mode: 0755
+  tags:
+    - custom_facts
+    - custom_facts_directory
+
+- name: "Load version info"
+  ansible.builtin.include_vars:
+    file: "version_info.yml"
+    name: "ucs_setup_custom_fact_deployment"
+  ignore_errors: true
+  tags:
+    - custom_facts
+    - custom_facts_variables
+
+- name: "Copy custom facts files to facts directory"
+  ansible.builtin.template:
+    dest: "/etc/ansible/facts.d/{{ item|replace('.j2', '') }}"
+    src: "{{ item }}"
+    mode: 0644
+  loop: "{{ custom_facts_templates|default([]) }}"
+  tags:
+    - custom_facts
+    - custom_facts_deployment
+
+- name: "Set custom facts"
+  ansible.builtin.copy:
+    src: files/ucr.fact
+    dest: /etc/ansible/facts.d/ucr.fact
+    mode: "0755"
+  notify:
+    - "re-read local facts"
+  check_mode: no

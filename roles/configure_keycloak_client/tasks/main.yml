@@ -1,0 +1,50 @@
+---
+# tasks file for configure_keycloak_client
+
+- name: "Configure UCS server for keycoak auth"
+  block:
+    - name: "Make sure the keycloak broker secret is set"
+      become: false
+      block:
+        - name: "Check that broker secret variable is set"
+          ansible.builtin.assert:
+            that:
+              - "configure_keycloak_client_oidc_broker_secret is defined"
+              - "configure_keycloak_client_oidc_broker_secret|bool"
+            fail_msg: >
+              Keycloak broker secret is not set but needed
+              We can't continue with keycloak server configureation
+
+        - name: "Set keycloak password"
+          ansible.builtin.set_fact:
+            configure_keycloak_client_keycloak_password: "{{ configure_keycloak_client_oidc_broker_secret }}"
+          no_log: true
+      when: "configure_keycloak_client_keycloak_password is undefined or configure_keycloak_client_keycloak_password|length == 0"
+      tags:
+        - configure_keycloak_client_password
+
+    - name: "Configure keycloak"
+      ansible.builtin.command: >
+        udm
+        oidc/rpservice
+        create
+        --position="cn=oidc,cn=univention,{{ configure_keycloak_client_basedn }}"
+        --set
+        name="Keycloak OIDC broker"
+        --set
+        clientid={{ configure_keycloak_client_keycloak_server_id }}
+        --set
+        clientsecret={{ configure_keycloak_client_keycloak_password }}
+        --set
+        trusted=yes
+        --set
+        applicationtype=web
+        --set
+        redirectURI=https://{{  configure_keycloak_client_keycloak_server }}/auth/realms/{{ ansible_domain }}/broker/{{ inventory_hostname }}/endpoint
+      no_log: true
+      tags:
+        - configure_keycloak_client_configure
+
+  when: "configure_keycloak_client_config_type != 'none'"
+  tags:
+    - configure_keycloak_client

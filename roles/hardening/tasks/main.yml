@@ -1,0 +1,24 @@
+---
+# tasks file for hardening
+
+- name: "Disable HTTP"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      apache2/force_https: "yes"
+  notify: "Restart apache"
+  when: "hardening_disable_http|bool"
+  tags:
+    - hardening_disable_http
+    - hardening
+
+- name: "Deactivate root login"
+  ansible.builtin.lineinfile:
+    path: "/etc/ssh/sshd_config"
+    line: "PermitRootLogin no"
+    regex: "^PermitRootLogin.*"
+    validate: "sshd -t -f %s"
+    state: present
+  notify: "Restart sshd"
+  tags:
+    - hardening_disable_ssh_root_password_login_ssh_config
+    - hardening

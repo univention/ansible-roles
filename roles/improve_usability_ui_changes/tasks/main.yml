@@ -1,0 +1,77 @@
+---
+# tasks file for improve_usability_ui_changes
+
+- name: "Get portal entries except Anmeldung and Impressum"
+  vars:
+    improve_usability_ui_changes_entry_dn: "cn=entry,cn=portals,cn=univention,{{ improve_usability_ui_changes_basedn }}"
+  ansible.builtin.shell: >
+      udm
+      portals/entry
+      list
+      --filter='(!(univentionNewPortalEntryAllowedUserGroup=*))'
+      | awk '/^DN/ && $2 !~ /^cn=(Anmeldung|Impressum),{{ improve_usability_ui_changes_entry_dn }}/ { print $2 }'
+  register: improve_usability_ui_changes_portal_entries
+  tags:
+    - improve_usability_ui_changes
+    - improve_usability_ui_changes_get_portal_entries
+
+- name: "Hide portal entries for anonymous user"
+  ansible.builtin.command:
+    argv:
+      - "udm"
+      - "portals/entry"
+      - "modify"
+      - "--dn"
+      - "{{ item }}"
+      - "--append"
+      - 'allowedGroups=cn=Domain Users,cn=groups,{{ improve_usability_ui_changes_basedn }}'
+  loop: "{{ improve_usability_ui_changes_portal_entries.stdout_lines }}"
+  tags:
+    - improve_usability_ui_changes
+    - improve_usability_ui_changes_hide_portal_entries
+
+- name: "Allow anonymous users to see Login tile"
+  ansible.builtin.command:
+    argv:
+      - "udm"
+      - "portals/entry"
+      - "modify"
+      - "--dn"
+      - "cn=Anmeldung,cn=entry,cn=portals,cn=univention,{{ improve_usability_ui_changes_basedn }}"
+      - "--set"
+      - "anonymous=TRUE"
+  tags:
+    - improve_usability_ui_changes
+    - improve_usability_ui_changes_login_tile
+
+- name: "Add Login tile to help category"
+  ansible.builtin.command:
+    argv:
+      - "udm"
+      - "portals/category"
+      - "modify"
+      - "--dn"
+      - "cn=Help,cn=category,cn=portals,cn=univention,{{ improve_usability_ui_changes_basedn }}"
+      - "--append"
+      - "entries=cn=Anmeldung,cn=entry,cn=portals,cn=univention,{{ improve_usability_ui_changes_basedn }}"
+  tags:
+    - improve_usability_ui_changes
+    - improve_usability_ui_changes_login_tile_to_help
+
+- name: "Remove setupSettingsContextMenu from setupMenus()"
+  ansible.builtin.lineinfile:
+    path: "/usr/share/univention-web/js/umc/hooks/default_menu_entries.js"
+    line: "\\s+setupCertificateMenu();"
+    state: "absent"
+  tags:
+    - improve_usability_ui_changes
+    - improve_usability_ui_changes_remove_setupsettingscontextmenu
+
+- name: "Remove setupHelpMenu from setupMenus()"
+  ansible.builtin.lineinfile:
+    path: "/usr/share/univention-web/js/umc/hooks/default_menu_entries.js"
+    line: "\\s+setupHelpMenu();"
+    state: "absent"
+  tags:
+    - improve_usability_ui_changes
+    - improve_usability_ui_changes_remove_setuphelpmenu

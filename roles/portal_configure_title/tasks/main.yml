@@ -1,0 +1,23 @@
+---
+# tasks file for portal_configure_title
+
+- name: "Change portal title"
+  ansible.builtin.command: >
+    udm portals/portal modify
+    --dn cn=domain,cn=portal,cn=portals,cn=univention,{{ portal_configure_title_basedn }}
+    --set displayName='{{ item.key }} "{{ item.value }}"'
+  loop: "{{ portal_configure_title_titles | dict2items }}"
+  ignore_errors: true
+  tags:
+    - portal_configure_title
+    - portal_configure_title_set_title
+
+- name: "Append portal titles"
+  ansible.builtin.command: >
+    udm portals/portal modify
+    --dn cn=domain,cn=portal,cn=portals,cn=univention,{{ portal_configure_title_basedn }}
+    --append displayName='{{ item.key }} "{{ item.value }}"'
+  loop: "{{ portal_configure_title_titles | dict2items }}"
+  tags:
+    - portal_configure_title
+    - portal_configure_title_append_title

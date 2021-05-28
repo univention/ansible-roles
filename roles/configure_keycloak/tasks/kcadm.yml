@@ -1,0 +1,226 @@
+---
+
+- name: "Configure keycloak server using kcadm.sh"
+  become: false
+  block:
+    - name: "Authenticate to keycloak server (KCADM)"
+      ansible.builtin.command:
+        argv:
+          - "kcadm.sh"
+          - "config"
+          - "credentials"
+          - "--server"
+          - "https://{{ configure_keycloak_keycloak_server }}/auth/"
+          - "--realm"
+          - "{{ configure_keycloak_auth_realm|default('master') }}"
+          - "--user"
+          - "{{ configure_keycloak_admin_username }}"
+          - "--password"
+          - "{{ configure_keycloak_admin_password }}"
+      run_once: true
+      no_log: true
+      tags:
+        - configure_keycloak_auth
+
+    - name: 'Remove keycloak config from keycloak server (hostname)'
+      ansible.builtin.command:
+        argv:
+          - "kcadm.sh"
+          - "delete"
+          - "identity-provider/instances/{{ inventory_hostname }}"
+          - "-r"
+          - "{{ configure_keycloak_realm }}"
+      throttle: 1
+      tags:
+        - configure_keycloak_remove_keycloak_config
+        - configure_keycloak_remove_keycloak_config_hostname
+      ignore_errors: true
+
+    - name: 'Remove keycloak config from keycloak server (FQDN)'
+      ansible.builtin.command:
+        argv:
+          - "kcadm.sh"
+          - "delete"
+          - "identity-provider/instances/{{ configure_keycloak_fqdn }}"
+          - "-r"
+          - "{{ configure_keycloak_realm }}"
+      throttle: 1
+      tags:
+        - configure_keycloak_remove_keycloak_config
+        - configure_keycloak_remove_keycloak_config_fqdn
+      ignore_errors: true
+
+    - name: "Get keycloak realm info (KCADM)"
+      ansible.builtin.command: "kcadm.sh get realms/{{ configure_keycloak_realm }}"
+      register: configure_keycloak_kcadm_realm_output
+      ignore_errors: true
+      tags:
+        - configure_keycloak_get_realm_list
+
+    - name: "Create realm (KCADM)"
+      ansible.builtin.command: >
+        kcadm.sh create realms
+        -o
+        -s id={{ configure_keycloak_realm }}
+        -s realm={{ configure_keycloak_realm }}
+        -s enabled=true
+        -s displayName={{ configure_keycloak_realm }}
+        -s displayNameHtml='<div class="kc-logo-text"><span>Keycloak {{ configure_keycloak_realm }}</span></div>'
+      when: "configure_keycloak_kcadm_realm_output is failed"
+      tags:
+        - configure_keycloak_create_realm
+
+    - name: "Configure our host as an IDP for this realm (KCADM)"
+      ansible.builtin.command: >
+        kcadm.sh create identity-provider/instances
+        -r {{ configure_keycloak_realm }}
+        -s alias={{ configure_keycloak_oidcidp_id }}
+        -s displayName="{{ configure_keycloak_oidcidp_id }} IDP"
+        -s providerId=oidc
+        -s enabled=true
+        -s config.useJwksUrl=true
+        -s config.issuer=https://{{ configure_keycloak_fqdn }}
+        -s config.authorizationUrl=https://{{ configure_keycloak_fqdn }}/signin/v1/identifier/_/authorize
+        -s config.logoutUrl=https://{{ configure_keycloak_fqdn }}/signin/v1/identifier/_/endsession
+        -s config.userInfoUrl=https://{{ configure_keycloak_fqdn }}/konnect/v1/userinfo
+        -s config.tokenUrl=https://{{ configure_keycloak_fqdn }}/konnect/v1/token
+        -s config.jwksUrl=https://{{ configure_keycloak_fqdn }}/konnect/v1/jwks.json
+        -s config.validateSignature=false
+        -s config.clientId={{ configure_keycloak_server_id }}
+        -s config.clientSecret={{ configure_keycloak_password }}
+        -s config.clientAuthMethod=client_secret_post
+        -s config.defaultScope='openid profile email'
+        -s config.syncMode=IMPORT
+      tags:
+        - configure_keycloak_create_idp_instance
+
+    - name: "Insert FQDN into CSP list"
+      vars:
+        configure_keycloak_host_url: "https://{{ configure_keycloak_fqdn }}/"
+      block:
+        - name: "Get keycloak realm info (KCADM)"
+          ansible.builtin.command: "kcadm.sh get realms/{{ configure_keycloak_realm }}"
+          register: configure_keycloak_kcadm_realm_output
+          tags:
+            - configure_keycloak_insert_fqdn_get_realm_list
+
+        - name: "Change current CSP config to string variable (KCADM)"
+          ansible.builtin.set_fact:
+            configure_keycloak_current_CSP_list: "{{ (configure_keycloak_kcadm_realm_output.stdout|from_json)['browserSecurityHeaders']['contentSecurityPolicy'] }}"
+          tags:
+            - configure_keycloak_insert_fqdn_append_host_to_csp_list_set_current_csp_list
+
+        - name: "Check if length is over limit (255 chars)"
+          ansible.builtin.assert:
+            # (length configure_keycloak_current_CSP_list) + whitespace + (length configure_keycloak_host_url) <= 255
+            that: "(configure_keycloak_current_CSP_list|length) + 1 + (configure_keycloak_host_url|length) <= 255"
+            fail_msg: "Appending host to current CSP list will result in an overflow. Limit is 255 chars."
+          when: "configure_keycloak_host_url not in configure_keycloak_current_CSP_list"
+          tags:
+            - configure_keycloak_insert_fqdn_append_host_to_csp_list_assert_csp_length
+
+        - name: "Append current host to configured CSP list (KCADM)"
+          ansible.builtin.command: >
+            kcadm.sh update realms/{{ configure_keycloak_realm }}
+            -s browserSecurityHeaders.xFrameOptions=""
+            -s browserSecurityHeaders.contentSecurityPolicy="{{ configure_keycloak_current_CSP_list[:-1] }} {{ configure_keycloak_host_url }};"
+          when: "configure_keycloak_host_url not in configure_keycloak_current_CSP_list"
+          tags:
+            - configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms
+
+      when: "configure_keycloak_display_matrix_in_iframe|bool"
+      tags:
+        - configure_keycloak_insert_fqdn
+
+    - name: "Configure the import mapping for preferred_username (KCADM)"
+      ansible.builtin.command: >
+        kcadm.sh create identity-provider/instances/{{ configure_keycloak_oidcidp_id }}/mappers
+        -r {{ configure_keycloak_realm }}
+        -s name="append IDP to username"
+        -s identityProviderAlias="{{ configure_keycloak_oidcidp_id }}"
+        -s identityProviderMapper=oidc-username-idp-mapper
+        -s config.template="{{ configure_keycloak_oidc_username_template }}"
+        -s config.syncMode=INHERIT
+      tags:
+        - configure_keycloak_username_import_mapping
+
+    - name: "Get keycloak client info (KCADM)"
+      ansible.builtin.command: "kcadm.sh get clients -q clientId={{ configure_keycloak_client_id }} -r {{ configure_keycloak_realm }}"
+      register: configure_keycloak_kcadm_client_output
+      tags:
+        - configure_keycloak_get_client_info
+
+    - name: "Check that client secret is set (KCADM)"
+      ansible.builtin.assert:
+        that:
+          - "configure_keycloak_client_secret is defined"
+          - "configure_keycloak_client_secret|bool"
+        fail_msg: >
+          Client not configured but password not set.
+          We can't continue with keycloak server configureation
+      when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
+      tags:
+        - configure_keycloak_assert_client_secret
+
+    - name: "Check that client callback url is set (KCADM)"
+      ansible.builtin.assert:
+        that:
+          - "configure_keycloak_client_callback_url|bool"
+        fail_msg: >
+          Client not configured but client callback url not set.
+          We can't continue with keycloak server configureation
+      when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
+      tags:
+        - configure_keycloak_assert_client_callback
+
+    - name: "Create new client (KCADM)"
+      vars:
+        configure_keycloak_callback_url_list: "{{ [ configure_keycloak_client_callback_url ] }}"
+      ansible.builtin.command: >
+        kcadm.sh create clients
+        -r {{ configure_keycloak_realm }}
+        -s publicClient=false
+        -s clientId={{ configure_keycloak_client_id }}
+        -s clientAuthenticatorType="client-secret"
+        -s secret={{ configure_keycloak_client_secret }}
+        -s redirectUris={{ configure_keycloak_callback_url_list|to_json }}
+      when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
+      tags:
+        - configure_keycloak_create_client
+
+    - name: "Get keycloak client info again (after client creation) (KCADM)"
+      ansible.builtin.command: "kcadm.sh get clients -q clientId={{ configure_keycloak_client_id }} -r {{ configure_keycloak_realm }}"
+      register: configure_keycloak_kcadm_client_output_second
+      when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
+      tags:
+        - configure_keycloak_get_client_info
+
+    - name: "Refresh kcadm client output variable (KCADM)"
+      ansible.builtin.set_fact:
+        configure_keycloak_kcadm_client_output: "{{ configure_keycloak_kcadm_client_output_second }}"
+      when: "not configure_keycloak_kcadm_client_output_second is skipped"
+      tags:
+        - configure_keycloak_get_client_info_refresh
+
+    - name: "configure user.session.note to pass 'sourceidp' to the client (KCADM)"
+      vars:
+        configure_keycloak_client_uuid: "{{ (configure_keycloak_kcadm_client_output.stdout|from_json)[0]['id'] }}"
+      ansible.builtin.command: >
+        kcadm.sh create clients/{{ configure_keycloak_client_uuid }}/protocol-mappers/models
+        -r {{ configure_keycloak_realm }}
+        -s name=identity-provider-mapper
+        -s protocol=openid-connect
+        -s protocolMapper=oidc-usersessionmodel-note-mapper
+        -s consentRequired=False
+        -s 'config."user.session.note"=identity_provider'
+        -s 'config."id.token.claim"=true'
+        -s 'config."access.token.claim"=true'
+        -s 'config."claim.name"=sourceidp'
+        -s 'config."jsonType.label"=String'
+      register: "configure_keycloak_kcadm_create_mapper_output"
+      failed_when:
+        - "configure_keycloak_kcadm_create_mapper_output.rc == 1"
+        - "'Protocol mapper exists' not in configure_keycloak_kcadm_create_mapper_output.stderr"
+  delegate_to: "{{ configure_keycloak_keycloak_server }}"
+  tags:
+    - keycloak_config

@@ -1,0 +1,8 @@
+---
+# defaults file for ucs_add_admin_user
+ucs_add_admin_user_basedn: ""
+ucs_add_admin_user_username: ""
+ucs_add_admin_user_firstname: ""
+ucs_add_admin_user_lastname: ""
+ucs_add_admin_user_password: ""
+ucs_add_admin_user_recoveryemail: ""

@@ -1,0 +1,46 @@
+---
+# tasks file for configure_keycloak_saml
+
+- name: "Modify Domain Users Group"
+  ansible.builtin.command: >
+    udm groups/group modify
+    --dn "cn=Domain Users,cn=groups,{{ configure_keycloak_saml_basedn }}"
+    --append serviceprovidergroup="SAMLServiceProviderIdentifier={{ configure_keycloak_saml_sp_base_url }},cn=saml-serviceprovider,cn=univention,{{ configure_keycloak_saml_basedn }}"
+  tags:
+    - configure_keycloak_saml
+    - configure_keycloak_saml_modify_domain_users_group
+
+- name: "Create SAML Service provider"
+  ansible.builtin.command: >
+    udm saml/serviceprovider create
+    --position "cn=saml-serviceprovider,cn=univention,{{ configure_keycloak_saml_basedn }}"
+    --set Identifier="{{ configure_keycloak_saml_sp_base_url }}"
+    --set AssertionConsumerService="{{ configure_keycloak_saml_sp_base_url }}/broker/ucssaml/endpoint"
+    --set singleLogoutService="{{ configure_keycloak_saml_sp_base_url }}/broker/ucssaml/endpoint"
+    --set NameIDFormat=urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
+    --set attributesNameFormat=urn:oasis:names:tc:SAML:2.0:attrname-format:basic
+    --set simplesamlNameIDAttribute=entryuuid
+    --set simplesamlAttributes=TRUE
+    --set isActivated=TRUE
+    --append LDAPattributes='"mailPrimaryAddress" "email"'
+    --append LDAPattributes='"entryUUID" "entryuuid"'
+    --append LDAPattributes='"displayName" "displayname"'
+    --append LDAPattributes='"givenName" "firstname"'
+    --append LDAPattributes='"sn" "lastname"'
+    --append LDAPattributes='"oxContextIDNum" "oxcontextid"'
+  tags:
+    - configure_keycloak_saml
+    - configure_keycloak_saml_create_saml_service_provider
+
+- name: "Modify IDP configuration"
+  ansible.builtin.command: >
+    udm saml/idpconfig modify
+    --dn=id=default-saml-idp,cn=univention,{{ configure_keycloak_saml_basedn }}
+    --append LdapGetAttributes=entryUUID
+    --append LdapGetAttributes=displayName
+    --append LdapGetAttributes=givenName
+    --append LdapGetAttributes=sn
+    --append LdapGetAttributes=oxContextIDNum
+  tags:
+    - configure_keycloak_saml
+    - configure_keycloak_saml_modify_idp_configuration

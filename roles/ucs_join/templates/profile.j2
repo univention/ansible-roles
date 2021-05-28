@@ -1,0 +1,25 @@
+hostname="{{ ucs_join_hostname }}"
+domainname="{{ ucs_join_domain_name }}"
+windows/domain="{{ ucs_join_domain_name }}"
+ldap/base="{{ ucs_join_basedn }}"
+root_password="{{ ucs_join_final_root_password }}"
+locale/default="de_DE.UTF-8:UTF-8"
+locale="en_US.UTF-8:UTF-8 de_DE.UTF-8:UTF-8"
+server/role="{{ 'domaincontroller_' + ucs_join_server_type|default('master') }}"
+{% if ucs_join_network_config_type|default("dhcp") == "dhcp" %}
+interfaces/eth0/type="dhcp"
+{% elif ucs_join_network_config_type|default("dhcp") == "static" %}
+interfaces/eth0/type=""
+interfaces/eth0/address="{{ ucs_join_network_config_static_ip_config|ipaddr('address') }}"
+interfaces/eth0/netmask="{{ ucs_join_network_config_static_ip_config|ipaddr('netmask') }}"
+interfaces/eth0/network="{{ ucs_join_network_config_static_ip_config|ipaddr('network') }}"
+interfaces/eth0/broadcast="{{ ucs_join_network_config_static_ip_config|ipaddr('broadcast') }}"
+{% if ucs_join_server_type == 'backup' %}
+nameserver1="{{ hostvars[ucs_join_master_server]['ansible_host'] }}"
+{% else %}
+{% for dns_server in ucs_join_network_config_static_dns_servers|default([]) %}
+dns/forwarder{{ loop.index }}="{{ dns_server }}"
+{% endfor %}
+{% endif %}
+gateway="{{ ucs_join_network_config_static_gateway }}"
+{% endif %}
