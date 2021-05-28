@@ -28,6 +28,7 @@
     deployment_message_message: "{{ lookup('template', 'deployment_start_message.j2') }}"
   ansible.builtin.debug:
     msg: "{{ deployment_message_message.split('\n') }}"
+  when: "deployment_message_custom_fact_deployment is defined"
   tags:
     - deployment_message
     - deployment_message_print_version_info
@@ -35,6 +36,7 @@
 - name: "Pause for {{ deployment_message_verification_pause_duration }} seconds"
   ansible.builtin.pause:
     seconds: "{{ deployment_message_verification_pause_duration }}"
+  when: "deployment_message_custom_fact_deployment is defined"
   tags:
     - deployment_message
     - deployment_message_initial_pause
