@@ -9,6 +9,32 @@ stages:
   - release
   - publish
 
+
+.combine_read: &combine_read
+  - |
+    ROLE_FILES=$(find roles/ -type f -name README.md)
+
+    # Generate table of modules
+    echo "" >> README.md
+    echo "# Modules" >> README.md
+    echo "" >> README.md
+    for f in ${ROLE_FILES}
+    do
+      ROLE=$(echo ${f} | cut -d "/" -f2)
+      echo "- [${ROLE}](#$(echo ${f} | sed "s@\.@@g" | sed "s@/@@g" | tr '[:upper:]' '[:lower:]'))" >> README.md
+    done
+    # Add content of modules
+    for f in ${ROLE_FILES}
+    do
+      ROLE=$(echo ${f} )
+      echo "" >> README.md
+      echo "---" >> README.md
+      echo "" >> README.md
+      echo "# ${ROLE}" >> README.md
+      echo "" >> README.md
+      cat ${f} >> README.md
+    done
+
 .publish-common:
   artifacts:
     paths:
@@ -17,6 +43,7 @@ stages:
   before_script:
     # Check if release has to be build
     - if [ -z "$RELEASE_VERSION" ]; then exit 0; fi
+    - *combine_read
     # Set new semantic-release version
     - if [[ ${CI_COMMIT_BRANCH} != "main" ]];
       then

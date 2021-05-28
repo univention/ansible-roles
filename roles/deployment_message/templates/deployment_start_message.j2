@@ -9,7 +9,7 @@ SAML is going to be configured in {{ "master/standalone" if deployment_message_s
 
 This host currently is in the following groups: {{ group_names|join(", ") }}
 This deployment uses the following versions:
-{% for key, value in deployment_message_custom_fact_deployment.items() %}
+{% for key, value in deployment_message_custom_fact_deployment.items()|default([]) %}
 {{ key }}: {{ value }}
 {% endfor %}
 
