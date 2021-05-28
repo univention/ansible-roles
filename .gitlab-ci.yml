@@ -100,6 +100,7 @@ sync-to-public-repo:
     - rm -rf ${CI_BUILDS_DIR}/public || true
     - git clone https://gitlab-ci-token:${GITLAB_ANSIBLE_ROLES_PUBLIC_TOKEN}@git.knut.univention.de/univention/customers/dataport/deployment/ansible-roles-public.git ${CI_BUILDS_DIR}/public
     - rsync -aq --delete --exclude .gitlab-ci.yml --exclude .git ${CI_PROJECT_DIR}/ ${CI_BUILDS_DIR}/public
+    - cd ${CI_BUILDS_DIR}/public
     - git add .
     - git config user.email "ucs@univention.de"
     - git config user.name "Univention Commit Service"
