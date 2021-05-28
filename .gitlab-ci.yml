@@ -91,6 +91,10 @@ sync-to-public-repo:
   dependencies: []
   image: artifacts.knut.univention.de/upx/container-tooling/automation-rsync:main-89685aaa
   before_script:
+    # Include univention CA certificate
+    - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt > /usr/local/share/ca-certificates/ucs-root-ca.crt
+    - update-ca-certificates
+    # Update README
     - *combine_read
   script:
     - rm -rf ${CI_BUILDS_DIR}/public || true
