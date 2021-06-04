@@ -66,7 +66,7 @@
           - "computers/domaincontroller_master"
           - "modify"
           - "--dn"
-          - "cn={{ inventory_hostname }},cn=dc,cn=computers,{{ umc_policies_maintenance_basedn }}"
+          - "cn={{ umc_policies_maintenance_hostname }},cn=dc,cn=computers,{{ umc_policies_maintenance_basedn }}"
           - "--policy-reference"
           - "cn=app-update-schedule,cn=policies,{{ umc_policies_maintenance_basedn }}"
           - "--policy-reference"

@@ -184,6 +184,7 @@ Role Variables
 - `configure_keycloak_realm_base_url`(string): default: `"{{ configure_keycloak_base_url }}/admin/realms/{{ ansible_domain }}"`
 - `configure_keycloak_protocol_mapper_name`(string): default: `"identity-provider-mapper"`
 - `configure_keycloak_import_mapper_name`(string): default: `"append IDP to username"`
+- `configure_keycloak_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
 Dependencies
 ------------
@@ -204,7 +205,6 @@ Author Information
 
 Univention GmbH
 www.univention.com
-
 
 ---
 
@@ -779,6 +779,7 @@ Role Variables
 - `umc_policies_maintenance_patchminute`(string): The choosen minute for univention-update; default: `00`.
 - `umc_policies_maintenance_patchday`(String): The chosen day for univention-update; default: `Tuesday`.
 - `umc_policies_maintenance_release_verion`(string): The univention release version.
+- `umc_policies_maintenance_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
 Dependencies
 ------------
@@ -1470,6 +1471,7 @@ Role Variables
 - `configure_keycloak_client_keycloak_server_id`(string): The OpenID Connect IDP broker ID. This is used in both config modes.
 - `configure_keycloak_client_keycloak_server`(string): The server the UCS system with authenticate against.
 - `configure_keycloak_client_config_type`(string): This variable determines if the keycloak server configuration is done using this role (`dynamic`) or if things already have been configured and only the UCS side has to be configured (`static`). `dynamic` usually is used for setups with a lot of turnover, `static` is used in a more static environment. If set to 'none' keycloak configuration as a whole will be skipped, including the "client" side; default: `dynamic`.
+- `configure_keycloak_client_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
 Dependencies
 ------------

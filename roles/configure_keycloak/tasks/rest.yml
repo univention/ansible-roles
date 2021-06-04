@@ -30,7 +30,7 @@
 
     - name: "Check if host is configured as an IDP on keycloak server (hostname) (REST)"
       ansible.builtin.uri:
-        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ inventory_hostname }}"
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ configure_keycloak_hostname }}"
         method: "GET"
         body_format: "json"
         headers:
@@ -44,7 +44,7 @@
 
     - name: "Remove host's IDP config from keycloak server (hostname) (REST)"
       ansible.builtin.uri:
-        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ inventory_hostname }}"
+        url: "{{ configure_keycloak_realm_base_url }}/identity-provider/instances/{{ configure_keycloak_hostname }}"
         method: "DELETE"
         body_format: "json"
         headers:
