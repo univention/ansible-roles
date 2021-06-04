@@ -17,7 +17,7 @@
     install_packages_temp_pw_file: "{{ ox_connector_temp_pw_file }}"
     install_packages_install_apps: "ox-connector"
     install_packages_additional_options: >
-      DEFAULT_CONTEXT=1
+      DEFAULT_CONTEXT=9999
       OX_SOAP_SERVER=https://{{ ox_connector_soap_server_name }}/
       OX_IMAP_SERVER=imap://127.0.0.1:143
       OX_SMTP_SERVER=smtp://127.0.0.1:26
@@ -33,8 +33,8 @@
   ansible.builtin.command: >
     udm oxmail/oxcontext create
     --position "cn=open-xchange,{{ ox_connector_basedn }}"
-    --set contextid=1
-    --set name=Default
+    --set contextid=9999
+    --set name=9999
     --ignore_exists
   tags:
     - ox_connector
