@@ -16,6 +16,7 @@ Role Variables
 - `umc_policies_maintenance_patchminute`(string): The choosen minute for univention-update; default: `00`.
 - `umc_policies_maintenance_patchday`(String): The chosen day for univention-update; default: `Tuesday`.
 - `umc_policies_maintenance_release_verion`(string): The univention release version.
+- `umc_policies_maintenance_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
 Dependencies
 ------------
