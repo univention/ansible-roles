@@ -32,6 +32,7 @@ Role Variables
 - `configure_keycloak_realm_base_url`(string): default: `"{{ configure_keycloak_base_url }}/admin/realms/{{ ansible_domain }}"`
 - `configure_keycloak_protocol_mapper_name`(string): default: `"identity-provider-mapper"`
 - `configure_keycloak_import_mapper_name`(string): default: `"append IDP to username"`
+- `configure_keycloak_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
 Dependencies
 ------------
@@ -52,4 +53,3 @@ Author Information
 
 Univention GmbH
 www.univention.com
-

@@ -27,7 +27,7 @@
         argv:
           - "kcadm.sh"
           - "delete"
-          - "identity-provider/instances/{{ inventory_hostname }}"
+          - "identity-provider/instances/{{ configure_keycloak_hostname }}"
           - "-r"
           - "{{ configure_keycloak_realm }}"
       throttle: 1
