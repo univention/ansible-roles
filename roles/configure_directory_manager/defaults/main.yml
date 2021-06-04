@@ -1,0 +1,5 @@
+---
+# defaults file for configure_directory_manager
+configure_directory_manager_mailprimaryaddress_required: false
+configure_directory_manager_firstname_required: false
+configure_directory_manager_wizard_disabled: "No"
