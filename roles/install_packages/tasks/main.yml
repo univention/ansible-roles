@@ -28,14 +28,16 @@
       if item in install_packages_app_version_map
       else '' }}"
     install_packages_package_name: "{{ install_packages_service_name_list[item]|default(item) }}"
-  ansible.builtin.command:
-    argv:
-      - "univention-app"
-      - "install"
-      - "{{ install_packages_package_name }}{{ install_packages_package_version }}"
-      - "--noninteractive"
-      - "--pwdfile"
-      - "{{ install_packages_temp_pw_file.path }}"
+  ansible.builtin.command: >
+    univention-app
+    install
+    {{ install_packages_package_name }}{{ install_packages_package_version }}
+    --noninteractive
+    --pwdfile
+    {{ install_packages_temp_pw_file.path }}
+    {% if install_packages_additional_options is defined and install_packages_additional_options|length > 0 %}
+    --set {{ install_packages_additional_options }}
+    {% endif %}
   loop: "{{ install_packages_install_apps }}"
   when: install_packages_package_name not in install_packages_currently_installed_apps or
         (install_packages_force_package_upgrade|bool and

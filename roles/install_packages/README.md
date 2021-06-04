@@ -16,6 +16,7 @@ Role Variables
 - `install_packages_temp_pw_file`(map): Tempfile object where univention app password is stored.
 - `install_packages_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_packages_app_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
 - `install_packages_install_apps`(list): A list of applications to install.
+- `install_packages_additional_options`(string): Additional option that could be set during install.
 
 Dependencies
 ------------
