@@ -40,7 +40,7 @@
         --set
         applicationtype=web
         --set
-        redirectURI=https://{{  configure_keycloak_client_keycloak_server }}/auth/realms/{{ ansible_domain }}/broker/{{ inventory_hostname }}/endpoint
+        redirectURI=https://{{  configure_keycloak_client_keycloak_server }}/auth/realms/{{ ansible_domain }}/broker/{{ configure_keycloak_client_hostname }}/endpoint
       no_log: true
       tags:
         - configure_keycloak_client_configure
