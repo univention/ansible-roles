@@ -15,7 +15,8 @@
   vars:
     install_packages_app_version_map: "{{ ox_connector_app_version_map }}"
     install_packages_temp_pw_file: "{{ ox_connector_temp_pw_file }}"
-    install_packages_install_apps: "ox-connector"
+    install_packages_install_apps:
+      - "ox-connector"
     install_packages_additional_options: >
       DEFAULT_CONTEXT=9999
       OX_SOAP_SERVER=https://{{ ox_connector_soap_server_name }}/

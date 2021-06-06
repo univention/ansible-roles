@@ -4,6 +4,3 @@
 improve_usability_user_config_basedn: ""
 improve_usability_user_config_external_hostname: ""
 improve_usability_user_config_install_apps: []
-improve_usability_user_config_mailprimaryaddress_required: false
-improve_usability_user_config_firstname_required: false
-improve_usability_user_config_wizard_disabled: "No"

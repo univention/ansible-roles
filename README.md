@@ -48,6 +48,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [portal_create_category](#rolesportal_create_categoryreadmemd)
 - [install_packages](#rolesinstall_packagesreadmemd)
 - [add_local_user](#rolesadd_local_userreadmemd)
+- [configure_directory_manager](#rolesconfigure_directory_managerreadmemd)
 - [univention_firewall](#rolesunivention_firewallreadmemd)
 - [configure_apps_nextcloud](#rolesconfigure_apps_nextcloudreadmemd)
 - [disable_piwik_tracking](#rolesdisable_piwik_trackingreadmemd)
@@ -177,6 +178,7 @@ Role Variables
 
 - `umc_permissions_basedn`(string): The LDAP base domain name.
 - `umc_permissions_passwordreset_blacklist_groups`(string): The name of LDAP groups which are not allowed to reset their password.
+- `umc_permissions_passwordreset_whitelist_groups`(string): The name of LDAP groups which are allowed to reset their password.
 
 Dependencies
 ------------
@@ -1364,9 +1366,6 @@ Role Variables
 - `improve_usability_user_config_basedn`(string): The LDAP base domain name.
 - `improve_usability_user_config_external_hostname`(string): The host name that is used to talk to the system.
 - `improve_usability_user_config_install_apps`(list):  A list of applications to install.
-- `improve_usability_user_config_mailprimaryaddress_required`(bool): Toggles if mailPrimaryAddress should be required; default: `false`.
-- `improve_usability_user_config_firstname_required`(bool): Toggles if forename should be required; default: `false`.
-- `improve_usability_user_config_wizard_disabled`(string): Toggles the wizard. When set to `Yes`, wizard is enabled; default: `No`.
 
 Dependencies
 ------------
@@ -1987,6 +1986,48 @@ Author Information
 
 Univention GmbH
 www.univention.com
+---
+
+# roles/configure_directory_manager/README.md
+
+Configure directory manager
+=========
+
+This role configures directory manager settings.
+
+Requirements
+------------
+
+- univention.ucs_modules
+    - univention_config_registry
+    
+Role Variables
+--------------
+
+- `configure_directory_manager_mailprimaryaddress_required`(bool): Toggles if mailPrimaryAddress should be required; default: `false`.
+- `configure_directory_manager_firstname_required`(bool): Toggles if forename should be required; default: `false`.
+- `configure_directory_manager_wizard_disabled`(string): Toggles the wizard. When set to `Yes`, wizard is enabled; default: `No`.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
 ---
 
 # roles/univention_firewall/README.md

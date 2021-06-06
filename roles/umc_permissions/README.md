@@ -14,6 +14,7 @@ Role Variables
 
 - `umc_permissions_basedn`(string): The LDAP base domain name.
 - `umc_permissions_passwordreset_blacklist_groups`(string): The name of LDAP groups which are not allowed to reset their password.
+- `umc_permissions_passwordreset_whitelist_groups`(string): The name of LDAP groups which are allowed to reset their password.
 
 Dependencies
 ------------

@@ -1,0 +1,19 @@
+---
+# tasks file for configure_directory_manager
+
+- name: "Set properties as required"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/users/user/properties/mailPrimaryAddress/required: "{{ configure_directory_manager_mailprimaryaddress_required }}"
+      directory/manager/web/modules/users/user/properties/firstname/required: "{{ configure_directory_manager_firstname_required }}"
+  tags:
+    - configure_directory_manager
+    - configure_directory_manager_set_required_properties
+
+- name: "Disable wizard"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/wizard/disabled: "{{ configure_directory_manager_wizard_disabled }}"
+  tags:
+    - configure_directory_manager
+    - configure_directory_manager_disable_wizard
