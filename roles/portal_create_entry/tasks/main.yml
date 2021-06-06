@@ -86,8 +86,7 @@
     loop_var: "entry"
   when: ('only' not in entry) or
         ('only' in entry and
-          portal_create_entry_install_list|intersect([entry['only']]|flatten) and
-          entry['name']|lower in portal_create_entry_portal_entries_existing
+          portal_create_entry_install_list|intersect([entry['only']]|flatten)
         )
   tags:
     - portal_create_entry
