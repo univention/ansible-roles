@@ -49,7 +49,7 @@ dependencies:
   "univention.ucs_modules": ">=0.0.1"
 
 # The URL of the originating SCM repository
-repository: https://github.com/univention/ansible-modules
+repository: https://github.com/univention/ansible-roles
 
 # The URL to any online docs
 #documentation: http://docs.example.com
