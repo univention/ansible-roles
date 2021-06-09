@@ -24,7 +24,7 @@ Role Variables
 - `ucs_join_network_config_static_ip_config`(map): The server's IPv4 address in one of the following two forms: `<ip address>/<netmask>` or CIDR form (`<ip address>/<prefix length>`. Both forms are functionally equal. Example: `192.168.0.1/255.255.255.240` or `192.168.0.1/28`.
 - `ucs_join_network_config_static_dns_servers`(list): A list of DNS servers to use in case of static network configuration. If `ucs_join_server_type` is `backup` this variable is ignored and the `master` server will be used instead.
 - `ucs_join_network_config_static_gateway`(string): The server's default router aka internet gateway. This is mandatory for the setup to work.
-
+- `ucs_join_network_config_interface`(string): The servers default network interface; default: `eth0`.
 
 Dependencies
 ------------

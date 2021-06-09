@@ -14,3 +14,4 @@ ucs_join_network_config_type: "dhcp"
 ucs_join_network_config_static_ip_config: ""
 ucs_join_network_config_static_dns_servers: []
 ucs_join_network_config_static_gateway: ""
+ucs_join_network_config_interface: "eth0"
