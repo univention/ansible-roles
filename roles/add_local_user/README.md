@@ -20,6 +20,7 @@ add_local_user_user:
     password:     # hased password of user; default:  "{{ "ansible"|password_hash('sha512') }}"
     sshkey_file:  # ssh key filename; default: empty
     sshkey:       # ssh key as string; default: empty
+    state:        # toggle if user should be present or absent; default: present
 ```
 - `add_local_user_default_shell`(string): Default user shell; default: `/bin/bash`
 

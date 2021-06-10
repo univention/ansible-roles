@@ -2,14 +2,17 @@
 # tasks file for add-local-user
 
 - name: "Add a user"
+  vars:
+    add_local_user_random_password: "{{ lookup('password', '/dev/null length=40 chars=ascii_letters') }}"
   ansible.builtin.user:
     name: "{{ add_local_user_user['name'] }}"
     comment: "{{ add_local_user_user['comment']|default('') }}"
-    password: "{{ add_local_user_user['password'] }}"
+    password: "{{ add_local_user_user['password']|default(add_local_user_random_password) }}"
     shell: "{{ add_local_user_user['shell']|default(add_local_user_default_shell) }}"
     update_password: "always"
     groups:
       - "sudo"
+    state: "{{ add_local_user_user['state']|default('present') }}"
   no_log: true
   tags:
     - add_local_user
@@ -21,7 +24,7 @@
     user: "{{ add_local_user_user['name'] }}"
     key: "{{ add_local_user_user['sshkey'] }}"
     manage_dir: true
-    state: "present"
+    state: "{{ add_local_user_user['state']|default('present') }}"
   when: "'sshkey' in add_local_user_user"
   tags:
     - add_local_user
@@ -33,7 +36,7 @@
     user: "{{ add_local_user_user['name'] }}"
     key: "{{ lookup('file', add_local_user_user['sshkey_file']) }}"
     manage_dir: true
-    state: "present"
+    state: "{{ add_local_user_user['state']|default('present') }}"
   when: "'sshkey_file' in add_local_user_user and 'sshkey' not in add_local_user_user"
   tags:
     - add_local_user
@@ -45,8 +48,8 @@
     kvlist:
       - key: "auth/sshd/user/{{ add_local_user_user['name'] }}"
         value: "yes"
+    state: "{{ add_local_user_user['state']|default('present') }}"
   tags:
     - add_local_user
     - add_local_user_user
     - add_local_user_user_allow_login
-
