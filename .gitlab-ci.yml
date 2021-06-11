@@ -54,7 +54,7 @@ stages:
     - sed -i "/version. [0-9]\.[0-9]\.[0-9]/s/[0-9]\.[0-9]\.[0-9]/$VERSION/" galaxy.yml
     # Download license client
     - curl https://raw.githubusercontent.com/univention/univention-corporate-server/5.0-0/test/ucs-test/univention/testing/license_client.py --output ${CI_PROJECT_DIR}/roles/configure_license/files/license_client.py
-  image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:main-b05ef2b4
+  image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:main-00bbac5a
   script:
     - ansible-galaxy collection build
     - ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} univention-ucs_roles-${VERSION}.tar.gz
@@ -75,7 +75,7 @@ publish-mr:
   when: manual
 
 update-requirements:
-  image: artifacts.knut.univention.de/upx/container-tooling/automation-mr-tool:main-b05ef2b4
+  image: artifacts.knut.univention.de/upx/container-tooling/automation-mr-tool:main-d08bb278
   only:
     - tags
   script:
@@ -89,7 +89,7 @@ update-requirements:
 
 sync-to-public-repo:
   dependencies: []
-  image: artifacts.knut.univention.de/upx/container-tooling/automation-rsync:main-89685aaa
+  image: artifacts.knut.univention.de/upx/container-tooling/automation-rsync:main-d08bb278
   before_script:
     # Include univention CA certificate
     - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt > /usr/local/share/ca-certificates/ucs-root-ca.crt
