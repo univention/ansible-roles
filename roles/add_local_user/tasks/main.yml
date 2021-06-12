@@ -18,6 +18,12 @@
     - add_local_user_user
     - add_local_user_user_create_user
 
+- name: "Allow sudo without password, when no password is given"
+  ansible.builtin.lineinfile:
+    path: "/etc/sudoers"
+    line: "{{ add_local_user_user['name'] }} ALL=(ALL) NOPASSWD: ALL"
+  when: "add_local_user_user['password'] is not defined"
+
 - name: "Install authorized_key for that user (key string)"
   ansible.posix.authorized_key:
     user: "{{ add_local_user_user['name'] }}"
@@ -54,5 +60,5 @@
     - add_local_user_user
     - add_local_user_user_allow_login
 
-- name: "Flush handlers"
-  ansible.builtin.meta: flush_handlers
+#- name: "Flush handlers"
+#  ansible.builtin.meta: flush_handlers
