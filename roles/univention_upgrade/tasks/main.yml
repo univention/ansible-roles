@@ -1,6 +1,16 @@
 ---
 # tasks file for univention_upgrade
-- name: 'Do univention-upgrade'
+
+- name: "Allow modified apache templates"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      update44/ignore_apache_template_checks: "yes"
+  tags:
+    - univention_upgrade
+    - univention_upgrade_ignore_apache_template_check
+
+- name: "Do univention-upgrade"
   ansible.builtin.command: "univention-upgrade --ignoressh --ignoreterm --noninteractive --updateto={{ univention_upgrade_version }}"
   tags:
     - univention_upgrade
+    - univention_upgrade_run
