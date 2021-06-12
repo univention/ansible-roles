@@ -13,7 +13,6 @@
     groups:
       - "sudo"
     state: "{{ add_local_user_user['state']|default('present') }}"
-  notify: "Restart sshd"
   tags:
     - add_local_user
     - add_local_user_user
@@ -50,7 +49,6 @@
       - key: "auth/sshd/user/{{ add_local_user_user['name'] }}"
         value: "yes"
     state: "{{ add_local_user_user['state']|default('present') }}"
-  notify: "Restart sshd"
   tags:
     - add_local_user
     - add_local_user_user
