@@ -5,3 +5,5 @@
   ansible.builtin.service:
     name: "ssh"
     state: "restarted"
+  retries: 3
+  ignore_errors: true

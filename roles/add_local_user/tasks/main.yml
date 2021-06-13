@@ -13,11 +13,16 @@
     groups:
       - "sudo"
     state: "{{ add_local_user_user['state']|default('present') }}"
-  notify: "Restart sshd"
   tags:
     - add_local_user
     - add_local_user_user
     - add_local_user_user_create_user
+
+- name: "Allow sudo without password, when no password is given"
+  ansible.builtin.lineinfile:
+    path: "/etc/sudoers"
+    line: "{{ add_local_user_user['name'] }} ALL=(ALL) NOPASSWD: ALL"
+  when: "add_local_user_user['password'] is not defined"
 
 - name: "Install authorized_key for that user (key string)"
   ansible.posix.authorized_key:
@@ -50,11 +55,10 @@
       - key: "auth/sshd/user/{{ add_local_user_user['name'] }}"
         value: "yes"
     state: "{{ add_local_user_user['state']|default('present') }}"
-  notify: "Restart sshd"
   tags:
     - add_local_user
     - add_local_user_user
     - add_local_user_user_allow_login
 
-- name: "Flush handlers"
-  ansible.builtin.meta: flush_handlers
+#- name: "Flush handlers"
+#  ansible.builtin.meta: flush_handlers

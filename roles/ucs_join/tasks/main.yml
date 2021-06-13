@@ -52,7 +52,7 @@
     - name: "Write admin password into temporary file"
       ansible.builtin.copy:
         dest: "{{ ucs_join_admin_pw_file.path }}"
-        content: "{{ hostvars[ucs_join_master_server]['admin_password'] }}"
+        content: "{{ ucs_join_root_password }}"
         mode: 0600
       tags:
         - ucs_join_admin_pw_file
@@ -65,12 +65,6 @@
       tags:
         - ucs_join_run
         - ucs_join_run_backup
-
-    - name: "Set admin password to master's admin password (backup setup)"
-      ansible.builtin.set_fact:
-        admin_password: "{{ hostvars[ucs_join_master_server]['admin_password'] }}"
-      tags:
-        - ucs_join_backup_set_admin_password
 
   always:
     - name: "Make sure that the temporary admin password file is gone"
