@@ -1,6 +1,48 @@
 ---
 # tasks file for ucs_join
 
+- name: "Check if all mandatory common vars are set"
+  ansible.builtin.assert:
+    that:
+      - "ucs_join_server_type|string|length > 0"
+      - "ucs_join_server_type == 'master' or ucs_join_server_type == 'backup'"
+      - "ucs_join_admin_user_name|string|length > 0"
+      - "ucs_join_root_password|string|length > 0"
+      - "ucs_join_hostname|string|length > 0"
+      - "ucs_join_domain_name|string|length > 0"
+      - "ucs_join_basedn|string|length > 0"
+      - "ucs_join_network_config_interface|string|length > 0"
+      - "ucs_join_network_config_type|string|length > 0"
+    fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags ucs_join_check_common_preconditions"
+  tags:
+    - ucs_join
+    - ucs_join_check_common_preconditions
+
+- name: "Check if all static network setting vars are set"
+  ansible.builtin.assert:
+    that:
+      - "ucs_join_network_config_static_ip_config|string|length > 0"
+      - "ucs_join_network_config_static_ip_config|ipaddr('address')|length > 0"
+      - "ucs_join_network_config_static_ip_config|ipaddr('netmask')|length > 0"
+      - "ucs_join_network_config_static_ip_config|ipaddr('network')|length > 0"
+      - "ucs_join_network_config_static_ip_config|ipaddr('broadcast')|length > 0"
+      - "ucs_join_network_config_static_gateway|string|length > 0"
+      - "ucs_join_network_config_static_dns_servers|length > 0"
+    fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags ucs_join_check_static_network_preconditions"
+  when: "ucs_join_network_config_type == 'static'"
+  tags:
+    - ucs_join
+    - ucs_join_check_static_network_preconditions
+
+- name: "Check if backup vars are set"
+  ansible.builtin.assert:
+    that:
+      - "ucs_join_master_server|string|length > 0"
+    fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags ucs_join_check_backup_preconditions"
+  when: "ucs_join_server_type == 'backup'"
+  tags:
+    - ucs_join
+    - ucs_join_check_backup_preconditions
 
 - name: "Get derived admin password"
   ansible.builtin.set_fact:
