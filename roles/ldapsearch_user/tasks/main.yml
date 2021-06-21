@@ -23,7 +23,7 @@
           --set username="ldapsearchox"
           --set lastname="LDAPSearch-OpenXchange"
           --set password="{{ ldapsearch_user_ox_password }}"
-      when: "'oxseforucs' in ldapsearch_user_install_apps"
+      when: "'oxseforucs' in ldapsearch_user_install_apps or 'ox-connector' in ldapsearch_user_install_apps"
       tags:
         - ldapsearch_user_nextcloud
   when: "ldapsearch_user_server_type|default('master') != 'backup'"

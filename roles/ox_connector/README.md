@@ -13,6 +13,7 @@ Role Variables
 --------------
 
 - `ox_connector_basedn`(string): The LDAP base dn.
+- `ox_connector_domain_name`(string): The system's dns domain name.
 - `ox_connector_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. 
 - `ox_connector_temp_pw_file`(map): Tempfile object where univention app password is stored.
 - `ox_connector_soap_server_name`(string): The DNS name of OX SOAP server.

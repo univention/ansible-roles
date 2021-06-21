@@ -7,6 +7,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [configure_office_suite](#rolesconfigure_office_suitereadmemd)
 - [install_service_selfservices](#rolesinstall_service_selfservicesreadmemd)
 - [configure_keycloak](#rolesconfigure_keycloakreadmemd)
+- [univention_remove](#rolesunivention_removereadmemd)
 - [remove_packages](#rolesremove_packagesreadmemd)
 - [disable_ipv6](#rolesdisable_ipv6readmemd)
 - [custom_facts](#rolescustom_factsreadmemd)
@@ -39,6 +40,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [install_apps_ox_pre](#rolesinstall_apps_ox_prereadmemd)
 - [configure_keycloak_client](#rolesconfigure_keycloak_clientreadmemd)
 - [install_lets_encrypt](#rolesinstall_lets_encryptreadmemd)
+- [univention_install](#rolesunivention_installreadmemd)
 - [ldapsearch_user](#rolesldapsearch_userreadmemd)
 - [disable_piwik_tracking](#rolesdisable_piwik_trackingreadmemd)
 - [cleanup_portal](#rolescleanup_portalreadmemd)
@@ -46,6 +48,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [improve_usability_nextcloud](#rolesimprove_usability_nextcloudreadmemd)
 - [configure_license](#rolesconfigure_licensereadmemd)
 - [portal_delete_entry](#rolesportal_delete_entryreadmemd)
+- [install_multitenant_acls](#rolesinstall_multitenant_aclsreadmemd)
 - [improve_usability_ui_changes](#rolesimprove_usability_ui_changesreadmemd)
 - [configure_ntp_servers](#rolesconfigure_ntp_serversreadmemd)
 - [extend_root_lvm_volume](#rolesextend_root_lvm_volumereadmemd)
@@ -187,6 +190,45 @@ Role Variables
 - `configure_keycloak_protocol_mapper_name`(string): default: `"identity-provider-mapper"`
 - `configure_keycloak_import_mapper_name`(string): default: `"append IDP to username"`
 - `configure_keycloak_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/univention_remove/README.md
+
+Remove packages with univention-remove
+=========
+
+This role installs packages via `univention-remove` wrapper. 
+
+Requirements
+------------
+
+none
+
+Role Variables
+--------------
+
+- `univention_remove_name`(string): The name of the package to be removed.
 
 Dependencies
 ------------
@@ -1585,6 +1627,45 @@ Univention GmbH
 www.univention.com
 ---
 
+# roles/univention_install/README.md
+
+Install packages with univention-install
+=========
+
+This role installs packages via `univention-install` wrapper. 
+
+Requirements
+------------
+
+none
+
+Role Variables
+--------------
+
+- `univention_install_name`(string): The name of the package to be installed.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
 # roles/ldapsearch_user/README.md
 
 LDAPSearch user
@@ -1888,6 +1969,58 @@ Univention GmbH
 www.univention.com
 ---
 
+# roles/install_multitenant_acls/README.md
+
+Install multitenant ACLs
+=========
+
+Install and configure ACL package.
+
+Requirements
+------------
+
+none
+
+Role Variables
+--------------
+
+- `install_multitenant_acls_customer_name`(string): The name of customer used inside ACL package.
+- `install_multitenant_acls_multitenant_acls`(list): A list of acl settings.
+    ```
+    multitenant_acls:
+      - tenant_id: "0000"
+        tenant_short_name: "test"
+        admin_password: ""
+      - tenant_id: "0001"
+        tenant_short_name: "test"
+        admin_password: ""
+    ```
+- `install_multitenant_acls_json_path`(string): The local path for ACL structure json file.
+- `install_multitenant_acls_package_name`(string): The customer specific debian package name.
+- `install_multitenant_acls_script_name`(string): The name of create acl structure script.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
 # roles/improve_usability_ui_changes/README.md
 
 Improve usability ui changes.
@@ -2029,6 +2162,7 @@ Role Variables
 --------------
 
 - `ox_connector_basedn`(string): The LDAP base dn.
+- `ox_connector_domain_name`(string): The system's dns domain name.
 - `ox_connector_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. 
 - `ox_connector_temp_pw_file`(map): Tempfile object where univention app password is stored.
 - `ox_connector_soap_server_name`(string): The DNS name of OX SOAP server.

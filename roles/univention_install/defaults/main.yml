@@ -1,0 +1,4 @@
+---
+# defaults file for univention_install
+
+univention_install_name: ""

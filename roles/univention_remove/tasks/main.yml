@@ -1,0 +1,12 @@
+---
+# tasks file for univention_remove
+
+- name: "Remove via univention-remove"
+  ansible.builtin.command: "univention-remove --yes {{ univention_remove_name }}"
+  register: univention_remove_run
+  retries: 10
+  delay: 10
+  until: "univention_remove_run.rc == 0"
+  tags:
+    - univention_remove
+    - univention_remove_run

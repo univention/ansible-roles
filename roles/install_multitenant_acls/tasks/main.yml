@@ -1,0 +1,32 @@
+---
+# tasks file for install_multitenant_acls
+
+- name: "Copy ACL template to machine"
+  ansible.builtin.template:
+    dest: "{{ install_multitenant_acls_json_path }}"
+    src: "multitenant-acls.j2"
+  tags:
+    - install_multitenant_acls
+    - install_multitenant_acls_copy_acl_template
+
+- name:  "Install ACL package"
+  ansible.builtin.include_role:
+    name: "univention_install"
+  vars:
+    univention_install_name: "{{ install_multitenant_acls_package_name }}"
+  tags:
+    - install_multitenant_acls
+    - install_multitenant_acls_install_acl_package
+
+- name: "Create Mandant structure"
+  ansible.builtin.command: "/usr/share/{{ install_multitenant_acls_package_name }}/{{ install_multitenant_acls_script_name }} {{ install_multitenant_acls_json_path }}"
+
+
+- name: "Make sure template is removed"
+  ansible.builtin.file:
+    path: "{{ install_multitenant_acls_json_path }}"
+    state: "absent"
+  tags:
+    - always
+    - install_multitenant_acls
+    - install_multitenant_acls_copy_acl_template
