@@ -92,9 +92,39 @@
     - name: "Add default dn to users"
       univention.ucs_modules.univention_config_registry:
         keys:
-          directory/manager/web/modules/users/user/add/default: "cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,${{ ox_connector_basedn }}"
+          directory/manager/web/modules/users/user/add/default: "cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}"
       tags:
         - ox_connector_default_dn
+
+    - name: "Disable UDMWeb for User"
+      ansible.builtin.command: >
+        udm settings/extended_attribute modify \
+          --dn "cn=oxContextUser,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}" \
+          --set mayChange=0 \
+          --set disableUDMWeb=1
+      tags:
+        - ox_connector_disable_udmweb_user
+
+    - name: "Disable UDMWeb for Ressource"
+      ansible.builtin.command: >
+        udm settings/extended_attribute modify \
+          --dn "cn=oxContextResource,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}" \
+          --set mayChange=0 \
+          --set disableUDMWeb=1
+      tags:
+        - ox_connector_disable_udmweb_ressource
+
+    - name: "Create ipmanagedclients"
+      ansible.builtin.command: >
+        udm computers/ipmanagedclient create \
+          --position "cn=computers,{{ ox_connector_basedn }}" \
+          --set dnsEntryZoneForward="zoneName={{ ox_connector_domain_name }},cn=dns,{{ ox_connector_basedn }}" \
+          --set name=ox-connect \
+          --set ip={{ ox_connector_soap_server_ip }} \
+          --set domain={{ ox_connector_domain_name }}
+      tags:
+        - ox_connector_ipmanagedclients
+
   when: "ox_connector_server_type|default('master') != 'backup'"
   tags:
     - ox_connector
