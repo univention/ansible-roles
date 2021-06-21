@@ -76,15 +76,6 @@
       tags:
         - improve_usability_user_config_change_primary_mail_address
 
-    # only have one user template (the ox template; call it phoenix)
-    - name: "Remove selfservice user template"
-      ansible.builtin.command: >
-        udm settings/usertemplate remove
-        --dn
-        cn=selfserviceregistrationtemplate,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}
-      tags:
-        - improve_usability_user_config_remove_selfservice
-
     - name: "Rename user template to 'Phoenix Groupware-Benutzer'"
       ansible.builtin.command: >
         udm settings/usertemplate modify
@@ -108,3 +99,12 @@
   tags:
     - improve_usability_user_config
     - improve_usability_user_config_user_template
+
+- name: "Remove selfservice user template"
+  ansible.builtin.command: >
+    udm settings/usertemplate remove
+    --dn
+    cn=selfserviceregistrationtemplate,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}
+  tags:
+    - improve_usability_user_config
+    - improve_usability_user_config_remove_selfservice
