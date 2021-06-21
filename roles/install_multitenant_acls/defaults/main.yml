@@ -1,0 +1,7 @@
+---
+# defaults file for install_multitenant_acls
+install_multitenant_acls_customer_name: ""
+install_multitenant_acls_multitenant_acls: []
+install_multitenant_acls_json_path: ""
+install_multitenant_acls_package_name: ""
+install_multitenant_acls_script_name: ""
