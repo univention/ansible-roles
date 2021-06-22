@@ -28,6 +28,7 @@
         - name: "Get license end date"
           ansible.builtin.command: "date -u -d '+{{ configure_license_validity }}' '+%d.%m.%Y'"
           register: configure_license_validity_date
+          when: "configure_license_validity != 'unlimited'"
           tags:
             - configure_license_server_license_calculate_end_date
 
@@ -60,7 +61,7 @@
               - "-f"
               - "{{ configure_license_temp_dir.path }}/license.ldif"
               - "{{ configure_license_basedn }}"
-              - "{{ configure_license_validity_date.stdout_lines[0] }}"
+              - "{{ configure_license_validity_date.stdout_lines[0]|default('unlimited') }}"
             creates: "{{ configure_license_temp_dir.path }}/license.ldif"
           tags:
             - configure_license_server_license_acquire
