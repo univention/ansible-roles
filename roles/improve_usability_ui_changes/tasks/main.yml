@@ -80,7 +80,7 @@
   ansible.builtin.lineinfile:
     path: "/usr/share/univention-management-console-frontend/js/umc/modules/udm/UsernameMaxLengthChecker.js"
     line: "                maxLength: 999,"
-    regexp: "                maxLength: 20,"
+    regexp: "maxLength: 20,"
   tags:
     - improve_usability_ui_changes
     - improve_usability_ui_changes_username_max_length
