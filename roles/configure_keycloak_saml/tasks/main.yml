@@ -28,6 +28,7 @@
     --append LDAPattributes='"givenName" "firstname"'
     --append LDAPattributes='"sn" "lastname"'
     --append LDAPattributes='"oxContextIDNum" "oxcontextid"'
+    --append LDAPattributes='"uid"'
   tags:
     - configure_keycloak_saml
     - configure_keycloak_saml_create_saml_service_provider
