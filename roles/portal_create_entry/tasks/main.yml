@@ -27,7 +27,7 @@
     --position cn={{ entry['class']|default('entry') }},{{ portal_create_entry_portal_dn }}
     {% endif %}
     {% if entry['class']|default('entry') == 'entry' %}
-    --set activated=TRUE
+    --set activated={{ entry['activated']|default('TRUE') }}
     {% endif %}
     {% for lang, text in (entry['description']|default({})).items() %}
     --set description='{{ lang }} "{{ text }}"'

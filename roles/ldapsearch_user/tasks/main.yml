@@ -11,6 +11,7 @@
           --set username="ldapsearchnc"
           --set lastname="LDAPSearch-Nextcloud"
           --set password="{{ ldapsearch_user_nextcloud_password }}"
+          --ignore_exists
       when: "'nextcloud' in ldapsearch_user_install_apps"
       tags:
         - ldapsearch_user_nextcloud
@@ -23,6 +24,7 @@
           --set username="ldapsearchox"
           --set lastname="LDAPSearch-OpenXchange"
           --set password="{{ ldapsearch_user_ox_password }}"
+          --ignore_exists
       when: "'oxseforucs' in ldapsearch_user_install_apps or 'ox-connector' in ldapsearch_user_install_apps"
       tags:
         - ldapsearch_user_nextcloud
