@@ -1,19 +1,6 @@
 ---
 # tasks file for cleanup_portal
 
-- name: "Turn off video conferencing"
-  ansible.builtin.command:
-    argv:
-      - 'udm'
-      - 'portals/entry'
-      - 'modify'
-      - '--dn'
-      - 'cn=Videokonferenzen,cn=entry,cn=portals,cn=univention,{{ cleanup_portal_basedn }}'
-      - '--set'
-      - 'activated=FALSE'
-  tags:
-    - cleanup_portal
-
 - name: "Install Dashboard"
   block:
     - name: "Allow Domain Admin group access to dashboard features"
