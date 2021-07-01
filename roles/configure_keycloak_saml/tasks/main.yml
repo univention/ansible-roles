@@ -27,6 +27,7 @@
     --append LDAPattributes='"displayName" "displayname"'
     --append LDAPattributes='"givenName" "firstname"'
     --append LDAPattributes='"sn" "lastname"'
+    --append LDAPattributes='"univentionTenantID" "tenantid"'
     --append LDAPattributes='"oxContextIDNum" "oxcontextid"'
     --append LDAPattributes='"uid"'
   tags:
@@ -41,6 +42,7 @@
     --append LdapGetAttributes=displayName
     --append LdapGetAttributes=givenName
     --append LdapGetAttributes=sn
+    --append LdapGetAttributes=univentionTenantID
     --append LdapGetAttributes=oxContextIDNum
   tags:
     - configure_keycloak_saml
