@@ -63,60 +63,83 @@
     - ucs_join
     - ucs_join_derive_admin_password
 
-- name: "Create UCS join profile from template"
-  ansible.builtin.template:
-    src: "profile.j2"
-    dest: "/var/cache/univention-system-setup/profile"
-  no_log: true
+- name: "Check if system-setup is run"
+  ansible.builtin.stat:
+    path: "/etc/ansible/univention-system-setup_sucessful"
+  register: "ucs_join_system_setup_status"
   tags:
+    - always
     - ucs_join
-    - ucs_join_create_join_profile
+    - ucs_join_system_setup_check
 
-- name: "Carry out UCS join (master/standalone)"
-  ansible.builtin.command: "/usr/lib/univention-system-setup/scripts/setup-join.sh"
-  when: "ucs_join_server_type|default('master') != 'backup'"
-  tags:
-    - ucs_join
-    - ucs_join_run
-    - ucs_join_run_primary
-    - ucs_join_run_standalone
-
-- name: "Carry out UCS join (backup)"
+- name: "Carry out system setup"
   block:
-    - name: "Create temporary admin password file"
-      ansible.builtin.tempfile:
-        state: file
-      register: ucs_join_admin_pw_file
+    - name: "Create UCS join profile from template"
+      ansible.builtin.template:
+        src: "profile.j2"
+        dest: "/var/cache/univention-system-setup/profile"
+      no_log: true
       tags:
-        - ucs_join_admin_pw_file
+        - ucs_join_system_setup_profile
 
-    - name: "Write admin password into temporary file"
-      ansible.builtin.copy:
-        dest: "{{ ucs_join_admin_pw_file.path }}"
-        content: "{{ ucs_join_root_password }}"
-        mode: 0600
+    - name: "Carry out UCS join (master/standalone)"
+      ansible.builtin.command: "/usr/lib/univention-system-setup/scripts/setup-join.sh"
+      when: "ucs_join_server_type|default('master') != 'backup'"
       tags:
-        - ucs_join_admin_pw_file
+        - ucs_join_system_setup_primary
+        - ucs_join_system_setup_standalone
 
     - name: "Carry out UCS join (backup)"
-      ansible.builtin.command: >
-        /usr/lib/univention-system-setup/scripts/setup-join.sh
-        --dcaccount "{{ ucs_join_admin_user_name }}"
-        --password_file "{{ ucs_join_admin_pw_file.path }}"
-      tags:
-        - ucs_join_run
-        - ucs_join_run_backup
+      block:
+        - name: "Create temporary admin password file"
+          ansible.builtin.tempfile:
+            state: file
+          register: ucs_join_admin_pw_file
+          tags:
+            - ucs_join_system_setup_backup_admin_pw_file_temp
 
-  always:
-    - name: "Make sure that the temporary admin password file is gone"
+        - name: "Write admin password into temporary file"
+          ansible.builtin.copy:
+            dest: "{{ ucs_join_admin_pw_file.path }}"
+            content: "{{ ucs_join_root_password }}"
+            mode: 0600
+          tags:
+            - ucs_join_system_setup_backup_admin_pw_file
+
+        - name: "Carry out UCS join (backup)"
+          ansible.builtin.command: >
+            /usr/lib/univention-system-setup/scripts/setup-join.sh
+            --dcaccount "{{ ucs_join_admin_user_name }}"
+            --password_file "{{ ucs_join_admin_pw_file.path }}"
+          tags:
+            - ucs_join_system_setup_backup_run
+
+      always:
+        - name: "Make sure that the temporary admin password file is gone"
+          ansible.builtin.file:
+            path: "{{ ucs_join_admin_pw_file.path }}"
+            state: "absent"
+          tags:
+            - ucs_join_system_setup_backup_cleanup_admin_pw_file
+            - cleanup
+
+      when: "ucs_join_server_type|default('master') == 'backup'"
+      tags:
+        - ucs_join_system_setup_backup
+
+    - name: "Create successful system-setup marker"
       ansible.builtin.file:
-        path: "{{ ucs_join_admin_pw_file.path }}"
-        state: "absent"
+        path: /etc/ansible/univention-system-setup_sucessful
+        state: "touch"
       tags:
-        - ucs_join_cleanup_admin_pw_file
-        - cleanup
-
-  when: "ucs_join_server_type|default('master') == 'backup'"
+        - ucs_join_system_setup_successful
+  when: "ucs_join_system_setup_status.stat.exists is false"
   tags:
     - ucs_join
-    - ucs_join_backup
+    - ucs_join_system_setup
+
+- name: "Run univention join scripts"
+  ansible.builtin.command: "univention-run-join-scripts"
+  tags:
+    - ucs_join
+    - ucs_join_run_join_scripts
