@@ -124,6 +124,8 @@
           --set ip={{ ox_connector_soap_server_ip }} \
           --set domain={{ ox_connector_domain_name }} \
           --ignore_exists
+      register: "ox_connector_ipmanagedclients"
+      failed_when: "ox_connector_ipmanagedclients.rc > 0 and 'already in use' not in ox_connector_ipmanagedclients.stdout"
       tags:
         - ox_connector_ipmanagedclients
 
