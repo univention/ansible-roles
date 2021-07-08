@@ -105,6 +105,7 @@
     udm settings/usertemplate remove
     --dn
     cn=selfserviceregistrationtemplate,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}
+    --ignore_not_exists
   tags:
     - improve_usability_user_config
     - improve_usability_user_config_remove_selfservice
