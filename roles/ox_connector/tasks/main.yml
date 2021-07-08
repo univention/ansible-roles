@@ -122,7 +122,8 @@
           --set dnsEntryZoneForward="zoneName={{ ox_connector_domain_name }},cn=dns,{{ ox_connector_basedn }}" \
           --set name=ox-connect \
           --set ip={{ ox_connector_soap_server_ip }} \
-          --set domain={{ ox_connector_domain_name }}
+          --set domain={{ ox_connector_domain_name }} \
+          --ignore_exists
       tags:
         - ox_connector_ipmanagedclients
 
