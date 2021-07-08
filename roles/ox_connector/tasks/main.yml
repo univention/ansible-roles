@@ -86,6 +86,7 @@
         --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
         --set name="Benutzer mit Groupware-Konto"
         --set oxAccess="phoenix_standard"
+      ignore_errors: true
       tags:
         - ox_connector_modify_usertemplate
 
