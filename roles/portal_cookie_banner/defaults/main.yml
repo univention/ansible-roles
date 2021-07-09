@@ -1,0 +1,5 @@
+---
+# defaults file for portal_cookie_banner
+
+portal_cookie_banner_enabled: true
+portal_cookie_banner_data: {}
