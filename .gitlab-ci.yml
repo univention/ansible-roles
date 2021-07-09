@@ -111,10 +111,7 @@ sync-to-public-repo:
     - main
 
 sync_to_dataport:
-  dependencies:
-    - build
-  only:
-    - main
+  stage: publish
   image: artifacts.knut.univention.de/upx/container-tooling/automation-rsync:main-41a9520a
   script:
     - ROLES=$(find roles -maxdepth 1 -type d | sed 's%roles/%%g')
