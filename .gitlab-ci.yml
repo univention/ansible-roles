@@ -118,14 +118,14 @@ sync_to_dataport:
     - |
       for ROLE in ${ROLES}
       do
-        - rm -rf ${CI_BUILDS_DIR}/dataport-${ROLE} || true
-        - git clone https://svc-ucs-sandboxes:${DATAPORT_GIT_TOKEN}@gitlab.px.openws.de/ucs_workaround/${ROLE}.git ${CI_BUILDS_DIR}/dataport-${ROLE}
-        - cd ${CI_BUILDS_DIR}/dataport-${ROLE}
-        - git checkout main
-        - rsync -a --delete --exclude .gitlab-ci.yml --exclude .git --exclude ansible.cfg ${CI_PROJECT_DIR}/roles/${ROLE} ${CI_BUILDS_DIR}/dataport-${ROLE}
-        - git add .
-        - git config user.email "ucs@univention.de"
-        - git config user.name "Univention Commit Service"
-        - git commit -am "Release $(date +'%d.%m.%Y') [${CI_COMMIT_SHORT_SHA}]" || true
-        - git push || true
+        rm -rf ${CI_BUILDS_DIR}/dataport-${ROLE} || true
+        git clone https://svc-ucs-sandboxes:${DATAPORT_GIT_TOKEN}@gitlab.px.openws.de/ucs_workaround/${ROLE}.git ${CI_BUILDS_DIR}/dataport-${ROLE}
+        cd ${CI_BUILDS_DIR}/dataport-${ROLE}
+        git checkout main
+        rsync -a --delete --exclude .gitlab-ci.yml --exclude .git --exclude ansible.cfg ${CI_PROJECT_DIR}/roles/${ROLE} ${CI_BUILDS_DIR}/dataport-${ROLE}
+        git add .
+        git config user.email "ucs@univention.de"
+        git config user.name "Univention Commit Service"
+        git commit -am "Release $(date +'%d.%m.%Y') [${CI_COMMIT_SHORT_SHA}]" || true
+        git push || true
       done
