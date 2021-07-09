@@ -78,7 +78,7 @@
       ansible.builtin.template:
         src: "profile.j2"
         dest: "/var/cache/univention-system-setup/profile"
-      no_log: true
+      no_log: false
       tags:
         - ucs_join_system_setup_profile
 
