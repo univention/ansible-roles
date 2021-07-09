@@ -115,7 +115,7 @@ sync_to_dataport:
   image: artifacts.knut.univention.de/upx/container-tooling/automation-rsync:main-41a9520a
   script:
     - |
-      for ROLE in $(find roles -maxdepth 1 -type d | sed 's%roles/%%g')
+      for ROLE in $(find roles -maxdepth 1 -type d | sed 's%roles/%%g' | grep -v "roles")
       do
         rm -rf ${CI_BUILDS_DIR}/dataport-${ROLE} || true
         git clone https://svc-ucs-sandboxes:${DATAPORT_GIT_TOKEN}@gitlab.px.openws.de/ucs_workaround/${ROLE}.git ${CI_BUILDS_DIR}/dataport-${ROLE}
