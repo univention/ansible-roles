@@ -17,6 +17,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [update_users_ssh_keys](#rolesupdate_users_ssh_keysreadmemd)
 - [univention_upgrade](#rolesunivention_upgradereadmemd)
 - [portal_deactivate_entry](#rolesportal_deactivate_entryreadmemd)
+- [portal_cookie_banner](#rolesportal_cookie_bannerreadmemd)
 - [improve_usability_user_config](#rolesimprove_usability_user_configreadmemd)
 - [portal_create_category](#rolesportal_create_categoryreadmemd)
 - [install_univention](#rolesinstall_univentionreadmemd)
@@ -635,6 +636,53 @@ Author Information
 
 Univention GmbH
 www.univention.com
+---
+
+# roles/portal_cookie_banner/README.md
+
+Toggle portal cookie banner
+=========
+
+This roles enables/disables a cookie banner in portal frontend.
+
+Requirements
+------------
+
+- univention.ucs_modules
+    - univention_config_registry
+
+Role Variables
+--------------
+
+- `portal_configure_title_basedn`(string): The base DN that has been used when setting up the UCS server
+- `portal_configure_title_titles`(list): The cookie banner title and body.
+```
+portal_configure_title_titles: 
+  de:
+    title: "We are using cookies"
+    text: ""
+```
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
 ---
 
 # roles/improve_usability_user_config/README.md

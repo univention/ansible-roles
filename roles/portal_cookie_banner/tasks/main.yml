@@ -1,0 +1,22 @@
+---
+# tasks file for portal_cookie_banner
+
+- name: "Enable Cookie banner in portal"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/cookie-banner/show: "{{ portal_cookie_banner_enabled|string|upper }}"
+  tags:
+    - portal_cookie_banner
+    - portal_cookie_banner_enable
+
+- name: "Add Cookie banner content"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "umc/cookie-banner/title/{{ item.key }}"
+        value: "{{ item.value.title }}"
+      - key: "umc/cookie-banner/text/{{ item.key }}"
+        value: "{{ item.value.text }}"
+  loop: "{{ portal_cookie_banner_data|dict2items }}"
+  tags:
+    - portal_cookie_banner
+    - portal_cookie_banner_content
