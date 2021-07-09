@@ -120,7 +120,7 @@ sync_to_dataport:
         rm -rf ${CI_BUILDS_DIR}/dataport-${ROLE} || true
         git clone https://svc-ucs-sandboxes:${DATAPORT_GIT_TOKEN}@gitlab.px.openws.de/ucs_workaround/${ROLE}.git ${CI_BUILDS_DIR}/dataport-${ROLE}
         cd ${CI_BUILDS_DIR}/dataport-${ROLE}
-        git checkout main
+        git checkout master
         rsync -a --delete --exclude .gitlab-ci.yml --exclude .git --exclude ansible.cfg ${CI_PROJECT_DIR}/roles/${ROLE} ${CI_BUILDS_DIR}/dataport-${ROLE}
         git add .
         git config user.email "ucs@univention.de"
