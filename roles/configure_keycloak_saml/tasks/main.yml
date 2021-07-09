@@ -30,6 +30,7 @@
     --append LDAPattributes='"univentionTenantID" "tenantid"'
     --append LDAPattributes='"oxContextIDNum" "oxcontextid"'
     --append LDAPattributes='"uid"'
+    --ignore_exists
   tags:
     - configure_keycloak_saml
     - configure_keycloak_saml_create_saml_service_provider

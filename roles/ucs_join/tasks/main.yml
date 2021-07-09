@@ -138,8 +138,39 @@
     - ucs_join
     - ucs_join_system_setup
 
-- name: "Run univention join scripts"
-  ansible.builtin.command: "univention-run-join-scripts"
+- name: "Run Univention Join Scripts"
+  block:
+    - name: "Create temporary admin password file"
+      ansible.builtin.tempfile:
+        state: file
+      register: ucs_join_admin_pw_file
+      tags:
+        - ucs_join_run_join_script_admin_pw_file_temp
+
+    - name: "Write admin password into temporary file"
+      ansible.builtin.copy:
+        dest: "{{ ucs_join_admin_pw_file.path }}"
+        content: "{{ ucs_join_root_password }}"
+        mode: 0600
+      tags:
+        - ucs_join_run_join_script_admin_pw_file
+
+    - name: "Run univention join scripts"
+      ansible.builtin.command: >
+        univention-run-join-scripts
+        -dcaccount "{{ ucs_join_admin_user_name }}"
+        -password_file "{{ ucs_join_admin_pw_file.path }}"
+      tags:
+        - ucs_join_run_join_script_run
+
+  always:
+    - name: "Make sure that the temporary admin password file is gone"
+      ansible.builtin.file:
+        path: "{{ ucs_join_admin_pw_file.path }}"
+        state: "absent"
+      tags:
+        - ucs_join_run_join_script_cleanup_admin_pw_file
+        - cleanup
   tags:
     - ucs_join
-    - ucs_join_run_join_scripts
+    - ucs_join_run_join_script

@@ -29,7 +29,6 @@
     user: "{{ add_local_user_user['name'] }}"
     key: "{{ add_local_user_user['sshkey'] }}"
     manage_dir: true
-  notify: "Restart sshd"
   when: "'sshkey' in add_local_user_user and add_local_user_user['state']|default('present') == 'present'"
   tags:
     - add_local_user
@@ -42,7 +41,6 @@
     key: "{{ lookup('file', add_local_user_user['sshkey_file']) }}"
     manage_dir: true
     state: "{{ add_local_user_user['state']|default('present') }}"
-  notify: "Restart sshd"
   when: "'sshkey_file' in add_local_user_user and 'sshkey' not in add_local_user_user and add_local_user_user['state']|default('present') == 'present'"
   tags:
     - add_local_user
@@ -59,6 +57,3 @@
     - add_local_user
     - add_local_user_user
     - add_local_user_user_allow_login
-
-#- name: "Flush handlers"
-#  ansible.builtin.meta: flush_handlers
