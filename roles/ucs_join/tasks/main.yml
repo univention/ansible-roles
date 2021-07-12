@@ -78,7 +78,7 @@
       ansible.builtin.template:
         src: "profile.j2"
         dest: "/var/cache/univention-system-setup/profile"
-      no_log: false
+      no_log: true
       tags:
         - ucs_join_system_setup_profile
 
@@ -88,6 +88,13 @@
       tags:
         - ucs_join_system_setup_primary
         - ucs_join_system_setup_standalone
+
+    - name: "Create UCS join profile from template"
+      ansible.builtin.template:
+        src: "system-setup-vars.j2"
+        dest: "/etc/ansible/facts.d/system-setup-vars.yml"
+      tags:
+        - ucs_join_system_setup_profile
 
     - name: "Carry out UCS join (backup)"
       block:
@@ -129,7 +136,7 @@
 
     - name: "Create successful system-setup marker"
       ansible.builtin.file:
-        path: /etc/ansible/univention-system-setup_sucessful
+        path: "/etc/ansible/univention-system-setup_sucessful"
         state: "touch"
       tags:
         - ucs_join_system_setup_successful
@@ -137,6 +144,65 @@
   tags:
     - ucs_join
     - ucs_join_system_setup
+
+- name: "Check if previous setup vars are set"
+  ansible.builtin.stat:
+    path: "/etc/ansible/facts.d/system-setup-vars.yml"
+  register: "ucs_join_system_setup_vars_file"
+  tags:
+    - always
+    - ucs_join
+    - ucs_join_system_setup_vars
+
+- name: "Check if user wants to change unsupported vars"
+  block:
+    - name: "Create temporary admin password file"
+      ansible.builtin.tempfile:
+        state: "file"
+        suffix: ".yml"
+      register: ucs_join_asystem_setup_tempfile
+      tags:
+        - ucs_join_system_setup_facts_temp
+
+    - name: "Get previous system configuration"
+      ansible.builtin.fetch:
+        src: "/etc/ansible/facts.d/system-setup-vars.yml"
+        dest: "{{ ucs_join_asystem_setup_tempfile.path }}"
+        flat: true
+      tags:
+        - ucs_join_system_setup_facts_fetch
+
+    - name: "Include vars of previous join"
+      ansible.builtin.include_vars:
+        file: "{{ ucs_join_asystem_setup_tempfile.path }}"
+        name: "ucs_join_system_setup_vars"
+      tags:
+        - ucs_join_system_setup_facts_include_vars
+
+    - name: "Assert that unchangeable vars are the same"
+      ansible.builtin.assert:
+        that:
+          - '"{{ ucs_join_system_setup_vars.ucs_join_hostname }}" == "{{ ucs_join_hostname }}"'
+          - '"{{ ucs_join_system_setup_vars.ucs_join_domain_name }}" == "{{ ucs_join_domain_name }}"'
+          - '"{{ ucs_join_system_setup_vars.ucs_join_basedn }}" == "{{ ucs_join_basedn }}"'
+          - '"{{ ucs_join_system_setup_vars.ucs_join_server_type }}" == "{{ ucs_join_server_type }}"'
+        fail_msg: "You've tried to change variables which will afterwards damage your exising installation."
+      tags:
+        - ucs_join_system_setup_facts_assert
+
+  always:
+    - name: "Make sure that the system setup vars are gone"
+      ansible.builtin.file:
+        path: "{{ ucs_join_asystem_setup_tempfile.path }}"
+        state: "absent"
+      tags:
+        - ucs_join_system_setup_facts_temp_removal
+        - cleanup
+
+  when: "ucs_join_system_setup_vars_file.stat.exists"
+  tags:
+    - ucs_join_system_setup_facts
+    - ucs_join
 
 - name: "Run Univention Join Scripts"
   block:
