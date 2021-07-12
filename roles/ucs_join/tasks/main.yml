@@ -145,6 +145,51 @@
     - ucs_join
     - ucs_join_system_setup
 
+- name: "Change network settings when system already initialized"
+  block:
+    - name: "Use DHCP network setting"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "interfaces/{{ ucs_join_network_config_interface }}"
+            value: "dhcp"
+      when: "ucs_join_network_config_type == 'dhcp'"
+      tags:
+        - ucs_join_network_settings_dhcp
+
+    - name: "Use static network setting (interface)"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "interfaces/{{ ucs_join_network_config_interface }}"
+            value: ""
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/address"
+            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('address') }}"
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/netmask"
+            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('netmask') }}"
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/network"
+            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('network') }}"
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/broadcast"
+            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('broadcast') }}"
+      when: "ucs_join_network_config_type != 'dhcp'"
+      tags:
+        - ucs_join_network_settings_static_interface
+
+    - name: "Use static network setting (dns)"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "dns/forwarder{{ dns_servers_index }}"
+            value: "{{ item }}"
+      loop: "{{ ucs_join_network_config_static_dns_servers|default([]) }}"
+      loop_control:
+        index_var: "dns_servers_index"
+      when: "ucs_join_network_config_type != 'dhcp'"
+      tags:
+        - ucs_join_network_settingsstatic_dns
+
+  when: "ucs_join_system_setup_status.stat.exists"
+  tags:
+    - ucs_join
+    - ucs_join_network_settings
+
 - name: "Check if previous setup vars are set"
   ansible.builtin.stat:
     path: "/etc/ansible/facts.d/system-setup-vars.yml"
