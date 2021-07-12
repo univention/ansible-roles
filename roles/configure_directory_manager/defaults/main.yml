@@ -3,3 +3,8 @@
 configure_directory_manager_mailprimaryaddress_required: false
 configure_directory_manager_firstname_required: false
 configure_directory_manager_wizard_disabled: "No"
+configure_directory_manager_invite_default: "True"
+configure_directory_manager_overridepwlength_visible: "False"
+configure_directory_manager_overridepwlength_default: "False"
+configure_directory_manager_pwdchangenextlogin_visible: "False"
+configure_directory_manager_pwdchangenextlogin_default: "True"
