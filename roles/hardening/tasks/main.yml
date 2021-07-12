@@ -22,3 +22,19 @@
   tags:
     - hardening_disable_ssh_root_password_login_ssh_config
     - hardening
+
+- name: "Enforce secure flag on cookies"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/http/enforce-secure-cookie: "true"
+  tags:
+    - hardening_secure_cookie_flag
+    - hardening
+
+- name: "Enforce session cookies"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/http/enforce-session-cookie: "true"
+  tags:
+    - hardening_session_cookies_enforcement
+    - hardening

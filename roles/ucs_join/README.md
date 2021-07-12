@@ -6,7 +6,8 @@ This role runs a UCS Join on master or backup servers.
 Requirements
 ------------
 
-none
+- univention.ucs_modules
+    - univention_config_registry
 
 Role Variables
 --------------

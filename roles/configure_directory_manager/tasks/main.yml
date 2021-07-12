@@ -10,10 +10,22 @@
     - configure_directory_manager
     - configure_directory_manager_set_required_properties
 
-- name: "Disable wizard"
+- name: "Toggle wizard"
   univention.ucs_modules.univention_config_registry:
     keys:
       directory/manager/web/modules/wizard/disabled: "{{ configure_directory_manager_wizard_disabled }}"
   tags:
     - configure_directory_manager
-    - configure_directory_manager_disable_wizard
+    - configure_directory_manager_toggle_wizard
+
+- name: "Set wizard properties"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/users/user/wizard/property/invite/default: "{{ configure_directory_manager_invite_default }}"
+      directory/manager/web/modules/users/user/wizard/property/overridePWLength/visible: "{{ configure_directory_manager_overridepwlength_visible }}"
+      directory/manager/web/modules/users/user/wizard/property/overridePWLength/default: "{{ configure_directory_manager_overridepwlength_default }}"
+      directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/visible: "{{ configure_directory_manager_pwdchangenextlogin_visible }}"
+      directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/default: "{{ configure_directory_manager_pwdchangenextlogin_default }}"
+  tags:
+    - configure_directory_manager
+    - configure_directory_manager_set_wizard_properties

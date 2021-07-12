@@ -89,6 +89,13 @@
         - ucs_join_system_setup_primary
         - ucs_join_system_setup_standalone
 
+    - name: "Create UCS join profile from template"
+      ansible.builtin.template:
+        src: "system-setup-vars.j2"
+        dest: "/etc/ansible/facts.d/system-setup-vars.yml"
+      tags:
+        - ucs_join_system_setup_profile
+
     - name: "Carry out UCS join (backup)"
       block:
         - name: "Create temporary admin password file"
@@ -129,7 +136,7 @@
 
     - name: "Create successful system-setup marker"
       ansible.builtin.file:
-        path: /etc/ansible/univention-system-setup_sucessful
+        path: "/etc/ansible/univention-system-setup_sucessful"
         state: "touch"
       tags:
         - ucs_join_system_setup_successful
@@ -137,6 +144,110 @@
   tags:
     - ucs_join
     - ucs_join_system_setup
+
+- name: "Change network settings when system already initialized"
+  block:
+    - name: "Use DHCP network setting"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "interfaces/{{ ucs_join_network_config_interface }}"
+            value: "dhcp"
+      when: "ucs_join_network_config_type == 'dhcp'"
+      tags:
+        - ucs_join_network_settings_dhcp
+
+    - name: "Use static network setting (interface)"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "interfaces/{{ ucs_join_network_config_interface }}"
+            value: ""
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/address"
+            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('address') }}"
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/netmask"
+            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('netmask') }}"
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/network"
+            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('network') }}"
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/broadcast"
+            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('broadcast') }}"
+      when: "ucs_join_network_config_type != 'dhcp'"
+      tags:
+        - ucs_join_network_settings_static_interface
+
+    - name: "Use static network setting (dns)"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "dns/forwarder{{ dns_servers_index }}"
+            value: "{{ item }}"
+      loop: "{{ ucs_join_network_config_static_dns_servers|default([]) }}"
+      loop_control:
+        index_var: "dns_servers_index"
+      when: "ucs_join_network_config_type != 'dhcp'"
+      tags:
+        - ucs_join_network_settingsstatic_dns
+
+  when: "ucs_join_system_setup_status.stat.exists"
+  tags:
+    - ucs_join
+    - ucs_join_network_settings
+
+- name: "Check if previous setup vars are set"
+  ansible.builtin.stat:
+    path: "/etc/ansible/facts.d/system-setup-vars.yml"
+  register: "ucs_join_system_setup_vars_file"
+  tags:
+    - always
+    - ucs_join
+    - ucs_join_system_setup_vars
+
+- name: "Check if user wants to change unsupported vars"
+  block:
+    - name: "Create temporary admin password file"
+      ansible.builtin.tempfile:
+        state: "file"
+        suffix: ".yml"
+      register: ucs_join_asystem_setup_tempfile
+      tags:
+        - ucs_join_system_setup_facts_temp
+
+    - name: "Get previous system configuration"
+      ansible.builtin.fetch:
+        src: "/etc/ansible/facts.d/system-setup-vars.yml"
+        dest: "{{ ucs_join_asystem_setup_tempfile.path }}"
+        flat: true
+      tags:
+        - ucs_join_system_setup_facts_fetch
+
+    - name: "Include vars of previous join"
+      ansible.builtin.include_vars:
+        file: "{{ ucs_join_asystem_setup_tempfile.path }}"
+        name: "ucs_join_system_setup_vars"
+      tags:
+        - ucs_join_system_setup_facts_include_vars
+
+    - name: "Assert that unchangeable vars are the same"
+      ansible.builtin.assert:
+        that:
+          - '"{{ ucs_join_system_setup_vars.ucs_join_hostname }}" == "{{ ucs_join_hostname }}"'
+          - '"{{ ucs_join_system_setup_vars.ucs_join_domain_name }}" == "{{ ucs_join_domain_name }}"'
+          - '"{{ ucs_join_system_setup_vars.ucs_join_basedn }}" == "{{ ucs_join_basedn }}"'
+          - '"{{ ucs_join_system_setup_vars.ucs_join_server_type }}" == "{{ ucs_join_server_type }}"'
+        fail_msg: "You've tried to change variables which will afterwards damage your exising installation."
+      tags:
+        - ucs_join_system_setup_facts_assert
+
+  always:
+    - name: "Make sure that the system setup vars are gone"
+      ansible.builtin.file:
+        path: "{{ ucs_join_asystem_setup_tempfile.path }}"
+        state: "absent"
+      tags:
+        - ucs_join_system_setup_facts_temp_removal
+        - cleanup
+
+  when: "ucs_join_system_setup_vars_file.stat.exists"
+  tags:
+    - ucs_join_system_setup_facts
+    - ucs_join
 
 - name: "Run Univention Join Scripts"
   block:
@@ -159,7 +270,7 @@
       ansible.builtin.command: >
         univention-run-join-scripts
         -dcaccount "{{ ucs_join_admin_user_name }}"
-        -password_file "{{ ucs_join_admin_pw_file.path }}"
+        -dcpwd "{{ ucs_join_admin_pw_file.path }}"
       tags:
         - ucs_join_run_join_script_run
 
