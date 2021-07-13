@@ -4,3 +4,5 @@
 improve_usability_user_config_basedn: ""
 improve_usability_user_config_external_hostname: ""
 improve_usability_user_config_install_apps: []
+improve_usability_user_config_disable_portal_management: "True"
+improve_usability_user_config_disable_oxcontext_management: "True"
