@@ -123,3 +123,12 @@
   tags:
     - improve_usability_user_config
     - improve_usability_user_config_remove_selfservice
+
+- name: "Hide unneeded settings from admin area"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/module/udm/portals/all/disabled: "{{ improve_usability_user_config_disable_portal_management }}"
+      umc/module/udm/oxmail/oxcontext/disabled: "{{ improve_usability_user_config_disable_oxcontext_management }}"
+  tags:
+    - improve_usability_user_config
+    - improve_usability_user_config_hide_portal_settings
