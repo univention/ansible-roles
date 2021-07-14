@@ -1,0 +1,84 @@
+---
+# tasks file for modify_ucs_ca
+
+- name: "Get existing ssl configuration"
+  ansible.builtin.slurp:
+    src: "/etc/univention/ssl/{{ modify_ucs_ca_external_domain_name }}/openssl.cnf"
+  register: modify_ucs_ca_existing_openssl
+  tags:
+    - modify_ucs_ca
+    - modify_ucs_ca_slurp_existing_config
+
+- name: "Generate subjectAltName List"
+  ansible.builtin.set_fact:
+    modify_ucs_ca_current_alternative_names_list: "{{ modify_ucs_ca_current_alternative_names_list|default([]) + ['DNS:' + item] }}"
+  with_items:
+    - "{{ inventory_hostname_short }}"
+
+- name: "Build new subjectAltName line"
+  ansible.builtin.set_fact:
+    modify_ucs_ca_current_alternative_name_new: "subjectAltName = {{ modify_ucs_ca_current_alternative_names_list | join(', ') }}"
+  tags:
+    - modify_ucs_ca
+    - modify_ucs_ca_build_alternative_name
+
+- name: "Get current alternative names"
+  ansible.builtin.set_fact:
+    modify_ucs_ca_current_alternative_name: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode | regex_search('(?sm)\\[ v3_req \\][^\\[]+') | regex_search('subjectAltName *= *([^\\n]+)') }}"
+  tags:
+    - modify_ucs_ca
+    - modify_ucs_ca_get_current_alternative_name
+
+- name: "Modify existing certitifactes"
+  block:
+    - name: "Replace existing subjectAltName line"
+      vars:
+        modify_ucs_ca_current_new_file_content_section: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode | regex_search('(?sm)\\[ v3_req \\][^\\[]+') | regex_replace('subjectAltName *= *([^\\n]+)', modify_ucs_ca_current_alternative_name_new) }}"
+      ansible.builtin.set_fact:
+        modify_ucs_ca_current_new_file_content: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode | regex_replace('(?sm)\\[ v3_req \\][^\\[]+', modify_ucs_ca_current_new_file_content_section) }}"
+      when: "modify_ucs_ca_current_alternative_name|length > 0"
+      tags:
+        - modify_ucs_ca_modify_replace_existing_line
+
+    - name: "Add subjectAltName to file"
+      vars:
+        modify_ucs_ca_current_new_file_content_section: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode  | regex_search('(?sm)\\[ v3_req \\][^\\[]+') + '\n' + modify_ucs_ca_current_alternative_name_new + '\n\n' }}"
+      ansible.builtin.set_fact:
+        modify_ucs_ca_current_new_file_content: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode  | regex_replace('(?sm)\\[ v3_req \\][^\\[]+', modify_ucs_ca_current_new_file_content_section) }}"
+      when: "modify_ucs_ca_current_alternative_name|length == 0"
+      tags:
+        - modify_ucs_ca_modify_add_new_line
+
+    - name: "Update openssl configuration"
+      ansible.builtin.copy:
+        dest: "/etc/univention/ssl/{{ modify_ucs_ca_external_domain_name }}/openssl.cnf"
+        content: "{{ modify_ucs_ca_current_new_file_content }}"
+      tags:
+        - modify_ucs_ca_modify_replace_exising_file
+
+    - name: "Get current UCR vars"
+      ansible.builtin.setup: filter=ansible_local
+      tags:
+        - modify_ucs_ca_modify_refresh_ucr_vars
+
+    - name: "Create new OpenSSL Certificate Signing Request"
+      ansible.builtin.command:
+        cmd: "openssl req -new -config openssl.cnf -key private.key -out req.pem"
+        chdir: "/etc/univention/ssl/{{ modify_ucs_ca_external_domain_name }}"
+      environment:
+        DEFAULT_MD: "{{ ansible_local['ucr']['ssl/default/hashfunction']|default('sha256') }}"
+        DEFAULT_BITS: "{{ ansible_local['ucr']['ssl/default/bits']|default('2048') }}"
+        DEFAULT_CRL_DAYS: "{{ ansible_local['ucr']['ssl/crl/validity']|default('10') }}"
+        DEFAULT_DAYS: "{{ ansible_local['ucr']['ssl/default/days']|default('1825') }}"
+      tags:
+        - modify_ucs_ca_modify_create_new_csr
+
+    - name: "Renew certificate"
+      ansible.builtin.command:
+        cmd: "univention-certificate renew -name {{ modify_ucs_ca_external_domain_name }} -days 7300"
+      tags:
+        - modify_ucs_ca_modify_create_new_csr
+  when: "modify_ucs_ca_current_alternative_name|length == 0 or modify_ucs_ca_current_alternative_name_new != modify_ucs_ca_current_alternative_name"
+  tags:
+    - modify_ucs_ca
+    - modify_ucs_ca_modify
