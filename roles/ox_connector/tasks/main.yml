@@ -90,6 +90,20 @@
       tags:
         - ox_connector_modify_usertemplate
 
+    - name: "Set oxDisplayName in usertemplate"
+      ansible.builtin.command: >
+        udm settings/usertemplate modify
+        --dn
+        'cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}'
+        --set
+        oxDisplayName="<firstname> <lastname> (<username>)"
+        --set
+        mailPrimaryAddress=""
+        --set
+        e-mail=""
+      tags:
+        - ox_connector_modify_usertemplate_set_oxdisplayname_in_user_template
+
     - name: "Add default dn to users"
       univention.ucs_modules.univention_config_registry:
         keys:

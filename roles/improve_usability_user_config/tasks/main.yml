@@ -86,20 +86,6 @@
       tags:
         - improve_usability_user_config_remame_user_template
 
-    - name: "Set oxDisplayName in usertemplate"
-      ansible.builtin.command: >
-        udm settings/usertemplate modify
-        --dn
-        'cn=Phoenix Groupware-Benutzer,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}'
-        --set
-        oxDisplayName="<firstname> <lastname> (<username>)"
-        --set
-        mailPrimaryAddress=""
-        --set
-        e-mail=""
-      tags:
-        - improve_usability_user_config_set_oxdisplayname_in_user_template
-
     - name: "Set Phoenix user template as default"
       univention.ucs_modules.univention_config_registry:
         keys:

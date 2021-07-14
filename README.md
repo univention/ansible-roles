@@ -47,6 +47,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [portal_create_entry](#rolesportal_create_entryreadmemd)
 - [configure_apps_owncloud](#rolesconfigure_apps_owncloudreadmemd)
 - [get_installed_apps](#rolesget_installed_appsreadmemd)
+- [modify_ucs_ca](#rolesmodify_ucs_careadmemd)
 - [portal_delete_entry](#rolesportal_delete_entryreadmemd)
 - [configure_nextcloud_saml](#rolesconfigure_nextcloud_samlreadmemd)
 - [install_apps_ox_post](#rolesinstall_apps_ox_postreadmemd)
@@ -592,6 +593,7 @@ Role Variables
 - `install_multitenant_acls_package_name`(string): The customer specific debian package name.
 - `install_multitenant_acls_script_name`(string): The name of create acl structure script.
 - `install_multitenant_acls_keycloak_base`(string): The base url for keycloak.
+- `install_multitenant_acls_hide_logging`(boolean): Toggle template logging; default: `true`.
 
 Dependencies
 ------------
@@ -1937,6 +1939,45 @@ Role Variables
 --------------
 
 none
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/modify_ucs_ca/README.md
+
+Modify UCS certs
+=========
+
+Modify exisiting univention certificates.
+
+Requirements
+------------
+
+none
+
+Role Variables
+--------------
+
+- `modify_ucs_ca_external_domain_name`(string): The external domain name.
 
 Dependencies
 ------------

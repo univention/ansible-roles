@@ -28,6 +28,7 @@ Role Variables
 - `install_multitenant_acls_package_name`(string): The customer specific debian package name.
 - `install_multitenant_acls_script_name`(string): The name of create acl structure script.
 - `install_multitenant_acls_keycloak_base`(string): The base url for keycloak.
+- `install_multitenant_acls_hide_logging`(boolean): Toggle template logging; default: `true`.
 
 Dependencies
 ------------
