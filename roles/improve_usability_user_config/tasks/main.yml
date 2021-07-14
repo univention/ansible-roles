@@ -131,4 +131,4 @@
       umc/module/udm/oxmail/oxcontext/disabled: "{{ improve_usability_user_config_disable_oxcontext_management }}"
   tags:
     - improve_usability_user_config
-    - improve_usability_user_config_directory_manager_settings
+    - improve_usability_user_config_hide_portal_settings
