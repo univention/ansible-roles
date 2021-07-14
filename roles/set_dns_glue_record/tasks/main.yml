@@ -45,6 +45,7 @@
         --superordinate {{ set_dns_glue_record_superordinate }}
         --set zone={{ set_dns_glue_record_host_name }}
         --set nameserver={{ set_dns_glue_record_glue_record_nameserver }}
+        --ignore_exists
       when: "set_dns_glue_record_glue_record_counter|default(0) == 0"
       tags:
         - set_dns_glue_record_create_dns_record
