@@ -5,6 +5,7 @@
   ansible.builtin.template:
     dest: "{{ install_multitenant_acls_json_path }}"
     src: "multitenant-acls.j2"
+  no_log: "{{ install_multitenant_acls_hide_logging|default(true)|bool }}"
   tags:
     - install_multitenant_acls
     - install_multitenant_acls_copy_acl_template
