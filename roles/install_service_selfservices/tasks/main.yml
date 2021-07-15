@@ -52,6 +52,8 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/passwordreset/email/sender_address: "Password Reset Service <noreply@{{ install_service_selfservice_domain_name }}>"
+      umc/self-service/passwordreset/email/webserver_address: "{{ install_service_selfservice_external_hostname }}"
+      umc/self-service/account-verification/email/webserver_address: "{{ install_service_selfservice_external_hostname }}"
   tags:
     - install_service_selfservice
     - install_service_selfservice_configure_passwortreset_sender
