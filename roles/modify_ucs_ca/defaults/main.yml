@@ -1,3 +1,4 @@
 ---
 # defaults file for modify_ucs_ca
 modify_ucs_ca_external_domain_name: ""
+modify_ucs_ca_external_domain_part: ""
