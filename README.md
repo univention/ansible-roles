@@ -1175,6 +1175,7 @@ Role Variables
 
 - `modify_ucs_ca_external_domain_name`(string): The external domain name.
 - `modify_ucs_ca_external_domain_part`(string): The part of an external domain eventually excluding fist subdomain.
+- `modify_ucs_ca_external_domain_prefix`(string): The first subdomain if exists.
 
 Dependencies
 ------------

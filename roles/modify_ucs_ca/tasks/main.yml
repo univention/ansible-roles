@@ -15,10 +15,13 @@
   with_items:
     - "{{ inventory_hostname_short }}"
     - "{{ inventory_hostname_short }}.{{ modify_ucs_ca_external_domain_part }}"
+    - "{{ inventory_hostname }}"
+    - "{{ modify_ucs_ca_external_domain_name }}"
+    - "{{ modify_ucs_ca_external_domain_prefix }}"
 
 - name: "Build new subjectAltName line"
   ansible.builtin.set_fact:
-    modify_ucs_ca_current_alternative_name_new: "subjectAltName = {{ modify_ucs_ca_current_alternative_names_list | join(', ') }}"
+    modify_ucs_ca_current_alternative_name_new: "subjectAltName = {{ modify_ucs_ca_current_alternative_names_list|select()| join(', ') }}"
   tags:
     - modify_ucs_ca
     - modify_ucs_ca_build_alternative_name
