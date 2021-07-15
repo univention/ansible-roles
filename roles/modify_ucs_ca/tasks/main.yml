@@ -14,6 +14,7 @@
     modify_ucs_ca_current_alternative_names_list: "{{ modify_ucs_ca_current_alternative_names_list|default([]) + ['DNS:' + item] }}"
   with_items:
     - "{{ inventory_hostname_short }}"
+    - "{{ inventory_hostname_short }}.{{ modify_ucs_ca_external_domain_part }}"
 
 - name: "Build new subjectAltName line"
   ansible.builtin.set_fact:
