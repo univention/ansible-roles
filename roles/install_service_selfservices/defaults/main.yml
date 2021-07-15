@@ -7,4 +7,5 @@ install_service_selfservice_force_package_upgrade: false
 install_service_selfservice_external_hostname: {}
 install_service_selfservice_install_services: []
 install_service_selfservice_domain_name: ""
+install_service_selfservice_master_server: ""
 install_service_selfservice_password_reset_filename: ""
