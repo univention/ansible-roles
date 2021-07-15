@@ -1,0 +1,40 @@
+---
+# tasks file for configure_apps_postfix_relay
+
+- name: "Set mail relayhost"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      mail/relayhost: "{{ configure_apps_postfix_relay_host }}:{{ configure_apps_postfix_relay_port }}"
+  notify: "Restart postfix"
+  when: "configure_apps_postfix_relay_enabled"
+  tags:
+    - configure_apps_postfix_relay
+    - configure_apps_postfix_relay_relayhost
+
+- name: "Set mail relayhost password authentication"
+  block:
+    - name: "Enable mail relayauth"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          mail/relayauth: "yes"
+      tags:
+        - configure_apps_postfix_relay_set_auth_enable_relayauth
+
+    - name: "Update smtp_auth file"
+      ansible.builtin.lineinfile:
+        path: "/etc/postfix/smtp_auth"
+        create: true
+        line: "{{ configure_apps_postfix_relay_host }} {{ configure_apps_postfix_relay_username }}:{{ configure_apps_postfix_relay_password }}"
+        mode: "775"
+      tags:
+        - configure_apps_postfix_relay_set_auth_update_file
+
+    - name: "Postmap smtp_auth file"
+      ansible.builtin.command: "postmap /etc/postfix/smtp_auth"
+      tags:
+        - configure_apps_postfix_relay_set_auth_postmap
+
+  when: "configure_apps_postfix_relay_enabled and configure_apps_postfix_relay_username|length > 0 and configure_apps_postfix_relay_password|length > 0"
+  tags:
+    - configure_apps_postfix_relay
+    - configure_apps_postfix_relay_set_auth
