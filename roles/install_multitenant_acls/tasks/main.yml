@@ -1,33 +1,46 @@
 ---
 # tasks file for install_multitenant_acls
 
-- name: "Copy ACL template to machine"
-  ansible.builtin.template:
-    dest: "{{ install_multitenant_acls_json_path }}"
-    src: "multitenant-acls.j2"
-  no_log: "{{ install_multitenant_acls_hide_logging|default(true)|bool }}"
+- name: "install_multitenant_acls | Install Multitenat ACLs"
+  block:
+    - name: "install_multitenant_acls | Set default mail domain to host's FQDN"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          kerberos/kdc: "127.0.0.1"
+          kerberos/defaults/dns_lookup_kdc: false
+      tags:
+        - install_multitenant_acls_disable_kerberos
+
+    - name: "install_multitenant_acls | Copy ACL template to machine"
+      ansible.builtin.template:
+        dest: "{{ install_multitenant_acls_json_path }}"
+        src: "multitenant-acls.j2"
+        mode: "744"
+      no_log: "{{ install_multitenant_acls_hide_logging|default(true)|bool }}"
+      tags:
+        - install_multitenant_acls_copy_acl_template
+
+    - name: "install_multitenant_acls | Install ACL package"
+      ansible.builtin.include_role:
+        name: "univention_install"
+      vars:
+        univention_install_name: "{{ install_multitenant_acls_package_name }}"
+      tags:
+        - install_multitenant_acls_install_acl_package
+
+    - name: "install_multitenant_acls | Create Mandant structure"
+      ansible.builtin.command:
+        cmd: "/usr/share/{{ install_multitenant_acls_package_name }}/{{ install_multitenant_acls_script_name }} {{ install_multitenant_acls_json_path }}"
+      tags:
+        - install_multitenant_acls_run_structure_creation
+
+    - name: "install_multitenant_acls | Make sure template is removed"
+      ansible.builtin.file:
+        path: "{{ install_multitenant_acls_json_path }}"
+        state: "absent"
+      tags:
+        - always
+        - install_multitenant_acls_copy_acl_template
+  when: "install_multitenant_acls_server_type|default('master') != 'backup'"
   tags:
     - install_multitenant_acls
-    - install_multitenant_acls_copy_acl_template
-
-- name:  "Install ACL package"
-  ansible.builtin.include_role:
-    name: "univention_install"
-  vars:
-    univention_install_name: "{{ install_multitenant_acls_package_name }}"
-  tags:
-    - install_multitenant_acls
-    - install_multitenant_acls_install_acl_package
-
-- name: "Create Mandant structure"
-  ansible.builtin.command: "/usr/share/{{ install_multitenant_acls_package_name }}/{{ install_multitenant_acls_script_name }} {{ install_multitenant_acls_json_path }}"
-
-
-- name: "Make sure template is removed"
-  ansible.builtin.file:
-    path: "{{ install_multitenant_acls_json_path }}"
-    state: "absent"
-  tags:
-    - always
-    - install_multitenant_acls
-    - install_multitenant_acls_copy_acl_template

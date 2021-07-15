@@ -6,7 +6,8 @@ Install and configure ACL package.
 Requirements
 ------------
 
-none
+- univention.ucs_modules
+  - univention_config_registry
 
 Role Variables
 --------------
@@ -29,6 +30,7 @@ Role Variables
 - `install_multitenant_acls_script_name`(string): The name of create acl structure script.
 - `install_multitenant_acls_keycloak_base`(string): The base url for keycloak.
 - `install_multitenant_acls_hide_logging`(boolean): Toggle template logging; default: `true`.
+- `install_multitenant_acls_server_type`(string): The ucs server type; default `"master"`.
 
 Dependencies
 ------------

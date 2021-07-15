@@ -7,3 +7,4 @@ install_multitenant_acls_package_name: ""
 install_multitenant_acls_script_name: ""
 install_multitenant_acls_keycloak_base: ""
 install_multitenant_acls_hide_logging: true
+install_multitenant_acls_server_type: "master"
