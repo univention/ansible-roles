@@ -1,7 +1,7 @@
 ---
 # tasks file for configure_saml_single_server
 
-- name: "Set basic UCR config variables"
+- name: "configure_saml_single_server | Set basic UCR config variables"
   univention.ucs_modules.univention_config_registry:
     keys:
       ucs/server/sso/autoregistraton: "no"
@@ -11,32 +11,27 @@
       ucs/server/sso/fqdn: "{{ configure_saml_single_server_external_hostname }}"
       umc/saml/sp-server: "{{ configure_saml_single_server_external_hostname }}"
       ucs/server/sso/virtualhost: "false"
-      apache2/ssl/certificate: "/etc/univention/ssl/{{ configure_saml_single_server_external_hostname }}/cert.pem"
-      apache2/ssl/key: "/etc/univention/ssl/{{ configure_saml_single_server_external_hostname }}/private.key"
   tags:
     - configure_saml_single_server
     - configure_saml_single_server_run_saml_configuration_script
 
-- name: "Configure external SAML settings"
-  block:
-    - name: "Allow external SAML Auth in apache"
-      ansible.builtin.template:
-        dest: "/etc/univention/templates/files/etc/apache2/sites-available/ssl.d/99end"
-        src: "99end"
-      tags:
-        - configure_saml_single_server_external_saml_configure_apache
-
-    - name: "Update apache configuration from ucr"
-      ansible.builtin.command: "ucr commit /etc/apache2/sites-available/default-ssl"
-      tags:
-        - configure_saml_single_server_external_saml_update_apache_configuration
-
-  when: "configure_saml_single_server_external"
+- name: "configure_saml_single_server | Create ipmanagedclients for external loadbalancer"
+  ansible.builtin.command: >
+    udm computers/ipmanagedclient create \
+      --position "cn=computers,{{ configure_saml_single_server_basedn }}" \
+      --set dnsEntryZoneForward="zoneName={{ configure_saml_single_server_domain_name }},cn=dns,{{ configure_saml_single_server_basedn }}" \
+      --set name=load_balancer \
+      --set ip={{ configure_saml_single_server_external_loadbalancer_ip }} \
+      --set domain={{ configure_saml_single_server_domain_name }} \
+      --ignore_exists
+  register: "configure_saml_single_server_ipmanagedclients"
+  failed_when: "configure_saml_single_server_ipmanagedclients.rc > 0 and 'already in use' not in configure_saml_single_server_ipmanagedclients.stdout"
+  when: "configure_saml_single_server_external_loadbalancer_ip is defined and configure_saml_single_server_external_loadbalancer_ip|length > 0"
   tags:
     - configure_saml_single_server
-    - configure_saml_single_server_external_saml
+    - configure_saml_single_server_ipmanagedclients
 
-- name: "Run Univention saml join script"
+- name: "configure_saml_single_server | Run Univention SAML join script"
   ansible.builtin.command: >
     univention-run-join-scripts --force
     {% if configure_saml_single_server_type == "backup" %}
@@ -48,20 +43,10 @@
     - configure_saml_single_server
     - configure_saml_single_server_saml_join_script
 
-- name: "Flush handlers to restart apache"
+- name: "configure_saml_single_server | Flush handlers to restart apache"
   ansible.builtin.meta: flush_handlers
 
-- name: "Workaround: use local server as host for external address"
-  univention.ucs_modules.univention_config_registry:
-    kvlist:
-      - key: "hosts/static/{{ ansible_default_ipv4['address'] }}"
-        value: "{{ configure_saml_single_server_external_hostname }}"
-  when: "configure_saml_single_server_use_workaround_external_idp_server is defined and configure_saml_single_server_use_workaround_external_idp_server|bool"
-  tags:
-    - configure_saml_single_server
-    - configure_saml_single_server_workaround_external_idp_server
-
-- name: "Set UCR idp server variable"
+- name: "configure_saml_single_server | Set UCR idp server variable"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/saml/idp-server: "https://{{ configure_saml_single_server_external_hostname }}/simplesamlphp/saml2/idp/metadata.php"
@@ -71,7 +56,7 @@
     - configure_saml_single_server
     - configure_saml_single_server_idp_ucr_variable
 
-- name: "Run Univention management console join script"
+- name: "configure_saml_single_server | Run Univention management console join script"
   ansible.builtin.command: >
     univention-run-join-scripts --force
     {% if configure_saml_single_server_type == "backup" %}
@@ -82,18 +67,7 @@
     - configure_saml_single_server
     - configure_saml_single_server_management_console_script
 
-- name: "Workaround: use local server as host for external address"
-  univention.ucs_modules.univention_config_registry:
-    kvlist:
-      - key: "hosts/static/{{ ansible_default_ipv4['address'] }}"
-        value: "{{ configure_saml_single_server_external_hostname }}"
-    state: "absent"
-  when: "configure_saml_single_server_use_workaround_external_idp_server is defined and configure_saml_single_server_use_workaround_external_idp_server|bool"
-  tags:
-    - configure_saml_single_server
-    - configure_saml_single_server_workaround_external_idp_server
-
-- name: "Remove default SAML provider"
+- name: "configure_saml_single_server | Remove default SAML provider"
   ansible.builtin.command:
     argv:
       - "udm"
