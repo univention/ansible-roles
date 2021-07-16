@@ -2,11 +2,10 @@
 # defaults file for configure_saml_single_server
 
 configure_saml_single_server_external_hostname: ""
-configure_saml_single_server_internal_hostname: "{{ inventory_hostname }}"
-configure_saml_single_server_external: false
 configure_saml_single_admin_user_name: ""
 configure_saml_single_temp_file: {}
 configure_saml_single_server_type: "master"
-configure_saml_single_server_use_workaround_external_idp_server: true
 configure_saml_single_server_basedn: ""
 configure_saml_single_server_remove_default_saml_provider: true
+configure_saml_single_server_domain_name: ""
+configure_saml_single_server_external_loadbalancer_ip: ""
