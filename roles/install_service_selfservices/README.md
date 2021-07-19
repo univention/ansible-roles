@@ -19,7 +19,6 @@ Role Variables
 - `install_service_selfservice_install_services`(list): A list of services to install.
 - `install_service_selfservice_domain_name`(string): The LDAP base domain name.
 - `install_service_selfservice_password_reset_filename`(string): The name of password reset template.
-- `install_service_selfservice_master_server`(string): The FQDN of master server.
 
 Dependencies
 ------------
