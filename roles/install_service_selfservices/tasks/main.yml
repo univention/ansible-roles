@@ -67,11 +67,3 @@
   tags:
     - install_service_selfservice
     - install_service_selfservice_configure_portal_frame
-
-- name: "Set external domain for selfservice backend"
-  univention.ucs_modules.univention_config_registry:
-    keys:
-      self-service/backend-server: "{{ install_service_selfservice_master_server }}"
-  tags:
-    - install_service_selfservice
-    - install_service_selfservice_set_external_domain
