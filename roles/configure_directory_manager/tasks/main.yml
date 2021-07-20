@@ -1,7 +1,7 @@
 ---
 # tasks file for configure_directory_manager
 
-- name: "Set properties as required"
+- name: "configure_directory_manager | Set properties as required"
   univention.ucs_modules.univention_config_registry:
     keys:
       directory/manager/web/modules/users/user/properties/mailPrimaryAddress/required: "{{ configure_directory_manager_mailprimaryaddress_required }}"
@@ -10,7 +10,7 @@
     - configure_directory_manager
     - configure_directory_manager_set_required_properties
 
-- name: "Toggle wizard"
+- name: "configure_directory_manager | Toggle wizard"
   univention.ucs_modules.univention_config_registry:
     keys:
       directory/manager/web/modules/wizard/disabled: "{{ configure_directory_manager_wizard_disabled }}"
@@ -18,7 +18,7 @@
     - configure_directory_manager
     - configure_directory_manager_toggle_wizard
 
-- name: "Set wizard properties"
+- name: "configure_directory_manager | Set wizard properties"
   univention.ucs_modules.univention_config_registry:
     keys:
       directory/manager/web/modules/users/user/wizard/property/invite/default: "{{ configure_directory_manager_invite_default }}"
@@ -29,3 +29,11 @@
   tags:
     - configure_directory_manager
     - configure_directory_manager_set_wizard_properties
+
+- name: "configure_directory_manager | Toogle loading of userlist"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/users/user/search/autosearch: "{{ configure_directory_manager_autosearch }}"
+  tags:
+    - configure_directory_manager
+    - configure_directory_manager_toggle_userlist_loading

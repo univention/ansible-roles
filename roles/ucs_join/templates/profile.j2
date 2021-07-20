@@ -14,6 +14,13 @@ interfaces/{{ ucs_join_network_config_interface }}/address="{{ ucs_join_network_
 interfaces/{{ ucs_join_network_config_interface }}/netmask="{{ ucs_join_network_config_static_ip_config|ipaddr('netmask') }}"
 interfaces/{{ ucs_join_network_config_interface }}/network="{{ ucs_join_network_config_static_ip_config|ipaddr('network') }}"
 interfaces/{{ ucs_join_network_config_interface }}/broadcast="{{ ucs_join_network_config_static_ip_config|ipaddr('broadcast') }}"
+{% for additional_interface in ucs_join_network_config_static_additional_interfaces|default([]) %}
+interfaces/{{ additional_interface }}/type=""
+interfaces/{{ additional_interface }}/address="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ipaddr('address') }}"
+interfaces/{{ additional_interface }}/netmask="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ipaddr('netmask') }}"
+interfaces/{{ additional_interface }}/network="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ipaddr('network') }}"
+interfaces/{{ additional_interface }}/broadcast="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ipaddr('broadcast') }}"
+{% endfor %}
 {% if ucs_join_server_type == 'master' %}
 {% for dns_server in ucs_join_network_config_static_dns_servers|default([]) %}
 dns/forwarder{{ loop.index }}="{{ dns_server }}"

@@ -735,6 +735,8 @@ Role Variables
 - `ucs_join_network_config_static_dns_servers`(list): A list of DNS servers to use in case of static network configuration. If `ucs_join_server_type` is `backup` this variable is ignored and the `master` server will be used instead.
 - `ucs_join_network_config_static_gateway`(string): The server's default router aka internet gateway. This is mandatory for the setup to work.
 - `ucs_join_network_config_interface`(string): The servers default network interface; default: `eth0`.
+- `ucs_join_network_config_static_additional_interfaces`(list): A list of additional interfaces as dictionary
+- `ucs_join_hide_logging`(boolean): Toggle template logging; default: `true`.
 
 Dependencies
 ------------
@@ -744,6 +746,38 @@ none
 Example Playbook
 ----------------
 
+### Configure static network interface
+
+```yaml
+- hosts: all
+  tasks:
+    - ansible.builtin.include_role:
+        name: "univention.ucs_roles.ucs_join"
+      vars:
+        ucs_join_network_config_type: "static"
+        ucs_join_network_config_interface: "eth0"
+        ucs_join_network_config_static_ip_config: "10.20.30.40/24"
+        ucs_join_network_config_static_gateway: "10.20.30.1"
+        ucs_join_network_config_static_dns_servers:
+          - "8.8.8.8"
+          - "8.8.4.4"
+        # ...
+```
+
+### Configure additional network interfaces
+
+```yaml
+- hosts: all
+  tasks:
+    - ansible.builtin.include_role:
+        name: "univention.ucs_roles.ucs_join"
+      vars:
+        ucs_join_network_config_type: "static"
+        ucs_join_network_config_static_additional_interfaces:
+          ens10: "10.20.30.40/24"
+          ens11: "20.30.40.50/24"
+        # ...
+```
 
 License
 -------
@@ -2336,6 +2370,7 @@ Role Variables
 - `configure_directory_manager_overridepwlength_default`(string): Sets default value for password length override; default: `"False"`.
 - `configure_directory_manager_pwdchangenextlogin_visible`(string): Toggles wether password change on next login is visible; default: `"False"`.
 - `configure_directory_manager_pwdchangenextlogin_default`(string): Sets default value for password change on next login; default: `"True"`.
+- `configure_directory_manager_autosearch`(string): Toggles wether the user autosearch is enabled; default: `"False"`.
 
 Dependencies
 ------------
