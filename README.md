@@ -1583,6 +1583,7 @@ Role Variables
 - `configure_saml_single_server_basedn`(string): The LDAP base dn.
 - `configure_saml_single_server_remove_default_saml_provider`(bool): When set to `true` all builtin SAML provider will be removed; default: `true`.
 - `configure_saml_single_server_external_loadbalancer_ip`(string): IP address of external load balancer if used.
+- `configure_saml_single_server_domain_prefix`(string): The external prefix of load balancer
 
 Dependencies
 ------------
