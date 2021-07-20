@@ -20,7 +20,7 @@
     udm computers/ipmanagedclient create \
       --position "cn=computers,{{ configure_saml_single_server_basedn }}" \
       --set dnsEntryZoneForward="zoneName={{ configure_saml_single_server_domain_name }},cn=dns,{{ configure_saml_single_server_basedn }}" \
-      --set name=load_balancer \
+      --set name={{ configure_saml_single_server_domain_prefix|default("portal") }} \
       --set ip={{ configure_saml_single_server_external_loadbalancer_ip }} \
       --set domain={{ configure_saml_single_server_domain_name }} \
       --ignore_exists

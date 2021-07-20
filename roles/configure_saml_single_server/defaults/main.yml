@@ -9,3 +9,4 @@ configure_saml_single_server_basedn: ""
 configure_saml_single_server_remove_default_saml_provider: true
 configure_saml_single_server_domain_name: ""
 configure_saml_single_server_external_loadbalancer_ip: ""
+configure_saml_single_server_domain_prefix: "portal"
