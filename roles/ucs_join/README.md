@@ -26,6 +26,7 @@ Role Variables
 - `ucs_join_network_config_static_dns_servers`(list): A list of DNS servers to use in case of static network configuration. If `ucs_join_server_type` is `backup` this variable is ignored and the `master` server will be used instead.
 - `ucs_join_network_config_static_gateway`(string): The server's default router aka internet gateway. This is mandatory for the setup to work.
 - `ucs_join_network_config_interface`(string): The servers default network interface; default: `eth0`.
+- `ucs_join_hide_logging`(boolean): Toggle template logging; default: `true`.
 
 Dependencies
 ------------
