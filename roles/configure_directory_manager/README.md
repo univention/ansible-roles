@@ -20,6 +20,7 @@ Role Variables
 - `configure_directory_manager_overridepwlength_default`(string): Sets default value for password length override; default: `"False"`.
 - `configure_directory_manager_pwdchangenextlogin_visible`(string): Toggles wether password change on next login is visible; default: `"False"`.
 - `configure_directory_manager_pwdchangenextlogin_default`(string): Sets default value for password change on next login; default: `"True"`.
+- `configure_directory_manager_autosearch`(string): Toggles wether the user autosearch is enabled; default: `"False"`.
 
 Dependencies
 ------------
