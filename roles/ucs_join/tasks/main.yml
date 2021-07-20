@@ -74,7 +74,7 @@
 
 - name: "ucs_join | Carry out system setup"
   block:
-    - name: "Create UCS join profile from template"
+    - name: "ucs_join | Create UCS join profile from template"
       ansible.builtin.template:
         src: "profile.j2"
         dest: "/var/cache/univention-system-setup/profile"
@@ -176,6 +176,24 @@
       when: "ucs_join_network_config_type != 'dhcp'"
       tags:
         - ucs_join_network_settings_static_interface
+
+    - name: "ucs_join | Use static network setting (additional interfaces)"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "interfaces/{{ item.key }}"
+            value: ""
+          - key: "interfaces/{{ item.key }}/address"
+            value: "{{ item.value|ipaddr('address') }}"
+          - key: "interfaces/{{ item.key }}/netmask"
+            value: "{{ item.value|ipaddr('netmask') }}"
+          - key: "interfaces/{{ item.key }}/network"
+            value: "{{ item.value|ipaddr('network') }}"
+          - key: "interfaces/{{ item.key }}/broadcast"
+            value: "{{ item.value|ipaddr('broadcast') }}"
+      when: "ucs_join_network_config_type != 'dhcp'"
+      loop: "{{ ucs_join_network_config_static_additional_interfaces|default([])|dict2items }}"
+      tags:
+        - ucs_join_network_settings_static_additional_interfaces
 
     - name: "ucs_join | Use static network setting (dns)"
       univention.ucs_modules.univention_config_registry:
