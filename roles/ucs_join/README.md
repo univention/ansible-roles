@@ -27,6 +27,7 @@ Role Variables
 - `ucs_join_network_config_static_gateway`(string): The server's default router aka internet gateway. This is mandatory for the setup to work.
 - `ucs_join_network_config_interface`(string): The servers default network interface; default: `eth0`.
 - `ucs_join_network_config_static_additional_interfaces`(list): A list of additional interfaces as dictionary
+- `ucs_join_network_config_static_routes`(list): A list of static routes, which should be attached to interfaces. 
 - `ucs_join_hide_logging`(boolean): Toggle template logging; default: `true`.
 
 Dependencies
@@ -67,6 +68,24 @@ Example Playbook
         ucs_join_network_config_static_additional_interfaces:
           ens10: "10.20.30.40/24"
           ens11: "20.30.40.50/24"
+        # ...
+```
+
+### Configure additional network routes
+
+```yaml
+- hosts: all
+  tasks:
+    - ansible.builtin.include_role:
+        name: "univention.ucs_roles.ucs_join"
+      vars:
+        ucs_join_network_config_static_routes:
+          - interface: "ens10"
+            index: 0
+            route: "host 10.10.0.1 metric 200"
+          - interface: "ens10"
+            index: 1
+            route: "net 10.10.0.0 netmask 255.255.0.0 gw 10.10.0.1 metric 100"
         # ...
 ```
 

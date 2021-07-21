@@ -100,7 +100,7 @@
 
     - name: "ucs_join | backup | Carry out UCS join (backup)"
       block:
-        - name: "Create temporary admin password file"
+        - name: "ucs_join | Create temporary admin password file"
           ansible.builtin.tempfile:
             state: file
           register: ucs_join_admin_pw_file
@@ -195,6 +195,15 @@
       tags:
         - ucs_join_network_settings_static_additional_interfaces
 
+    - name: "ucs_join | Use static network setting (network routes)"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "interfaces/{{ item['interface'] }}/route/{{ item['index'] }}"
+            value: "{{ item['route'] }}"
+      loop: "{{ ucs_join_network_config_static_additional_interfaces|default([]) }}"
+      tags:
+        - ucs_join_network_settings_static_routes
+
     - name: "ucs_join | Use static network setting (dns)"
       univention.ucs_modules.univention_config_registry:
         kvlist:
@@ -212,7 +221,7 @@
     - ucs_join
     - ucs_join_network_settings
 
-- name: "Check if previous setup vars are set"
+- name: "ucs_join | Check if previous setup vars are set"
   ansible.builtin.stat:
     path: "/etc/ansible/facts.d/system-setup-vars.yml"
   register: "ucs_join_system_setup_vars_file"
