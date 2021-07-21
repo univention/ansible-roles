@@ -31,3 +31,6 @@ gateway="{{ ucs_join_network_config_static_gateway }}"
 {% if ucs_join_server_type == 'backup' %}
 nameserver1="{{ ucs_join_master_server }}"
 {% endif %}
+{% for routes in ucs_join_network_config_static_routes|default([]) %}
+interfaces/{{ routes['interface'] }}/route/{{ routes['index'] }}="{{ routes['route'] }}"
+{% endfor %}
