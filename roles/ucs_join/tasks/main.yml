@@ -200,7 +200,7 @@
         kvlist:
           - key: "interfaces/{{ item['interface'] }}/route/{{ item['index'] }}"
             value: "{{ item['route'] }}"
-      loop: "{{ ucs_join_network_config_static_additional_interfaces|default([]) }}"
+      loop: "{{ ucs_join_network_config_static_routes|default([]) }}"
       tags:
         - ucs_join_network_settings_static_routes
 
