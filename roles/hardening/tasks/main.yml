@@ -38,3 +38,11 @@
   tags:
     - hardening_session_cookies_enforcement
     - hardening
+
+- name: "Set processes limit to cpu cores"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/server/processes: "{{ ansible_processor_cores }}"
+  tags:
+    - hardening_set_processes_limit
+    - hardening
