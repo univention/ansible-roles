@@ -102,9 +102,9 @@
 
     - name: "ox_connector | Modify usertemplate"
       ansible.builtin.command: >
-        udm settings/usertemplate modify \
-        --dn "cn=open-xchange groupware account,cn=templates,cn=univention,dc=test,dc=px,dc=own-data,dc=org \
-        --set name="Benutzer mit Groupware-Konto" \
+        udm settings/usertemplate modify
+        --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
+        --set name="Benutzer mit Groupware-Konto"
         --set oxAccess="phoenix_standard"
       register: "ox_connector_modify_usertemplate"
       failed_when: "ox_connector_modify_usertemplate.rc != 0 and (ox_connector_modify_usertemplate.rc == 3 and 'object not found' not in ox_connector_modify_usertemplate.stdout"
