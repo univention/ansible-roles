@@ -107,7 +107,7 @@
         --set name="Benutzer mit Groupware-Konto"
         --set oxAccess="phoenix_standard"
       register: "ox_connector_modify_usertemplate"
-      failed_when: "ox_connector_modify_usertemplate.rc != 0 and (ox_connector_modify_usertemplate.rc == 3 and 'object not found' not in ox_connector_modify_usertemplate.stdout"
+      failed_when: "ox_connector_modify_usertemplate.rc != 0 and (ox_connector_modify_usertemplate.rc == 3 and 'object not found' not in ox_connector_modify_usertemplate.stdout)"
       tags:
         - ox_connector_modify_usertemplate
 
