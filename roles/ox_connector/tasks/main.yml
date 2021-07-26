@@ -1,9 +1,9 @@
 ---
 # tasks file for ox_connector
 
-- name: "install OX connector"
+- name: "ox_connector | Install OX connector"
   block:
-    - name: "Set static host entry of ox server"
+    - name: "ox_connector | Set static host entry of ox server"
       univention.ucs_modules.univention_config_registry:
         kvlist:
           - key: "hosts/static/{{ ox_connector_soap_server_ip }}"
@@ -11,7 +11,7 @@
       tags:
         - ox_connector_static_ox_host
 
-    - name: "Run UCS install apps: Install Packages"
+    - name: "ox_connector | Install ox-connector"
       vars:
         install_packages_app_version_map: "{{ ox_connector_app_version_map }}"
         install_packages_temp_pw_file: "{{ ox_connector_temp_pw_file }}"
@@ -29,7 +29,27 @@
       tags:
         - ox_connector_install
 
-    - name: "Create ox context"
+    - name: "ox_connector | Stop slapd"
+      ansible.builtin.service:
+        name: "slapd"
+        state: "stopped"
+      tags:
+        - ox_connector_stop_slapd
+
+    - name: "ox_connector | Add oxDisplayName index"
+      ansible.builtin.command:
+        cmd: "/usr/share/univention-ldap/ldap_setup_index --add-eq oxDisplayName"
+      tags:
+        - ox_connector_index_oxdisplayname
+
+    - name: "ox_connector | Start slapd"
+      ansible.builtin.service:
+        name: "slapd"
+        state: "started"
+      tags:
+        - ox_connector_start_slapd
+
+    - name: "ox_connector | Create ox context"
       ansible.builtin.command: >
         udm oxmail/oxcontext create
         --position "cn=open-xchange,{{ ox_connector_basedn }}"
@@ -39,7 +59,7 @@
       tags:
         - ox_connector_ox_context
 
-    - name: "Create ox accessprofile"
+    - name: "ox_connector | Create ox accessprofile"
       ansible.builtin.command: >
         udm oxmail/accessprofile create
         --position "cn=accessprofiles,cn=open-xchange,{{ ox_connector_basedn }}"
@@ -65,7 +85,7 @@
       tags:
         - ox_connector_add_phoenix_accessprofile
 
-    - name: "Remove existing accessprofiles"
+    - name: "ox_connector | Remove existing accessprofiles"
       ansible.builtin.command: >
         udm oxmail/accessprofile remove
         --dn="{{ item }},{{ ox_connector_basedn }}"
@@ -80,17 +100,18 @@
       tags:
         - ox_connector_remove_existing_accessprofiles
 
-    - name: "Modify usertemplate"
+    - name: "ox_connector | Modify usertemplate"
       ansible.builtin.command: >
-        udm settings/usertemplate modify
-        --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
-        --set name="Benutzer mit Groupware-Konto"
+        udm settings/usertemplate modify \
+        --dn "cn=open-xchange groupware account,cn=templates,cn=univention,dc=test,dc=px,dc=own-data,dc=org \
+        --set name="Benutzer mit Groupware-Konto" \
         --set oxAccess="phoenix_standard"
-      ignore_errors: true
+      register: "ox_connector_modify_usertemplate"
+      failed_when: "ox_connector_modify_usertemplate.rc != 0 and (ox_connector_modify_usertemplate.rc == 3 and 'object not found' not in ox_connector_modify_usertemplate.stdout"
       tags:
         - ox_connector_modify_usertemplate
 
-    - name: "Set oxDisplayName in usertemplate"
+    - name: "ox_connector | Set oxDisplayName in usertemplate"
       ansible.builtin.command: >
         udm settings/usertemplate modify
         --dn
@@ -104,14 +125,14 @@
       tags:
         - ox_connector_modify_usertemplate_set_oxdisplayname_in_user_template
 
-    - name: "Add default dn to users"
+    - name: "ox_connector | Add default dn to users"
       univention.ucs_modules.univention_config_registry:
         keys:
           directory/manager/web/modules/users/user/add/default: "cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}"
       tags:
         - ox_connector_default_dn
 
-    - name: "Disable UDMWeb for User"
+    - name: "ox_connector | Disable UDMWeb for User"
       ansible.builtin.command: >
         udm settings/extended_attribute modify \
           --dn "cn=oxContextUser,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}" \
@@ -120,7 +141,7 @@
       tags:
         - ox_connector_disable_udmweb_user
 
-    - name: "Disable UDMWeb for Ressource"
+    - name: "ox_connector | Disable UDMWeb for Ressource"
       ansible.builtin.command: >
         udm settings/extended_attribute modify \
           --dn "cn=oxContextResource,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}" \
@@ -129,7 +150,7 @@
       tags:
         - ox_connector_disable_udmweb_ressource
 
-    - name: "Create ipmanagedclients"
+    - name: "ox_connector | Create ipmanagedclients"
       ansible.builtin.command: >
         udm computers/ipmanagedclient create \
           --position "cn=computers,{{ ox_connector_basedn }}" \
