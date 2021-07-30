@@ -1,16 +1,16 @@
 ---
 # tasks file for install_multitenant_acls
 
+- name: "install_multitenant_acls | Disable kerberos DNS lookup"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      kerberos/kdc: "127.0.0.1"
+      kerberos/defaults/dns_lookup_kdc: false
+  tags:
+    - install_multitenant_acls_disable_kerberos
+
 - name: "install_multitenant_acls | Install Multitenat ACLs"
   block:
-    - name: "install_multitenant_acls | Set default mail domain to host's FQDN"
-      univention.ucs_modules.univention_config_registry:
-        keys:
-          kerberos/kdc: "127.0.0.1"
-          kerberos/defaults/dns_lookup_kdc: false
-      tags:
-        - install_multitenant_acls_disable_kerberos
-
     - name: "install_multitenant_acls | Copy ACL template to machine"
       ansible.builtin.template:
         dest: "{{ install_multitenant_acls_json_path }}"
