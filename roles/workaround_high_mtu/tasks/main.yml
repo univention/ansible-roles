@@ -3,7 +3,7 @@
 - name: "Handle docker HTTPS issues on high MTU"
   block:
     - name: "Patch docker Daemon to MTU 1400"
-      ansible.builtin.file:
+      ansible.builtin.copy:
         dest: "/etc/systemd/system/docker.service.d/fixmtu.conf"
         src: "fixmtu.conf"
       tags:
