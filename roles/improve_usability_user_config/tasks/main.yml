@@ -73,23 +73,27 @@
         'cn=open-xchange groupware account,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}'
         --set
         mailPrimaryAddress='<username>@{{ improve_usability_user_config_external_hostname }}'
+      register: "improve_usability_user_config_change_primary_mail_address"
+      failed_when: "improve_usability_user_config_change_primary_mail_address.rc != 0 and (improve_usability_user_config_change_primary_mail_address.rc == 3 and 'object not found' not in improve_usability_user_config_change_primary_mail_address.stdout)"
       tags:
         - improve_usability_user_config_change_primary_mail_address
 
-    - name: "Rename user template to 'Phoenix Groupware-Benutzer'"
+    - name: "Rename user template to 'Groupware-Benutzer'"
       ansible.builtin.command: >
         udm settings/usertemplate modify
         --dn
         'cn=open-xchange groupware account,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}'
         --set
-        name='Phoenix Groupware-Benutzer'
+        name='Groupware-Benutzer'
+      register: "improve_usability_user_config_remame_user_template"
+      failed_when: "improve_usability_user_config_remame_user_template.rc != 0 and (improve_usability_user_config_remame_user_template.rc == 3 and 'object not found' not in improve_usability_user_config_remame_user_template.stdout)"
       tags:
         - improve_usability_user_config_remame_user_template
 
-    - name: "Set Phoenix user template as default"
+    - name: "Set user template as default"
       univention.ucs_modules.univention_config_registry:
         keys:
-          directory/manager/web/modules/users/user/add/default: "cn=Phoenix Groupware-Benutzer,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}"
+          directory/manager/web/modules/users/user/add/default: "cn=Groupware-Benutzer,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}"
           directory/manager/web/modules/users/user/wizard/property/invite/default: "true"
       tags:
         - improve_usability_user_config
