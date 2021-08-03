@@ -125,13 +125,6 @@
       tags:
         - ox_connector_modify_usertemplate_set_oxdisplayname_in_user_template
 
-    - name: "ox_connector | Add default dn to users"
-      univention.ucs_modules.univention_config_registry:
-        keys:
-          directory/manager/web/modules/users/user/add/default: "cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}"
-      tags:
-        - ox_connector_default_dn
-
     - name: "ox_connector | Disable UDMWeb for User"
       ansible.builtin.command: >
         udm settings/extended_attribute modify \
@@ -167,3 +160,10 @@
   when: "ox_connector_server_type|default('master') != 'backup'"
   tags:
     - ox_connector
+
+- name: "ox_connector | Add default dn to users"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/users/user/add/default: "cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}"
+  tags:
+    - ox_connector_default_dn
