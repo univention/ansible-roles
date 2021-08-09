@@ -26,6 +26,7 @@
         create: true
         line: "{{ configure_apps_postfix_relay_host }} {{ configure_apps_postfix_relay_username }}:{{ configure_apps_postfix_relay_password }}"
         mode: "775"
+      no_log: "{{ configure_apps_postfix_relay_hide_logging | default(true) }}"
       tags:
         - configure_apps_postfix_relay_set_auth_update_file
 
