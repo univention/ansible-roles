@@ -1,17 +1,30 @@
 ---
 # tasks file for univention_upgrade
 
-- name: "Allow modified apache templates"
+- name: "univention_upgrade | Allow modified apache templates"
   univention.ucs_modules.univention_config_registry:
     keys:
       update44/ignore_apache_template_checks: "yes"
+  check_mode: false
   tags:
     - univention_upgrade
     - univention_upgrade_ignore_apache_template_check
 
-- name: "Do univention-upgrade"
+- name: "univention_upgrade | Check for upgrade"
+  ansible.builtin.command: "univention-upgrade --check --updateto={{ univention_upgrade_version }}"
+  changed_when: false
+  register: "univention_upgrade_upgrade_check"
+  failed_when: "univention_upgrade_upgrade_check.rc > 0 and univention_upgrade_upgrade_check.stderr is not search('update to UCS 5.0 is blocked')"
+  tags:
+    - univention_upgrade
+    - univention_upgrade_upgrade_check
+
+- name: "univention_upgrade | Do univention-upgrade"
   ansible.builtin.command: "univention-upgrade --ignoressh --ignoreterm --noninteractive --updateto={{ univention_upgrade_version }}"
+  check_mode: false
+  delay: 10
   retries: 3
+  when: "univention_upgrade_upgrade_check.stdout is not search('No update available')"
   tags:
     - univention_upgrade
     - univention_upgrade_run
