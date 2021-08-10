@@ -1,41 +1,64 @@
 ---
 # tasks file for deployment_message
 
-- name: "Check if all vars are set"
+- name: "deployment_message | Check if all vars are set"
   ansible.builtin.assert:
     that:
-      - deployment_message_external_hostname|length > 0
-      - deployment_message_domain_name|length > 0
-      - deployment_message_basedn|length > 0
-      - deployment_message_server_type|length > 0
-      - deployment_message_saml_config_type|length > 0
+      - "deployment_message_external_hostname|length > 0"
+      - "deployment_message_domain_name|length > 0"
+      - "deployment_message_basedn|length > 0"
+      - "deployment_message_server_type|length > 0"
+      - "deployment_message_saml_config_type|length > 0"
     fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags deployment_message_check_preconditions"
+  changed_when: false
   tags:
     - deployment_message
     - deployment_message_check_preconditions
 
-- name: "Load version info"
+- name: "deployment_message | Load version info (collections)"
   ansible.builtin.include_vars:
-    file: "version_info.yml"
-    name: "deployment_message_custom_fact_deployment"
-  ignore_errors: true
+    file: "collections/requirements.yml"
+    name: "deployment_message_custom_fact_collections"
+  changed_when: false
+  failed_when: false
   tags:
     - deployment_message
-    - deployment_message_version_info
+    - deployment_message_version_info_collections
 
-- name: "Print Deployment Start Message"
+- name: "deployment_message | Load version info (roles)"
+  ansible.builtin.include_vars:
+    file: "roles/requirements.yml"
+    name: "deployment_message_custom_fact_roles"
+  changed_when: false
+  failed_when: false
+  tags:
+    - deployment_message
+    - deployment_message_version_info_roles
+
+- name: "deployment_message | Load version info (global)"
+  ansible.builtin.include_vars:
+    file: "requirements.yml"
+    name: "deployment_message_custom_fact_global"
+  changed_when: false
+  failed_when: false
+  tags:
+    - deployment_message
+    - deployment_message_version_info_global
+
+- name: "deployment_message | Print Deployment Start Message"
   vars:
     deployment_message_message: "{{ lookup('template', 'deployment_start_message.j2') }}"
   ansible.builtin.debug:
     msg: "{{ deployment_message_message.split('\n') }}"
-  when: "deployment_message_custom_fact_deployment is defined"
+  changed_when: false
   tags:
     - deployment_message
     - deployment_message_print_version_info
 
-- name: "Pause for {{ deployment_message_verification_pause_duration }} seconds"
+- name: "deployment_message | Pause for {{ deployment_message_verification_pause_duration }} seconds"
   ansible.builtin.pause:
     seconds: "{{ deployment_message_verification_pause_duration }}"
+  changed_when: false
   when: "deployment_message_custom_fact_deployment is defined"
   tags:
     - deployment_message
