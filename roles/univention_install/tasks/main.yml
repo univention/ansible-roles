@@ -1,11 +1,14 @@
 ---
 # tasks file for univention_install
 
-- name: "Install via univention-install"
-  ansible.builtin.command: "univention-install --yes {{ univention_install_name }}"
-  register: install_univention_install
-  retries: 10
+- name: "univention_install | Install via univention-install"
+  ansible.builtin.command:
+    cmd: "univention-install --yes {{ univention_install_name }}"
+  changed_when: "install_univention_install.stdout is not search('is already the newest version')"
+  check_mode: false
   delay: 10
+  register: "install_univention_install"
+  retries: 10
   until: "install_univention_install.rc == 0"
   tags:
     - univention_install
