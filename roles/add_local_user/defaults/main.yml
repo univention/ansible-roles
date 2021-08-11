@@ -7,3 +7,4 @@ add_local_user_user:
   password: "{{ 'ansible'|password_hash('sha512') }}"
 
 add_local_user_default_shell: "/bin/bash"
+add_local_user_default_password_policy: "on_create"
