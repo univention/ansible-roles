@@ -9,7 +9,7 @@
     comment: "{{ add_local_user_user['comment']|default('') }}"
     password: "{{ add_local_user_user['password']|default(add_local_user_random_password) }}"
     shell: "{{ add_local_user_user['shell']|default(add_local_user_default_shell) }}"
-    update_password: "always"
+    update_password: "{{ add_local_user_user['update_password_policy']|default(add_local_user_default_password_policy) }}"
     groups:
       - "sudo"
     state: "{{ add_local_user_user['state']|default('present') }}"

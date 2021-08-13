@@ -5,3 +5,4 @@ configure_apps_postfix_relay_host: ""
 configure_apps_postfix_relay_port: 25
 configure_apps_postfix_relay_username: ""
 configure_apps_postfix_relay_password: ""
+configure_apps_postfix_relay_hide_logging: true

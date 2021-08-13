@@ -17,6 +17,7 @@ Role Variables
 - `configure_apps_postfix_relay_host`(string): The SMTP relay hostname.
 - `configure_apps_postfix_relay_username`(string): The SMTP relay username.
 - `configure_apps_postfix_relay_password`(string): The SMTP relay password.
+- `configure_apps_postfix_relay_hide_logging`(boolean): Toggles output logging for sensible information; default: `true`.
 
 Dependencies
 ------------

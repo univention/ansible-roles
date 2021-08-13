@@ -1,12 +1,18 @@
 [versions]
-{% if ucs_setup_custom_fact_deployment|default(false) %}
-{% for item, version in ucs_setup_custom_fact_deployment.items() %}
-{{ item }} = {{ version }}
-{% endfor %}
+{% if deployment_message_custom_fact_global is defined and deployment_message_custom_fact_global|length > 0 %}
+{% set deployment_message_temp_collections = deployment_message_custom_fact_global['collections']|default([]) %}
+{% set deployment_message_temp_roles = deployment_message_custom_fact_global['roles']|default([]) %}
 {% else %}
-ucs_setup = MANUAL
+{% set deployment_message_temp_collections = deployment_message_custom_fact_collections['collections']|default([]) %}
+{% set deployment_message_temp_roles = deployment_message_custom_fact_roles['roles']|default([]) %}
 {% endif %}
 
-[date]
-rollout_date = {{ ansible_date_time['date'] }}
-rollout_time = {{ ansible_date_time['time'] }} {{ ansible_date_time['tz'] }}
+[versions-collections]
+{% for requirement in deployment_message_temp_collections %}
+{{ requirement['name'] }} = {{ requirement['version'] }}
+{% endfor %}
+
+[versions-roles]
+{% for requirement in deployment_message_temp_roles %}
+{{ requirement['name'] }} = {{ requirement['version'] }}
+{% endfor %}

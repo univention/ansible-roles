@@ -8,9 +8,22 @@ This server is going to fulfill the following role: {{ "master/standalone" if de
 SAML is going to be configured in {{ "master/standalone" if deployment_message_saml_config_type != "failover" else deployment_message_saml_config_type }} mode.
 
 This host currently is in the following groups: {{ group_names|join(", ") }}
-This deployment uses the following versions:
-{% for key, value in deployment_message_custom_fact_deployment.items()|default([]) %}
-{{ key }}: {{ value }}
+
+{% if deployment_message_custom_fact_global is defined and deployment_message_custom_fact_global|length > 0 %}
+{% set deployment_message_temp_collections = deployment_message_custom_fact_global['collections']|default([]) %}
+{% set deployment_message_temp_roles = deployment_message_custom_fact_global['roles']|default([]) %}
+{% else %}
+{% set deployment_message_temp_collections = deployment_message_custom_fact_collections['collections']|default([]) %}
+{% set deployment_message_temp_roles = deployment_message_custom_fact_roles['roles']|default([]) %}
+{% endif %}
+This deployment uses the following collections:
+{% for requirement in deployment_message_temp_collections %}
+{{ requirement['name'] }}: {{ requirement['version'] }}
+{% endfor %}
+
+This deployment uses the following roles:
+{% for requirement in deployment_message_temp_roles %}
+{{ requirement['name'] }}: {{ requirement['version'] }}
 {% endfor %}
 
 We're about to pause for {{ deployment_message_verification_pause_duration }} seconds
