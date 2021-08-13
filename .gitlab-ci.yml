@@ -79,10 +79,8 @@ update-requirements:
   only:
     - tags
   script:
-    - curl --insecure --request POST  --form token=${TRIGGER_TOKEN_BMI}  --form ref=main  --form variables[GALAXY_RELEASE_VERSION]=${CI_COMMIT_TAG} ${CI_SERVER_URL}/api/v4/projects/402/trigger/pipeline
     - curl --insecure --request POST  --form token=${TRIGGER_TOKEN_SANDBOX}  --form ref=main  --form variables[GALAXY_RELEASE_VERSION]=${CI_COMMIT_TAG} ${CI_SERVER_URL}/api/v4/projects/396/trigger/pipeline
     - curl --insecure --request POST  --form token=${TRIGGER_TOKEN_SPS}  --form ref=main  --form variables[GALAXY_RELEASE_VERSION]=${CI_COMMIT_TAG} ${CI_SERVER_URL}/api/v4/projects/398/trigger/pipeline
-    - curl --insecure --request POST  --form token=${TRIGGER_TOKEN_ZITSH}  --form ref=main  --form variables[GALAXY_RELEASE_VERSION]=${CI_COMMIT_TAG} ${CI_SERVER_URL}/api/v4/projects/399/trigger/pipeline
   stage: prepare
   variables:
     GIT_STRATEGY: none
