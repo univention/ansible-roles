@@ -1,7 +1,7 @@
 ---
 # tasks file for configure_ntp_servers
 
-- name: "Configure NTP servers"
+- name: "configure_ntp_servers | Configure NTP servers"
   univention.ucs_modules.univention_config_registry:
     kvlist:
       - key: "timeserver{{ '' if index == 0 else index+1 }}"
@@ -9,7 +9,17 @@
   loop: "{{ configure_ntp_servers_timeservers|default([]) }}"
   loop_control:
     index_var: index
-  notify: "Restart ntpd"
+  register: "configure_ntp_servers_result"
   when: "configure_ntp_servers_timeservers|default(false)"
   tags:
     - configure_ntp_servers
+    - configure_ntp_servers_set_ucr
+
+- name: "configure_ntp_servers | Restart ntpd"
+  ansible.builtin.service:
+    name: "ntp"
+    state: "restarted"
+  when: "configure_ntp_servers_result.changed"
+  tags:
+    - configure_ntp_servers
+    - configure_ntp_servers_restart_ntp_deamon
