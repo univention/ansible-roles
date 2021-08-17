@@ -1,7 +1,7 @@
 ---
 # tasks file for configure_network_proxy
 
-- name: "Configure http network proxy"
+- name: "configure_network_proxy | Configure http network proxy"
   univention.ucs_modules.univention_config_registry:
     keys:
       proxy/http: "{{ configure_network_proxy_http_proxy|default('') }}"
@@ -11,7 +11,7 @@
     - configure_network_proxy
     - configure_network_proxy_http_proxy
 
-- name: "Configure https network proxy"
+- name: "configure_network_proxy | Configure https network proxy"
   univention.ucs_modules.univention_config_registry:
     keys:
       proxy/https: "{{ configure_network_proxy_https_proxy|default('') }}"
@@ -21,7 +21,7 @@
     - configure_network_proxy
     - configure_network_proxy_https_proxy
 
-- name: "Configure no_proxy network proxy"
+- name: "configure_network_proxy | Configure no_proxy network proxy"
   univention.ucs_modules.univention_config_registry:
     keys:
       proxy/no_proxy: "{{ configure_network_proxy_no_proxy|default('') }}"
