@@ -3,13 +3,20 @@
 
 - name: "ox_connector | Install OX connector"
   block:
-    - name: "ox_connector | Set static host entry of ox server"
-      univention.ucs_modules.univention_config_registry:
-        kvlist:
-          - key: "hosts/static/{{ ox_connector_soap_server_ip }}"
-            value: "{{ ox_connector_soap_server_name }}"
+    - name: "ox_connector | Create ipmanagedclients"
+      ansible.builtin.command: >
+        udm computers/ipmanagedclient create \
+          --position "cn=computers,{{ ox_connector_basedn }}" \
+          --set dnsEntryZoneForward="zoneName={{ ox_connector_domain_name }},cn=dns,{{ ox_connector_basedn }}" \
+          --set name={{ ox_connector_soap_server_name }} \
+          --set ip={{ ox_connector_soap_server_ip }} \
+          --set domain={{ ox_connector_domain_name }} \
+          --ignore_exists
+      changed_when: "ox_connector_disable_udmweb_ressource.stdout is search('Object created')"
+      failed_when: "ox_connector_ipmanagedclients.rc > 0 and 'already in use' not in ox_connector_ipmanagedclients.stdout"
+      register: "ox_connector_ipmanagedclients"
       tags:
-        - ox_connector_static_ox_host
+        - ox_connector_ipmanagedclients
 
     - name: "ox_connector | Install ox-connector"
       vars:
@@ -19,7 +26,7 @@
           - "ox-connector"
         install_packages_additional_options: >
           DEFAULT_CONTEXT=9999
-          OX_SOAP_SERVER=https://{{ ox_connector_soap_server_name }}/
+          OX_SOAP_SERVER=https://{{ ox_connector_soap_server_name }}.{{ ox_connector_domain_name }}/
           OX_IMAP_SERVER=imap://127.0.0.1:143
           OX_SMTP_SERVER=smtp://127.0.0.1:26
           OX_MASTER_ADMIN={{ ox_connector_master_admin }}
@@ -159,21 +166,6 @@
       register: "ox_connector_disable_udmweb_ressource"
       tags:
         - ox_connector_disable_udmweb_ressource
-
-    - name: "ox_connector | Create ipmanagedclients"
-      ansible.builtin.command: >
-        udm computers/ipmanagedclient create \
-          --position "cn=computers,{{ ox_connector_basedn }}" \
-          --set dnsEntryZoneForward="zoneName={{ ox_connector_domain_name }},cn=dns,{{ ox_connector_basedn }}" \
-          --set name=ox-connect \
-          --set ip={{ ox_connector_soap_server_ip }} \
-          --set domain={{ ox_connector_domain_name }} \
-          --ignore_exists
-      changed_when: "ox_connector_disable_udmweb_ressource.stdout is search('Object created')"
-      failed_when: "ox_connector_ipmanagedclients.rc > 0 and 'already in use' not in ox_connector_ipmanagedclients.stdout"
-      register: "ox_connector_ipmanagedclients"
-      tags:
-        - ox_connector_ipmanagedclients
 
   when: "ox_connector_server_type|default('master') != 'backup'"
   tags:
