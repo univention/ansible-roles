@@ -12,7 +12,7 @@
 
 - name: "force_package_list_update | Check if packages list already updated"
   block:
-    - name: "Update debian package lists"
+    - name: "force_package_list_update | Update debian package lists"
       ansible.builtin.apt:
         update_cache: true
         update_cache_retries: 3
