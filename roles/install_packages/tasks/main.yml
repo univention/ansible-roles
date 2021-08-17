@@ -1,28 +1,28 @@
 ---
 # tasks file for install_packages
 
-- name: "Update package list"
+- name: "install_packages | Update package list"
   ansible.builtin.include_role:
-    name: force_package_list_update
+    name: "force_package_list_update"
   tags:
     - install_packages
     - install_packages_update_packages
 
-- name: "Update installed applications list"
+- name: "install_packages | Update installed applications list"
   ansible.builtin.include_role:
-    name: get_installed_apps
+    name: "get_installed_apps"
   tags:
     - install_packages_get_installed_apps
     - install_packages
 
-- name: "Set installed apps"
+- name: "install_packages | Set installed apps"
   ansible.builtin.set_fact:
     install_packages_currently_installed_apps: "{{ get_installed_apps_installed_apps }}"
   tags:
     - install_packages
     - install_packages_set_installed_apps
 
-- name: "Install Univention app packages"
+- name: "install_packages | Install Univention app packages"
   vars:
     install_packages_package_version: "{{ '=' + install_packages_app_version_map[item]
       if item in install_packages_app_version_map
