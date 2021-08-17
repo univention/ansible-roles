@@ -28,7 +28,7 @@
 
         - name: "configure_license | Get license from license server"
           block:
-            - name: "Check if all vars are set"
+            - name: "configure_license | Check if all vars are set"
               ansible.builtin.assert:
                 that:
                   - "configure_license_validity|string|length > 0"
