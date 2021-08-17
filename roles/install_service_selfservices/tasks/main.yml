@@ -1,9 +1,9 @@
 ---
 # tasks file for install_service_selfservices
 
-- name: "Install New Portal app"
+- name: "install_service_selfservices | Install New Portal app"
   ansible.builtin.include_role:
-    name: install_packages
+    name: "install_packages"
   vars:
     install_packages_app_version_map: "{{ install_service_selfservice_service_version_map }}"
     install_packages_temp_pw_file: "{{ install_service_selfservice_temp_file }}"
@@ -12,10 +12,10 @@
       - "self-service-backend"
       - "self-service"
   tags:
-    - install_service_selfservice
-    - install_service_selfservice_install_app
+    - install_service_selfservices
+    - install_service_selfservices_install_app
 
-- name: "Install self service mail"
+- name: "install_service_selfservices | Install self service mail"
   vars:
     fqdn: "{{ install_service_selfservice_external_hostname }}"
   ansible.builtin.template:
@@ -23,10 +23,10 @@
     src: "{{ item }}"
   loop: "{{ query('fileglob', 'files/selfservice-mails/*') }}"
   tags:
-    - install_service_selfservice
-    - install_service_selfservice_install_service_mails
+    - install_service_selfservices
+    - install_service_selfservices_install_service_mails
 
-- name: "Configure Univention Config Registry"
+- name: "install_service_selfservices | Configure Univention Config Registry"
   vars:
     install_service_selfservice_attributes: 'jpegPhoto,e-mail,roomnumber,departmentNumber,country,homeTelephoneNumber,mobileTelephoneNumber,homePostalAddress'
   univention.ucs_modules.univention_config_registry:
@@ -34,36 +34,36 @@
       self-service/udm_attributes: "{{ install_service_selfservice_attributes }}"
       self-service/ldap_attributes: "{{ install_service_selfservice_attributes }}"
       umc/self-service/profiledata/enabled: "true"
-      umc/self-service/passwordreset/token_validity_period: 172800
+      umc/self-service/passwordreset/token_validity_period: "172800"
   tags:
-    - install_service_selfservice
-    - install_service_selfservice_configure_ucr
+    - install_service_selfservices
+    - install_service_selfservices_configure_ucr
 
-- name: "Set password reset template"
+- name: "install_service_selfservices | Set password reset template"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/passwordreset/email/text_file: "/usr/share/univention-self-service/email_bodies/{{ install_service_selfservice_password_reset_filename }}"
   when: "install_service_selfservice_password_reset_filename|length > 0"
   tags:
-    - install_service_selfservice
-    - install_service_selfservice_configure_passwortreset_email
+    - install_service_selfservices
+    - install_service_selfservices_configure_passwortreset_email
 
-- name: "Set sender address"
+- name: "install_service_selfservices | Set sender address"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/passwordreset/email/sender_address: "Password Reset Service <noreply@{{ install_service_selfservice_domain_name }}>"
       umc/self-service/passwordreset/email/webserver_address: "{{ install_service_selfservice_external_hostname }}"
       umc/self-service/account-verification/email/webserver_address: "{{ install_service_selfservice_external_hostname }}"
   tags:
-    - install_service_selfservice
-    - install_service_selfservice_configure_passwortreset_sender
+    - install_service_selfservices
+    - install_service_selfservices_configure_passwortreset_sender
 
-- name: "Set frame ancestor for portal"
+- name: "install_service_selfservices | Set frame ancestor for portal"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/content-security-policy/frame-ancestors: "'self'"
   when: "'new_portal' in install_service_selfservice_install_services"
   notify: "Restart apache"
   tags:
-    - install_service_selfservice
-    - install_service_selfservice_configure_portal_frame
+    - install_service_selfservices
+    - install_service_selfservices_configure_portal_frame
