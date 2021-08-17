@@ -13,6 +13,7 @@
           --set password="{{ ldapsearch_user_nextcloud_password }}"
           --ignore_exists
       changed_when: "ldapsearch_user_nextcloud_result.stdout is not search('Object exists')"
+      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
       register: "ldapsearch_user_nextcloud_result"
       when: "'nextcloud' in ldapsearch_user_install_apps"
       tags:
@@ -28,6 +29,7 @@
           --set password="{{ ldapsearch_user_ox_password }}"
           --ignore_exists
       changed_when: "ldapsearch_user_ox_result.stdout is not search('Object exists')"
+      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
       register: "ldapsearch_user_ox_result"
       when: "'oxseforucs' in ldapsearch_user_install_apps or 'ox-connector' in ldapsearch_user_install_apps"
       tags:
