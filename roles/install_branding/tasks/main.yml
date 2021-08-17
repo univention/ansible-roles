@@ -1,48 +1,25 @@
 ---
 # tasks file for install_branding
 
-- name: "Create repository key dictionary"
-  ansible.builtin.set_fact:
-    install_branding_customer_repo_info_dict: "{{ install_branding_customer_repo_info_dict|default({})|combine({item.key: item.value}) }}"
-  loop:
-    - key: "repository/online/component/{{ install_branding_customer_repo_name }}/parts"
-      value: "{{ install_branding_customer_repo_parts }}"
-    - key: "repository/online/component/{{ install_branding_customer_repo_name }}/password"
-      value: "{{ install_branding_customer_repo_password }}"
-    - key: "repository/online/component/{{ install_branding_customer_repo_name }}/prefix"
-      value: "apt/{{ install_branding_customer_repo_username }}"
-    - key: "repository/online/component/{{ install_branding_customer_repo_name }}/server"
-      value: "{{ install_branding_customer_repo_server }}"
-    - key: "repository/online/component/{{ install_branding_customer_repo_name }}/username"
-      value: "{{ install_branding_customer_repo_username }}"
-    - key: "repository/online/component/{{ install_branding_customer_repo_name }}"
-      value: "yes"
-  no_log: true
-  tags:
-    - install_branding
-    - install_branding_customer_repository
-
-- name: "Activate customer repository"
-  univention.ucs_modules.univention_config_registry:
-    keys: "{{ install_branding_customer_repo_info_dict }}"
-  no_log: true
-  tags:
-    - install_branding
-    - install_branding_customer_repository
-
-- name: "Update package list"
+- name: "install_branding | Enable branding repository"
   ansible.builtin.include_role:
-    name: force_package_list_update
+    name: "univention_repository_component"
+  vars:
+    univention_repository_component_name: "{{ install_branding_customer_repo_name }}"
+    univention_repository_component_parts: "{{ install_branding_customer_repo_parts }}"
+    univention_repository_component_prefix: "apt/{{ install_branding_customer_repo_username }}"
+    univention_repository_component_server: "{{ install_branding_customer_repo_server }}"
+    univention_repository_component_username: "{{ install_branding_customer_repo_username }}"
+    univention_repository_component_password: "{{ install_branding_customer_repo_password }}"
   tags:
     - install_branding
     - install_branding_update_packages
 
-- name: "Install customer branding"
-  ansible.builtin.command: "univention-install --yes {{ install_branding_customer_branding_package }}"
-  register: install_branding_package_install
-  retries: 10
-  delay: 10
-  until: "install_branding_package_install.rc == 0"
+- name: "install_branding | Install branding package"
+  ansible.builtin.include_role:
+    name: "univention_install"
+  vars:
+    univention_install_name: "{{ install_branding_customer_branding_package }}"
   tags:
     - install_branding
-    - install_branding_install_customer_branding
+    - install_branding_update_packages
