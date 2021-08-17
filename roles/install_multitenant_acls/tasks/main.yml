@@ -1,12 +1,27 @@
 ---
 # tasks file for install_multitenant_acls
 
+- name: "install_multitenant_acls | Enable ACL repository"
+  ansible.builtin.include_role:
+    name: "univention_repository_component"
+  vars:
+    univention_repository_component_name: "{{ install_multitenant_acls_customer_repo_name }}"
+    univention_repository_component_parts: "{{ install_multitenant_acls_customer_repo_parts }}"
+    univention_repository_component_prefix: "apt/{{ install_multitenant_acls_customer_repo_username }}"
+    univention_repository_component_server: "{{ install_multitenant_acls_customer_repo_server }}"
+    univention_repository_component_username: "{{ install_multitenant_acls_customer_repo_username }}"
+    univention_repository_component_password: "{{ install_multitenant_acls_customer_repo_password }}"
+  tags:
+    - install_multitenant_acls
+    - install_multitenant_acls_enable_repository
+
 - name: "install_multitenant_acls | Disable kerberos DNS lookup"
   univention.ucs_modules.univention_config_registry:
     keys:
       kerberos/kdc: "127.0.0.1"
       kerberos/defaults/dns_lookup_kdc: false
   tags:
+    - install_multitenant_acls
     - install_multitenant_acls_disable_kerberos
 
 - name: "install_multitenant_acls | Install Multitenat ACLs"
