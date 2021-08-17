@@ -1,7 +1,7 @@
 ---
 # tasks file for install_apps_ox_pre
 
-- name: "Set default mail domain to host's FQDN"
+- name: "install_apps_ox_pre | Set default mail domain to host's FQDN"
   univention.ucs_modules.univention_config_registry:
     keys:
       mail/default/domains: "{{ install_apps_ox_pre_external_hostname }}"
@@ -9,12 +9,14 @@
     - install_apps_ox_pre
     - install_apps_ox_pre_default_domain
 
-- name: "Set mail domain for external domain"
+- name: "install_apps_ox_pre | Set mail domain for external domain"
   ansible.builtin.command: >
     udm mail/domain create
     --position "cn=domain,cn=mail,{{ install_apps_ox_pre_basedn }}"
     --set name="{{ install_apps_ox_pre_mail_domain }}"
     --ignore_exists
+  changed_when: "install_apps_ox_pre_external_domain_result.stdout is not search('Object exists')"
+  register: "install_apps_ox_pre_external_domain_result"
   when: "install_apps_ox_pre_mail_domain is defined and
          install_apps_ox_pre_mail_domain|length > 0"
   tags:
