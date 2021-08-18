@@ -24,7 +24,7 @@
       --set ip={{ configure_saml_single_server_external_loadbalancer_ip }} \
       --set domain={{ configure_saml_single_server_domain_name }} \
       --ignore_exists
-  changed_when: "configure_saml_single_server_ipmanagedclients.stdout is search('Object creating')"
+  changed_when: "configure_saml_single_server_ipmanagedclients.stdout is search('Object created')"
   failed_when: "configure_saml_single_server_ipmanagedclients.rc > 0 and 'already in use' not in configure_saml_single_server_ipmanagedclients.stdout"
   register: "configure_saml_single_server_ipmanagedclients"
   when: "configure_saml_single_server_external_loadbalancer_ip is defined and configure_saml_single_server_external_loadbalancer_ip|length > 0"
