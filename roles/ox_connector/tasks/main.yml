@@ -26,7 +26,7 @@
           - "ox-connector"
         install_packages_additional_options: >
           DEFAULT_CONTEXT=9999
-          OX_SOAP_SERVER=https://{{ ox_connector_soap_server_name }}.{{ ox_connector_domain_name }}/
+          OX_SOAP_SERVER=https://{{ ox_connector_soap_server_name }}.{{ ox_connector_domain_name }}
           OX_IMAP_SERVER=imap://127.0.0.1:143
           OX_SMTP_SERVER=smtp://127.0.0.1:26
           OX_MASTER_ADMIN={{ ox_connector_master_admin }}
