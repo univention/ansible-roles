@@ -1,7 +1,7 @@
 ---
 # tasks file for improve_usability_ui_changes
 
-- name: "Get portal entries except Anmeldung and Impressum"
+- name: "improve_usability_ui_changes | Get portal entries except Anmeldung and Impressum"
   vars:
     improve_usability_ui_changes_entry_dn: "cn=entry,cn=portals,cn=univention,{{ improve_usability_ui_changes_basedn }}"
   ansible.builtin.shell: >
@@ -10,12 +10,13 @@
       list
       --filter='(!(univentionNewPortalEntryAllowedUserGroup=*))'
       | awk '/^DN/ && $2 !~ /^cn=(Anmeldung|Impressum),{{ improve_usability_ui_changes_entry_dn }}/ { print $2 }'
-  register: improve_usability_ui_changes_portal_entries
+  changed_when: false
+  register: "improve_usability_ui_changes_portal_entries"
   tags:
     - improve_usability_ui_changes
     - improve_usability_ui_changes_get_portal_entries
 
-- name: "Hide portal entries for anonymous user"
+- name: "improve_usability_ui_changes | Hide portal entries for anonymous user"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -30,7 +31,7 @@
     - improve_usability_ui_changes
     - improve_usability_ui_changes_hide_portal_entries
 
-- name: "Allow anonymous users to see Login tile"
+- name: "improve_usability_ui_changes | Allow anonymous users to see Login tile"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -40,11 +41,13 @@
       - "cn=Anmeldung,cn=entry,cn=portals,cn=univention,{{ improve_usability_ui_changes_basedn }}"
       - "--set"
       - "anonymous=TRUE"
+  changed_when: "improve_usability_ui_changes_login_tile_result.stdout is not search('No modification')"
+  register: "improve_usability_ui_changes_login_tile_result"
   tags:
     - improve_usability_ui_changes
     - improve_usability_ui_changes_login_tile
 
-- name: "Add Login tile to help category"
+- name: "improve_usability_ui_changes | Add Login tile to help category"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -54,11 +57,13 @@
       - "cn=Help,cn=category,cn=portals,cn=univention,{{ improve_usability_ui_changes_basedn }}"
       - "--append"
       - "entries=cn=Anmeldung,cn=entry,cn=portals,cn=univention,{{ improve_usability_ui_changes_basedn }}"
+  changed_when: "improve_usability_ui_changes_login_tile_to_help_result.stdout is not search('No modification')"
+  register: "improve_usability_ui_changes_login_tile_to_help_result"
   tags:
     - improve_usability_ui_changes
     - improve_usability_ui_changes_login_tile_to_help
 
-- name: "Remove setupSettingsContextMenu from setupMenus()"
+- name: "improve_usability_ui_changes | Remove setupSettingsContextMenu from setupMenus()"
   ansible.builtin.lineinfile:
     path: "/usr/share/univention-web/js/umc/hooks/default_menu_entries.js"
     line: "\\s+setupCertificateMenu();"
@@ -67,7 +72,7 @@
     - improve_usability_ui_changes
     - improve_usability_ui_changes_remove_setupsettingscontextmenu
 
-- name: "Remove setupHelpMenu from setupMenus()"
+- name: "improve_usability_ui_changes | Remove setupHelpMenu from setupMenus()"
   ansible.builtin.lineinfile:
     path: "/usr/share/univention-web/js/umc/hooks/default_menu_entries.js"
     line: "\\s+setupHelpMenu();"
@@ -76,7 +81,7 @@
     - improve_usability_ui_changes
     - improve_usability_ui_changes_remove_setuphelpmenu
 
-- name: "Set username maxLength"
+- name: "improve_usability_ui_changes | Set username maxLength"
   ansible.builtin.lineinfile:
     path: "/usr/share/univention-management-console-frontend/js/umc/modules/udm/UsernameMaxLengthChecker.js"
     line: "                maxLength: 999,"

@@ -31,6 +31,12 @@ Role Variables
 - `install_multitenant_acls_keycloak_base`(string): The base url for keycloak.
 - `install_multitenant_acls_hide_logging`(boolean): Toggle template logging; default: `true`.
 - `install_multitenant_acls_server_type`(string): The ucs server type; default `"master"`.
+- `install_multitenant_acls_customer_repo_name`(string): The name of customer debian repository.
+- `install_multitenant_acls_customer_repo_parts`(string): The part of customer debian repository.
+- `install_multitenant_acls_customer_repo_password`(string): The password of customer debian repository.
+- `install_multitenant_acls_customer_repo_server`(string): The server of customer debian repository.
+- `install_multitenant_acls_customer_repo_username`(string): The username of customer debian repository.
+
 
 Dependencies
 ------------

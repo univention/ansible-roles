@@ -1,11 +1,13 @@
 ---
 # tasks file for univention_remove
 
-- name: "Remove via univention-remove"
+- name: "univention_remove | Remove via univention-remove"
   ansible.builtin.command: "univention-remove --yes {{ univention_remove_name }}"
-  register: univention_remove_run
-  retries: 10
+  changed_when: "univention_remove_run.stdout is not search('is not installed')"
+  check_mode: false
   delay: 10
+  register: "univention_remove_run"
+  retries: 3
   until: "univention_remove_run.rc == 0"
   tags:
     - univention_remove

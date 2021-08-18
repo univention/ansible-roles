@@ -1,9 +1,9 @@
 ---
 # tasks file for ldapsearch_user
 
-- name: "Create LDAPSearch user"
+- name: "ldapsearch_user | Create LDAPSearch user"
   block:
-    - name: "Create LDAPSearch user for Nextcloud"
+    - name: "ldapsearch_user | Create LDAPSearch user for Nextcloud"
       ansible.builtin.command: >
         udm users/ldap create
           --position "cn=users,{{ ldapsearch_user_basedn }}"
@@ -12,11 +12,14 @@
           --set lastname="LDAPSearch-Nextcloud"
           --set password="{{ ldapsearch_user_nextcloud_password }}"
           --ignore_exists
+      changed_when: "ldapsearch_user_nextcloud_result.stdout is not search('Object exists')"
+      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
+      register: "ldapsearch_user_nextcloud_result"
       when: "'nextcloud' in ldapsearch_user_install_apps"
       tags:
         - ldapsearch_user_nextcloud
 
-    - name: "Create LDAPSearch user for OX"
+    - name: "ldapsearch_user | Create LDAPSearch user for OX"
       ansible.builtin.command: >
         udm users/ldap create
           --position "cn=users,{{ ldapsearch_user_basedn }}"
@@ -25,9 +28,12 @@
           --set lastname="LDAPSearch-OpenXchange"
           --set password="{{ ldapsearch_user_ox_password }}"
           --ignore_exists
+      changed_when: "ldapsearch_user_ox_result.stdout is not search('Object exists')"
+      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
+      register: "ldapsearch_user_ox_result"
       when: "'oxseforucs' in ldapsearch_user_install_apps or 'ox-connector' in ldapsearch_user_install_apps"
       tags:
-        - ldapsearch_user_nextcloud
+        - ldapsearch_user_ox
   when: "ldapsearch_user_server_type|default('master') != 'backup'"
   tags:
     - ldapsearch_user

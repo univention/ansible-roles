@@ -1,29 +1,52 @@
 ---
 # tasks file for hardening
 
-- name: "Disable HTTP"
+- name: "hardening | Disable HTTP"
   univention.ucs_modules.univention_config_registry:
     keys:
       apache2/force_https: "yes"
-  notify: "Restart apache"
+  register: "hardening_disable_http_result"
   when: "hardening_disable_http|bool"
   tags:
     - hardening_disable_http
     - hardening
 
-- name: "Deactivate root login"
+- name: "hardening | Restart apache"
+  ansible.builtin.service:
+    name: "apache2"
+    state: "restarted"
+  changed_when: false
+  when:
+    - "hardening_disable_http|bool"
+    - "hardening_disable_http_result.changed"
+  tags:
+    - hardening_restart_http
+    - hardening
+
+- name: "hardening | Deactivate root login"
   ansible.builtin.lineinfile:
     path: "/etc/ssh/sshd_config"
     line: "PermitRootLogin no"
     regex: "^PermitRootLogin.*"
     validate: "sshd -t -f %s"
-    state: present
-  notify: "Restart sshd"
+    state: "present"
+  register: "hardening_disable_root_login_result"
   tags:
     - hardening_disable_ssh_root_password_login_ssh_config
     - hardening
 
-- name: "Enforce secure flag on cookies"
+- name: "hardening | Restart ssh"
+  ansible.builtin.service:
+    name: "ssh"
+    state: "restarted"
+  changed_when: false
+  when:
+    - "hardening_disable_root_login_result.changed"
+  tags:
+    - hardening_restart_ssh
+    - hardening
+
+- name: "hardening | Enforce secure flag on cookies"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/http/enforce-secure-cookie: "true"
@@ -31,7 +54,7 @@
     - hardening_secure_cookie_flag
     - hardening
 
-- name: "Enforce session cookies"
+- name: "hardening | Enforce session cookies"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/http/enforce-session-cookie: "true"
@@ -39,10 +62,10 @@
     - hardening_session_cookies_enforcement
     - hardening
 
-- name: "Set processes limit to cpu cores"
+- name: "hardening | Set processes limit to cpu cores"
   univention.ucs_modules.univention_config_registry:
     keys:
-      umc/server/processes: "{{ ansible_processor_cores }}"
+      umc/server/processes: "{{ ansible_processor_cores|quote }}"
   tags:
     - hardening_set_processes_limit
     - hardening

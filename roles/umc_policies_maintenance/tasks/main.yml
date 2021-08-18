@@ -1,9 +1,9 @@
 ---
 # tasks file for umc_policies_maintenance
 
-- name: "Modify Univention Update Maintenance policies"
+- name: "umc_policies_maintenance | Modify Univention Update Maintenance policies"
   block:
-    - name: "Edit policies/maintenance"
+    - name: "umc_policies_maintenance | Edit policies/maintenance"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -43,10 +43,12 @@
           - "month=December"
           - "--set"
           - "weekday={{ umc_policies_maintenance_patchday }}"
+      changed_when: "umc_policies_maintenance_edit_maintenance_result.stdout is not search('value exists')"
+      register: "umc_policies_maintenance_edit_maintenance_result"
       tags:
         - umc_policies_maintenance_edit_maintenance
 
-    - name: "Set release version to update-policy"
+    - name: "umc_policies_maintenance | Set release version to update-policy"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -56,10 +58,12 @@
           - "cn=app-release-update,cn=policies,{{ umc_policies_maintenance_basedn }}"
           - "--set"
           - "releaseVersion={{ umc_policies_maintenance_release_verion }}"
+      changed_when: "umc_policies_maintenance_edit_release_result.stdout is not search('No modification')"
+      register: "umc_policies_maintenance_edit_release_result"
       tags:
         - umc_policies_maintenance_edit_release
 
-    - name: "Add policy reference to computer object"
+    - name: "umc_policies_maintenance | Add policy reference to computer object"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -71,8 +75,9 @@
           - "cn=app-update-schedule,cn=policies,{{ umc_policies_maintenance_basedn }}"
           - "--policy-reference"
           - "cn=app-release-update,cn=policies,{{ umc_policies_maintenance_basedn }}"
+      changed_when: "umc_policies_maintenance_reference_result.stdout is not search('No modification')"
+      register: "umc_policies_maintenance_reference_result"
       tags:
         - umc_policies_maintenance_reference
-
   tags:
     - umc_policies_maintenance

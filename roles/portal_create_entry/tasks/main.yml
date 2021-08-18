@@ -5,7 +5,8 @@
   ansible.builtin.command: >
     udm portals/entry list
     --position "cn=entry,{{ portal_create_entry_portal_dn }}"
-  register: portal_create_entry_portal_entries
+  changed_when: false
+  register: "portal_create_entry_portal_entries"
   tags:
     - portal_create_entry
     - portal_create_entry_check_entries
@@ -51,10 +52,12 @@
     --set allowedGroups='{{ allowedgroup }}'
     {% endfor %}
     {% endif %}
+  changed_when: "portal_create_entry_create_entry_result.stdout is not search('No modification')"
   loop: "{{ [portal_create_entry_entries|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
       portal_create_entry_entries|selectattr('state', 'undefined')|list|default([])|flatten]|flatten }}"
   loop_control:
     loop_var: "entry"
+  register: "portal_create_entry_create_entry_result"
   when: ('only' not in entry) or
         ('only' in entry and
           portal_create_entry_install_list|intersect([entry['only']]|flatten)
@@ -80,17 +83,19 @@
     {% for lang, text in (entry['display_name']|default({})).items() %}
     --append displayName='{{ lang }} "{{ text }}"'
     {% endfor %}
+  changed_when: "portal_create_entry_update_entry_result.stdout is not search('No modification')"
   loop: "{{ [portal_create_entry_entries|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
       portal_create_entry_entries|selectattr('state', 'undefined')|list|default([])|flatten]|flatten }}"
   loop_control:
     loop_var: "entry"
+  register: "portal_create_entry_update_entry_result"
   when: ('only' not in entry) or
         ('only' in entry and
           portal_create_entry_install_list|intersect([entry['only']]|flatten)
         )
   tags:
     - portal_create_entry
-    - portal_create_entry_create_entry
+    - portal_create_entry_update_entry
 
 - name: "Append entry to portal"
   vars:
@@ -104,9 +109,11 @@
       - "{{ portal_create_entry_category_map[entry['category']]|default(entry['category']) }},{{ portal_create_entry_portal_dn }}"
       - "--append"
       - "{{ portal_create_entry_member_attribute }}=cn={{ entry['name'] }},cn=entry,{{ portal_create_entry_portal_dn }}"
+  changed_when: "portal_create_entry_append_entry_result.stdout is not search('No modification')"
   loop: "{{ portal_create_entry_entries|selectattr('state', 'equalto', 'present')|default([])|flatten }}"
   loop_control:
     loop_var: "entry"
+  register: "portal_create_entry_append_entry_result"
   tags:
     - portal_create_entry
     - portal_create_entry_append_entry

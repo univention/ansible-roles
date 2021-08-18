@@ -1,98 +1,115 @@
 ---
 # tasks file for configure_license
 
-- name: "Import License"
+- name: "configure_license | Import License"
   block:
-    - name: "Create temporary directory"
-      ansible.builtin.tempfile:
-        state: "directory"
-      register: configure_license_temp_dir
-      tags:
-        - configure_license_tempdir
+    - name: "configure_license | Check current license status"
+      ansible.builtin.command:
+        cmd: "univention-license-check"
+      changed_when: false
+      failed_when: false
+      register: "configure_license_status"
 
-    - name: "Get license from license server"
+    - name: "configure_license | Get ucr variables"
+      ansible.builtin.include_role:
+        name: "custom_facts"
+      tags:
+        - configure_license_get_custom_facts
+
+    - name: "configure_license | Refresh expired license"
       block:
-        - name: "Check if all vars are set"
-          ansible.builtin.assert:
-            that:
-              - configure_license_validity|string|length > 0
-              - configure_license_shop_password|string|length > 0
-              - configure_license_shop_id|string|length > 0
-              - configure_license_shop_username|string|length > 0
-              - configure_license_max_users|string|length > 0
-              - configure_license_basedn|string|length > 0
-            fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags configure_license_server_license_check_preconditions"
+        - name: "configure_license | Create temporary directory"
+          ansible.builtin.tempfile:
+            state: "directory"
+          changed_when: false
+          register: "configure_license_temp_dir"
           tags:
-            - configure_license_server_license_check_preconditions
+            - configure_license_tempdir
 
-        - name: "Get license end date"
-          ansible.builtin.command: "date -u -d '+{{ configure_license_validity }}' '+%d.%m.%Y'"
-          register: configure_license_validity_date
-          when: "configure_license_validity != 'unlimited'"
+        - name: "configure_license | Get license from license server"
+          block:
+            - name: "configure_license | Check if all vars are set"
+              ansible.builtin.assert:
+                that:
+                  - "configure_license_validity|string|length > 0"
+                  - "configure_license_shop_password|string|length > 0"
+                  - "configure_license_shop_id|string|length > 0"
+                  - "configure_license_shop_username|string|length > 0"
+                  - "configure_license_max_users|string|length > 0"
+                  - "configure_license_basedn|string|length > 0"
+                fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags configure_license_server_license_check_preconditions"
+              tags:
+                - configure_license_server_license_check_preconditions
+
+            - name: "configure_license | Get license end date"
+              ansible.builtin.command: "date -u -d '+{{ configure_license_validity }}' '+%d.%m.%Y'"
+              register: "configure_license_validity_date"
+              when: "configure_license_validity != 'unlimited'"
+              tags:
+                - configure_license_server_license_calculate_end_date
+
+            - name: "configure_license | Copy license tool to server"
+              ansible.builtin.copy:
+                src: "license_client.py"
+                dest: "{{ configure_license_temp_dir.path }}/license_client.py"
+                mode: 0700
+              tags:
+                - configure_license_server_license_copy_license_to_server
+
+            - name: "configure_license | Create license.secret file"
+              ansible.builtin.copy:
+                content: "{{ configure_license_shop_password }}"
+                dest: "/etc/license.secret"
+                mode: 0660
+              tags:
+                - configure_license_server_license_copy_shop_secret
+
+            - name: "configure_license | Acquire a license via license tool"
+              ansible.builtin.command:
+                argv:
+                  - "{{ configure_license_temp_dir.path }}/license_client.py"
+                  - "--shop"
+                  - "{{ configure_license_shop_id }}"
+                  - "--username"
+                  - "{{ configure_license_shop_username }}"
+                  - "-u"
+                  - "{{ configure_license_max_users }}"
+                  - "-f"
+                  - "{{ configure_license_temp_dir.path }}/license.ldif"
+                  - "{{ configure_license_basedn }}"
+                  - "{{ configure_license_validity_date.stdout_lines[0]|default('unlimited') }}"
+                creates: "{{ configure_license_temp_dir.path }}/license.ldif"
+              tags:
+                - configure_license_server_license_acquire
+          when: "configure_license_type == 'server_license'"
           tags:
-            - configure_license_server_license_calculate_end_date
+            - configure_license_server_license
 
-        - name: "Copy license tool to server"
+        - name: "configure_license | Copy pre-prepared license file to server"
           ansible.builtin.copy:
-            src: "license_client.py"
-            dest: "{{ configure_license_temp_dir.path }}/license_client.py"
-            mode: 0700
+            dest: "{{ configure_license_temp_dir.path }}/license.ldif"
+            src: "{{ configure_license_file }}"
+          when:
+            - "configure_license_type == 'local_license'"
+            - "configure_license_file|default(false)"
           tags:
-            - configure_license_server_license_copy_license_to_server
+            - configure_license_local_license
 
-        - name: "Create license.secret file"
-          ansible.builtin.copy:
-            content: "{{ configure_license_shop_password }}"
-            dest: "/etc/license.secret"
-            mode: 0660
+        - name: "configure_license | Import newly created license into UCS"
+          ansible.builtin.command: "univention-license-import {{ configure_license_temp_dir.path }}/license.ldif"
           tags:
-            - configure_license_server_license_copy_shop_secret
+            - configure_license_run_import
 
-        - name: "Acquire a license via license tool"
-          ansible.builtin.command:
-            argv:
-              - "{{ configure_license_temp_dir.path }}/license_client.py"
-              - "--shop"
-              - "{{ configure_license_shop_id }}"
-              - "--username"
-              - "{{ configure_license_shop_username }}"
-              - "-u"
-              - "{{ configure_license_max_users }}"
-              - "-f"
-              - "{{ configure_license_temp_dir.path }}/license.ldif"
-              - "{{ configure_license_basedn }}"
-              - "{{ configure_license_validity_date.stdout_lines[0]|default('unlimited') }}"
-            creates: "{{ configure_license_temp_dir.path }}/license.ldif"
+      always:
+        - name: "configure_license | Make sure that the temporary directory is gone"
+          ansible.builtin.file:
+            path: "{{ configure_license_temp_dir.path }}"
+            state: "absent"
           tags:
-            - configure_license_server_license_acquire
-      when: "configure_license_type == 'server_license'"
-      tags:
-        - configure_license_server_license
-
-    - name: "Copy pre-prepared license file to server"
-      ansible.builtin.copy:
-        dest: "{{ configure_license_temp_dir.path }}/license.ldif"
-        src: "{{ configure_license_file }}"
-      when:
-        - "configure_license_type == 'local_license'"
-        - "configure_license_file|default(false)"
-      tags:
-        - configure_license_local_license
-
-    - name: "Import newly created license into UCS"
-      ansible.builtin.command: "univention-license-import {{ configure_license_temp_dir.path }}/license.ldif"
-      tags:
-        - configure_license_run_import
-
-  always:
-    - name: "Make sure that the temporary directory is gone"
-      ansible.builtin.file:
-        path: "{{ configure_license_temp_dir.path }}"
-        state: "absent"
-      tags:
-        - configure_license_tempdir
-        - configure_license_cleanup
-        - cleanup
+            - configure_license_tempdir
+            - configure_license_cleanup
+            - cleanup
+      when: "configure_license_status.rc > 0 or configure_license_status.stdout is search('FAILED') or ansible_local['ucr']['uuid/license'] is not defined"
   when: "configure_license_server_type|default('master') != 'backup'"
   tags:
     - configure_license

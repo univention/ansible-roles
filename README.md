@@ -59,6 +59,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [univention_firewall](#rolesunivention_firewallreadmemd)
 - [configure_apps_nextcloud](#rolesconfigure_apps_nextcloudreadmemd)
 - [disable_piwik_tracking](#rolesdisable_piwik_trackingreadmemd)
+- [univention_repository_component](#rolesunivention_repository_componentreadmemd)
 - [install_univention](#rolesinstall_univentionreadmemd)
 - [configure_ntp_servers](#rolesconfigure_ntp_serversreadmemd)
 - [workaround_acmetiny_upgrade](#rolesworkaround_acmetiny_upgradereadmemd)
@@ -643,6 +644,12 @@ Role Variables
 - `install_multitenant_acls_keycloak_base`(string): The base url for keycloak.
 - `install_multitenant_acls_hide_logging`(boolean): Toggle template logging; default: `true`.
 - `install_multitenant_acls_server_type`(string): The ucs server type; default `"master"`.
+- `install_multitenant_acls_customer_repo_name`(string): The name of customer debian repository.
+- `install_multitenant_acls_customer_repo_parts`(string): The part of customer debian repository.
+- `install_multitenant_acls_customer_repo_password`(string): The password of customer debian repository.
+- `install_multitenant_acls_customer_repo_server`(string): The server of customer debian repository.
+- `install_multitenant_acls_customer_repo_username`(string): The username of customer debian repository.
+
 
 Dependencies
 ------------
@@ -1217,10 +1224,10 @@ Role Variables
 
 - `ox_connector_basedn`(string): The LDAP base dn.
 - `ox_connector_domain_name`(string): The system's dns domain name.
+- `ox_connector_domain_prefix`(string): The system's dns domain prefix. Useful when OX server is in same network
+- `ox_connector_soap_prefix`(string): The ox soap server prefix; default: `ox-provisioning`.
 - `ox_connector_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. 
 - `ox_connector_temp_pw_file`(map): Tempfile object where univention app password is stored.
-- `ox_connector_soap_server_name`(string): The DNS name of OX SOAP server.
-- `ox_connector_soap_server_ip`(string): The IP address of OX SOAP server.
 - `ox_connector_master_admin`(string): The name of OX administrator.
 - `ox_connector_master_password`(string): The password of OX administrator.
 - `ox_connector_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
@@ -2534,6 +2541,52 @@ Univention GmbH
 www.univention.com
 ---
 
+# roles/univention_repository_component/README.md
+
+Univention Repository Component
+=========
+
+This role enables a univention repository component.
+
+Requirements
+------------
+
+none
+
+Role Variables
+--------------
+
+- `univention_repository_component_name`(string): The name of customer debian repository.
+- `univention_repository_component_parts`(string): The part of customer debian repository.
+- `univention_repository_component_prefix`(string): The prefix of customer debian repository.
+- `univention_repository_component_server`(string): The server of customer debian repository.
+- `univention_repository_component_username`(string): The username of customer debian repository.
+- `univention_repository_component_password`(string): The password of customer debian repository.
+- `univention_repository_component_version`(string): The version of customer debian repository.
+- `univention_repository_component_unmaintained`(bool): Toggle unmaintained status of customer debian repository.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
 # roles/install_univention/README.md
 
 Install packages with univention-install
@@ -2711,6 +2764,7 @@ Role Variables
 - `ldapsearch_user_ox_password`(string): The password for OX LDAPSearch user.
 - `ldapsearch_user_install_apps`(list): A list of applications to install.
 - `ldapsearch_user_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
+- `ldapsearch_user_hide_logging`(boolean): Toggle template logging; default: `true`.
 
 Dependencies
 ------------

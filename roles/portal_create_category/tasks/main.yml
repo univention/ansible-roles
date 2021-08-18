@@ -5,7 +5,8 @@
   ansible.builtin.command: >
     udm portals/category list
     --position "cn=category,{{ portal_create_category_portal_dn }}"
-  register: portal_create_category_categories_portal_categories
+  changed_when: false
+  register: "portal_create_category_categories_portal_categories"
   tags:
     - portal_create_category
     - portal_create_category_check_categories
@@ -30,10 +31,12 @@
     {% endfor %}
     --set name='{{ category['name'] }}'
     {% endif %}
+  changed_when: "portal_create_category_add_category_result.stdout is not search('No modification')"
   loop: "{{ [portal_create_category_categories|selectattr('state', 'defined')|selectattr('state', 'equalto', 'present')|list|default([])|flatten,
       portal_create_category_categories|selectattr('state', 'undefined')|list|default([])|flatten]|flatten }}"
   loop_control:
     loop_var: "category"
+  register: "portal_create_category_add_category_result"
   when: ('only' not in category) or
         ('only' in category and
           portal_create_category_install_list|intersect([category['only']]|flatten)
@@ -52,9 +55,11 @@
       - "cn=domain,cn=portal,{{ portal_create_category_portal_dn }}"
       - "--append"
       - "categories=cn={{ category['name'] }},cn=category,{{ portal_create_category_portal_dn }}"
+  changed_when: "portal_create_category_append_category_result.stdout is not search('No modification')"
   loop: "{{ portal_create_category_categories|selectattr('state', 'equalto', 'present')|default([])|flatten }}"
   loop_control:
     loop_var: "category"
+  register: "portal_create_category_append_category_result"
   tags:
     - portal_create_category
     - portal_create_category_append_category

@@ -24,8 +24,9 @@
       --set ip={{ configure_saml_single_server_external_loadbalancer_ip }} \
       --set domain={{ configure_saml_single_server_domain_name }} \
       --ignore_exists
-  register: "configure_saml_single_server_ipmanagedclients"
+  changed_when: "configure_saml_single_server_ipmanagedclients.stdout is search('Object created')"
   failed_when: "configure_saml_single_server_ipmanagedclients.rc > 0 and 'already in use' not in configure_saml_single_server_ipmanagedclients.stdout"
+  register: "configure_saml_single_server_ipmanagedclients"
   when: "configure_saml_single_server_external_loadbalancer_ip is defined and configure_saml_single_server_external_loadbalancer_ip|length > 0"
   tags:
     - configure_saml_single_server
@@ -38,20 +39,26 @@
     -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
     {% endif %}
     --run-scripts 91univention-saml.inst
-  notify: "Restart apache"
+  changed_when: false
   tags:
     - configure_saml_single_server
     - configure_saml_single_server_saml_join_script
 
-- name: "configure_saml_single_server | Flush handlers to restart apache"
-  ansible.builtin.meta: flush_handlers
+- name: "configure_saml_single_server | Restart apache"
+  ansible.builtin.service:
+    name: "apache2"
+    state: "restarted"
+  changed_when: false
+  tags:
+    - configure_saml_single_server
+    - configure_saml_single_server_restart_apache"
 
 - name: "configure_saml_single_server | Set UCR idp server variable"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/saml/idp-server: "https://{{ configure_saml_single_server_external_hostname }}/simplesamlphp/saml2/idp/metadata.php"
-  register: configure_saml_single_server_idp_output
   failed_when: "configure_saml_single_server_idp_output.rc is defined and configure_saml_single_server_idp_output.rc > 0"
+  register: "configure_saml_single_server_idp_output"
   tags:
     - configure_saml_single_server
     - configure_saml_single_server_idp_ucr_variable
@@ -63,6 +70,7 @@
     -dcaccount "{{ configure_saml_single_admin_user_name }}" -dcpwd "{{ configure_saml_single_temp_file.path }}"
     {% endif %}
     --run-scripts 92univention-management-console-web-server.inst
+  changed_when: false
   tags:
     - configure_saml_single_server
     - configure_saml_single_server_management_console_script
@@ -76,6 +84,8 @@
       - "--dn"
       - "{{ item }}"
       - "--ignore_not_exists"
+  changed_when: "configure_saml_single_server_remove_default_saml_provider_result is not search('Object not found')"
+  register: "configure_saml_single_server_remove_default_saml_provider_result"
   loop:
     - "SAMLServiceProviderIdentifier=openid-connect-provider,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
     - "SAMLServiceProviderIdentifier=google.com,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"

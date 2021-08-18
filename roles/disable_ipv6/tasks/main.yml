@@ -1,16 +1,25 @@
 ---
 # tasks file for disable_ipv6
-- name: Disable IPv6 with sysctl
-  ansible.posix.sysctl: name={{ item }} value=1 state=present reload=yes
+- name: "disable_ipv6 | Disable IPv6 with sysctl"
+  ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: "present"
+    reload: true
   with_items:
-    - net.ipv6.conf.default.disable_ipv6
-    - net.ipv6.conf.all.disable_ipv6
-    - net.ipv6.conf.lo.disable_ipv6
+    - "net.ipv6.conf.default.disable_ipv6"
+    - "net.ipv6.conf.all.disable_ipv6"
+    - "net.ipv6.conf.lo.disable_ipv6"
+  tags:
+    - disable_ipv6
+    - disable_ipv6_sysctl
 
-- name: Blacklist IPv6 in modprobe
+- name: "disable_ipv6 | Blacklist IPv6 in modprobe"
   ansible.builtin.lineinfile:
-    line: 'blacklist ipv6'
-    dest: /etc/modprobe.d/blacklist.conf
-    mode: '0644'
-    create: yes
-  notify: "rmmod ipv6"
+    line: "blacklist ipv6"
+    dest: "/etc/modprobe.d/blacklist.conf"
+    mode: "0644"
+    create: true
+  tags:
+    - disable_ipv6
+    - disable_ipv6_modprobe

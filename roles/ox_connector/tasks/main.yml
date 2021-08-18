@@ -3,13 +3,19 @@
 
 - name: "ox_connector | Install OX connector"
   block:
-    - name: "ox_connector | Set static host entry of ox server"
-      univention.ucs_modules.univention_config_registry:
-        kvlist:
-          - key: "hosts/static/{{ ox_connector_soap_server_ip }}"
-            value: "{{ ox_connector_soap_server_name }}"
+    - name: "ox_connector | Create DNS Alias"
+      ansible.builtin.command: |
+        udm dns/alias create
+          --superordinate "zoneName={{ ox_connector_domain_name }},cn=dns,{{ ox_connector_basedn }}"
+          --set name={{ ox_connector_soap_prefix }}
+          --set cname={{ ox_connector_domain_prefix }}
+          --ignore_exists
+      changed_when: "ox_connector_ipmanagedclients.stdout is search('Object created')"
+      failed_when: "ox_connector_ipmanagedclients.rc > 0 and 'already in use' not in ox_connector_ipmanagedclients.stdout"
+      register: "ox_connector_ipmanagedclients"
+      when: "ox_connector_domain_prefix|default('')|length > 0"
       tags:
-        - ox_connector_static_ox_host
+        - ox_connector_ipmanagedclients
 
     - name: "ox_connector | Install ox-connector"
       vars:
@@ -19,13 +25,13 @@
           - "ox-connector"
         install_packages_additional_options: >
           DEFAULT_CONTEXT=9999
-          OX_SOAP_SERVER=https://{{ ox_connector_soap_server_name }}/
+          OX_SOAP_SERVER=https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}
           OX_IMAP_SERVER=imap://127.0.0.1:143
           OX_SMTP_SERVER=smtp://127.0.0.1:26
           OX_MASTER_ADMIN={{ ox_connector_master_admin }}
           OX_MASTER_PASSWORD={{ ox_connector_master_password }}
       ansible.builtin.include_role:
-        name: install_packages
+        name: "install_packages"
       tags:
         - ox_connector_install
 
@@ -33,12 +39,15 @@
       ansible.builtin.service:
         name: "slapd"
         state: "stopped"
+      changed_when: false
       tags:
         - ox_connector_stop_slapd
 
     - name: "ox_connector | Add oxDisplayName index"
       ansible.builtin.command:
         cmd: "/usr/share/univention-ldap/ldap_setup_index --add-eq oxDisplayName"
+      changed_when: "ox_connector_index_oxdisplayname.stdout|length > 0"
+      register: "ox_connector_index_oxdisplayname"
       tags:
         - ox_connector_index_oxdisplayname
 
@@ -46,6 +55,7 @@
       ansible.builtin.service:
         name: "slapd"
         state: "started"
+      changed_when: false
       tags:
         - ox_connector_start_slapd
 
@@ -56,6 +66,8 @@
         --set contextid=9999
         --set name=9999
         --ignore_exists
+      changed_when: "ox_connector_ox_context.stdout is search('Object created')"
+      register: "ox_connector_ox_context"
       tags:
         - ox_connector_ox_context
 
@@ -82,6 +94,8 @@
         --set webdav=TRUE
         --set webmail=TRUE
         --ignore_exists
+      changed_when: "ox_connector_add_phoenix_accessprofile.stdout is search('Object created')"
+      register: "ox_connector_add_phoenix_accessprofile"
       tags:
         - ox_connector_add_phoenix_accessprofile
 
@@ -97,6 +111,8 @@
         - "cn=pim_drive,cn=accessprofiles,cn=open-xchange"
         - "cn=groupware,cn=accessprofiles,cn=open-xchange"
         - "cn=premium,cn=accessprofiles,cn=open-xchange"
+      changed_when: "ox_connector_remove_existing_accessprofiles.stdout is search('Object removed')"
+      register: "ox_connector_remove_existing_accessprofiles"
       tags:
         - ox_connector_remove_existing_accessprofiles
 
@@ -106,8 +122,9 @@
         --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
         --set name="Benutzer mit Groupware-Konto"
         --set oxAccess="phoenix_standard"
-      register: "ox_connector_modify_usertemplate"
+      changed_when: "ox_connector_modify_usertemplate.stdout is search('Object modified')"
       failed_when: "ox_connector_modify_usertemplate.rc != 0 and (ox_connector_modify_usertemplate.rc == 3 and 'object not found' not in ox_connector_modify_usertemplate.stdout)"
+      register: "ox_connector_modify_usertemplate"
       tags:
         - ox_connector_modify_usertemplate
 
@@ -122,6 +139,8 @@
         mailPrimaryAddress=""
         --set
         e-mail=""
+      changed_when: "ox_connector_modify_usertemplate_set_oxdisplayname_in_user_template.stdout is search('Object modified')"
+      register: "ox_connector_modify_usertemplate_set_oxdisplayname_in_user_template"
       tags:
         - ox_connector_modify_usertemplate_set_oxdisplayname_in_user_template
 
@@ -131,6 +150,8 @@
           --dn "cn=oxContextUser,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}" \
           --set mayChange=0 \
           --set disableUDMWeb=1
+      changed_when: "ox_connector_disable_udmweb_user.stdout is search('Object modified')"
+      register: "ox_connector_disable_udmweb_user"
       tags:
         - ox_connector_disable_udmweb_user
 
@@ -140,22 +161,10 @@
           --dn "cn=oxContextResource,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}" \
           --set mayChange=0 \
           --set disableUDMWeb=1
+      changed_when: "ox_connector_disable_udmweb_ressource.stdout is search('Object modified')"
+      register: "ox_connector_disable_udmweb_ressource"
       tags:
         - ox_connector_disable_udmweb_ressource
-
-    - name: "ox_connector | Create ipmanagedclients"
-      ansible.builtin.command: >
-        udm computers/ipmanagedclient create \
-          --position "cn=computers,{{ ox_connector_basedn }}" \
-          --set dnsEntryZoneForward="zoneName={{ ox_connector_domain_name }},cn=dns,{{ ox_connector_basedn }}" \
-          --set name=ox-connect \
-          --set ip={{ ox_connector_soap_server_ip }} \
-          --set domain={{ ox_connector_domain_name }} \
-          --ignore_exists
-      register: "ox_connector_ipmanagedclients"
-      failed_when: "ox_connector_ipmanagedclients.rc > 0 and 'already in use' not in ox_connector_ipmanagedclients.stdout"
-      tags:
-        - ox_connector_ipmanagedclients
 
   when: "ox_connector_server_type|default('master') != 'backup'"
   tags:

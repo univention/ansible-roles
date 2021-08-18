@@ -1,41 +1,52 @@
 ---
 # tasks file for configure_apps_postfix_relay
 
-- name: "Set mail relayhost"
+- name: "configure_apps_postfix_relay | Set mail relayhost"
   univention.ucs_modules.univention_config_registry:
     keys:
       mail/relayhost: "{{ configure_apps_postfix_relay_host }}:{{ configure_apps_postfix_relay_port }}"
-  notify: "Restart postfix"
+  register: "configure_apps_postfix_relay_relayhost_result"
   when: "configure_apps_postfix_relay_enabled"
   tags:
     - configure_apps_postfix_relay
     - configure_apps_postfix_relay_relayhost
 
-- name: "Set mail relayhost password authentication"
+- name: "configure_apps_postfix_relay | Set mail relayhost password authentication"
   block:
-    - name: "Enable mail relayauth"
+    - name: "configure_apps_postfix_relay | Enable mail relayauth"
       univention.ucs_modules.univention_config_registry:
         keys:
           mail/relayauth: "yes"
       tags:
         - configure_apps_postfix_relay_set_auth_enable_relayauth
 
-    - name: "Update smtp_auth file"
+    - name: "configure_apps_postfix_relay | Update smtp_auth file"
       ansible.builtin.lineinfile:
         path: "/etc/postfix/smtp_auth"
         create: true
         line: "{{ configure_apps_postfix_relay_host }} {{ configure_apps_postfix_relay_username }}:{{ configure_apps_postfix_relay_password }}"
         mode: "775"
       no_log: "{{ configure_apps_postfix_relay_hide_logging | default(true) }}"
+      register: "configure_apps_postfix_relay_set_auth_update_file_result"
       tags:
         - configure_apps_postfix_relay_set_auth_update_file
 
-    - name: "Postmap smtp_auth file"
+    - name: "configure_apps_postfix_relay | Postmap smtp_auth file"
       ansible.builtin.command: "postmap /etc/postfix/smtp_auth"
+      when: "configure_apps_postfix_relay_set_auth_update_file_result.changed"
       tags:
         - configure_apps_postfix_relay_set_auth_postmap
-
   when: "configure_apps_postfix_relay_enabled and configure_apps_postfix_relay_username|length > 0 and configure_apps_postfix_relay_password|length > 0"
   tags:
     - configure_apps_postfix_relay
     - configure_apps_postfix_relay_set_auth
+
+- name: "configure_apps_postfix_relay | Restart postfix"
+  ansible.builtin.service:
+    name: "postfix"
+    state: "restarted"
+  when:
+    - "configure_apps_postfix_relay_relayhost_result.changed or (configure_apps_postfix_relay_set_auth_update_file_result is defined and configure_apps_postfix_relay_set_auth_update_file_result.changed)"
+  tags:
+    - configure_apps_postfix_relay
+    - configure_apps_postfix_relay_restart_postfix
