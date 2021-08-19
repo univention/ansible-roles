@@ -1,0 +1,4 @@
+---
+# defaults file for configure_monitoring
+
+configure_monitoring_ldap_enabled: "true"
