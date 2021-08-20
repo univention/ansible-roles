@@ -35,6 +35,37 @@
       tags:
         - ox_connector_install
 
+    - name: "ox_connector | Get current settings"
+      ansible.builtin.command:
+        cmd: "univention-app configure ox-connector --list"
+      changed_when: false
+      register: "ox_connector_get_current_settings_result"
+      tags:
+        - ox_connector_get_current_settings
+
+    - name: "ox_connector | Check if settings are still correct"
+      vars:
+        ox_connector_settings_correct: true
+      ansible.builtin.set_fact:
+        ox_connector_settings_correct: "{{ ox_connector_settings_correct if (ox_connector_get_current_settings_result.stdout is search(item)) else false }}"
+      loop:
+        - "OX_SOAP_SERVER: 'https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}'"
+        - "OX_MASTER_ADMIN: '{{ ox_connector_master_admin }}'"
+        - "OX_MASTER_PASSWORD: '{{ ox_connector_master_password }}'"
+      tags:
+        - ox_connector_check_settings
+
+    - name: "ox_connector | Configure settings"
+      ansible.builtin.command:
+        cmd: |
+          univention-app configure ox-connector
+          --set OX_SOAP_SERVER=https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}
+          --set OX_MASTER_ADMIN={{ ox_connector_master_admin }}
+          --set OX_MASTER_PASSWORD={{ ox_connector_master_password }}
+      when: "not ox_connector_settings_correct"
+      tags:
+        - ox_connector_configure
+
     - name: "ox_connector | Stop slapd"
       ansible.builtin.service:
         name: "slapd"
@@ -123,10 +154,21 @@
         --set name="Benutzer mit Groupware-Konto"
         --set oxAccess="phoenix_standard"
       changed_when: "ox_connector_modify_usertemplate.stdout is search('Object modified')"
-      failed_when: "ox_connector_modify_usertemplate.rc != 0 and (ox_connector_modify_usertemplate.rc == 3 and 'object not found' not in ox_connector_modify_usertemplate.stdout)"
+      failed_when: "ox_connector_modify_usertemplate.rc != 0 and (ox_connector_modify_usertemplate.rc == 3 and 'object not found' not in ox_connector_modify_usertemplate.stdout) and ox_connector_modify_usertemplate.stdout is not search('Already exists')"
       register: "ox_connector_modify_usertemplate"
       tags:
         - ox_connector_modify_usertemplate
+
+    - name: "ox_connector | Remove duplicate usertemplate"
+      ansible.builtin.command:
+        cmd: |
+          udm settings/usertemplate remove
+          --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
+          --ignore_not_exists
+      changed_when: "ox_connector_remove_duplicate_usertemplate_result.stdout is search('Object removed')"
+      register: "ox_connector_remove_duplicate_usertemplate_result"
+      tags:
+        - ox_connector_remove_duplicate_usertemplate
 
     - name: "ox_connector | Set oxDisplayName in usertemplate"
       ansible.builtin.command: >

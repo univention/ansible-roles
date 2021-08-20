@@ -63,3 +63,11 @@
   when: "install_multitenant_acls_server_type|default('master') != 'backup'"
   tags:
     - install_multitenant_acls
+
+- name: "install_multitenant_acls | Disable nested ACL groups"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      ldap/acl/nestedgroups: "false"
+  tags:
+    - install_multitenant_acls
+    - install_multitenant_acls_disable_nested_acl_groups
