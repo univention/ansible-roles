@@ -18,12 +18,12 @@ This host currently is in the following groups: {{ group_names|join(", ") }}
 {% endif %}
 This deployment uses the following collections:
 {% for requirement in deployment_message_temp_collections %}
-{{ requirement['name'] }}: {{ requirement['version'] }}
+{{ requirement['name'] }}: {{ requirement['version']|default('latest') }}
 {% endfor %}
 
 This deployment uses the following roles:
 {% for requirement in deployment_message_temp_roles %}
-{{ requirement['name'] }}: {{ requirement['version'] }}
+{{ requirement['name'] }}: {{ requirement['version']|default('latest') }}
 {% endfor %}
 
 We're about to pause for {{ deployment_message_verification_pause_duration }} seconds

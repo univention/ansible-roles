@@ -9,10 +9,10 @@
 
 [versions-collections]
 {% for requirement in deployment_message_temp_collections %}
-{{ requirement['name'] }} = {{ requirement['version'] }}
+{{ requirement['name'] }} = {{ requirement['version']|default('latest') }}
 {% endfor %}
 
 [versions-roles]
 {% for requirement in deployment_message_temp_roles %}
-{{ requirement['name'] }} = {{ requirement['version'] }}
+{{ requirement['name'] }} = {{ requirement['version']|default('latest') }}
 {% endfor %}
