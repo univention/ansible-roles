@@ -1,0 +1,50 @@
+---
+# tasks file for use_trusted_cert
+
+- name: "use_trusted_cert | Check if paths are set"
+  ansible.builtin.assert:
+    that:
+      - "use_trusted_cert_path_key|length > 0"
+      - "use_trusted_cert_path_cert|length > 0"
+    fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags use_trusted_cert_check_preconditions"
+  changed_when: false
+  tags:
+    - "use_trusted_cert"
+    - "use_trusted_cert_check_preconditions"
+
+- name: "use_trusted_cert | Copy certificate to UCS"
+  ansible.builtin.copy:
+    src: "{{ use_trusted_cert_path_cert }}"
+    dest: "/etc/univention/ssl/custom_trusted.crt"
+  register: "use_trusted_cert_copy_certificate_result"
+  tags:
+    - "use_trusted_cert"
+    - "use_trusted_cert_copy_certificate"
+
+- name: "use_trusted_cert | Copy key to UCS"
+  ansible.builtin.copy:
+    src: "{{ use_trusted_cert_path_key }}"
+    dest: "/etc/univention/ssl/custom_trusted.key"
+  register: "use_trusted_cert_copy_key_result"
+  tags:
+    - "use_trusted_cert"
+    - "use_trusted_cert_copy_key"
+
+- name: "use_trusted_cert | Enable custom certificate"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      apache2/ssl/certificate: "/etc/univention/ssl/custom_trusted.crt"
+      apache2/ssl/key: "/etc/univention/ssl/custom_trusted.key"
+  tags:
+    - "use_trusted_cert"
+    - "use_trusted_cert_enable_certificate"
+
+- name: "use_trusted_cert | Restart apache2"
+  ansible.builtin.service:
+    name: "apache2"
+    state: "restarted"
+  changed_when: false
+  when: "use_trusted_cert_copy_certificate_result.changed or use_trusted_cert_copy_key_result.changed"
+  tags:
+    - "use_trusted_cert"
+    - "use_trusted_cert_restart_apache"
