@@ -11,6 +11,7 @@ none
 Role Variables
 --------------
 
+- `umc_policies_maintenance_autoupdate_enabled`(bool): Toogle autoupdate status; default: `true`.
 - `umc_policies_maintenance_basedn`(string): The LDAP base domain name.
 - `umc_policies_maintenance_patchhour`(string): The chosen hour for univention-update; default: `5`.
 - `umc_policies_maintenance_patchminute`(string): The choosen minute for univention-update; default: `00`.
