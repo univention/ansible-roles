@@ -1,0 +1,17 @@
+---
+# tasks file for install_nextcloud_app
+
+- name: "NextCloud: Install given app"
+  ansible.builtin.command:
+    argv:
+      - "univention-app"
+      - "shell"
+      - "nextcloud"
+      - "sudo"
+      - "-u"
+      - "www-data"
+      - "/var/www/html/occ"
+      - "app:install"
+      - "{{ nextcloud_app }}"
+  tags:
+    - install_nextcloud_app
