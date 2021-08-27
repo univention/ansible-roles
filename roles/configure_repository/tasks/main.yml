@@ -35,7 +35,7 @@
 - name: "configure_repository | Configure default repository"
   univention.ucs_modules.univention_config_registry:
     keys:
-      repository/online/server: "{{ configure_repository_default_repository_prefix|default('https://') }}{{ configure_repository_default_repository_server }}/{{ configure_repository_default_repository_path }}/"
+      repository/online/server: "{{ configure_repository_default_repository_prefix|default('https://') }}{{ configure_repository_default_repository_server }}{{ '/' + configure_repository_default_repository_path if configure_repository_default_repository_path|length > 0 }}/"
   when: "configure_repository_default_repository_server|length > 0"
   tags:
     - configure_repository
@@ -45,7 +45,7 @@
   univention.ucs_modules.univention_config_registry:
     kvlist:
       - key: "repository/online/component/{{ ansible_local['ucr']['version/version'] }}-{{ ansible_local['ucr']['version/patchlevel'] }}-errata/server"
-        value: "{{ configure_repository_default_repository_prefix|default('https://') }}{{ configure_repository_default_repository_server }}/{{ configure_repository_default_repository_path }}/{{ ansible_local['ucr']['version/version'] }}/maintained/"
+        value: "{{ configure_repository_default_repository_prefix|default('https://') }}{{ configure_repository_default_repository_server }}{{ '/' + configure_repository_default_repository_path if configure_repository_default_repository_path|length > 0 }}/{{ ansible_local['ucr']['version/version'] }}/maintained/"
   when: "configure_repository_default_repository_server|length > 0"
   tags:
     - configure_repository
