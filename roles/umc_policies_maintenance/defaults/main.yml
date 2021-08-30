@@ -6,3 +6,4 @@ umc_policies_maintenance_patchminute: "00"
 umc_policies_maintenance_patchday: "Tuesday"
 umc_policies_maintenance_release_verion: ""
 umc_policies_maintenance_hostname: "{{ inventory_hostname }}"
+umc_policies_maintenance_autoupdate_enabled: true

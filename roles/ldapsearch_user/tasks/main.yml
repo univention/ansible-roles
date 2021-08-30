@@ -3,37 +3,37 @@
 
 - name: "ldapsearch_user | Create LDAPSearch user"
   block:
-    - name: "ldapsearch_user | Create LDAPSearch user for Nextcloud"
+    - name: "ldapsearch_user | Create LDAPSearch user"
       ansible.builtin.command: >
         udm users/ldap create
           --position "cn=users,{{ ldapsearch_user_basedn }}"
-          --set name="ldapsearchnc"
-          --set username="ldapsearchnc"
-          --set lastname="LDAPSearch-Nextcloud"
-          --set password="{{ ldapsearch_user_nextcloud_password }}"
+          --set name="{{ item.name|default(item.username) }}"
+          --set username="{{ item.username }}"
+          --set lastname="{{ item.lastname|default(item.username) }}"
+          --set password="{{ item.password }}"
           --ignore_exists
-      changed_when: "ldapsearch_user_nextcloud_result.stdout is not search('Object exists')"
+      changed_when: "ldapsearch_user_create_result.stdout is not search('Object exists')"
+      loop: "{{ ldapsearch_user_list }}"
       no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
-      register: "ldapsearch_user_nextcloud_result"
-      when: "'nextcloud' in ldapsearch_user_install_apps"
+      register: "ldapsearch_user_create_result"
       tags:
-        - ldapsearch_user_nextcloud
+        - ldapsearch_user_create
 
-    - name: "ldapsearch_user | Create LDAPSearch user for OX"
+    - name: "ldapsearch_user | Create LDAPSearch user (per Tenant)"
       ansible.builtin.command: >
         udm users/ldap create
-          --position "cn=users,{{ ldapsearch_user_basedn }}"
-          --set name="ldapsearchox"
-          --set username="ldapsearchox"
-          --set lastname="LDAPSearch-OpenXchange"
-          --set password="{{ ldapsearch_user_ox_password }}"
+          --position "{{ item.tenant_ou }},{{ ldapsearch_user_basedn }}"
+          --set name="{{ item.name|default(item.username) }}"
+          --set username="{{ item.username }}"
+          --set lastname="{{ item.lastname|default(item.username) }}"
+          --set password="{{ item.password }}"
           --ignore_exists
-      changed_when: "ldapsearch_user_ox_result.stdout is not search('Object exists')"
+      changed_when: "ldapsearch_user_create_tenantbased_result.stdout is not search('Object exists')"
+      loop: "{{ ldapsearch_user_list_tenantbased }}"
       no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
-      register: "ldapsearch_user_ox_result"
-      when: "'oxseforucs' in ldapsearch_user_install_apps or 'ox-connector' in ldapsearch_user_install_apps"
+      register: "ldapsearch_user_create_tenantbased_result"
       tags:
-        - ldapsearch_user_ox
+        - ldapsearch_user_create_tenantbased
   when: "ldapsearch_user_server_type|default('master') != 'backup'"
   tags:
     - ldapsearch_user

@@ -1,0 +1,52 @@
+---
+# tasks file for configure_repository
+
+- name: "configure_repository | Get ucr variables"
+  ansible.builtin.include_role:
+    name: "custom_facts"
+  tags:
+    - configure_repository
+    - configure_repository_get_facts
+
+- name: "configure_repository | Configure default repository (with auth)"
+  blockinfile:
+    block: |
+      machine {{ configure_repository_default_repository_server }}
+      login {{ configure_repository_default_repository_username }}
+      password {{ configure_repository_default_repository_password }}
+    create: true
+    path: "/etc/apt/auth.conf"
+  when: "configure_repository_default_repository_server|length > 0 and configure_repository_default_repository_username|length > 0"
+  tags:
+    - configure_repository
+    - configure_repository_default_repository_auth_debian
+
+- name: "configure_repository | Configure default repository"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      repository/credentials/uris: "{{ configure_repository_default_repository_server }}"
+      repository/credentials/username: "{{ configure_repository_default_repository_username }}"
+      repository/credentials/password: "{{ configure_repository_default_repository_password }}"
+  when: "configure_repository_default_repository_server|length > 0 and configure_repository_default_repository_username|length > 0"
+  tags:
+    - configure_repository
+    - configure_repository_default_repository_auth_ucr
+
+- name: "configure_repository | Configure default repository"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      repository/online/server: "{{ configure_repository_default_repository_prefix|default('https://') }}{{ configure_repository_default_repository_server }}{{ '/' + configure_repository_default_repository_path if configure_repository_default_repository_path|length > 0 }}/"
+  when: "configure_repository_default_repository_server|length > 0"
+  tags:
+    - configure_repository
+    - configure_repository_default_repository
+
+- name: "configure_repository | Configure component repository"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "repository/online/component/{{ ansible_local['ucr']['version/version'] }}-{{ ansible_local['ucr']['version/patchlevel'] }}-errata/server"
+        value: "{{ configure_repository_default_repository_prefix|default('https://') }}{{ configure_repository_default_repository_server }}{{ '/' + configure_repository_default_repository_path if configure_repository_default_repository_path|length > 0 }}/{{ ansible_local['ucr']['version/version'] }}/maintained/"
+  when: "configure_repository_default_repository_server|length > 0"
+  tags:
+    - configure_repository
+    - configure_repository_default_repository

@@ -2,8 +2,7 @@
 # defaults file for ldapsearch_user
 
 ldapsearch_user_basedn: ""
-ldapsearch_user_nextcloud_password: ""
-ldapsearch_user_ox_password: ""
-ldapsearch_user_install_apps: ""
+ldapsearch_user_list: []
+ldapsearch_user_list_tenantbased: []
 ldapsearch_user_server_type: "master"
 ldapsearch_user_hide_logging: true

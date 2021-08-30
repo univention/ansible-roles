@@ -22,13 +22,13 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [univention_remove](#rolesunivention_removereadmemd)
 - [hardening](#roleshardeningreadmemd)
 - [ox_connector](#rolesox_connectorreadmemd)
+- [configure_repository](#rolesconfigure_repositoryreadmemd)
 - [use_trusted_cert](#rolesuse_trusted_certreadmemd)
 - [update_users_ssh_keys](#rolesupdate_users_ssh_keysreadmemd)
 - [ldapsearch_user](#rolesldapsearch_userreadmemd)
 - [portal_deactivate_entry](#rolesportal_deactivate_entryreadmemd)
 - [portal_deactivate_category](#rolesportal_deactivate_categoryreadmemd)
 - [disable_piwik_tracking](#rolesdisable_piwik_trackingreadmemd)
-- [install_univention](#rolesinstall_univentionreadmemd)
 - [portal_create_entry](#rolesportal_create_entryreadmemd)
 - [portal_create_category](#rolesportal_create_categoryreadmemd)
 - [set_dns_glue_record](#rolesset_dns_glue_recordreadmemd)
@@ -844,6 +844,50 @@ www.univention.com
 
 ---
 
+# roles/configure_repository/README.md
+
+Configure repository
+=========
+
+Configure repository URLs to use own apt repository server.
+
+Requirements
+------------
+
+- univention.ucs_modules
+    - univention_config_registry
+
+Role Variables
+--------------
+
+- `configure_repository_default_repository_prefix`(string): Define access method, either `"http://"` or `"https://"`; default: `"https://"`.
+- `configure_repository_default_repository_server`(string): The repository server without any prefix or suffix or path.
+- `configure_repository_default_repository_path`(string): The repository path/suffix where repository could be found on server.
+- `configure_repository_default_repository_username`(string): Optionally configure username for authentication.
+- `configure_repository_default_repository_password`(string): Optionally configure password for authentication.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
 # roles/use_trusted_cert/README.md
 
 Use trusted SSL certificate
@@ -958,11 +1002,10 @@ Role Variables
 --------------
 
 - `ldapsearch_user_basedn`(string): The LDAP base DN.
-- `ldapsearch_user_nextcloud_password`(string): The password for nextcloud LDAPSearch user.
-- `ldapsearch_user_ox_password`(string): The password for OX LDAPSearch user.
-- `ldapsearch_user_install_apps`(list): A list of applications to install.
 - `ldapsearch_user_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
 - `ldapsearch_user_hide_logging`(boolean): Toggle template logging; default: `true`.
+- `ldapsearch_user_list`(list): A list of ldapsearch users to create.
+- `ldapsearch_user_list_tenantbased`(list): A list of LDAPSearch users to create.
 
 Dependencies
 ------------
@@ -972,6 +1015,38 @@ none
 Example Playbook
 ----------------
 
+### Configure LDAPSearch user
+
+```yaml
+- hosts: all
+  tasks:
+    - ansible.builtin.include_role:
+        name: "univention.ucs_roles.ldapsearch_user"
+      vars:
+        ldapsearch_user_list:
+          - username: "ldapsearch_example"
+            name: "Name of LDAPSearch user"           # optional; default value from username
+            lastname: "Lastname of LDAPSearch user"   # optional; default value from username
+            password: "SuperSecretPassword"
+        # ...
+```
+
+### Configure LDAPSearch user (per tenant)
+
+```yaml
+- hosts: all
+  tasks:
+    - ansible.builtin.include_role:
+        name: "univention.ucs_roles.ldapsearch_user"
+      vars:
+        ldapsearch_user_list_tenantbased:
+          - username: "ldapsearch_example"
+            name: "Name of LDAPSearch user"                  # optional; default value from username
+            lastname: "Lastname of LDAPSearch user"          # optional; default value from username
+            password: "SuperSecretPassword"
+            tenant_ou: "ou=users,ou=root,ou=0001,ou=tenants" # position in LDAP
+        # ...
+```
 
 License
 -------
@@ -1103,45 +1178,6 @@ Author Information
 
 Univention GmbH
 www.univention.com
----
-
-# roles/install_univention/README.md
-
-Install packages with univention-install
-=========
-
-This role installs packages via `univention-install` wrapper. 
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `install_univention_install_name`(string): The name of the package to be installed.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
 ---
 
 # roles/portal_create_entry/README.md
@@ -2108,6 +2144,7 @@ none
 Role Variables
 --------------
 
+- `umc_policies_maintenance_autoupdate_enabled`(bool): Toogle autoupdate status; default: `true`.
 - `umc_policies_maintenance_basedn`(string): The LDAP base domain name.
 - `umc_policies_maintenance_patchhour`(string): The chosen hour for univention-update; default: `5`.
 - `umc_policies_maintenance_patchminute`(string): The choosen minute for univention-update; default: `00`.

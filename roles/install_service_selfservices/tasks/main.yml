@@ -62,7 +62,6 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/content-security-policy/frame-ancestors: "'self'"
-  when: "'new_portal' in install_service_selfservice_install_services"
   notify: "Restart apache"
   tags:
     - install_service_selfservices

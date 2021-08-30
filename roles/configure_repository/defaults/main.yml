@@ -1,0 +1,7 @@
+---
+# defaults file for configure_repository
+configure_repository_default_repository_prefix: "https://"
+configure_repository_default_repository_server: "updates.software-univention.de"
+configure_repository_default_repository_path: ""
+configure_repository_default_repository_username: ""
+configure_repository_default_repository_password: ""
