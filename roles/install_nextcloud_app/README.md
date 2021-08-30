@@ -11,7 +11,7 @@ none
 Role Variables
 --------------
 
-none
+- `install_nextcloud_app_name`(string): The name of nextcloud app to be installed from store.
 
 Dependencies
 ------------
