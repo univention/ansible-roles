@@ -2,6 +2,9 @@
 # handlers file for configure_apps_postfix
 
 - name: "Restart postfix"
-  service:
+  ansible.builtin.service:
     name: "postfix"
     state: "restarted"
+  tags:
+    - "configure_apps_postfix"
+    - "configure_apps_postfix_restart_postfix"

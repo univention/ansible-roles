@@ -30,15 +30,45 @@ skip_list:
 # Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
 # mentioned in the enable_list:
 enable_list:
-  - "empty-string-compare"  # Don't compare to empty string
-  - "experimental"  # all rules tagged as experimental
-  - "ignore-errors"  # Use failed_when and specify error conditions instead of using ignore_errors
-  - "meta-no-tags"  # Tags must contain lowercase letters and digits only
-  - "no-loop-var-prefix"  # Role loop_var should use configured prefix.: update_users_ssh_keys_
-  - "risky-file-permissions"
-  - "fqcn-builtins"
-  - "no-log-password"
-  - "no-same-owner"
+  - command-instead-of-module
+  - command-instead-of-shell
+  - deprecated-bare-vars
+  - deprecated-command-syntax
+  - deprecated-local-action
+  - deprecated-module
+  - empty-string-compare
+  - fqcn-builtins
+  - git-latest
+  - hg-latest
+  - ignore-errors
+  - inline-env-var
+  - internal-error
+  - literal-compare
+  - load-failure
+  - meta-incorrect
+  - meta-no-info
+  - meta-no-tags
+  - meta-video-links
+  - no-changed-when
+  - no-jinja-nesting
+  - no-jinja-when
+  - no-log-password
+  - no-loop-var-prefix
+  - no-relative-paths
+  - no-same-owner
+  - no-tabs
+  - package-latest
+  - parser-error
+  - partial-become
+  - playbook-extension
+  - risky-file-permissions
+  - risky-octal
+  - risky-shell-pipe
+  - role-name
+  - syntax-check
+  - unnamed-task
+  - var-naming
+  - var-spacing
   # add yaml here if you want to avoid ignoring yaml checks when yamllint
   # library is missing. Normally its absence just skips using that rule.
   # - yaml

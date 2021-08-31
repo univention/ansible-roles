@@ -27,7 +27,7 @@
     install_packages_package_version: "{{ '=' + install_packages_app_version_map[install_packages_item]
       if install_packages_item in install_packages_app_version_map
       else '' }}"
-    install_packages_package_name: >
+    install_packages_package_name: >-
        {{ install_packages_service_name_list[install_packages_item]|default(install_packages_item) }}
   ansible.builtin.command: >
     univention-app
