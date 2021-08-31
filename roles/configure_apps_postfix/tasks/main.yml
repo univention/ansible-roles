@@ -7,10 +7,10 @@
     line: "/^(.*)@{{ configure_apps_postfix_domain_name }}$/      \\${1}@{{ configure_apps_postfix_external_hostname }}"
     create: true
     state: "present"
-  register: configure_apps_postfix_domain_rewrite_task
+  register: "configure_apps_postfix_domain_rewrite_task"
   tags:
-    - configure_apps_postfix
-    - configure_apps_postfix_domain_rewrite
+    - "configure_apps_postfix"
+    - "configure_apps_postfix_domain_rewrite"
 
 - name: "Configure postfix to use the map we're creating"
   ansible.builtin.lineinfile:
@@ -19,15 +19,15 @@
     create: true
     state: "present"
   tags:
-    - configure_apps_postfix
-    - configure_apps_postfix_use_map
+    - "configure_apps_postfix"
+    - "configure_apps_postfix_use_map"
 
 - name: "Compile domain rewrite map"
   ansible.builtin.command: "postmap /etc/postfix/generic"
   when: "configure_apps_postfix_domain_rewrite_task.changed|bool"
   tags:
-    - configure_apps_postfix
-    - configure_apps_postfix_compile_domain_rewrite
+    - "configure_apps_postfix"
+    - "configure_apps_postfix_compile_domain_rewrite"
 
 - name: "Set mail destination in Univention Config Registry"
   univention.ucs_modules.univention_config_registry:
@@ -35,5 +35,5 @@
       mail/postfix/mydestination: "localhost.$mydomain, localhost"
   notify: "Restart postfix"
   tags:
-    - configure_apps_postfix
-    - configure_apps_postfix_set_mail_destination
+    - "configure_apps_postfix"
+    - "configure_apps_postfix_set_mail_destination"
