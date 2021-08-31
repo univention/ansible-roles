@@ -7,17 +7,19 @@
       ansible.builtin.setup:
 
     - name: "Get owncloud oidc secret from LDAP"
-      ansible.builtin.shell: 'univention-ldapsearch "(&(univentionObjectType=oidc/rpservice)(clientid=owncloud))" clientsecret -xLLL | sed -ne "s|clientsecret: ||p"'
-      register: configure_apps_owncloud_oidc_secret_output
+      ansible.builtin.shell: >
+        univention-ldapsearch
+        "(&(univentionObjectType=oidc/rpservice)(clientid=owncloud))" clientsecret -xLLL | sed -ne "s|clientsecret: ||p"
+      register: "configure_apps_owncloud_oidc_secret_output"
       tags:
-        - configure_apps_owncloud_docker_override_script
+        - "configure_apps_owncloud_docker_override_script"
 
     - name: "Create temporary file for docker override scripts"
       ansible.builtin.tempfile:
         state: "file"
-      register: configure_apps_owncloud_tempfile_docker_override
+      register: "configure_apps_owncloud_tempfile_docker_override"
       tags:
-        - configure_apps_owncloud_docker_override_script
+        - "configure_apps_owncloud_docker_override_script"
 
     - name: "Create owncloud docker image override script"
       vars:
@@ -27,7 +29,7 @@
         dest: "{{ configure_apps_owncloud_tempfile_docker_override.path }}"
         src: "owncloud_univention_override_sh.j2"
       tags:
-        - configure_apps_owncloud_docker_override_script
+        - "configure_apps_owncloud_docker_override_script"
 
     - name: "Copy script to container"
       ansible.builtin.command: >
@@ -37,18 +39,18 @@
         "{{ ansible_local['ucr']['appcenter/apps/owncloud/container'] }}:/etc/entrypoint.d/06-univention-override.sh"
       notify: "Restart OwnCloud"
       tags:
-        - configure_apps_owncloud_docker_override_script
+        - "configure_apps_owncloud_docker_override_script"
 
     - name: "Wait for OwnCloud to be available"
       ansible.builtin.wait_for:
         port: 40001
       tags:
-        - configure_apps_owncloud_docker_restart_wait
+        - "configure_apps_owncloud_docker_restart_wait"
 
     - name: "Resync OwnCloud users"
       ansible.builtin.command: "univention-app shell owncloud occ user:sync -m disable 'OCA\\User_LDAP\\User_Proxy'"
       tags:
-        - configure_apps_owncloud_resync_users
+        - "configure_apps_owncloud_resync_users"
 
   always:
     - name: "Remove temporary file"
@@ -56,10 +58,10 @@
         path: "{{ configure_apps_owncloud_tempfile_docker_override.path }}"
         state: "absent"
       tags:
-        - cleanup
-        - configure_apps_owncloud_cleanup_tempfile_docker_override
+        - "cleanup"
+        - "configure_apps_owncloud_cleanup_tempfile_docker_override"
 
     - name: "Flush handlers to restart owncloud"
-      ansible.builtin.meta: flush_handlers
+      ansible.builtin.meta: "flush_handlers"
   tags:
-    - configure_apps_owncloud
+    - "configure_apps_owncloud"
