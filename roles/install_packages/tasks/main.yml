@@ -46,7 +46,7 @@
   register: install_packages_package_install
   retries: 10
   delay: 10
-  until: "install_packages_package_install.rc == 0"
+  until: "install_packages_package_install.rc == 0 or install_packages_package_install.stderr is search('must_not_be_installed')"
   tags:
     - install_apps
     - install_apps_install_app
