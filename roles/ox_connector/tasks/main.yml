@@ -57,11 +57,11 @@
 
     - name: "ox_connector | Configure settings"
       ansible.builtin.command:
-        cmd: |
-          univention-app configure ox-connector
-          --set OX_SOAP_SERVER=https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}
-          --set OX_MASTER_ADMIN={{ ox_connector_master_admin }}
-          --set OX_MASTER_PASSWORD={{ ox_connector_master_password }}
+        cmd: >
+          univention-app configure ox-connector --set
+          OX_SOAP_SERVER=https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}
+          OX_MASTER_ADMIN={{ ox_connector_master_admin }}
+          OX_MASTER_PASSWORD={{ ox_connector_master_password }}
       when: "not ox_connector_settings_correct"
       tags:
         - ox_connector_configure
