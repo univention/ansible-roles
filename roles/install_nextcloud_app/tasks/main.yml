@@ -15,6 +15,9 @@
       - "{{ install_nextcloud_app_name }}"
   when: "install_nextcloud_app_name|length > 0"
   changed_when: "install_nextcloud_app_result.stdout is not search('already installed')"
+  failed_when:
+    - "install_nextcloud_app_result.rc > 0"
+    - "install_nextcloud_app_result.stdout is not search('already installed')"
   register: "install_nextcloud_app_result"
   tags:
-    - install_nextcloud_app
+    - "install_nextcloud_app"
