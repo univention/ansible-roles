@@ -5,26 +5,41 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       update44/ignore_apache_template_checks: "yes"
+    state: "present"
   check_mode: false
   tags:
-    - univention_upgrade
-    - univention_upgrade_ignore_apache_template_check
+    - "univention_upgrade"
+    - "univention_upgrade_ignore_apache_template_check"
 
 - name: "univention_upgrade | Check for upgrade"
-  ansible.builtin.command: "univention-upgrade --check --updateto={{ univention_upgrade_version }}"
+  ansible.builtin.command: >
+    univention-upgrade
+    --check
+    --setucr
+    --updateto={{ univention_upgrade_version }}
+    --disable-app-updates
   changed_when: false
   register: "univention_upgrade_upgrade_check"
-  failed_when: "univention_upgrade_upgrade_check.rc > 0 and univention_upgrade_upgrade_check.stderr is not search('update to UCS 5.0 is blocked') and univention_upgrade_upgrade_check.stdout is not search('but updater has been instructed to stop')"
+  failed_when:
+    - "univention_upgrade_upgrade_check.rc > 0"
+    - "univention_upgrade_upgrade_check.stderr is not search('update to UCS 5.0 is blocked')"
+    - "univention_upgrade_upgrade_check.stdout is not search('but updater has been instructed to stop')"
   tags:
-    - univention_upgrade
-    - univention_upgrade_upgrade_check
+    - "univention_upgrade"
+    - "univention_upgrade_upgrade_check"
 
 - name: "univention_upgrade | Do univention-upgrade"
-  ansible.builtin.command: "univention-upgrade --ignoressh --ignoreterm --noninteractive --updateto={{ univention_upgrade_version }}"
+  ansible.builtin.command: >
+    univention-upgrade
+    --ignoressh
+    --ignoreterm
+    --noninteractive
+    --disable-app-updates
+    --updateto={{ univention_upgrade_version }}
   check_mode: false
   delay: 10
   retries: 3
   when: "univention_upgrade_upgrade_check.stdout is not search('No update available')"
   tags:
-    - univention_upgrade
-    - univention_upgrade_run
+    - "univention_upgrade"
+    - "univention_upgrade_run"

@@ -5,29 +5,30 @@
   ansible.builtin.include_role:
     name: "force_package_list_update"
   tags:
-    - install_packages
-    - install_packages_update_packages
+    - "install_packages"
+    - "install_packages_update_packages"
 
 - name: "install_packages | Update installed applications list"
   ansible.builtin.include_role:
     name: "get_installed_apps"
   tags:
-    - install_packages_get_installed_apps
-    - install_packages
+    - "install_packages_get_installed_apps"
+    - "install_packages"
 
 - name: "install_packages | Set installed apps"
   ansible.builtin.set_fact:
     install_packages_currently_installed_apps: "{{ get_installed_apps_installed_apps }}"
   tags:
-    - install_packages
-    - install_packages_set_installed_apps
+    - "install_packages"
+    - "install_packages_set_installed_apps"
 
 - name: "install_packages | Install Univention app packages"
   vars:
-    install_packages_package_version: "{{ '=' + install_packages_app_version_map[item]
-      if item in install_packages_app_version_map
+    install_packages_package_version: "{{ '=' + install_packages_app_version_map[install_packages_item]
+      if install_packages_item in install_packages_app_version_map
       else '' }}"
-    install_packages_package_name: "{{ install_packages_service_name_list[item]|default(item) }}"
+    install_packages_package_name: >
+       {{ install_packages_service_name_list[install_packages_item]|default(install_packages_item) }}
   ansible.builtin.command: >
     univention-app
     install
@@ -39,14 +40,19 @@
     --set {{ install_packages_additional_options }}
     {% endif %}
   loop: "{{ install_packages_install_apps }}"
-  when: install_packages_package_name not in install_packages_currently_installed_apps or
-        (install_packages_force_package_upgrade|bool and
-          (install_packages_package_version != '') and
-          (install_packages_currently_installed_apps[package_name] != install_packages_package_version[1:]))
-  register: install_packages_package_install
+  loop_control:
+    loop_var: "install_packages_item"
+  when: >
+    install_packages_package_name not in install_packages_currently_installed_apps or
+    (install_packages_force_package_upgrade|bool and
+      (install_packages_package_version|length > 0) and
+      (install_packages_currently_installed_apps[package_name] != install_packages_package_version[1:]))
+  register: "install_packages_package_install"
   retries: 10
   delay: 10
-  until: "install_packages_package_install.rc == 0"
+  until: >
+    install_packages_package_install.rc == 0 or
+    install_packages_package_install.stderr is search('must_not_be_installed')
   tags:
-    - install_apps
-    - install_apps_install_app
+    - "install_apps"
+    - "install_apps_install_app"
