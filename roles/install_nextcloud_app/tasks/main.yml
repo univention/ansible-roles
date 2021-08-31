@@ -1,0 +1,20 @@
+---
+# tasks file for install_nextcloud_app
+
+- name: "NextCloud: Install given app"
+  ansible.builtin.command:
+    argv:
+      - "univention-app"
+      - "shell"
+      - "nextcloud"
+      - "sudo"
+      - "-u"
+      - "www-data"
+      - "/var/www/html/occ"
+      - "app:install"
+      - "{{ install_nextcloud_app_name }}"
+  when: "install_nextcloud_app_name|length > 0"
+  changed_when: "install_nextcloud_app_result.stdout is not search('already installed')"
+  register: "install_nextcloud_app_result"
+  tags:
+    - install_nextcloud_app

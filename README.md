@@ -16,6 +16,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [deployment_message](#rolesdeployment_messagereadmemd)
 - [configure_keycloak_saml](#rolesconfigure_keycloak_samlreadmemd)
 - [configure_apps_owncloud](#rolesconfigure_apps_owncloudreadmemd)
+- [install_nextcloud_app](#rolesinstall_nextcloud_appreadmemd)
 - [configure_monitoring](#rolesconfigure_monitoringreadmemd)
 - [improve_usability_ui_changes](#rolesimprove_usability_ui_changesreadmemd)
 - [configure_apps_postfix_relay](#rolesconfigure_apps_postfix_relayreadmemd)
@@ -591,6 +592,45 @@ Author Information
 
 Univention GmbH
 www.univention.com
+---
+
+# roles/install_nextcloud_app/README.md
+
+Install app for nextcloud
+=========
+
+This role installs an app for nextcloud
+
+Requirements
+------------
+
+none
+
+Role Variables
+--------------
+
+- `install_nextcloud_app_name`(string): The name of nextcloud app to be installed from store.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
 ---
 
 # roles/configure_monitoring/README.md
