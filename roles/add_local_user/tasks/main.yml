@@ -1,59 +1,64 @@
 ---
 # tasks file for add-local-user
 
-- name: "Add a user"
+- name: "add_local_user | Add a user"
   vars:
-    add_local_user_random_password: "{{ lookup('password', '/dev/null length=40 chars=ascii_letters')|password_hash('sha512') }}"
+    add_local_user_random_password: >-
+      {{ lookup('password', '/dev/null length=40 chars=ascii_letters')|password_hash('sha512') }}
   ansible.builtin.user:
     name: "{{ add_local_user_user['name'] }}"
     comment: "{{ add_local_user_user['comment']|default('') }}"
     password: "{{ add_local_user_user['password']|default(add_local_user_random_password) }}"
     shell: "{{ add_local_user_user['shell']|default(add_local_user_default_shell) }}"
-    update_password: "{{ add_local_user_user['update_password_policy']|default(add_local_user_default_password_policy) }}"
+    update_password: >-
+      {{ add_local_user_user['update_password_policy']|default(add_local_user_default_password_policy) }}
     groups:
       - "sudo"
     state: "{{ add_local_user_user['state']|default('present') }}"
   tags:
-    - add_local_user
-    - add_local_user_user
-    - add_local_user_user_create_user
+    - "add_local_user"
+    - "add_local_user_user"
+    - "add_local_user_user_create_user"
 
-- name: "Allow sudo without password, when no password is given"
+- name: "add_local_user | Allow sudo without password, when no password is given"
   ansible.builtin.lineinfile:
     path: "/etc/sudoers"
     line: "{{ add_local_user_user['name'] }} ALL=(ALL) NOPASSWD: ALL"
   when: "add_local_user_user['password'] is not defined"
 
-- name: "Install authorized_key for that user (key string)"
+- name: "add_local_user | Install authorized_key for that user (key string)"
   ansible.posix.authorized_key:
     user: "{{ add_local_user_user['name'] }}"
     key: "{{ add_local_user_user['sshkey'] }}"
     manage_dir: true
   when: "'sshkey' in add_local_user_user and add_local_user_user['state']|default('present') == 'present'"
   tags:
-    - add_local_user
-    - add_local_user_user
-    - add_local_user_user_deployment_key
+    - "add_local_user"
+    - "add_local_user_user"
+    - "add_local_user_user_deployment_key"
 
-- name: "Install authorized_key for that user (key file)"
+- name: "add_local_user | Install authorized_key for that user (key file)"
   ansible.posix.authorized_key:
     user: "{{ add_local_user_user['name'] }}"
     key: "{{ lookup('file', add_local_user_user['sshkey_file']) }}"
     manage_dir: true
     state: "{{ add_local_user_user['state']|default('present') }}"
-  when: "'sshkey_file' in add_local_user_user and 'sshkey' not in add_local_user_user and add_local_user_user['state']|default('present') == 'present'"
+  when:
+    - "'sshkey_file' in add_local_user_user"
+    - "'sshkey' not in add_local_user_user"
+    - "add_local_user_user['state']|default('present') == 'present'"
   tags:
-    - add_local_user
-    - add_local_user_user
-    - add_local_user_user_deployment_key
+    - "add_local_user"
+    - "add_local_user_user"
+    - "add_local_user_user_deployment_key"
 
-- name: "Allow user to log in (UCR)"
+- name: "add_local_user | Allow user to log in (UCR)"
   univention.ucs_modules.univention_config_registry:
     kvlist:
       - key: "auth/sshd/user/{{ add_local_user_user['name'] }}"
         value: "yes"
     state: "{{ add_local_user_user['state']|default('present') }}"
   tags:
-    - add_local_user
-    - add_local_user_user
-    - add_local_user_user_allow_login
+    - "add_local_user"
+    - "add_local_user_user"
+    - "add_local_user_user_allow_login"
