@@ -8,8 +8,8 @@
     directory_mode: 0755
     mode: "preserve"
   tags:
-    - configure_apps_nextcloud
-    - configure_apps_nextcloud_install_skeleton_files
+    - "configure_apps_nextcloud"
+    - "configure_apps_nextcloud_install_skeleton_files"
 
 - name: "Configure skeleton directory in NextCloud"
   ansible.builtin.lineinfile:
@@ -17,10 +17,10 @@
     line: "  'skeletondirectory' => '/var/lib/univention-appcenter/apps/nextcloud/data/skeleton',"
     insertafter: "'secret' =>"
     state: "present"
-  register: configure_apps_nextcloud_skeleton_result
+  register: "configure_apps_nextcloud_skeleton_result"
   tags:
-    - configure_apps_nextcloud
-    - configure_apps_nextcloud_configure_skeleton_directory
+    - "configure_apps_nextcloud"
+    - "configure_apps_nextcloud_configure_skeleton_directory"
 
 - name: "Copy modified NextCloud config over to live app"
   ansible.builtin.command:
@@ -33,5 +33,5 @@
       - "/var/www/html/config/config.php"
   when: "configure_apps_nextcloud_skeleton_result is changed"
   tags:
-    - configure_apps_nextcloud
-    - configure_apps_nextcloud_copy_nextcloud_config
+    - "configure_apps_nextcloud"
+    - "configure_apps_nextcloud_copy_nextcloud_config"
