@@ -8,7 +8,7 @@ Requirements
 
 - univention.ucs_modules
     - univention_config_registry
-    
+
 Role Variables
 --------------
 
