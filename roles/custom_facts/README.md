@@ -1,7 +1,7 @@
 Custom facts
 =========
 
-This role gathers release information and store them an remote system. 
+This role gathers release information and store them an remote system.
 
 Requirements
 ------------

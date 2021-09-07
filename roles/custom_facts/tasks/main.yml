@@ -6,8 +6,8 @@
     filter: "ansible_date_time"
   changed_when: false
   tags:
-    - custom_facts
-    - custom_facts_refresh_date_time_facts
+    - "custom_facts"
+    - "custom_facts_refresh_date_time_facts"
 
 - name: "custom_facts | Ensure custom facts script exists"
   ansible.builtin.file:
@@ -15,8 +15,8 @@
     state: "directory"
     mode: "0755"
   tags:
-    - custom_facts
-    - custom_facts_directory
+    - "custom_facts"
+    - "custom_facts_directory"
 
 - name: "custom_facts | Load version info (collections)"
   ansible.builtin.include_vars:
@@ -25,8 +25,8 @@
   changed_when: false
   failed_when: false
   tags:
-    - custom_facts
-    - custom_facts_version_info_collections
+    - "custom_facts"
+    - "custom_facts_version_info_collections"
 
 - name: "custom_facts | Load version info (roles)"
   ansible.builtin.include_vars:
@@ -35,8 +35,8 @@
   changed_when: false
   failed_when: false
   tags:
-    - custom_facts
-    - custom_facts_version_info_roles
+    - "custom_facts"
+    - "custom_facts_version_info_roles"
 
 - name: "custom_facts | Load version info (global)"
   ansible.builtin.include_vars:
@@ -45,18 +45,20 @@
   changed_when: false
   failed_when: false
   tags:
-    - custom_facts
-    - custom_facts_version_info_global
+    - "custom_facts"
+    - "custom_facts_version_info_global"
 
 - name: "custom_facts | Copy custom facts files to facts directory"
   ansible.builtin.template:
-    dest: "/etc/ansible/facts.d/{{ item|replace('.j2', '') }}"
-    src: "{{ item }}"
+    dest: "/etc/ansible/facts.d/{{ custom_facts_item|replace('.j2', '') }}"
+    src: "{{ custom_facts_item }}"
     mode: "0644"
   loop: "{{ custom_facts_templates|default([]) }}"
+  loop_control:
+    loop_var: "custom_facts_item"
   tags:
-    - custom_facts
-    - custom_facts_deployment
+    - "custom_facts"
+    - "custom_facts_deployment"
 
 - name: "custom_facts | Create deployment_meta file and do not mark it as \
          changed in ansible"
@@ -66,8 +68,8 @@
     mode: "0644"
   changed_when: false
   tags:
-    - custom_facts
-    - custom_facts_deployment
+    - "custom_facts"
+    - "custom_facts_deployment"
 
 - name: "custom_facts | Copy custom facts script to machine"
   ansible.builtin.copy:
@@ -75,13 +77,13 @@
     dest: "/etc/ansible/facts.d/ucr.fact"
     mode: "0755"
   tags:
-    - custom_facts
-    - custom_facts_copy_custom_facs_script
+    - "custom_facts"
+    - "custom_facts_copy_custom_facs_script"
 
 - name: "custom_facts | Refresh ucr facts"
   ansible.builtin.setup:
     filter: "ansible_local"
   changed_when: false
   tags:
-    - custom_facts
-    - custom_facts_refresh_ucr_facts
+    - "custom_facts"
+    - "custom_facts_refresh_ucr_facts"
