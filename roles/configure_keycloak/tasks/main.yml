@@ -8,8 +8,8 @@
   when: "configure_keycloak_generate_oidc_broker_secret|bool"
   no_log: true
   tags:
-    - configure_keycloak
-    - configure_keycloak_gerate_secret
+    - "configure_keycloak"
+    - "configure_keycloak_gerate_secret"
 
 - name: "Check that broker secret variable is set"
   become: false
@@ -22,8 +22,8 @@
       We can't continue with keycloak server configureation
   when: "not configure_keycloak_generate_oidc_broker_secret|bool"
   tags:
-    - configure_keycloak
-    - configure_keycloak_password_assert_client
+    - "configure_keycloak"
+    - "configure_keycloak_password_assert_client"
 
 - name: "Set keycloak password"
   become: false
@@ -32,12 +32,12 @@
   when: "not configure_keycloak_generate_oidc_broker_secret|bool"
   no_log: true
   tags:
-    - configure_keycloak
-    - configure_keycloak_set_password
+    - "configure_keycloak"
+    - "configure_keycloak_set_password"
 
 - name: "Configure keycloak server"
   ansible.builtin.include_tasks: "{{ configure_keycloak_config_method|lower }}.yml"
   when: "configure_keycloak_config_type == 'dynamic'"
   tags:
-    - configure_keycloak
-    - configure_keycloak_import_subtasks
+    - "configure_keycloak"
+    - "configure_keycloak_import_subtasks"

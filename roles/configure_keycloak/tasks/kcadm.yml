@@ -20,9 +20,9 @@
       run_once: true
       no_log: true
       tags:
-        - configure_keycloak_auth
+        - "configure_keycloak_auth"
 
-    - name: 'Remove keycloak config from keycloak server (hostname)'
+    - name: "Remove keycloak config from keycloak server (hostname)"
       ansible.builtin.command:
         argv:
           - "kcadm.sh"
@@ -32,11 +32,11 @@
           - "{{ configure_keycloak_realm }}"
       throttle: 1
       tags:
-        - configure_keycloak_remove_keycloak_config
-        - configure_keycloak_remove_keycloak_config_hostname
-      ignore_errors: true
+        - "configure_keycloak_remove_keycloak_config"
+        - "configure_keycloak_remove_keycloak_config_hostname"
+      ignore_errors: true  # noqa ignore-errors
 
-    - name: 'Remove keycloak config from keycloak server (FQDN)'
+    - name: "Remove keycloak config from keycloak server (FQDN)"
       ansible.builtin.command:
         argv:
           - "kcadm.sh"
@@ -46,16 +46,16 @@
           - "{{ configure_keycloak_realm }}"
       throttle: 1
       tags:
-        - configure_keycloak_remove_keycloak_config
-        - configure_keycloak_remove_keycloak_config_fqdn
-      ignore_errors: true
+        - "configure_keycloak_remove_keycloak_config"
+        - "configure_keycloak_remove_keycloak_config_fqdn"
+      ignore_errors: true  # noqa ignore-errors
 
     - name: "Get keycloak realm info (KCADM)"
       ansible.builtin.command: "kcadm.sh get realms/{{ configure_keycloak_realm }}"
-      register: configure_keycloak_kcadm_realm_output
+      register: "configure_keycloak_kcadm_realm_output"
       ignore_errors: true
       tags:
-        - configure_keycloak_get_realm_list
+        - "configure_keycloak_get_realm_list"
 
     - name: "Create realm (KCADM)"
       ansible.builtin.command: >
@@ -68,7 +68,7 @@
         -s displayNameHtml='<div class="kc-logo-text"><span>Keycloak {{ configure_keycloak_realm }}</span></div>'
       when: "configure_keycloak_kcadm_realm_output is failed"
       tags:
-        - configure_keycloak_create_realm
+        - "configure_keycloak_create_realm"
 
     - name: "Configure our host as an IDP for this realm (KCADM)"
       ansible.builtin.command: >
@@ -92,7 +92,7 @@
         -s config.defaultScope='openid profile email'
         -s config.syncMode=IMPORT
       tags:
-        - configure_keycloak_create_idp_instance
+        - "configure_keycloak_create_idp_instance"
 
     - name: "Insert FQDN into CSP list"
       vars:
@@ -100,15 +100,16 @@
       block:
         - name: "Get keycloak realm info (KCADM)"
           ansible.builtin.command: "kcadm.sh get realms/{{ configure_keycloak_realm }}"
-          register: configure_keycloak_kcadm_realm_output
+          register: "configure_keycloak_kcadm_realm_output"
           tags:
-            - configure_keycloak_insert_fqdn_get_realm_list
+            - "configure_keycloak_insert_fqdn_get_realm_list"
 
         - name: "Change current CSP config to string variable (KCADM)"
           ansible.builtin.set_fact:
+            # yamllint disable-line rule:line-length
             configure_keycloak_current_CSP_list: "{{ (configure_keycloak_kcadm_realm_output.stdout|from_json)['browserSecurityHeaders']['contentSecurityPolicy'] }}"
           tags:
-            - configure_keycloak_insert_fqdn_append_host_to_csp_list_set_current_csp_list
+            - "configure_keycloak_insert_fqdn_append_host_to_csp_list_set_current_csp_list"
 
         - name: "Check if length is over limit (255 chars)"
           ansible.builtin.assert:
@@ -117,20 +118,22 @@
             fail_msg: "Appending host to current CSP list will result in an overflow. Limit is 255 chars."
           when: "configure_keycloak_host_url not in configure_keycloak_current_CSP_list"
           tags:
-            - configure_keycloak_insert_fqdn_append_host_to_csp_list_assert_csp_length
+            - "configure_keycloak_insert_fqdn_append_host_to_csp_list_assert_csp_length"
 
         - name: "Append current host to configured CSP list (KCADM)"
+          # yamllint disable rule:line-length
           ansible.builtin.command: >
             kcadm.sh update realms/{{ configure_keycloak_realm }}
             -s browserSecurityHeaders.xFrameOptions=""
             -s browserSecurityHeaders.contentSecurityPolicy="{{ configure_keycloak_current_CSP_list[:-1] }} {{ configure_keycloak_host_url }};"
+          # yamllint enable rule:line-length
           when: "configure_keycloak_host_url not in configure_keycloak_current_CSP_list"
           tags:
-            - configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms
+            - "configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms"
 
       when: "configure_keycloak_display_matrix_in_iframe|bool"
       tags:
-        - configure_keycloak_insert_fqdn
+        - "configure_keycloak_insert_fqdn"
 
     - name: "Configure the import mapping for preferred_username (KCADM)"
       ansible.builtin.command: >
@@ -142,13 +145,14 @@
         -s config.template="{{ configure_keycloak_oidc_username_template }}"
         -s config.syncMode=INHERIT
       tags:
-        - configure_keycloak_username_import_mapping
+        - "configure_keycloak_username_import_mapping"
 
     - name: "Get keycloak client info (KCADM)"
-      ansible.builtin.command: "kcadm.sh get clients -q clientId={{ configure_keycloak_client_id }} -r {{ configure_keycloak_realm }}"
-      register: configure_keycloak_kcadm_client_output
+      ansible.builtin.command:
+        cmd: "kcadm.sh get clients -q clientId={{ configure_keycloak_client_id }} -r {{ configure_keycloak_realm }}"
+      register: "configure_keycloak_kcadm_client_output"
       tags:
-        - configure_keycloak_get_client_info
+        - "configure_keycloak_get_client_info"
 
     - name: "Check that client secret is set (KCADM)"
       ansible.builtin.assert:
@@ -160,7 +164,7 @@
           We can't continue with keycloak server configureation
       when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
       tags:
-        - configure_keycloak_assert_client_secret
+        - "configure_keycloak_assert_client_secret"
 
     - name: "Check that client callback url is set (KCADM)"
       ansible.builtin.assert:
@@ -171,7 +175,7 @@
           We can't continue with keycloak server configureation
       when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
       tags:
-        - configure_keycloak_assert_client_callback
+        - "configure_keycloak_assert_client_callback"
 
     - name: "Create new client (KCADM)"
       vars:
@@ -186,21 +190,22 @@
         -s redirectUris={{ configure_keycloak_callback_url_list|to_json }}
       when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
       tags:
-        - configure_keycloak_create_client
+        - "configure_keycloak_create_client"
 
     - name: "Get keycloak client info again (after client creation) (KCADM)"
-      ansible.builtin.command: "kcadm.sh get clients -q clientId={{ configure_keycloak_client_id }} -r {{ configure_keycloak_realm }}"
-      register: configure_keycloak_kcadm_client_output_second
+      ansible.builtin.command:
+        cmd: "kcadm.sh get clients -q clientId={{ configure_keycloak_client_id }} -r {{ configure_keycloak_realm }}"
+      register: "configure_keycloak_kcadm_client_output_second"
       when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
       tags:
-        - configure_keycloak_get_client_info
+        - "configure_keycloak_get_client_info"
 
     - name: "Refresh kcadm client output variable (KCADM)"
       ansible.builtin.set_fact:
         configure_keycloak_kcadm_client_output: "{{ configure_keycloak_kcadm_client_output_second }}"
       when: "not configure_keycloak_kcadm_client_output_second is skipped"
       tags:
-        - configure_keycloak_get_client_info_refresh
+        - "configure_keycloak_get_client_info_refresh"
 
     - name: "configure user.session.note to pass 'sourceidp' to the client (KCADM)"
       vars:
@@ -223,4 +228,4 @@
         - "'Protocol mapper exists' not in configure_keycloak_kcadm_create_mapper_output.stderr"
   delegate_to: "{{ configure_keycloak_keycloak_server }}"
   tags:
-    - keycloak_config
+    - "keycloak_config"
