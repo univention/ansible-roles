@@ -44,3 +44,12 @@
   tags:
     - "configure_directory_manager"
     - "configure_directory_manager_toggle_userlist_loading"
+
+- name: "configure_directory_manager | Set username syntax"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/users/user/properties/username/syntax: >-
+        {{ configure_directory_manager_username_syntax }}
+  tags:
+    - "configure_directory_manager"
+    - "configure_directory_manager_username_syntax"
