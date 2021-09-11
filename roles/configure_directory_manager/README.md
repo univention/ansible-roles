@@ -8,7 +8,7 @@ Requirements
 
 - univention.ucs_modules
     - univention_config_registry
-    
+
 Role Variables
 --------------
 
@@ -21,6 +21,7 @@ Role Variables
 - `configure_directory_manager_pwdchangenextlogin_visible`(string): Toggles wether password change on next login is visible; default: `"False"`.
 - `configure_directory_manager_pwdchangenextlogin_default`(string): Sets default value for password change on next login; default: `"True"`.
 - `configure_directory_manager_autosearch`(string): Toggles wether the user autosearch is enabled; default: `"False"`.
+- `configure_directory_manager_username_syntax`(string): Set the username syntax; default `"uid"`.
 
 Dependencies
 ------------

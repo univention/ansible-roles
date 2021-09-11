@@ -2,15 +2,17 @@
 # tasks file for configure_keycloak_saml
 
 - name: "configure_keycloak_saml | Modify Domain Users Group"
+  # yamllint disable rule:line-length
   ansible.builtin.command: >
     udm groups/group modify
     --dn "cn=Domain Users,cn=groups,{{ configure_keycloak_saml_basedn }}"
     --append serviceprovidergroup="SAMLServiceProviderIdentifier={{ configure_keycloak_saml_sp_base_url }},cn=saml-serviceprovider,cn=univention,{{ configure_keycloak_saml_basedn }}"
+  # yamllint enable rule:line-length
   changed_when: "configure_keycloak_saml_modify_domain_users_group_result.stdout is not search('value exists')"
   register: "configure_keycloak_saml_modify_domain_users_group_result"
   tags:
-    - configure_keycloak_saml
-    - configure_keycloak_saml_modify_domain_users_group
+    - "configure_keycloak_saml"
+    - "configure_keycloak_saml_modify_domain_users_group"
 
 - name: "configure_keycloak_saml | Create SAML Service provider"
   ansible.builtin.command: >
@@ -36,8 +38,8 @@
   changed_when: "configure_keycloak_saml_create_saml_service_provider_result.stdout is not search('Object exists')"
   register: "configure_keycloak_saml_create_saml_service_provider_result"
   tags:
-    - configure_keycloak_saml
-    - configure_keycloak_saml_create_saml_service_provider
+    - "configure_keycloak_saml"
+    - "configure_keycloak_saml_create_saml_service_provider"
 
 - name: "configure_keycloak_saml | Modify IDP configuration"
   ansible.builtin.command: >
@@ -52,5 +54,5 @@
   changed_when: "configure_keycloak_saml_modify_idp_configuration_result.stdout is not search('value exists')"
   register: "configure_keycloak_saml_modify_idp_configuration_result"
   tags:
-    - configure_keycloak_saml
-    - configure_keycloak_saml_modify_idp_configuration
+    - "configure_keycloak_saml"
+    - "configure_keycloak_saml_modify_idp_configuration"

@@ -23,7 +23,7 @@ add_local_user_user:
     state:        # toggle if user should be present or absent; default: present
 ```
 - `add_local_user_default_shell`(string): Default user shell; default: `/bin/bash`
-- `add_local_user_default_password_policy`(string): Default password update policy. 
+- `add_local_user_default_password_policy`(string): Default password update policy.
   Possible values are `"on_create"` and `"always"`; default `"on_create"`.
 
 Dependencies

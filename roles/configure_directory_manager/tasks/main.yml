@@ -4,36 +4,52 @@
 - name: "configure_directory_manager | Set properties as required"
   univention.ucs_modules.univention_config_registry:
     keys:
-      directory/manager/web/modules/users/user/properties/mailPrimaryAddress/required: "{{ configure_directory_manager_mailprimaryaddress_required }}"
-      directory/manager/web/modules/users/user/properties/firstname/required: "{{ configure_directory_manager_firstname_required }}"
+      directory/manager/web/modules/users/user/properties/mailPrimaryAddress/required: >-
+        {{ configure_directory_manager_mailprimaryaddress_required }}
+      directory/manager/web/modules/users/user/properties/firstname/required: >-
+        {{ configure_directory_manager_firstname_required }}
   tags:
-    - configure_directory_manager
-    - configure_directory_manager_set_required_properties
+    - "configure_directory_manager"
+    - "configure_directory_manager_set_required_properties"
 
 - name: "configure_directory_manager | Toggle wizard"
   univention.ucs_modules.univention_config_registry:
     keys:
       directory/manager/web/modules/wizard/disabled: "{{ configure_directory_manager_wizard_disabled }}"
   tags:
-    - configure_directory_manager
-    - configure_directory_manager_toggle_wizard
+    - "configure_directory_manager"
+    - "configure_directory_manager_toggle_wizard"
 
 - name: "configure_directory_manager | Set wizard properties"
   univention.ucs_modules.univention_config_registry:
     keys:
-      directory/manager/web/modules/users/user/wizard/property/invite/default: "{{ configure_directory_manager_invite_default }}"
-      directory/manager/web/modules/users/user/wizard/property/overridePWLength/visible: "{{ configure_directory_manager_overridepwlength_visible }}"
-      directory/manager/web/modules/users/user/wizard/property/overridePWLength/default: "{{ configure_directory_manager_overridepwlength_default }}"
-      directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/visible: "{{ configure_directory_manager_pwdchangenextlogin_visible }}"
-      directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/default: "{{ configure_directory_manager_pwdchangenextlogin_default }}"
+      directory/manager/web/modules/users/user/wizard/property/invite/default: >-
+        {{ configure_directory_manager_invite_default }}
+      directory/manager/web/modules/users/user/wizard/property/overridePWLength/visible: >-
+        {{ configure_directory_manager_overridepwlength_visible }}
+      directory/manager/web/modules/users/user/wizard/property/overridePWLength/default: >-
+        {{ configure_directory_manager_overridepwlength_default }}
+      directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/visible: >-
+        {{ configure_directory_manager_pwdchangenextlogin_visible }}
+      directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/default: >-
+        {{ configure_directory_manager_pwdchangenextlogin_default }}
   tags:
-    - configure_directory_manager
-    - configure_directory_manager_set_wizard_properties
+    - "configure_directory_manager"
+    - "configure_directory_manager_set_wizard_properties"
 
 - name: "configure_directory_manager | Toogle loading of userlist"
   univention.ucs_modules.univention_config_registry:
     keys:
       directory/manager/web/modules/users/user/search/autosearch: "{{ configure_directory_manager_autosearch }}"
   tags:
-    - configure_directory_manager
-    - configure_directory_manager_toggle_userlist_loading
+    - "configure_directory_manager"
+    - "configure_directory_manager_toggle_userlist_loading"
+
+- name: "configure_directory_manager | Set username syntax"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/users/user/properties/username/syntax: >-
+        {{ configure_directory_manager_username_syntax }}
+  tags:
+    - "configure_directory_manager"
+    - "configure_directory_manager_username_syntax"

@@ -19,11 +19,14 @@
           ansible.builtin.set_fact:
             configure_keycloak_client_keycloak_password: "{{ configure_keycloak_client_oidc_broker_secret }}"
           no_log: true
-      when: "configure_keycloak_client_keycloak_password is undefined or configure_keycloak_client_keycloak_password|length == 0"
+      when: >
+        configure_keycloak_client_keycloak_password is undefined or
+        configure_keycloak_client_keycloak_password|length == 0
       tags:
-        - configure_keycloak_client_password
+        - "configure_keycloak_client_password"
 
     - name: "Configure keycloak"
+      # yamllint disable rule:line-length
       ansible.builtin.command: >
         udm
         oidc/rpservice
@@ -41,10 +44,11 @@
         applicationtype=web
         --set
         redirectURI=https://{{  configure_keycloak_client_keycloak_server }}/auth/realms/{{ ansible_domain }}/broker/{{ configure_keycloak_client_hostname }}/endpoint
+      # yamllint enable rule:line-length
       no_log: true
       tags:
-        - configure_keycloak_client_configure
+        - "configure_keycloak_client_configure"
 
   when: "configure_keycloak_client_config_type != 'none'"
   tags:
-    - configure_keycloak_client
+    - "configure_keycloak_client"
