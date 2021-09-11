@@ -1,0 +1,5 @@
+{% set portal_entry_drift_detection=false -%}
+{% if ("cn=" + portal_entry_append_item['name'] + ",cn=entry," + portal_entry_portal_dn) not in portal_entry_portal_combined_fact[portal_entry_append_item['category']][portal_entry_append_item['type']]|default([])  -%}
+{% set portal_entry_drift_detection=true -%}
+{% endif -%}
+{{ portal_entry_drift_detection -}}
