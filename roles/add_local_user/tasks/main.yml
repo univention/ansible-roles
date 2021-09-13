@@ -3,15 +3,15 @@
 
 - name: "add_local_user | Add a user"
   vars:
-    add_local_user_random_password: >-
-      {{ lookup('password', '/dev/null length=40 chars=ascii_letters')|password_hash('sha512') }}
+    add_local_user_random_password: "{{ lookup('password', '/dev/null length=40 chars=ascii_letters')
+                                          |password_hash('sha512') }}"
   ansible.builtin.user:
     name: "{{ add_local_user_user['name'] }}"
     comment: "{{ add_local_user_user['comment']|default('') }}"
     password: "{{ add_local_user_user['password']|default(add_local_user_random_password) }}"
     shell: "{{ add_local_user_user['shell']|default(add_local_user_default_shell) }}"
-    update_password: >-
-      {{ add_local_user_user['update_password_policy']|default(add_local_user_default_password_policy) }}
+    update_password: "{{ add_local_user_user['update_password_policy']
+                           |default(add_local_user_default_password_policy) }}"
     groups:
       - "sudo"
     state: "{{ add_local_user_user['state']|default('present') }}"
