@@ -8,11 +8,11 @@
   when: "univention_firewall_telegraf is defined and univention_firewall_telegraf|length > 0"
   notify: "Restart univention-firewall"
   tags:
-    - univention_firewall
-    - univention_firewall_telegraf
+    - "univention_firewall"
+    - "univention_firewall_telegraf"
 
 - name: "Restart firewall"
-  ansible.builtin.meta: flush_handlers
+  ansible.builtin.meta: "flush_handlers"
   tags:
-    - univention_firewall
-    - univention_firewall_restart
+    - "univention_firewall"
+    - "univention_firewall_restart"
