@@ -29,8 +29,8 @@
       - "firstname=Addison"
   when: "'oxseforucs' in improve_usability_user_config_install_apps"
   tags:
-    - improve_usability_user_config
-    - improve_usability_user_config_make_admin_ox_user
+    - "improve_usability_user_config"
+    - "improve_usability_user_config_make_admin_ox_user"
 
 - name: "improve_usability_user_config | Remove 'self registered' permission from  Administrator"
   ansible.builtin.command: >
@@ -40,35 +40,39 @@
   changed_when: "improve_usability_user_config_selfregistered_permission_result.stdout is not search('No modification')"
   register: "improve_usability_user_config_selfregistered_permission_result"
   tags:
-    - improve_usability_user_config
-    - improve_usability_user_config_selfregistered_permission
+    - "improve_usability_user_config"
+    - "improve_usability_user_config_selfregistered_permission"
 
 - name: "improve_usability_user_config | Add SAML Auth to all users"
+  # yamllint disable rule:line-length
   ansible.builtin.command: >
     udm groups/group modify
     --dn
     'cn=Domain Users,cn=groups,{{ improve_usability_user_config_basedn }}'
     --append
     serviceprovidergroup='SAMLServiceProviderIdentifier=https://{{ improve_usability_user_config_external_hostname }}/appsuite/,cn=saml-serviceprovider,cn=univention,{{ improve_usability_user_config_basedn }}'
+  # yamllint enable rule:line-length
   changed_when: "improve_usability_user_config_saml_auth_result.stdout is not search('No modification')"
   register: "improve_usability_user_config_saml_auth_result"
   tags:
-    - improve_usability_user_config
-    - improve_usability_user_config_saml_auth
+    - "improve_usability_user_config"
+    - "improve_usability_user_config_saml_auth"
 
 - name: "improve_usability_user_config | Add NextCloud Auth to all users"
+  # yamllint disable rule:line-length
   ansible.builtin.command: >
     udm groups/group modify
     --dn
     'cn=Domain Users,cn=groups,{{ improve_usability_user_config_basedn }}'
     --append
     serviceprovidergroup='SAMLServiceProviderIdentifier=https://{{ improve_usability_user_config_external_hostname }}/nextcloud/apps/user_saml/saml/metadata,cn=saml-serviceprovider,cn=univention,{{ improve_usability_user_config_basedn }}'
+  # yamllint enable rule:line-length
   changed_when: "improve_usability_user_config_nextcloud_auth_result.stdout is not search('No modification')"
   register: "improve_usability_user_config_nextcloud_auth_result"
   when: "'nextcloud' in improve_usability_user_config_install_apps"
   tags:
-    - improve_usability_user_config
-    - improve_usability_user_config_nextcloud_auth
+    - "improve_usability_user_config"
+    - "improve_usability_user_config_nextcloud_auth"
 
 - name: "improve_usability_user_config | Modify OX user template"
   block:
@@ -80,9 +84,12 @@
         --set
         mailPrimaryAddress='<username>@{{ improve_usability_user_config_external_hostname }}'
       register: "improve_usability_user_config_change_primary_mail_address"
-      failed_when: "improve_usability_user_config_change_primary_mail_address.rc != 0 and (improve_usability_user_config_change_primary_mail_address.rc == 3 and 'object not found' not in improve_usability_user_config_change_primary_mail_address.stdout)"
+      failed_when:
+        - "improve_usability_user_config_change_primary_mail_address.rc != 0"
+        - "improve_usability_user_config_change_primary_mail_address.rc == 3 and 'object not found'
+              not in improve_usability_user_config_change_primary_mail_address.stdout"
       tags:
-        - improve_usability_user_config_change_primary_mail_address
+        - "improve_usability_user_config_change_primary_mail_address"
 
     - name: "improve_usability_user_config | Rename user template to 'Groupware-Benutzer'"
       ansible.builtin.command: >
@@ -92,23 +99,27 @@
         --set
         name='Groupware-Benutzer'
       register: "improve_usability_user_config_remame_user_template"
-      failed_when: "improve_usability_user_config_remame_user_template.rc != 0 and (improve_usability_user_config_remame_user_template.rc == 3 and 'object not found' not in improve_usability_user_config_remame_user_template.stdout)"
+      failed_when:
+        - "improve_usability_user_config_remame_user_template.rc != 0"
+        - "improve_usability_user_config_remame_user_template.rc == 3 and 'object not found'
+              not in improve_usability_user_config_remame_user_template.stdout"
       tags:
-        - improve_usability_user_config_remame_user_template
+        - "improve_usability_user_config_remame_user_template"
 
     - name: "improve_usability_user_config | Set user template as default"
       univention.ucs_modules.univention_config_registry:
         keys:
+          # yamllint disable-line rule:line-length
           directory/manager/web/modules/users/user/add/default: "cn=Groupware-Benutzer,cn=templates,cn=univention,{{ improve_usability_user_config_basedn }}"
           directory/manager/web/modules/users/user/wizard/property/invite/default: "true"
       tags:
-        - improve_usability_user_config
-        - improve_usability_user_config_directory_manager_settings
+        - "improve_usability_user_config"
+        - "improve_usability_user_config_directory_manager_settings"
 
   when: "'oxseforucs' in improve_usability_user_config_install_apps"
   tags:
-    - improve_usability_user_config
-    - improve_usability_user_config_user_template
+    - "improve_usability_user_config"
+    - "improve_usability_user_config_user_template"
 
 - name: "improve_usability_user_config | Remove selfservice user template"
   ansible.builtin.command: >
@@ -119,8 +130,8 @@
   changed_when: "improve_usability_user_config_remove_selfservice_result.stdout is not search('Object not found')"
   register: "improve_usability_user_config_remove_selfservice_result"
   tags:
-    - improve_usability_user_config
-    - improve_usability_user_config_remove_selfservice
+    - "improve_usability_user_config"
+    - "improve_usability_user_config_remove_selfservice"
 
 - name: "improve_usability_user_config | Hide unneeded settings from admin area"
   univention.ucs_modules.univention_config_registry:
@@ -128,5 +139,5 @@
       umc/module/udm/portals/all/disabled: "{{ improve_usability_user_config_disable_portal_management }}"
       umc/module/udm/oxmail/oxcontext/disabled: "{{ improve_usability_user_config_disable_oxcontext_management }}"
   tags:
-    - improve_usability_user_config
-    - improve_usability_user_config_hide_portal_settings
+    - "improve_usability_user_config"
+    - "improve_usability_user_config_hide_portal_settings"
