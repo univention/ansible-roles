@@ -1,6 +1,6 @@
 ---
 
-- example: "Installed: letsencrypt=1.2.2-8 mailserver=12.0 nextcloud=20.0.2-0 onlyoffice-ds=6.1.0.83 openid-connect-provider=2.2-konnect-0.33.11 oxseforucs=7.10.4-ucs2 self-service=4.0 self-service-backend=4.0"
+- example: "Installed: letsencrypt=1.2.2-8 mailserver=12.0 nextcloud=20.0.2-0 onlyoffice-ds=6.1.0.83"
   getval: |
     (?x)
     (^In\S+:\s)
