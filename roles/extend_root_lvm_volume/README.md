@@ -9,7 +9,7 @@ Requirements
 - community.general
   - parted
   - lvg
-  - lvol  
+  - lvol
 
 Role Variables
 --------------
