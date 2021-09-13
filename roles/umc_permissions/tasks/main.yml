@@ -4,12 +4,12 @@
 - name: "Hide remaining UMC modules per UCR and empty favorites"
   univention.ucs_modules.univention_config_registry:
     keys:
-      umc/module/udm/oxresources/oxresources/disabled: true
-      umc/module/udm/oxmail/oxmail/disabled: true
+      umc/module/udm/oxresources/oxresources/disabled: "true"
+      umc/module/udm/oxmail/oxmail/disabled: "true"
       umc/web/favorites/default: ""
   tags:
-    - umc_permissions
-    - umc_permissions_ucr
+    - "umc_permissions"
+    - "umc_permissions_ucr"
 
 - name: "Manage cn=only-users-and-groups,cn=UMC,cn=policies"
   block:
@@ -21,9 +21,9 @@
           - "delete"
           - "--dn"
           - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
-      ignore_errors: true
+          - "--ignore_not_exists"
       tags:
-        - umc_permissions_policy_remove
+        - "umc_permissions_policy_remove"
 
     - name: "Add policies/umc"
       ansible.builtin.command:
@@ -41,7 +41,7 @@
           - "--append"
           - "allow=cn=udm-new-portal,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
       tags:
-        - umc_permissions_policy_add
+        - "umc_permissions_policy_add"
 
     - name: "Add policy reference"
       ansible.builtin.command:
@@ -55,12 +55,13 @@
           - "cn=default-umc-all,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
           - "--policy-reference"
           - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
+      # noqa ignore-errors
       ignore_errors: true
       tags:
-        - umc_permissions_policy_add_reference
+        - "umc_permissions_policy_add_reference"
   tags:
-    - umc_permissions
-    - umc_permissions_policy
+    - "umc_permissions"
+    - "umc_permissions_policy"
 
 - name: "Manage cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention"
   block:
@@ -72,9 +73,9 @@
           - "delete"
           - "--dn"
           - "cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
-      ignore_errors: true
+          - "--ignore_not_exists"
       tags:
-        - umc_permissions_policy_usertemplate_remove_settings
+        - "umc_permissions_policy_usertemplate_remove_settings"
 
     - name: "Remove from policies/umc"
       ansible.builtin.command:
@@ -86,9 +87,9 @@
           - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
           - "--remove"
           - "allow=cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
-      ignore_errors: true
+          - "--ignore_not_exists"
       tags:
-        - umc_permissions_policy_usertemplate_remove_policy
+        - "umc_permissions_policy_usertemplate_remove_policy"
 
     - name: "Add settings/umc_operationset"
       ansible.builtin.command:
@@ -106,7 +107,7 @@
           - "--set"
           - "operation=udm/*"
       tags:
-        - umc_permissions_policy_usertemplate_add_settings
+        - "umc_permissions_policy_usertemplate_add_settings"
 
     - name: "Add to policies/umc"
       ansible.builtin.command:
@@ -119,10 +120,10 @@
           - "--append"
           - "allow=cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
       tags:
-        - umc_permissions_policy_usertemplate_add_policy
+        - "umc_permissions_policy_usertemplate_add_policy"
   tags:
-    - umc_permissions
-    - umc_permissions_policy_usertemplate
+    - "umc_permissions"
+    - "umc_permissions_policy_usertemplate"
 
 - name: "Manage cn=udm-reports,cn=operations,cn=UMC,cn=univention"
   block:
@@ -131,12 +132,12 @@
         argv:
           - "udm"
           - "settings/umc_operationset"
-          - "delete"
+          - "remove"
           - "--dn"
           - "cn=udm-reports,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
-      ignore_errors: true
+          - "--ignore_not_exists"
       tags:
-        - umc_permissions_policy_userreports_remove_settings
+        - "umc_permissions_policy_userreports_remove_settings"
 
     - name: "Remove from policies/umc"
       ansible.builtin.command:
@@ -148,9 +149,10 @@
           - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
           - "--remove"
           - "allow=cn=udm-reports,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
+      # noqa ignore-errors
       ignore_errors: true
       tags:
-        - umc_permissions_policy_userreports_remove_policy
+        - "umc_permissions_policy_userreports_remove_policy"
 
     - name: "Add settings/umc_operationset"
       ansible.builtin.command:
@@ -166,7 +168,7 @@
           - "--set"
           - "operation=udm/reports/get"
       tags:
-        - umc_permissions_policy_userreports_add_settings
+        - "umc_permissions_policy_userreports_add_settings"
 
     - name: "Add to policies/umc"
       ansible.builtin.command:
@@ -179,10 +181,10 @@
           - "--append"
           - "allow=cn=udm-reports,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
       tags:
-        - umc_permissions_policy_userreports_add_policy
+        - "umc_permissions_policy_userreports_add_policy"
   tags:
-    - umc_permissions
-    - umc_permissions_policy_userreports
+    - "umc_permissions"
+    - "umc_permissions_policy_userreports"
 
 - name: "Allow groups to be added to user"
   ansible.builtin.command:
@@ -195,8 +197,8 @@
       - "--append"
       - "operation=udm/syntax/choices:objectType=groups/group"
   tags:
-    - umc_permissions
-    - umc_permissions_allow_groups_add_to_users
+    - "umc_permissions"
+    - "umc_permissions_allow_groups_add_to_users"
 
 - name: "Allow users to be added to groups"
   ansible.builtin.command:
@@ -209,16 +211,16 @@
       - "--append"
       - "operation=udm/syntax/choices:objectType=users/user"
   tags:
-    - umc_permissions
-    - umc_permissions_allow_users_add_to_groups
+    - "umc_permissions"
+    - "umc_permissions_allow_users_add_to_groups"
 
 - name: "Set passwordreset/blacklist"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/passwordreset/blacklist/groups: "{{ umc_permissions_passwordreset_blacklist_groups }}"
   tags:
-    - umc_permissions
-    - umc_permissions_policy_selfservice_blacklist
+    - "umc_permissions"
+    - "umc_permissions_policy_selfservice_blacklist"
 
 
 - name: "Set passwordreset/whitelist"
@@ -226,5 +228,5 @@
     keys:
       umc/self-service/passwordreset/whitelist/groups: "{{ umc_permissions_passwordreset_whitelist_groups }}"
   tags:
-    - umc_permissions
-    - umc_permissions_policy_selfservice_whitelist
+    - "umc_permissions"
+    - "umc_permissions_policy_selfservice_whitelist"
