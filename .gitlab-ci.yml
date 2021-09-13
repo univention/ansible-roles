@@ -1,13 +1,13 @@
 include:
-  - project: 'univention/customers/dataport/dps/helper/ci-tooling'
-    ref: main
-    file: '.gitlab-ci-ansible.yml'
+  - project: "univention/customers/dataport/dps/helper/ci-tooling"
+    ref: "main"
+    file: ".gitlab-ci-ansible.yml"
 
 stages:
-  - .pre
-  - prepare
-  - release
-  - publish
+  - ".pre"
+  - "prepare"
+  - "release"
+  - "publish"
 
 
 .combine_read: &combine_read
@@ -51,7 +51,7 @@ stages:
       else
         VERSION=${RELEASE_VERSION};
       fi
-    - sed -i "/version. [0-9]\.[0-9]\.[0-9]/s/[0-9]\.[0-9]\.[0-9]/$VERSION/" galaxy.yml
+    - sed -i "/version. \"[0-9]\.[0-9]\.[0-9]\"/s/[0-9]\.[0-9]\.[0-9]/$VERSION/" galaxy.yml
     # Download license client
     - curl https://raw.githubusercontent.com/univention/univention-corporate-server/5.0-0/test/ucs-test/univention/testing/license_client.py --output ${CI_PROJECT_DIR}/roles/configure_license/files/license_client.py
   image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:main-41a9520a
