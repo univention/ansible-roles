@@ -42,6 +42,6 @@ galaxy_info:
     - "univention"
     - "ucs"
     - "bootstrap"
-    - "ssh_key"
+    - "sshkey"
 
 dependencies: []
