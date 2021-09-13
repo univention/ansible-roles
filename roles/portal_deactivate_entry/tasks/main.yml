@@ -4,17 +4,17 @@
 - name: "Check if entry that is about to be deactivated exists to begin with"
   ansible.builtin.command: >
     udm portals/entry list
-    --position "cn=entry,{{ portal_deactivate_entry['dn']|default(portal_deactivate_entry_portal_dn) }}"
-    --filter "cn={{ portal_deactivate_entry['name'] }}"
+    --position "cn=entry,{{ portal_deactivate_entry_item['dn']|default(portal_deactivate_entry_portal_dn) }}"
+    --filter "cn={{ portal_deactivate_entry_item['name'] }}"
   loop: "{{ portal_deactivate_entry_entries|selectattr('state', 'defined')
               |selectattr('state', 'equalto', 'deactivated')|list|default([])|flatten }}"
   loop_control:
-    loop_var: "portal_deactivate_entry"
+    loop_var: "portal_deactivate_entry_item"
   register: "portal_deactivate_entry_entries"
   when: |
-    ('only' not in portal_deactivate_entry) or
-    ('only' in portal_deactivate_entry and
-      portal_deactivate_entry_install_list|intersect([portal_deactivate_entry['only']]|flatten)
+    ('only' not in portal_deactivate_entry_item) or
+    ('only' in portal_deactivate_entry_item and
+      portal_deactivate_entry_install_list|intersect([portal_deactivate_entry_item['only']]|flatten)
     )
   tags:
     - "portal_deactivate_entry"
@@ -25,14 +25,14 @@
     entry: "{{ item.item }}"
   ansible.builtin.command: >
     udm portals/entry modify
-    --dn 'cn={{ portal_deactivate_entry["name"] }},cn=entry,{{ portal_deactivate_entry["dn"]
+    --dn 'cn={{ portal_deactivate_entry_item["name"] }},cn=entry,{{ portal_deactivate_entry_item["dn"]
                                                                 |default(portal_deactivate_entry_portal_dn) }}'
     --set activated="FALSE"
   # noqa ignore-errors
   ignore_errors: true
   loop: "{{ portal_deactivate_entry_entries['results']|default([]) }}"
   loop_control:
-    loop_var: "portal_deactivate_entry"
+    loop_var: "portal_deactivate_entry_item"
   tags:
     - "portal_deactivate_entry"
     - "portal_deactivate_entry_deactivate_entry"
