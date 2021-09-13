@@ -17,6 +17,6 @@
       - "mail"
       - "calendar"
   tags:
-    - improve_usability
-    - improve_usability_nextcloud
-    - improve_usability_nextcloud_disable_functionality
+    - "improve_usability"
+    - "improve_usability_nextcloud"
+    - "improve_usability_nextcloud_disable_functionality"
