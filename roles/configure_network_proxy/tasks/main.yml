@@ -8,8 +8,8 @@
     state: "{{ 'present' if configure_network_proxy_enabled|bool else 'absent' }}"
   when: "configure_network_proxy_http_proxy is defined and configure_network_proxy_http_proxy|length > 0"
   tags:
-    - configure_network_proxy
-    - configure_network_proxy_http_proxy
+    - "configure_network_proxy"
+    - "configure_network_proxy_http_proxy"
 
 - name: "configure_network_proxy | Configure https network proxy"
   univention.ucs_modules.univention_config_registry:
@@ -18,8 +18,8 @@
     state: "{{ 'present' if configure_network_proxy_enabled|bool else 'absent' }}"
   when: "configure_network_proxy_https_proxy is defined and configure_network_proxy_https_proxy|length > 0"
   tags:
-    - configure_network_proxy
-    - configure_network_proxy_https_proxy
+    - "configure_network_proxy"
+    - "configure_network_proxy_https_proxy"
 
 - name: "configure_network_proxy | Configure no_proxy network proxy"
   univention.ucs_modules.univention_config_registry:
@@ -28,5 +28,5 @@
     state: "{{ 'present' if configure_network_proxy_enabled|bool else 'absent' }}"
   when: "configure_network_proxy_no_proxy is defined and configure_network_proxy_no_proxy|length > 0"
   tags:
-    - configure_network_proxy
-    - configure_network_proxy_no_proxy
+    - "configure_network_proxy"
+    - "configure_network_proxy_no_proxy"
