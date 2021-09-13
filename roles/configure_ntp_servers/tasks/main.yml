@@ -13,11 +13,12 @@
 - name: "configure_ntp_servers | Configure NTP servers"
   univention.ucs_modules.univention_config_registry:
     kvlist:
-      - key: "timeserver{{ '' if index == 0 else index+1 }}"
-        value: "{{ item }}"
+      - key: "timeserver{{ '' if configure_ntp_servers_index == 0 else configure_ntp_servers_index+1 }}"
+        value: "{{ configure_ntp_servers_item }}"
   loop: "{{ configure_ntp_servers_timeservers|default([]) }}"
   loop_control:
-    index_var: "index"
+    index_var: "configure_ntp_servers_index"
+    loop_var: "configure_ntp_servers_item"
   register: "configure_ntp_servers_result"
   when: "configure_ntp_servers_timeservers|default(false)"
   tags:
