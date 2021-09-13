@@ -7,13 +7,13 @@
   vars:
     univention_repository_component_name: "{{ install_branding_customer_repo_name }}"
     univention_repository_component_parts: "{{ install_branding_customer_repo_parts }}"
-    univention_repository_component_prefix: "apt/{{ install_branding_customer_repo_username }}"
+    univention_repository_component_prefix: "{{ install_branding_customer_repo_prefix }}"
     univention_repository_component_server: "{{ install_branding_customer_repo_server }}"
     univention_repository_component_username: "{{ install_branding_customer_repo_username }}"
     univention_repository_component_password: "{{ install_branding_customer_repo_password }}"
   tags:
-    - install_branding
-    - install_branding_update_packages
+    - "install_branding"
+    - "install_branding_update_packages"
 
 - name: "install_branding | Install branding package"
   ansible.builtin.include_role:
@@ -21,5 +21,5 @@
   vars:
     univention_install_name: "{{ install_branding_customer_branding_package }}"
   tags:
-    - install_branding
-    - install_branding_update_packages
+    - "install_branding"
+    - "install_branding_update_packages"
