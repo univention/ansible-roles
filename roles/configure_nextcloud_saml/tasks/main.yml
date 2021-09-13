@@ -16,4 +16,4 @@
       - "general-allow_multiple_user_back_ends"
       - "--value=0"
   tags:
-    - configure_nextcloud_saml
+    - "configure_nextcloud_saml"
