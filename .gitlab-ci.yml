@@ -9,6 +9,8 @@ stages:
   - "release"
   - "publish"
 
+variables:
+  DISABLE_LINT: "false"
 
 .combine_read: &combine_read
   - |
