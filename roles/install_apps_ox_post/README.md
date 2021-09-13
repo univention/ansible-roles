@@ -11,7 +11,7 @@ Requirements
 - community.crypto
   - openssl_pkcs12
 - community.general
-  - java_cert    
+  - java_cert
 
 Role Variables
 --------------

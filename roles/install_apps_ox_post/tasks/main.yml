@@ -3,35 +3,35 @@
 
 - name: "Update package list"
   ansible.builtin.include_role:
-    name: force_package_list_update
+    name: "force_package_list_update"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_update_packages
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_update_packages"
 
 - name: "Install additional SAML packages"
   ansible.builtin.command: "univention-install open-xchange-saml-ucs open-xchange-saml"
-  register: install_apps_ox_post_package_install
+  register: "install_apps_ox_post_package_install"
   retries: 10
   delay: 10
   until: "install_apps_ox_post_package_install.rc == 0"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_saml_packages
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_saml_packages"
 
 - name: "Configure various OpenXchange aspects in UCR"
   univention.ucs_modules.univention_config_registry:
     keys:
       ox/cfg/sessiond.properties/com.openexchange.sessiond.autologin: "false"
-      ox/listener/imaplogin_value: '{}*dovecotadmin'
+      ox/listener/imaplogin_value: "{}*dovecotadmin"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_ucr_config
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_ucr_config"
 
 - name: "Restart the Univention Directory Listener"
   ansible.builtin.command: "/etc/init.d/univention-directory-listener restart"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_restart_directory_listener
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_restart_directory_listener"
 
 - name: "Set OpenXchange passwordSource to 'global'"
   ansible.builtin.lineinfile:
@@ -40,16 +40,16 @@
     regexp: "com\\.openexchange\\.mail\\.passwordSource=.*"
     state: "present"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_password_source
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_password_source"
 
 - name: "Get dovecot admin password"
   ansible.builtin.command: "sed -e 's|.*{PLAIN}||;s|:.*||' /etc/dovecot/master-users"
-  register: install_apps_ox_post_dovecot_admin_password
+  register: "install_apps_ox_post_dovecot_admin_password"
   no_log: true
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_get_admin_password
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_get_admin_password"
 
 - name: "Set Sieve master password to admin password"
   ansible.builtin.lineinfile:
@@ -58,8 +58,8 @@
     regexp: "com\\.openexchange\\.mail\\.masterPassword=.*"
     state: "present"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_set_sieve_master_password
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_set_sieve_master_password"
 
 - name: "Add saml login to OpenXchange config"
   ansible.builtin.lineinfile:
@@ -69,16 +69,16 @@
     insertafter: "host: all"
     state: "present"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_saml_login
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_saml_login"
 
 - name: "Install saml.properties file"
   ansible.builtin.template:
     dest: "/opt/open-xchange/etc/saml.properties"
     src: "saml.properties.j2"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_saml_properties_file
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_saml_properties_file"
 
 - name: "Configure OpenXchange as SAML service provider"
   ansible.builtin.command: >
@@ -95,17 +95,17 @@
     --set simplesamlAttributes="TRUE"
     --set simplesamlNameIDAttribute="uid"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_ox_as_saml_provider
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_ox_as_saml_provider"
 
 - name: "Cert File operations"
   block:
     - name: "Create temporary directory for certificate operations"
       ansible.builtin.tempfile:
         state: "directory"
-      register: install_apps_ox_post_cert_temp_dir
+      register: "install_apps_ox_post_cert_temp_dir"
       tags:
-        - install_apps_ox_post_cert_temp_dir
+        - "install_apps_ox_post_cert_temp_dir"
 
     - name: "Create PKCS12 file from IDP certificate"
       community.crypto.openssl_pkcs12:
@@ -117,7 +117,7 @@
         friendly_name: "{{ install_apps_ox_post_external_hostname }}"
         passphrase: "{{ install_apps_ox_post_ox_keystore_passphrase }}"
       tags:
-        - iinstall_apps_ox_post_cert_idp_certificate
+        - "iinstall_apps_ox_post_cert_idp_certificate"
 
     - name: "Import PKCS12 into keystore"
       community.general.java_cert:
@@ -131,7 +131,7 @@
         cert_alias: "{{ install_apps_ox_post_external_hostname }}"
         state: "present"
       tags:
-        - install_apps_ox_post_cert_idp_certificate_import
+        - "install_apps_ox_post_cert_idp_certificate_import"
 
     - name: "Export keystore into a temporary format"
       ansible.builtin.command: >
@@ -140,7 +140,7 @@
         -keystore "{{ install_apps_ox_post_cert_temp_dir.path }}/my-keystore.jks"
         -deststorepass "{{ install_apps_ox_post_ox_keystore_passphrase }}"
       tags:
-        - install_apps_ox_post_cert_idp_certificate_export
+        - "install_apps_ox_post_cert_idp_certificate_export"
 
     - name: "Change the system keystore password"
       ansible.builtin.command: >
@@ -148,9 +148,10 @@
         -new "{{ install_apps_ox_post_ox_keystore_passphrase }}"
         -storepass changeit
         -keystore /etc/ssl/certs/java/cacerts
+      # noqa ignore-errors
       ignore_errors: true
       tags:
-        - install_apps_ox_post_cert_keystore_password
+        - "install_apps_ox_post_cert_keystore_password"
 
     - name: "Use new password in jks-keystore script"
       ansible.builtin.lineinfile:
@@ -159,7 +160,7 @@
         regexp: "^storepass='.*'$"
         state: "present"
       tags:
-        - install_apps_ox_post_cert_keystore_password_jks
+        - "install_apps_ox_post_cert_keystore_password_jks"
 
     - name: "Import temporary file into system keystore"
       community.general.java_cert:
@@ -170,7 +171,7 @@
         keystore_pass: "{{ install_apps_ox_post_ox_keystore_passphrase }}"
         state: "present"
       tags:
-        - install_apps_ox_post_cert_system_keystore
+        - "install_apps_ox_post_cert_system_keystore"
 
   always:
     - name: "Delete temporary cert directory"
@@ -178,10 +179,10 @@
         path: "{{ install_apps_ox_post_cert_temp_dir.path }}"
         state: "absent"
       tags:
-        - cleanup
+        - "cleanup"
   tags:
-    - install_apps_ox_post_cert
-    - install_apps_ox_post
+    - "install_apps_ox_post_cert"
+    - "install_apps_ox_post"
 
 - name: "Add master_user user name fix to dovecot (https://dovecot.org/pipermail/dovecot/2019-April/115457.html)"
   ansible.builtin.blockinfile:
@@ -193,8 +194,8 @@
     - "Restart dovecot"
     - "Restart OpenXchange"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_dovecot_acl
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_dovecot_acl"
 
 - name: "Toogle OXDrive"
   ansible.builtin.command: >
@@ -202,11 +203,11 @@
     --dn "cn=oxDrive,cn=open-xchange,cn=custom attributes,cn=univention,{{ install_apps_ox_post_basedn }}"
     --set default={{ install_apps_ox_post_ox_drive_default }}
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_ox_drive_toggle
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_ox_drive_toggle"
 
 - name: "Force flushing handlers in order to restart dovecot and open-xchange"
   ansible.builtin.meta: "flush_handlers"
   tags:
-    - install_apps_ox_post
-    - install_apps_ox_post_restart_services
+    - "install_apps_ox_post"
+    - "install_apps_ox_post_restart_services"
