@@ -46,7 +46,7 @@
       changed_when: "umc_policies_maintenance_edit_maintenance_result.stdout is not search('value exists')"
       register: "umc_policies_maintenance_edit_maintenance_result"
       tags:
-        - umc_policies_maintenance_edit_maintenance
+        - "umc_policies_maintenance_edit_maintenance"
 
     - name: "umc_policies_maintenance | Set release version to update-policy"
       ansible.builtin.command:
@@ -61,7 +61,7 @@
       changed_when: "umc_policies_maintenance_edit_release_result.stdout is not search('No modification')"
       register: "umc_policies_maintenance_edit_release_result"
       tags:
-        - umc_policies_maintenance_edit_release
+        - "umc_policies_maintenance_edit_release"
 
     - name: "umc_policies_maintenance | Add policy reference to computer object"
       ansible.builtin.command:
@@ -78,19 +78,24 @@
       changed_when: "umc_policies_maintenance_reference_result.stdout is not search('No modification')"
       register: "umc_policies_maintenance_reference_result"
       tags:
-        - umc_policies_maintenance_reference
+        - "umc_policies_maintenance_reference"
   when: "umc_policies_maintenance_autoupdate_enabled|default(true)"
   tags:
-    - umc_policies_maintenance
-    - umc_policies_maintenance_configure_autoupdate
+    - "umc_policies_maintenance"
+    - "umc_policies_maintenance_configure_autoupdate"
 
 - name: "umc_policies_maintenance | Configure cron"
   command:
-    cmd: "udm policies/maintenance modify --dn cn=app-update-schedule,cn=policies,{{ umc_policies_maintenance_basedn }} --set cron={{ umc_policies_maintenance_autoupdate_enabled|bool|int }}"
-  changed_when: "umc_policies_maintenance_autoupdate_enabled_result.stdout is not search('No modification')"
+    cmd: |
+      udm policies/maintenance
+      modify
+      --dn cn=app-update-schedule,cn=policies,{{ umc_policies_maintenance_basedn }}
+      --set cron={{ umc_policies_maintenance_autoupdate_enabled|bool|int }}
+  changed_when:
+    - "umc_policies_maintenance_autoupdate_enabled_result.stdout|default('') is not search('No modification')"
   check_mode: false
   register: "umc_policies_maintenance_autoupdate_enabled_result"
-  when: "not umc_policies_maintenance_autoupdate_enabled"
+  when: "not umc_policies_maintenance_autoupdate_enabled|default(true)"
   tags:
-    - umc_policies_maintenance
-    - umc_policies_maintenance_configure_cron
+    - "umc_policies_maintenance"
+    - "umc_policies_maintenance_configure_cron"
