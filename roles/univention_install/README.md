@@ -1,7 +1,7 @@
 Install packages with univention-install
 =========
 
-This role installs packages via `univention-install` wrapper. 
+This role installs packages via `univention-install` wrapper.
 
 Requirements
 ------------
