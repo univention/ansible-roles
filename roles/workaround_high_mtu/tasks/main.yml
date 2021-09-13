@@ -7,7 +7,7 @@
         dest: "/etc/systemd/system/docker.service.d/fixmtu.conf"
         src: "fixmtu.conf"
       tags:
-        - workaround_high_mtu_patch_serivce_config
+        - "workaround_high_mtu_patch_serivce_config"
 
     - name: "Reload docker daemon"
       ansible.builtin.systemd:
@@ -15,8 +15,8 @@
         state: "restarted"
         name: "docker"
       tags:
-        - workaround_high_mtu_reload_daemon
+        - "workaround_high_mtu_reload_daemon"
 
   when: "ansible_default_ipv4['mtu'] < 1500"
   tags:
-    - workaround_high_mtu
+    - "workaround_high_mtu"
