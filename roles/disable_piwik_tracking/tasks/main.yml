@@ -7,4 +7,4 @@
       umc/web/piwik: "false"
   when: "disable_piwik_tracking_disable|bool"
   tags:
-    - disable_piwik_tracking
+    - "disable_piwik_tracking"
