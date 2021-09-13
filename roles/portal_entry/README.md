@@ -11,9 +11,9 @@ none
 Role Variables
 --------------
 
-- `portal_create_entry_base_dn`(string): The base DN that has been used when setting up the UCS server
-- `portal_create_entry_entries`(list): The portal entries list.
-- `portal_create_entry_install_list`(list): Combine apps/services/customization lists.
+- `portal_entry_base_dn`(string): The base DN that has been used when setting up the UCS server
+- `portal_entry_entries`(list): The portal entries list.
+- `portal_entry_install_list`(list): Combined apps/services/customization lists.
 - `portal_entry_drift_detection`(bool): Toggle drift detection and only apply differences; default: `true`.
 - `portal_entry_remove_unscoped`(bool): Toggle removal of undefined entries; default: `false`.
 
@@ -33,11 +33,11 @@ Example Playbook
     - ansible.builtin.include_role:
         name: "univention.ucs_roles.portal_entry"
       vars:
-        portal_create_entry_base_dn: "dc=ansible,dc=univention,dc=de"
-        portal_create_entry_install_list: ["nextcloud"]
+        portal_entry_base_dn: "dc=ansible,dc=univention,dc=de"
+        portal_entry_install_list: ["nextcloud"]
         portal_entry_drift_detection: true
         portal_entry_remove_unscoped: false
-        portal_create_entry_entries:
+        portal_entry_entries:
           - name: "Anmeldung"
             anonymous: true
             category: "help"
@@ -66,7 +66,7 @@ Example Playbook
               en_US: "My files"
             icon_file: "ucs_portal_files_icon.svg"
             linktarget: "newwindow"
-            link: "/necxtcloud"
+            link: "/nextcloud"
             only: "nextcloud"
             parent: "category"
             state: "present"
@@ -78,7 +78,7 @@ Portal entries
 ----------------
 
 ```yaml
-portal_create_entry_entries:
+portal_entry_entries:
   - name:           # (string, required) | Name of portal entry.
     activated:      # (boolean)          | Enable/Disable portal entry.
     allowed_groups: # (list)             | A list of LDAP groups the entry should be shown.
@@ -92,11 +92,11 @@ portal_create_entry_entries:
       en_US:        # (string)           | F.e. english translation.
     icon_file:      # (string)           | Name of predefined images or local images.
     link:           # (string)           | Internal or external link.
-    linktarget:     # (string)           | Link target, f.e. "samewindow", "newwindow" or "useportaldefault".
-    only:           # (string)           | Modify when app defined is in `portal_create_entry_install_list`.
+    linktarget:     # (string)           | Link target f.e. "samewindow", "newwindow", "embedded" or "useportaldefault".
+    only:           # (string)           | Modify when app defined is in `portal_entry_install_list`.
     parent:         # (string)           | The type where entry should be appended, f.e. "category" or "portal".
-    state:          # (string, required) | State of entry, should be "present" or "absend".
-    type:           # (string)           | The list from parent where entry should be appended. For 
+    state:          # (string, required) | State of entry, should be "present" or "absent".
+    type:           # (string)           | The list from parent where entry should be appended. For
                     #                    |  - "category" > possible: "entries"
                     #                    |  - "portal" > possible: "menuLinks", "userLinks"
 ```
@@ -104,7 +104,8 @@ portal_create_entry_entries:
 Limitations
 ----------------
 
-Drift detection does not detect changes in icons.
+- Modifying/Removing attributes with whitespaces are not supported by UCS 4.4
+- Drift detection does not detect changes in icons.
 
 License
 -------
