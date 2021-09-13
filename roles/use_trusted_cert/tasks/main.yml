@@ -6,7 +6,9 @@
     that:
       - "use_trusted_cert_path_key|length > 0"
       - "use_trusted_cert_path_cert|length > 0"
-    fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags use_trusted_cert_check_preconditions"
+    fail_msg: |
+      At least one necessary variable is not set.
+      Skip this check with --skip-tags use_trusted_cert_check_preconditions
   changed_when: false
   tags:
     - "use_trusted_cert"
