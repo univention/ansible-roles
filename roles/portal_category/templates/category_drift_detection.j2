@@ -1,0 +1,14 @@
+{% set ns = namespace(found='no') -%}
+{% if portal_category_update_item['name'] not in portal_category_portal_categories_fact and portal_category_update_item['state'] == 'absent' -%}
+{% elif portal_category_update_item['name'] in portal_category_portal_categories_fact and portal_category_update_item['state'] != 'absent' -%}
+{% if 'display_name' in portal_category_update_item -%}
+{% for displayname_key, displayname_value in portal_category_update_item['display_name'].items() -%}
+{% if not displayname_value == portal_category_portal_categories_fact[portal_category_update_item['name']]['displayName'][displayname_key]|default("") -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% endfor -%}
+{% endif -%}
+{% else -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{{ ns.found -}}

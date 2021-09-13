@@ -1,0 +1,8 @@
+---
+# defaults file for portal_category
+portal_category_base_dn: ""
+portal_category_portal_dn: "cn=portals,cn=univention,{{ portal_category_base_dn }}"
+portal_category_categories: []
+portal_category_install_list: []
+portal_category_drift_detection: true
+portal_category_remove_unscoped: false
