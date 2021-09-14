@@ -111,8 +111,8 @@
       ansible.builtin.command: >
         udm oxmail/accessprofile create
         --position "cn=accessprofiles,cn=open-xchange,{{ ox_connector_basedn }}"
-        --set name=auto_standard
-        --set displayName="Automation Standard"
+        --set name=standard
+        --set displayName="Standard"
         --set calendar=TRUE
         --set collectemailaddresses=TRUE
         --set contacts=TRUE
@@ -130,10 +130,10 @@
         --set webdav=TRUE
         --set webmail=TRUE
         --ignore_exists
-      changed_when: "ox_connector_add_auto_accessprofile.stdout is search('Object created')"
-      register: "ox_connector_add_auto_accessprofile"
+      changed_when: "ox_connector_add_accessprofile.stdout is search('Object created')"
+      register: "ox_connector_add_accessprofile"
       tags:
-        - "ox_connector_add_auto_accessprofile"
+        - "ox_connector_add_accessprofile"
 
     - name: "ox_connector | Remove existing accessprofiles"
       ansible.builtin.command: >
@@ -159,7 +159,7 @@
         udm settings/usertemplate modify
         --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
         --set name="Benutzer mit Groupware-Konto"
-        --set oxAccess="auto_standard"
+        --set oxAccess="standard"
       changed_when: "ox_connector_modify_usertemplate.stdout is search('Object modified')"
       failed_when:
         - "ox_connector_modify_usertemplate.rc != 0"
