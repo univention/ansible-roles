@@ -46,7 +46,7 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/passwordreset/email/text_file: >-
-        "/usr/share/univention-self-service/email_bodies/{{ install_service_selfservice_password_reset_filename }}"
+        /usr/share/univention-self-service/email_bodies/{{ install_service_selfservice_password_reset_filename }}
   when: "install_service_selfservice_password_reset_filename|length > 0"
   tags:
     - "install_service_selfservices"
