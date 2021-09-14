@@ -1,0 +1,229 @@
+---
+# tasks file for portal_entry
+
+- name: "portal_entry | Validate portal entry fields"
+  ansible.builtin.assert:
+    that:
+      - "portal_entry_item['state'] == 'present' or portal_entry_item['state'] == 'absent'"
+      - "portal_entry_item['name']|length > 0"
+      - "portal_entry_item['anonymous'] is undefined or portal_entry_item['anonymous'] is boolean"
+      - "portal_entry_item['activated'] is undefined or portal_entry_item['activated'] is boolean"
+      - "portal_entry_item['link'] is undefined or portal_entry_item['link']|length > 0"
+      - "portal_entry_item['linkTarget'] is undefined or portal_entry_item['linkTarget']|length > 0"
+      - "portal_entry_item['icon_file'] is undefined or portal_entry_item['icon_file']|length > 0"
+      - "portal_entry_item['description'] is undefined or portal_entry_item['description'] is mapping"
+      - "portal_entry_item['display_name'] is undefined or portal_entry_item['display_name'] is mapping"
+      - "portal_entry_item['allowedGroups'] is undefined or ((portal_entry_item['allowedGroups'] is not mapping)
+          and (portal_entry_item['allowedGroups'] is iterable) and (portal_entry_item['allowedGroups'] is not string))"
+      - "portal_entry_item['only'] is undefined or portal_entry_item['only']|length > 0"
+    fail_msg: |
+      At least one variables is missing or not as expected. Required and optional values are:
+
+      - name(string)[required]
+      - state(string)[required], values "present" or "absent"
+      - anonymous(boolean), default false
+      - activated(boolean), default true
+      - link(string)
+      - linktarget(string), default "useportaldefault"
+      - icon_file(string)
+      - description(dict)
+      - display_name(dict)
+      - only(string)
+
+      You can skip this check with --skip-tags portal_entry_assert
+    quiet: true
+  loop: "{{ portal_entry_entries|default([])|flatten }}"
+  loop_control:
+    loop_var: "portal_entry_item"
+  tags:
+    - "portal_entry"
+    - "portal_entry_assert"
+
+- name: "portal_entry | Get a list of already existing entries"
+  ansible.builtin.command: >
+    udm portals/entry list
+    --position "cn=entry,{{ portal_entry_portal_dn }}"
+  changed_when: false
+  register: "portal_entry_portal_entries"
+  tags:
+    - "portal_entry"
+    - "portal_entry_check_entries"
+
+- name: "portal_entry | Parse current entries to facts (portal_entry_portal_entries_fact)"
+  vars:
+    portal_entry_portal_entries_stdout_lines: "{{ portal_entry_portal_entries.stdout_lines|default([]) }}"
+  ansible.builtin.set_fact:
+    portal_entry_portal_entries_fact: "{{ lookup('template', 'entry_parse_udm_out_to_ansible.j2') | from_yaml }}"
+  changed_when: false
+  tags:
+    - "portal_entry"
+    - "portal_entry_parse_entries"
+
+- name: "portal_entry | Update entry in portal"
+  vars:
+    portal_entry_icon_data: "{{ lookup('file', portal_entry_update_item['icon_file'])|string|b64encode
+                if 'icon_file' in portal_entry_update_item else
+                  None }}"
+    portal_entry_update_drift_detection: "{{ lookup('template', 'entry_drift_detection.j2')|regex_replace('\n','')
+                                              if portal_entry_drift_detection|bool else 'yes' }}"
+  ansible.builtin.command: >-
+    udm portals/entry
+    {% if portal_entry_update_item['state'] is defined and portal_entry_update_item['state'] == 'absent' %}
+      remove
+        --dn cn={{ portal_entry_update_item['name'] }},cn=entry,{{ portal_entry_portal_dn }}
+    {% else %}
+      {% if portal_entry_update_item['name'] in portal_entry_portal_entries_fact %}
+        modify
+          --dn cn={{ portal_entry_update_item['name'] }},cn=entry,{{ portal_entry_portal_dn }}
+      {% else %}
+        create
+          --position cn=entry,{{ portal_entry_portal_dn }}
+      {% endif %}
+          --set activated={{ "TRUE" if portal_entry_update_item['activated']|default(true) else "FALSE" }}
+          {% for lang, text in (portal_entry_update_item['description']|default("{}")).items() %}
+            {% if lang in portal_entry_portal_entries_fact[portal_entry_update_item['name']]['description']|
+                default([]) %}
+              {% if text != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['description'][lang] %}
+                --remove description="{{ lang }} {{ portal_entry_portal_entries_fact[portal_entry_update_item['name']]
+                                                      ['description'][lang] }}"
+                --append description='{{ lang }} "{{ text }}"'
+              {% endif %}
+            {% else %}
+              --append description='{{ lang }} "{{ text }}"'
+            {% endif %}
+          {% endfor %}
+          {% for lang, text in (portal_entry_update_item['display_name']|default("{}")).items() %}
+            {% if lang in
+                portal_entry_portal_entries_fact[portal_entry_update_item['name']]['displayName']|default([]) %}
+              {% if text != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['displayName'][lang] %}
+                --remove displayName="{{ lang }} {{ portal_entry_portal_entries_fact[portal_entry_update_item['name']]
+                                                      ['displayName'][lang] }}"
+                --append displayName='{{ lang }} "{{ text }}"'
+              {% endif %}
+            {% else %}
+              --append displayName='{{ lang }} "{{ text }}"'
+            {% endif %}
+          {% endfor %}
+          {% if portal_entry_icon_data != None and portal_entry_icon_data|length > 0 %}
+            --set icon='{{ portal_entry_icon_data }}'
+          {% endif %}
+          {% if 'link' in portal_entry_update_item %}
+            --set link='{{ portal_entry_update_item['link'] }}'
+          {% endif %}
+          --set anonymous='{{ "TRUE" if portal_entry_update_item['anonymous']|default(false) else "FALSE" }}'
+          --set linkTarget={{ portal_entry_update_item['linktarget']|default('useportaldefault') }}
+          --set name='{{ portal_entry_update_item['name'] }}'
+          {% if 'allowed_groups' in portal_entry_update_item %}
+            {% for allowedgroup in portal_entry_update_item['allowed_groups']|default([]) %}
+              --append allowedGroups='{{ allowedgroup }}'
+            {% endfor %}
+          {% endif %}
+    {% endif %}
+  changed_when: "portal_entry_create_entry_result.stdout is not search('No modification')"
+  loop: "{{ portal_entry_entries|default([])|flatten }}"
+  loop_control:
+    loop_var: "portal_entry_update_item"
+  register: "portal_entry_create_entry_result"
+  when:
+    - "portal_entry_update_drift_detection == 'yes'"
+    - "('only' not in portal_entry_update_item) or
+              ('only' in portal_entry_update_item and
+                portal_entry_install_list|intersect([portal_entry_update_item['only']]|flatten)
+              )"
+  tags:
+    - "portal_entry"
+    - "portal_entry_create_entry"
+
+
+- name: "portal_entry | Get a list of already existing categories"
+  ansible.builtin.command: >
+    udm portals/category list
+    --position "cn=category,{{ portal_entry_portal_dn }}"
+  changed_when: false
+  register: "portal_entry_portal_categories"
+  when: "portal_entry_drift_detection|bool or portal_entry_remove_unscoped|bool"
+  tags:
+    - "portal_entry"
+    - "portal_entry_get_categories"
+
+- name: "portal_entry | Get a list of already existing portal"
+  ansible.builtin.command: >
+    udm portals/portal list
+    --position "cn=portal,{{ portal_entry_portal_dn }}"
+  changed_when: false
+  register: "portal_entry_portal_portal"
+  when: "portal_entry_drift_detection|bool or portal_entry_remove_unscoped|bool"
+  tags:
+    - "portal_entry"
+    - "portal_entry_get_portal"
+
+- name: "portal_entry | Parse current categories to facts"
+  vars:
+    portal_entry_portal_categories_stdout_lines: "{{ portal_entry_portal_categories.stdout_lines|default([]) }}"
+  ansible.builtin.set_fact:
+    portal_entry_portal_categories_fact: "{{ lookup('template', 'category_parse_udm_out_to_ansible.j2') | from_yaml }}"
+  changed_when: false
+  when: "portal_entry_drift_detection|bool or portal_entry_remove_unscoped|bool"
+  tags:
+    - "portal_entry"
+    - "portal_entry_parse_categories"
+
+- name: "portal_entry | Parse current portals to facts"
+  vars:
+    portal_entry_portal_portals_stdout_lines: "{{ portal_entry_portal_portal.stdout_lines|default([]) }}"
+  ansible.builtin.set_fact:
+    portal_entry_portal_portals_fact: "{{ lookup('template', 'portal_parse_udm_out_to_ansible.j2')|from_yaml }}"
+  changed_when: false
+  when: "portal_entry_drift_detection|bool or portal_entry_remove_unscoped|bool"
+  tags:
+    - "portal_entry"
+    - "portal_entry_parse_categories"
+
+
+- name: "portal_entry | Combine category and portals to facts"
+  vars:
+  ansible.builtin.set_fact:
+    portal_entry_portal_combined_fact: "{{ portal_entry_portal_categories_fact
+                                              |combine(portal_entry_portal_portals_fact) }}"
+  changed_when: false
+  when: "portal_entry_drift_detection|bool or portal_entry_remove_unscoped|bool"
+  tags:
+    - "portal_entry"
+    - "portal_entry_parse_categories"
+
+- name: "portal_entry | Append entry to portal"
+  vars:
+    portal_entry_append_drift_detection: "{{ lookup('template', 'append_drift_detection.j2')|regex_replace('\n','') if
+                                                portal_entry_drift_detection|bool else 'yes' }}"
+  ansible.builtin.command:
+    # yamllint disable rule:line-length
+    cmd: |
+      udm
+      portals/{{ portal_entry_append_item['parent'] }}
+      modify
+      --dn
+      cn={{ portal_entry_append_item['category'] }},cn={{ portal_entry_append_item['parent'] }},{{ portal_entry_portal_dn }}
+      --append
+      {{ portal_entry_append_item['type'] }}=cn={{ portal_entry_append_item['name'] }},cn=entry,{{ portal_entry_portal_dn }}
+    # yamllint enable rule:line-length
+  changed_when: "portal_entry_append_entry_result.stdout is not search('No modification')"
+  loop: "{{ portal_entry_entries|selectattr('state', 'equalto', 'present')|default([])|flatten }}"
+  loop_control:
+    loop_var: "portal_entry_append_item"
+  register: "portal_entry_append_entry_result"
+  when: "portal_entry_append_drift_detection == 'yes'"
+  tags:
+    - "portal_entry"
+    - "portal_entry_append_entry"
+
+- name: "portal_entry | Remove unconfigures entries"
+  ansible.builtin.command: >
+    udm portals/entry
+    remove
+    --dn cn={{ portal_entry_remove_item.key }},cn=entry,{{ portal_entry_portal_dn }}
+  loop: "{{ portal_entry_portal_entries_fact|dict2items }}"
+  loop_control:
+    loop_var: "portal_entry_remove_item"
+  when:
+    - "portal_entry_remove_unscoped"
+    - "portal_entry_remove_item.key not in portal_entry_entries|map(attribute='name')"

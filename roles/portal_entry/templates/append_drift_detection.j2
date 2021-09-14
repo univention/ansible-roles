@@ -1,0 +1,5 @@
+{% set ns = namespace(found='no') -%}
+{% if ("cn=" + portal_entry_append_item['name'] + ",cn=entry," + portal_entry_portal_dn) not in portal_entry_portal_combined_fact[portal_entry_append_item['category']][portal_entry_append_item['type']]|default([])  -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{{ ns.found -}}

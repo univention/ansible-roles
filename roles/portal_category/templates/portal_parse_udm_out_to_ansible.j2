@@ -1,0 +1,31 @@
+{% for line in portal_category_portals_portal_stdout_lines %}
+{% if line|regex_search('DN: cn=[a-zA-Z-]+') %}
+{{ line[7:].split(',')[0] }}: {
+{% else %}
+{% if 'displayName:' in line -%}
+{{ "displayName: {" if 'displayName:' not in portal_category_portals_portal_stdout_lines[loop.index-2]|default("")}}"{{ line.split(": ")[1] }}": "{{- line.split(": ")[2] }}"
+{{- "}" if 'displayName:' not in portal_category_portals_portal_stdout_lines[loop.index]|default("")}}
+{{- "" if portal_category_portals_portal_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') or portal_category_portals_portal_stdout_lines[loop.index]|default("")|length == 0 else "," }}
+{% elif 'menuLinks:' in line -%}
+{{ "menuLinks: [" if 'menuLinks:' not in portal_category_portals_portal_stdout_lines[loop.index-2]|default("")}}"{{ line.split(": ")[1] }}"
+{{- "]" if 'menuLinks:' not in portal_category_portals_portal_stdout_lines[loop.index]|default("")}}
+{{- "" if portal_category_portals_portal_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') or portal_category_portals_portal_stdout_lines[loop.index]|default("")|length == 0 else "," }}
+{% elif 'userLinks:' in line -%}
+{{ "userLinks: [" if 'userLinks:' not in portal_category_portals_portal_stdout_lines[loop.index-2]|default("")}}"{{ line.split(": ")[1] }}"
+{{- "]" if 'userLinks:' not in portal_category_portals_portal_stdout_lines[loop.index]|default("")}}
+{{- "" if portal_category_portals_portal_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') or portal_category_portals_portal_stdout_lines[loop.index]|default("")|length == 0 else "," }}
+{% elif 'categories:' in line -%}
+{{ "categories: [" if 'categories:' not in portal_category_portals_portal_stdout_lines[loop.index-2]|default("")}}"{{ line.split(": ")[1] }}"
+{{- "]" if 'categories:' not in portal_category_portals_portal_stdout_lines[loop.index]|default("")}}
+{{- "" if portal_category_portals_portal_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') or portal_category_portals_portal_stdout_lines[loop.index]|default("")|length == 0 else "," }}
+{% elif '  ' not in line -%}
+{% elif line|length == 0 -%}
+{% else -%}
+{{ line.split(": ")[0] }}: "{{- line.split(": ")[1] }}"{{ "" if portal_category_portals_portal_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') or portal_category_portals_portal_stdout_lines[loop.index]|default("")|length == 0 else "," }}
+{% endif %}
+{% if portal_category_portals_portal_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') and loop.index > 2 -%}
+}
+{% endif %}
+{% endif %}
+{% endfor %}
+}

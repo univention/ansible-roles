@@ -1,0 +1,40 @@
+{% set ns = namespace(found='no') -%}
+{% if portal_entry_update_item['name'] not in portal_entry_portal_entries_fact and portal_entry_update_item['state'] == 'absent' %}
+{% elif portal_entry_update_item['name'] in portal_entry_portal_entries_fact and portal_entry_update_item['state'] != 'absent' -%}
+{% if portal_entry_update_item['anonymous']|default(false)|bool|lower != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['anonymous']|bool|string|lower -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% if portal_entry_update_item['linktarget']|default("useportaldefault") != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['linkTarget']|default("useportaldefault") -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% if portal_entry_update_item['activated']|default(true)|bool|lower != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['activated']|default(true)|bool|string|lower -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% if portal_entry_update_item['link']|default("") not in portal_entry_portal_entries_fact[portal_entry_update_item['name']]['link']|default([]) -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% if 'allowed_groups' in portal_entry_update_item -%}
+{% for group in portal_entry_update_item['allowed_groups'] -%}
+{% if group not in portal_entry_portal_entries_fact[portal_entry_update_item['name']]['allowedGroups']|default([]) -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% endfor -%}
+{% endif -%}
+{% if 'description' in portal_entry_update_item -%}
+{% for description_key, description_value in portal_entry_update_item['description'].items() -%}
+{% if description_value != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['description'][description_key]|default("") -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% endfor -%}
+{% endif -%}
+{% if 'display_name' in portal_entry_update_item -%}
+{% for displayname_key, displayname_value in portal_entry_update_item['display_name'].items() -%}
+{% if not displayname_value == portal_entry_portal_entries_fact[portal_entry_update_item['name']]['displayName'][displayname_key]|default("") -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% endfor -%}
+{% endif -%}
+{% else -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{{ ns.found -}}

@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  role_name: "improve_usability_ui_changes"
+  role_name: "portal_entry"
   author: "Univention"
-  description: "Configure comfort settins for UI."
+  description: "Create, modify, delete and append portal entries"
   company: "Univention GmbH"
 
   # If the issue tracker for your role is not on github, uncomment the
@@ -41,8 +41,7 @@ galaxy_info:
   galaxy_tags:
     - "univention"
     - "ucs"
-    - "bootstrap"
-    - "usability"
-    - "ui"
+    - "customize"
+    - "portal"
 
 dependencies: []
