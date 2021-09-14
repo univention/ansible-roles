@@ -57,7 +57,7 @@
     - name: "univention_repository_component | Define username in {{ univention_repository_component_name }} component"
       vars:
         univention_repository_component_keys: >-
-          repository/online/component/{{ univention_repository_component_name }}/username"
+          repository/online/component/{{ univention_repository_component_name }}/username
       ansible.builtin.set_fact:
         univention_repository_component: "{{ univention_repository_component
           |combine({univention_repository_component_keys: univention_repository_component_username}) }}"
