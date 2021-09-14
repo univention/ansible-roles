@@ -8,8 +8,8 @@
   register: "hardening_disable_http_result"
   when: "hardening_disable_http|bool"
   tags:
-    - hardening_disable_http
-    - hardening
+    - "hardening_disable_http"
+    - "hardening"
 
 - name: "hardening | Restart apache"
   ansible.builtin.service:
@@ -20,8 +20,8 @@
     - "hardening_disable_http|bool"
     - "hardening_disable_http_result.changed"
   tags:
-    - hardening_restart_http
-    - hardening
+    - "hardening_restart_http"
+    - "hardening"
 
 - name: "hardening | Deactivate root login"
   ansible.builtin.lineinfile:
@@ -32,8 +32,8 @@
     state: "present"
   register: "hardening_disable_root_login_result"
   tags:
-    - hardening_disable_ssh_root_password_login_ssh_config
-    - hardening
+    - "hardening_disable_ssh_root_password_login_ssh_config"
+    - "hardening"
 
 - name: "hardening | Restart ssh"
   ansible.builtin.service:
@@ -43,29 +43,29 @@
   when:
     - "hardening_disable_root_login_result.changed"
   tags:
-    - hardening_restart_ssh
-    - hardening
+    - "hardening_restart_ssh"
+    - "hardening"
 
 - name: "hardening | Enforce secure flag on cookies"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/http/enforce-secure-cookie: "true"
   tags:
-    - hardening_secure_cookie_flag
-    - hardening
+    - "hardening_secure_cookie_flag"
+    - "hardening"
 
 - name: "hardening | Enforce session cookies"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/http/enforce-session-cookie: "true"
   tags:
-    - hardening_session_cookies_enforcement
-    - hardening
+    - "hardening_session_cookies_enforcement"
+    - "hardening"
 
 - name: "hardening | Set processes limit to cpu cores"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/server/processes: "{{ ansible_processor_cores|quote }}"
   tags:
-    - hardening_set_processes_limit
-    - hardening
+    - "hardening_set_processes_limit"
+    - "hardening"

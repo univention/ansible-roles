@@ -1,7 +1,7 @@
 Remove packages with univention-remove
 =========
 
-This role installs packages via `univention-remove` wrapper. 
+This role installs packages via `univention-remove` wrapper.
 
 Requirements
 ------------

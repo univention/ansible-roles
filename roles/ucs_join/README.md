@@ -27,7 +27,7 @@ Role Variables
 - `ucs_join_network_config_static_gateway`(string): The server's default router aka internet gateway. This is mandatory for the setup to work.
 - `ucs_join_network_config_interface`(string): The servers default network interface; default: `eth0`.
 - `ucs_join_network_config_static_additional_interfaces`(list): A list of additional interfaces as dictionary
-- `ucs_join_network_config_static_routes`(list): A list of static routes, which should be attached to interfaces. 
+- `ucs_join_network_config_static_routes`(list): A list of static routes, which should be attached to interfaces.
 - `ucs_join_hide_logging`(boolean): Toggle template logging; default: `true`.
 
 Dependencies

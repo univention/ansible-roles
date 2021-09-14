@@ -3,7 +3,7 @@
 
 - name: "Install New Portal app"
   ansible.builtin.include_role:
-    name: install_packages
+    name: "install_packages"
   vars:
     install_packages_app_version_map: "{{ install_service_new_portal_service_version_map }}"
     install_packages_temp_pw_file: "{{ install_service_new_portal_temp_file }}"
@@ -11,15 +11,15 @@
     install_packages_install_apps:
       - "univention-portal"
   tags:
-    - install_service_new_portal
-    - install_service_new_portal_install_app
+    - "install_service_new_portal"
+    - "install_service_new_portal_install_app"
 
 - name: "Copy icon to the right place"
   vars:
     install_service_new_portal_icon_dir: "/var/www/univention/js/dijit/themes/umc/icons/16x16"
   ansible.builtin.copy:
-    dest: "{{ install_service_new_portal_icon_dir }}/{{ item['dest'] }}"
-    src: "{{ install_service_new_portal_icon_dir }}/{{ item['src'] }}"
+    dest: "{{ install_service_new_portal_icon_dir }}/{{ install_service_new_portal_item['dest'] }}"
+    src: "{{ install_service_new_portal_icon_dir }}/{{ install_service_new_portal_item['src'] }}"
     remote_src: true
   loop:
     - src: "udm-settings-portal_category.png"
@@ -28,6 +28,8 @@
       dest: "udm-portals-portal.png"
     - src: "udm-settings-portal_entry.png"
       dest: "udm-portals-entry.png"
+  loop_control:
+    loop_var: "install_service_new_portal_item"
   tags:
-    - install_service_new_portal
-    - install_service_new_portal_install_icons
+    - "install_service_new_portal"
+    - "install_service_new_portal_install_icons"

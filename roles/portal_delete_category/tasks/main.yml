@@ -4,28 +4,32 @@
 - name: "Check if category that is about to be deleted exists to begin with"
   ansible.builtin.command: >
     udm portals/category list
-    --position "cn=category,{{ category['dn']|default(portal_delete_category_base_dn) }}"
-    --filter "cn={{ category['name'] }}"
-  loop: "{{ portal_delete_category_categories|selectattr('state', 'defined')|selectattr('state', 'equalto', 'absent')|list|default([])|flatten }}"
+    --position "cn=portal_delete_category_item,{{ portal_delete_category_item['dn']
+                                                    |default(portal_delete_category_base_dn) }}"
+    --filter "cn={{ portal_delete_category_item['name'] }}"
+  loop: "{{ portal_delete_category_categories|selectattr('state', 'defined')|selectattr('state', 'equalto', 'absent')
+              |list|default([])|flatten }}"
   loop_control:
-    loop_var: "category"
-  register: portal_delete_category_existing_portal_categories
-  when:
-    - ('only' not in category) or
-        ('only' in category and
-          portal_delete_category_install_list|intersect([category['only']]|flatten)
-        )
+    loop_var: "portal_delete_category_item"
+  register: "portal_delete_category_existing_portal_categories"
+  when: |
+     ('only' not in portal_delete_category_item) or
+     ('only' in portal_delete_category_item and
+       portal_delete_category_install_list|intersect([portal_delete_category_item['only']]|flatten)
+     )
   tags:
-    - portal_delete_category
-    - portal_delete_category_check_categories
+    - "portal_delete_category"
+    - "portal_delete_category_check_categories"
 
 - name: "Delete existing portal category"
   vars:
-    category: "{{ item.item }}"
+    category: "{{ portal_delete_category_item.item }}"
   ansible.builtin.command: >
     udm portals/category delete
     --dn 'cn={{ category["name"] }},cn=category,{{ category["dn"]|default(portal_delete_category_base_dn) }}'
-  ignore_errors: true
-  loop: "{{ portal_delete_category_existing_portal_categories['results']|default({}) }}"
+    --ignore_not_exists
+  loop: "{{ portal_delete_category_existing_portal_categories['results']|default([]) }}"
+  loop_control:
+    loop_var: "portal_delete_category_item"
   tags:
-    - portal_delete_category_delete_category
+    - "portal_delete_category_delete_category"

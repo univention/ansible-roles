@@ -6,17 +6,19 @@
     keys:
       umc/cookie-banner/show: "{{ portal_cookie_banner_enabled|string|upper }}"
   tags:
-    - portal_cookie_banner
-    - portal_cookie_banner_enable
+    - "portal_cookie_banner"
+    - "portal_cookie_banner_enable"
 
 - name: "portal_cookie_banner | Add Cookie banner content"
   univention.ucs_modules.univention_config_registry:
     kvlist:
-      - key: "umc/cookie-banner/title/{{ item.key }}"
-        value: "{{ item.value.title }}"
-      - key: "umc/cookie-banner/text/{{ item.key }}"
-        value: "{{ item.value.text }}"
+      - key: "umc/cookie-banner/title/{{ portal_cookie_banner_item.key }}"
+        value: "{{ portal_cookie_banner_item.value.title }}"
+      - key: "umc/cookie-banner/text/{{ portal_cookie_banner_item.key }}"
+        value: "{{ portal_cookie_banner_item.value.text }}"
   loop: "{{ portal_cookie_banner_data|dict2items }}"
+  loop_control:
+    loop_var: "portal_cookie_banner_item"
   tags:
-    - portal_cookie_banner
-    - portal_cookie_banner_content
+    - "portal_cookie_banner"
+    - "portal_cookie_banner_content"

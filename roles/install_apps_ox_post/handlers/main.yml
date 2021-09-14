@@ -5,7 +5,6 @@
   ansible.builtin.service:
     name: "dovecot"
     state: "restarted"
-  ignore_errors: true
 
 - name: "Restart OpenXchange"
   ansible.builtin.service:

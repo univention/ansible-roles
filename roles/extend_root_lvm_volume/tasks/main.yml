@@ -10,34 +10,35 @@
           - "lvm2"
         state: "present"
       tags:
-        - extend_root_lvm_volume_packages
+        - "extend_root_lvm_volume_packages"
 
     - name: "extend_root_lvm_volume | Read device information /dev/sda"
       community.general.parted:
         device: "/dev/{{ extend_root_lvm_volume_lvm_disk }}"
-        unit: MiB
+        unit: "MiB"
         state: "info"
-      register: extend_root_lvm_volume_disk_device_info
+      register: "extend_root_lvm_volume_disk_device_info"
       tags:
-        - extend_root_lvm_volume_gather_device_information
+        - "extend_root_lvm_volume_gather_device_information"
 
     - name: "extend_root_lvm_volume | Create second partition that takes up the available disk space"
       community.general.parted:
         device: "/dev/{{ extend_root_lvm_volume_lvm_disk }}"
         number: 3
+        # yamllint disable-line rule:line-length
         part_start: "{{ extend_root_lvm_volume_disk_device_info.partitions[extend_root_lvm_volume_existing_lvm_partition_number].end + 1 }}MiB"
         part_end: "100%"
-        flags: [lvm]
+        flags: ["lvm"]
         state: "present"
       tags:
-        - extend_root_lvm_volume_create_second_partition
+        - "extend_root_lvm_volume_create_second_partition"
 
     - name: "extend_root_lvm_volume | Add newly created partition to lvm volume group"
       community.general.lvg:
         vg: "{{ extend_root_lvm_volume_lvm_vg_name }}"
         pvs: "/dev/{{ extend_root_lvm_volume_lvm_disk }}5,/dev/{{ extend_root_lvm_volume_lvm_disk }}3"
       tags:
-        - extend_root_lvm_volume_add_second_partition
+        - "extend_root_lvm_volume_add_second_partition"
 
     - name: "extend_root_lvm_volume | Extend logical volume to available space"
       community.general.lvol:
@@ -46,8 +47,8 @@
         resizefs: "yes"
         size: "+100%FREE"
       tags:
-        - extend_root_lvm_volume_resize
+        - "extend_root_lvm_volume_resize"
 
   when: "extend_root_lvm_volume_extend_lvm_to_whole_disk|bool"
   tags:
-    - extend_root_lvm_volume
+    - "extend_root_lvm_volume"

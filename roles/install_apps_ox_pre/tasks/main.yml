@@ -6,8 +6,8 @@
     keys:
       mail/default/domains: "{{ install_apps_ox_pre_external_hostname }}"
   tags:
-    - install_apps_ox_pre
-    - install_apps_ox_pre_default_domain
+    - "install_apps_ox_pre"
+    - "install_apps_ox_pre_default_domain"
 
 - name: "install_apps_ox_pre | Set mail domain for external domain"
   ansible.builtin.command: >
@@ -20,5 +20,5 @@
   when: "install_apps_ox_pre_mail_domain is defined and
          install_apps_ox_pre_mail_domain|length > 0"
   tags:
-    - install_apps_ox_pre
-    - install_apps_ox_pre_external_domain
+    - "install_apps_ox_pre"
+    - "install_apps_ox_pre_external_domain"

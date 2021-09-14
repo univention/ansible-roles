@@ -10,5 +10,5 @@
   retries: 3
   until: "univention_remove_run.rc == 0"
   tags:
-    - univention_remove
-    - univention_remove_run
+    - "univention_remove"
+    - "univention_remove_run"

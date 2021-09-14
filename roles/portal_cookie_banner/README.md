@@ -15,7 +15,7 @@ Role Variables
 - `portal_configure_title_basedn`(string): The base DN that has been used when setting up the UCS server
 - `portal_configure_title_titles`(list): The cookie banner title and body.
 ```
-portal_configure_title_titles: 
+portal_configure_title_titles:
   de:
     title: "We are using cookies"
     text: ""

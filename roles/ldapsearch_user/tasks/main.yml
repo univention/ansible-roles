@@ -7,33 +7,37 @@
       ansible.builtin.command: >
         udm users/ldap create
           --position "cn=users,{{ ldapsearch_user_basedn }}"
-          --set name="{{ item.name|default(item.username) }}"
-          --set username="{{ item.username }}"
-          --set lastname="{{ item.lastname|default(item.username) }}"
-          --set password="{{ item.password }}"
+          --set name="{{ ldapsearch_user_item.name|default(ldapsearch_user_item.username) }}"
+          --set username="{{ ldapsearch_user_item.username }}"
+          --set lastname="{{ ldapsearch_user_item.lastname|default(ldapsearch_user_item.username) }}"
+          --set password="{{ ldapsearch_user_item.password }}"
           --ignore_exists
       changed_when: "ldapsearch_user_create_result.stdout is not search('Object exists')"
       loop: "{{ ldapsearch_user_list }}"
+      loop_control:
+        loop_var: "ldapsearch_user_item"
       no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
       register: "ldapsearch_user_create_result"
       tags:
-        - ldapsearch_user_create
+        - "ldapsearch_user_create"
 
     - name: "ldapsearch_user | Create LDAPSearch user (per Tenant)"
       ansible.builtin.command: >
         udm users/ldap create
-          --position "{{ item.tenant_ou }},{{ ldapsearch_user_basedn }}"
-          --set name="{{ item.name|default(item.username) }}"
-          --set username="{{ item.username }}"
-          --set lastname="{{ item.lastname|default(item.username) }}"
-          --set password="{{ item.password }}"
+          --position "{{ ldapsearch_user_item.tenant_ou }},{{ ldapsearch_user_basedn }}"
+          --set name="{{ ldapsearch_user_item.name|default(ldapsearch_user_item.username) }}"
+          --set username="{{ ldapsearch_user_item.username }}"
+          --set lastname="{{ ldapsearch_user_item.lastname|default(ldapsearch_user_item.username) }}"
+          --set password="{{ ldapsearch_user_item.password }}"
           --ignore_exists
       changed_when: "ldapsearch_user_create_tenantbased_result.stdout is not search('Object exists')"
       loop: "{{ ldapsearch_user_list_tenantbased }}"
+      loop_control:
+        loop_var: "ldapsearch_user_item"
       no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
       register: "ldapsearch_user_create_tenantbased_result"
       tags:
-        - ldapsearch_user_create_tenantbased
+        - "ldapsearch_user_create_tenantbased"
   when: "ldapsearch_user_server_type|default('master') != 'backup'"
   tags:
-    - ldapsearch_user
+    - "ldapsearch_user"

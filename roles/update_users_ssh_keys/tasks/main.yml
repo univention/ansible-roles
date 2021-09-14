@@ -4,29 +4,35 @@
 - name: "Check if all vars are set"
   ansible.builtin.assert:
     that:
-      - update_users_ssh_keys_user|length > 0
-    fail_msg: "At least one necessary variable is not set. Skip this check with --skip-tags update_users_ssh_keys_check_preconditions"
+      - "update_users_ssh_keys_user|length > 0"
+    fail_msg: |
+      At least one necessary variable is not set.
+      Skip this check with --skip-tags update_users_ssh_keys_check_preconditions
   tags:
-    - update_users_ssh_keys
-    - update_users_ssh_keys_check_preconditions
+    - "update_users_ssh_keys"
+    - "update_users_ssh_keys_check_preconditions"
 
 - name: "Install individual ssh keys to ansible user"
   ansible.posix.authorized_key:
     user: "{{ update_users_ssh_keys_user }}"
-    key: "{{ lookup('file', item) }}"
+    key: "{{ lookup('file', update_users_ssh_keys_item) }}"
     manage_dir: true
     state: "present"
-  loop: "{{ lookup('fileglob', 'ssh_keys/add/*.pubkey', wantlist=True)  }}"
+  loop: "{{ lookup('fileglob', 'ssh_keys/add/*.pubkey', wantlist=True) }}"
+  loop_control:
+    loop_var: "update_users_ssh_keys_item"
   tags:
-    - update_users_ssh_keys
-    - update_users_ssh_keys_add
+    - "update_users_ssh_keys"
+    - "update_users_ssh_keys_add"
 
 - name: "Remove individual ssh keys from ansible user"
   ansible.posix.authorized_key:
     user: "{{ update_users_ssh_keys_user }}"
-    key: "{{ lookup('file', item) }}"
+    key: "{{ lookup('file', update_users_ssh_keys_item) }}"
     state: "absent"
-  loop: "{{ lookup('fileglob', 'ssh_keys/remove/*.pubkey', wantlist=True)  }}"
+  loop: "{{ lookup('fileglob', 'ssh_keys/remove/*.pubkey', wantlist=True) }}"
+  loop_control:
+    loop_var: "update_users_ssh_keys_item"
   tags:
-    - update_users_ssh_keys
-    - update_users_ssh_keys_remove
+    - "update_users_ssh_keys"
+    - "update_users_ssh_keys_remove"

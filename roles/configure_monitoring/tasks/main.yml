@@ -6,5 +6,5 @@
     keys:
       ldap/monitor: "{{ configure_monitoring_ldap_enabled|default('true') }}"
   tags:
-    - configure_monitoring
-    - configure_monitoring_ldap
+    - "configure_monitoring"
+    - "configure_monitoring_ldap"

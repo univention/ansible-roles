@@ -3,4 +3,6 @@
 
 - name: "Restart collabora-online"
   ansible.builtin.shell: "univention-app stop collabora-online; univention-app start collabora-online"
-  ignore_errors: true
+  tags:
+    - "configure_office_suite"
+    - "configure_office_suite_restart_collabora"

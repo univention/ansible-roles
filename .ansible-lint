@@ -1,7 +1,7 @@
 ---
 # .ansible-lint
 exclude_paths:
-  - .git/
+  - ".git/"
 # parseable: true
 # quiet: true
 # verbosity: 1
@@ -25,50 +25,50 @@ use_default_rules: true
 
 # This makes linter to fully ignore rules/tags listed below
 skip_list:
- - "no-handler"
+  - "no-handler"
 
 # Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
 # mentioned in the enable_list:
 enable_list:
-  - command-instead-of-module
-  - command-instead-of-shell
-  - deprecated-bare-vars
-  - deprecated-command-syntax
-  - deprecated-local-action
-  - deprecated-module
-  - empty-string-compare
-  - fqcn-builtins
-  - git-latest
-  - hg-latest
-  - ignore-errors
-  - inline-env-var
-  - internal-error
-  - literal-compare
-  - load-failure
-  - meta-incorrect
-  - meta-no-info
-  - meta-no-tags
-  - meta-video-links
-  - no-changed-when
-  - no-jinja-nesting
-  - no-jinja-when
-  - no-log-password
-  - no-loop-var-prefix
-  - no-relative-paths
-  - no-same-owner
-  - no-tabs
-  - package-latest
-  - parser-error
-  - partial-become
-  - playbook-extension
-  - risky-file-permissions
-  - risky-octal
-  - risky-shell-pipe
-  - role-name
-  - syntax-check
-  - unnamed-task
-  - var-naming
-  - var-spacing
+  - "command-instead-of-module"
+  - "command-instead-of-shell"
+  - "deprecated-bare-vars"
+  - "deprecated-command-syntax"
+  - "deprecated-local-action"
+  - "deprecated-module"
+  - "empty-string-compare"
+  - "fqcn-builtins"
+  - "git-latest"
+  - "hg-latest"
+  - "ignore-errors"
+  - "inline-env-var"
+  - "internal-error"
+  - "literal-compare"
+  - "load-failure"
+  - "meta-incorrect"
+  - "meta-no-info"
+  - "meta-no-tags"
+  - "meta-video-links"
+  - "no-changed-when"
+  - "no-jinja-nesting"
+  - "no-jinja-when"
+  - "no-log-password"
+  - "no-loop-var-prefix"
+  - "no-relative-paths"
+  - "no-same-owner"
+  - "no-tabs"
+  - "package-latest"
+  - "parser-error"
+  - "partial-become"
+  - "playbook-extension"
+  - "risky-file-permissions"
+  - "risky-octal"
+  - "risky-shell-pipe"
+  - "role-name"
+  - "syntax-check"
+  - "unnamed-task"
+  - "var-naming"
+  - "var-spacing"
   # add yaml here if you want to avoid ignoring yaml checks when yamllint
   # library is missing. Normally its absence just skips using that rule.
   # - yaml

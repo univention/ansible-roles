@@ -4,10 +4,12 @@
 - name: "Assert that provided office suite is a supported value"
   ansible.builtin.assert:
     that: "configure_office_suite_office_suite in configure_office_suite_supported_office_suites"
-    fail_msg: "You have provided an unsupported office suite. Valid suites are {{ configure_office_suite_supported_office_suites | join(', ') }}"
+    fail_msg: |
+      You have provided an unsupported office suite.
+      Valid suites are {{ configure_office_suite_supported_office_suites | join(', ') }}"
   tags:
-    - configure_office_suite
-    - configure_office_suite_precheck
+    - "configure_office_suite"
+    - "configure_office_suite_precheck"
 
 - name: "Run UCS install apps: Install Packages"
   vars:
@@ -16,11 +18,11 @@
     install_packages_install_apps:
       - "{{ configure_office_suite_office_suite }}"
   ansible.builtin.include_role:
-    name: install_packages
+    name: "install_packages"
 
   tags:
-    - configure_office_suite
-    - configure_office_suite_install
+    - "configure_office_suite"
+    - "configure_office_suite_install"
 
 - name: "Configure onlyoffice"
   block:
@@ -40,8 +42,8 @@
           - "--value=https://{{ ansible_fqdn }}/onlyoffice-documentserver"
       when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
-        - configure_office_suite_only_office_nextcloud
-        - configure_office_suite_only_office_nextcloud_document_server
+        - "configure_office_suite_only_office_nextcloud"
+        - "configure_office_suite_only_office_nextcloud_document_server"
 
     - name: "NextCloud: Set file formats"
       ansible.builtin.command:
@@ -59,13 +61,13 @@
           - "--value={{ configure_office_suite_onlyoffice_formats|to_json }}"
       when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
-        - configure_office_suite_only_office_nextcloud
-        - configure_office_suite_only_office_nextcloud_fileformat
+        - "configure_office_suite_only_office_nextcloud"
+        - "configure_office_suite_only_office_nextcloud_fileformat"
 
-  when: configure_office_suite_office_suite == "onlyoffice"
+  when: "configure_office_suite_office_suite == 'onlyoffice'"
   tags:
-    - configure_office_suite
-    - configure_office_suite_only_office
+    - "configure_office_suite"
+    - "configure_office_suite_only_office"
 
 - name: "Configure collabora-online"
   block:
@@ -85,8 +87,8 @@
           - "--value=yes"
       when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
-        - configure_office_suite_collabora_online_nextcloud
-        - configure_office_suite_collabora_online_nextcloud_disable_certificate_validation
+        - "configure_office_suite_collabora_online_nextcloud"
+        - "configure_office_suite_collabora_online_nextcloud_disable_certificate_validation"
 
     - name: "NextCloud: Install Collabora license"
       ansible.builtin.command:
@@ -99,17 +101,16 @@
       notify: "Restart collabora-online"
       when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
-        - configure_office_suite_collabora_online_nextcloud
-        - configure_office_suite_collabora_online_nextcloud_collabora_license_key
+        - "configure_office_suite_collabora_online_nextcloud"
+        - "configure_office_suite_collabora_online_nextcloud_collabora_license_key"
 
-  when: configure_office_suite_office_suite == "collabora-online"
+  when: "configure_office_suite_office_suite == 'collabora-online'"
   tags:
-    - configure_office_suite
-    - configure_office_suite_collabora_online
+    - "configure_office_suite"
+    - "configure_office_suite_collabora_online"
 
 - name: "Flush handlers to restart collabora"
-  ansible.builtin.meta: flush_handlers
+  ansible.builtin.meta: "flush_handlers"
   tags:
-    - configure_office_suite
-    - configure_office_suite_flush_handlers
-
+    - "configure_office_suite"
+    - "configure_office_suite_flush_handlers"

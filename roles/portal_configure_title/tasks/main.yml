@@ -9,18 +9,22 @@
   ignore_errors: true
   register: "portal_configure_title_get_titles"
   tags:
-    - portal_configure_title
-    - portal_configure_title_get_titles
+    - "portal_configure_title"
+    - "portal_configure_title_get_titles"
 
 - name: "portal_configure_title | Check if title already set"
   vars:
     portal_configure_title_existing: true
   ansible.builtin.set_fact:
-    portal_configure_title_existing: "{{ portal_configure_title_existing if (portal_configure_title_get_titles.stdout is search(item.key + ': ' + item.value)) else false }}"
+    portal_configure_title_existing: "{{ portal_configure_title_existing
+      if (portal_configure_title_get_titles.stdout is
+      search(portal_configure_title_item.key + ': ' + portal_configure_title_item.value)) else false }}"
   loop: "{{ portal_configure_title_titles | dict2items }}"
+  loop_control:
+    loop_var: "portal_configure_title_item"
   tags:
-    - portal_configure_title
-    - portal_configure_title_check_titles
+    - "portal_configure_title"
+    - "portal_configure_title_check_titles"
 
 - name: "portal_configure_title | Update portal title"
   block:
@@ -28,25 +32,29 @@
       ansible.builtin.command: >
         udm portals/portal modify
         --dn cn=domain,cn=portal,cn=portals,cn=univention,{{ portal_configure_title_basedn }}
-        --set displayName='{{ item.key }} "{{ item.value }}"'
+        --set displayName='{{ portal_configure_title_item.key }} "{{ portal_configure_title_item.value }}"'
       changed_when: "portal_configure_title_set_title_result.stdout is not search('No modification')"
       ignore_errors: true
       loop: "{{ portal_configure_title_titles | dict2items }}"
+      loop_control:
+        loop_var: "portal_configure_title_item"
       register: "portal_configure_title_set_title_result"
       tags:
-        - portal_configure_title_update_set_title
+        - "portal_configure_title_update_set_title"
 
     - name: "portal_configure_title | Append portal titles"
       ansible.builtin.command: >
         udm portals/portal modify
         --dn cn=domain,cn=portal,cn=portals,cn=univention,{{ portal_configure_title_basedn }}
-        --append displayName='{{ item.key }} "{{ item.value }}"'
+        --append displayName='{{ portal_configure_title_item.key }} "{{ portal_configure_title_item.value }}"'
       changed_when: "portal_configure_title_append_title_result.stdout is not search('No modification')"
       loop: "{{ portal_configure_title_titles | dict2items }}"
+      loop_control:
+        loop_var: "portal_configure_title_item"
       register: "portal_configure_title_append_title_result"
       tags:
-        - portal_configure_title_update_append_title
+        - "portal_configure_title_update_append_title"
   when: "portal_configure_title_existing is not defined or not portal_configure_title_existing"
   tags:
-    - portal_configure_title
-    - portal_configure_title_update
+    - "portal_configure_title"
+    - "portal_configure_title_update"

@@ -9,94 +9,111 @@
       vars:
         univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}"
       ansible.builtin.set_fact:
-        univention_repository_component: "{{ univention_repository_component|combine({univention_repository_component_keys: 'yes'}) }}"
+        univention_repository_component: "{{ univention_repository_component
+                                               |combine({univention_repository_component_keys: 'yes'}) }}"
       tags:
-        - univention_repository_component
-        - univention_repository_component_enable_component
+        - "univention_repository_component"
+        - "univention_repository_component_enable_component"
 
     - name: "univention_repository_component | Define parts in {{ univention_repository_component_name }} component"
       vars:
-        univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}/parts"
+        univention_repository_component_keys: "
+          repository/online/component/{{ univention_repository_component_name }}/parts"
       ansible.builtin.set_fact:
-        univention_repository_component: "{{ univention_repository_component|combine({univention_repository_component_keys: univention_repository_component_parts}) }}"
+        univention_repository_component: "{{ univention_repository_component
+          |combine({univention_repository_component_keys: univention_repository_component_parts}) }}"
       when:
         - "univention_repository_component_parts is defined and univention_repository_component_parts|length > 0"
       tags:
-        - univention_repository_component
-        - univention_repository_component_define_parts
+        - "univention_repository_component"
+        - "univention_repository_component_define_parts"
 
     - name: "univention_repository_component | Define prefix in {{ univention_repository_component_name }} component"
       vars:
-        univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}/prefix"
+        univention_repository_component_keys: >-
+          repository/online/component/{{ univention_repository_component_name }}/prefix
       ansible.builtin.set_fact:
-        univention_repository_component: "{{ univention_repository_component|combine({univention_repository_component_keys: univention_repository_component_prefix}) }}"
+        univention_repository_component: "{{ univention_repository_component
+          |combine({univention_repository_component_keys: univention_repository_component_prefix}) }}"
       when:
         - "univention_repository_component_prefix is defined and univention_repository_component_prefix|length > 0"
       tags:
-        - univention_repository_component
-        - univention_repository_component_define_prefix
+        - "univention_repository_component"
+        - "univention_repository_component_define_prefix"
 
     - name: "univention_repository_component | Define server in {{ univention_repository_component_name }} component"
       vars:
-        univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}/server"
+        univention_repository_component_keys: >-
+          repository/online/component/{{ univention_repository_component_name }}/server
       ansible.builtin.set_fact:
-        univention_repository_component: "{{ univention_repository_component|combine({univention_repository_component_keys: univention_repository_component_server}) }}"
+        univention_repository_component: "{{ univention_repository_component
+          |combine({univention_repository_component_keys: univention_repository_component_server}) }}"
       when:
         - "univention_repository_component_server is defined and univention_repository_component_server|length > 0"
       tags:
-        - univention_repository_component
-        - univention_repository_component_define_server
+        - "univention_repository_component"
+        - "univention_repository_component_define_server"
 
     - name: "univention_repository_component | Define username in {{ univention_repository_component_name }} component"
       vars:
-        univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}/username"
+        univention_repository_component_keys: >-
+          repository/online/component/{{ univention_repository_component_name }}/username"
       ansible.builtin.set_fact:
-        univention_repository_component: "{{ univention_repository_component|combine({univention_repository_component_keys: univention_repository_component_username}) }}"
+        univention_repository_component: "{{ univention_repository_component
+          |combine({univention_repository_component_keys: univention_repository_component_username}) }}"
       when:
         - "univention_repository_component_username is defined and univention_repository_component_username|length > 0"
       tags:
-        - univention_repository_component
-        - univention_repository_component_define_username
+        - "univention_repository_component"
+        - "univention_repository_component_define_username"
 
 
     - name: "univention_repository_component | Define password in {{ univention_repository_component_name }} component"
       vars:
-        univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}/password"
+        univention_repository_component_keys: >-
+          repository/online/component/{{ univention_repository_component_name }}/password
       ansible.builtin.set_fact:
-        univention_repository_component: "{{ univention_repository_component|combine({univention_repository_component_keys: univention_repository_component_password}) }}"
+        univention_repository_component: "{{ univention_repository_component
+          |combine({univention_repository_component_keys: univention_repository_component_password}) }}"
       no_log: "{{ univention_repository_component_hide_logging|default(true)|bool }}"
       when:
         - "univention_repository_component_password is defined and univention_repository_component_password|length > 0"
       tags:
-        - univention_repository_component
-        - univention_repository_component_define_password
+        - "univention_repository_component"
+        - "univention_repository_component_define_password"
 
     - name: "univention_repository_component | Define version in {{ univention_repository_component_name }} component"
       vars:
-        univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}/version"
+        univention_repository_component_keys: >-
+          repository/online/component/{{ univention_repository_component_name }}/version
       ansible.builtin.set_fact:
-        univention_repository_component: "{{ univention_repository_component|combine({univention_repository_component_keys: univention_repository_component_version}) }}"
+        univention_repository_component: "{{ univention_repository_component
+          |combine({univention_repository_component_keys: univention_repository_component_version}) }}"
       when:
         - "univention_repository_component_version is defined and univention_repository_component_version|length > 0"
       tags:
-        - univention_repository_component
-        - univention_repository_component_define_version
+        - "univention_repository_component"
+        - "univention_repository_component_define_version"
 
-    - name: "univention_repository_component | Define unmaintained in {{ univention_repository_component_name }} component"
+    - name: "univention_repository_component
+              | Define unmaintained in {{ univention_repository_component_name }} component"
       vars:
-        univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}/unmaintained"
+        univention_repository_component_keys: >-
+          repository/online/component/{{ univention_repository_component_name }}/unmaintained
       ansible.builtin.set_fact:
-        univention_repository_component: "{{ univention_repository_component|combine({univention_repository_component_keys: univention_repository_component_unmaintained}) }}"
+        univention_repository_component: "{{ univention_repository_component
+          |combine({univention_repository_component_keys: univention_repository_component_unmaintained}) }}"
       when:
-        - "univention_repository_component_unmaintained is defined and univention_repository_component_unmaintained|length > 0"
+        - "univention_repository_component_unmaintained is defined"
+        - "univention_repository_component_unmaintained|length > 0"
       tags:
-        - univention_repository_component
-        - univention_repository_component_define_unmaintained
+        - "univention_repository_component"
+        - "univention_repository_component_define_unmaintained"
 
     - name: "univention_repository_component | Activate  {{ univention_repository_component_name }} component"
       univention.ucs_modules.univention_config_registry:
         keys: "{{ univention_repository_component }}"
       tags:
-        - univention_repository_component
-        - univention_repository_component_activate
+        - "univention_repository_component"
+        - "univention_repository_component_activate"
   when: "univention_repository_component_name is defined and univention_repository_component_name|length > 0"

@@ -11,5 +11,5 @@
   retries: 10
   until: "install_univention_install.rc == 0"
   tags:
-    - univention_install
-    - univention_install_run
+    - "univention_install"
+    - "univention_install_run"

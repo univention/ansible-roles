@@ -4,30 +4,35 @@
 - name: "Check if category that is about to be deactivated exists to begin with"
   ansible.builtin.command: >
     udm portals/category list
-    --position "cn=category,{{ category['dn']|default(portal_deactivate_category_portal_dn) }}"
-    --filter "cn={{ category['name'] }}"
-  loop: "{{ portal_deactivate_category_categories|selectattr('state', 'defined')|selectattr('state', 'equalto', 'deactivated')|list|default([])|flatten }}"
+    --position "cn=category,{{ portal_deactivate_category_item['dn']|default(portal_deactivate_category_portal_dn) }}"
+    --filter "cn={{ portal_deactivate_category_item['name'] }}"
+  loop: "{{ portal_deactivate_category_categories|selectattr('state', 'defined')
+              |selectattr('state', 'equalto', 'deactivated')|list|default([])|flatten }}"
   loop_control:
-    loop_var: "category"
-  register: portal_deactivate_category_existing_portal_categories
-  when:
-    - ('only' not in category) or
-        ('only' in category and
-          portal_deactivate_category_install_list|intersect([category['only']]|flatten)
-        )
+    loop_var: "portal_deactivate_category_item"
+  register: "portal_deactivate_category_existing_portal_categories"
+  when: |
+    ('only' not in portal_deactivate_category_item) or
+    ('only' in portal_deactivate_category_item and
+      portal_deactivate_category_install_list|intersect([portal_deactivate_category_item['only']]|flatten)
+    )
   tags:
-    - portal_deactivate_category
-    - portal_deactivate_category_check_categories
+    - "portal_deactivate_category"
+    - "portal_deactivate_category_check_categories"
 
 - name: "Deactivate existing portal category"
   vars:
     category: "{{ item.item }}"
   ansible.builtin.command: >
     udm portals/category modify
-    --dn 'cn={{ category["name"] }},cn=category,{{ category["dn"]|default(portal_deactivate_category_portal_dn) }}'
+    --dn 'cn={{ portal_deactivate_category_item["name"] }},cn=category,{{ portal_deactivate_category_item["dn"]
+                  |default(portal_deactivate_category_portal_dn) }}'
     --set activated="FALSE"
+  # noqa ignore-errors
   ignore_errors: true
-  loop: "{{ portal_deactivate_category_existing_portal_categories['results']|default({}) }}"
+  loop_control:
+    loop_var: "portal_deactivate_category_item"
+  loop: "{{ portal_deactivate_category_existing_portal_categories['results']|default([]) }}"
   tags:
-    - portal_deactivate_category
-    - portal_deactivate_categorydeactivate_category
+    - "portal_deactivate_category"
+    - "portal_deactivate_categorydeactivate_category"

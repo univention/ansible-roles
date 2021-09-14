@@ -1,12 +1,13 @@
+---
 galaxy_info:
-  role_name: workaround_acmetiny_upgrade
-  author: Univention
-  description: Workaround> Use specific acme-tiny version for let's encrypt.
-  company: Univention GmbH
+  role_name: "workaround_acmetiny_upgrade"
+  author: "Univention"
+  description: "Workaround> Use specific acme-tiny version for let's encrypt."
+  company: "Univention GmbH"
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
-  issue_tracker_url: https://forge.univention.org
+  issue_tracker_url: "https://forge.univention.org"
 
   # Choose a valid license ID from https://spdx.org - some suggested licenses:
   # - BSD-3-Clause (default)
@@ -16,9 +17,9 @@ galaxy_info:
   # - Apache-2.0
   # - CC-BY-4.0
   license:
-    - GPL-3.0-or-later
+    - "GPL-3.0-or-later"
 
-  min_ansible_version: 2.10
+  min_ansible_version: "2.10"
 
   #
   # Provide a list of supported platforms, and for each platform a list of versions.
@@ -27,9 +28,9 @@ galaxy_info:
   # https://galaxy.ansible.com/api/v1/platforms/
   #
   platforms:
-    - name: Univention
+    - name: "Univention"
       versions:
-        - all
+        - "all"
 
   # List tags for your role here, one per line. A tag is a keyword that describes
   # and categorizes the role. Users find roles by searching for tags. Be sure to
@@ -38,11 +39,11 @@ galaxy_info:
   # NOTE: A tag is limited to a single word comprised of alphanumeric characters.
   #       Maximum 20 tags per role.
   galaxy_tags:
-    - univention
-    - ucs
-    - bootstrap
-    - workaround
-    - letsencrypt
-    - acme
+    - "univention"
+    - "ucs"
+    - "bootstrap"
+    - "workaround"
+    - "letsencrypt"
+    - "acme"
 
 dependencies: []
