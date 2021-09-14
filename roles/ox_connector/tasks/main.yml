@@ -228,6 +228,6 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       directory/manager/web/modules/users/user/add/default: >-
-        "cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}"
+        cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}
   tags:
     - "ox_connector_default_dn"
