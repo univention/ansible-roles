@@ -111,8 +111,8 @@
       ansible.builtin.command: >
         udm oxmail/accessprofile create
         --position "cn=accessprofiles,cn=open-xchange,{{ ox_connector_basedn }}"
-        --set name=standard
-        --set displayName="Standard"
+        --set name={{ ox_connector_template_name }}
+        --set displayName="{{ ox_connector_template_name }}"
         --set calendar=TRUE
         --set collectemailaddresses=TRUE
         --set contacts=TRUE
@@ -159,7 +159,7 @@
         udm settings/usertemplate modify
         --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
         --set name="Benutzer mit Groupware-Konto"
-        --set oxAccess="standard"
+        --set oxAccess="{{ ox_connector_template_name }}"
       changed_when: "ox_connector_modify_usertemplate.stdout is search('Object modified')"
       failed_when:
         - "ox_connector_modify_usertemplate.rc != 0"
@@ -219,6 +219,16 @@
       register: "ox_connector_disable_udmweb_ressource"
       tags:
         - "ox_connector_disable_udmweb_ressource"
+
+    - name: "ox_connector | Set oxAccess default template"
+      ansible.builtin.command: >
+        udm settings/extended_attribute modify \
+          --dn "cn=oxAccess,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}" \
+          --set default="{{ ox_connector_template_name }}"
+      changed_when: "ox_connector_disable_udmweb_user.stdout is search('Object modified')"
+      register: "ox_connector_disable_udmweb_user"
+      tags:
+        - "ox_connector_disable_udmweb_user"
 
   when: "ox_connector_server_type|default('master') != 'backup'"
   tags:
