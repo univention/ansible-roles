@@ -21,6 +21,7 @@ Role Variables
 - `ox_connector_master_admin`(string): The name of OX administrator.
 - `ox_connector_master_password`(string): The password of OX administrator.
 - `ox_connector_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
+- `ox_connector_template_name`(string): The name of default template; default: `"standard"`.
 
 Dependencies
 ------------
