@@ -34,6 +34,7 @@
           OX_MASTER_PASSWORD={{ ox_connector_master_password }}
       ansible.builtin.include_role:
         name: "install_packages"
+      no_log: "{{ ox_connector_hide_logging }}"
       tags:
         - "ox_connector_install"
 
@@ -57,6 +58,7 @@
         - "OX_MASTER_PASSWORD: '{{ ox_connector_master_password }}'"
       loop_control:
         loop_var: "ox_connector_item"
+      no_log: "{{ ox_connector_hide_logging }}"
       tags:
         - "ox_connector_check_settings"
 
@@ -67,6 +69,7 @@
           OX_SOAP_SERVER=https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}
           OX_MASTER_ADMIN={{ ox_connector_master_admin }}
           OX_MASTER_PASSWORD={{ ox_connector_master_password }}
+      no_log: "{{ ox_connector_hide_logging }}"
       when: "not ox_connector_settings_correct"
       tags:
         - "ox_connector_configure"
