@@ -1,7 +1,7 @@
 ---
 # tasks file for umc_permissions
 
-- name: "Hide remaining UMC modules per UCR and empty favorites"
+- name: "umc_permissions | Hide remaining UMC modules per UCR and empty favorites"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/module/udm/oxresources/oxresources/disabled: "true"
@@ -11,27 +11,16 @@
     - "umc_permissions"
     - "umc_permissions_ucr"
 
-- name: "Manage cn=only-users-and-groups,cn=UMC,cn=policies"
+- name: "umc_permissions | Manage cn=only-users-and-groups,cn=UMC,cn=policies"
   block:
-    - name: "Remove policies/umc"
+    - name: "umc_permissions | Modifly policies/umc"
       ansible.builtin.command:
         argv:
           - "udm"
           - "policies/umc"
-          - "delete"
+          - "modify"
           - "--dn"
           - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
-          - "--ignore_not_exists"
-      tags:
-        - "umc_permissions_policy_remove"
-
-    - name: "Add policies/umc"
-      ansible.builtin.command:
-        argv:
-          - "udm"
-          - "policies/umc"
-          - "create"
-          - "--position=cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
           - "--set"
           - "name=only-users-and-groups"
           - "--append"
@@ -40,10 +29,12 @@
           - "allow=cn=udm-groups,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
           - "--append"
           - "allow=cn=udm-new-portal,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
+      changed_when: "umc_permissions_modify_only_users_and_groups.stdout is not search('No modification: ')"
+      register: "umc_permissions_modify_only_users_and_groups"
       tags:
         - "umc_permissions_policy_add"
 
-    - name: "Add policy reference"
+    - name: "umc_permissions | Add policy reference"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -55,43 +46,17 @@
           - "cn=default-umc-all,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
           - "--policy-reference"
           - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
-      # noqa ignore-errors
-      ignore_errors: true
+      changed_when: "umc_permissions_policy_reference_result.stdout is not search('No modification: ')"
+      register: "umc_permissions_policy_reference_result"
       tags:
         - "umc_permissions_policy_add_reference"
   tags:
     - "umc_permissions"
     - "umc_permissions_policy"
 
-- name: "Manage cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention"
+- name: "umc_permissions | Manage cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention"
   block:
-    - name: "Remove settings/umc_operationset"
-      ansible.builtin.command:
-        argv:
-          - "udm"
-          - "settings/umc_operationset"
-          - "delete"
-          - "--dn"
-          - "cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
-          - "--ignore_not_exists"
-      tags:
-        - "umc_permissions_policy_usertemplate_remove_settings"
-
-    - name: "Remove from policies/umc"
-      ansible.builtin.command:
-        argv:
-          - "udm"
-          - "policies/umc"
-          - "modify"
-          - "--dn"
-          - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
-          - "--remove"
-          - "allow=cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
-          - "--ignore_not_exists"
-      tags:
-        - "umc_permissions_policy_usertemplate_remove_policy"
-
-    - name: "Add settings/umc_operationset"
+    - name: "umc_permissions | Add settings/umc_operationset"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -106,10 +71,13 @@
           - "flavor=settings/usertemplate"
           - "--set"
           - "operation=udm/*"
+          - "--ignore_exists"
+      changed_when: "umc_permissions_policy_usertemplate_add_setting_result.stdout is not search('Object exists: ')"
+      register: "umc_permissions_policy_usertemplate_add_setting_result"
       tags:
         - "umc_permissions_policy_usertemplate_add_settings"
 
-    - name: "Add to policies/umc"
+    - name: "umc_permissions | Add to policies/umc"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -119,42 +87,17 @@
           - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
           - "--append"
           - "allow=cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
+      changed_when: "umc_permissions_append_udm_usertemplate_result.stdout is not search('No modification: ')"
+      register: "umc_permissions_append_udm_usertemplate_result"
       tags:
         - "umc_permissions_policy_usertemplate_add_policy"
   tags:
     - "umc_permissions"
     - "umc_permissions_policy_usertemplate"
 
-- name: "Manage cn=udm-reports,cn=operations,cn=UMC,cn=univention"
+- name: "umc_permissions | Manage cn=udm-reports,cn=operations,cn=UMC,cn=univention"
   block:
-    - name: "Remove settings/umc_operationset"
-      ansible.builtin.command:
-        argv:
-          - "udm"
-          - "settings/umc_operationset"
-          - "remove"
-          - "--dn"
-          - "cn=udm-reports,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
-          - "--ignore_not_exists"
-      tags:
-        - "umc_permissions_policy_userreports_remove_settings"
-
-    - name: "Remove from policies/umc"
-      ansible.builtin.command:
-        argv:
-          - "udm"
-          - "policies/umc"
-          - "modify"
-          - "--dn"
-          - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
-          - "--remove"
-          - "allow=cn=udm-reports,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
-      # noqa ignore-errors
-      ignore_errors: true
-      tags:
-        - "umc_permissions_policy_userreports_remove_policy"
-
-    - name: "Add settings/umc_operationset"
+    - name: "umc_permissions | Add settings/umc_operationset"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -167,10 +110,13 @@
           - "description=UDM - User Reports"
           - "--set"
           - "operation=udm/reports/get"
+          - "--ignore_exists"
+      changed_when: "umc_permissions_policy_userreports_add_settings_result.stdout is not search('Object exists: ')"
+      register: "umc_permissions_policy_userreports_add_settings_result"
       tags:
         - "umc_permissions_policy_userreports_add_settings"
 
-    - name: "Add to policies/umc"
+    - name: "umc_permissions | Add to policies/umc"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -180,13 +126,15 @@
           - "cn=only-users-and-groups,cn=UMC,cn=policies,{{ umc_permissions_basedn }}"
           - "--append"
           - "allow=cn=udm-reports,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
+      changed_when: "umc_permissions_append_udm_reports_result.stdout is not search('No modification: ')"
+      register: "umc_permissions_append_udm_reports_result"
       tags:
         - "umc_permissions_policy_userreports_add_policy"
   tags:
     - "umc_permissions"
     - "umc_permissions_policy_userreports"
 
-- name: "Allow groups to be added to user"
+- name: "umc_permissions | Allow groups to be added to user"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -195,12 +143,14 @@
       - "--dn"
       - "cn=udm-users,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
       - "--append"
-      - "operation=udm/syntax/choices:objectType=groups/group"
+      - "operation=udm/syntax/choices objectType=groups/group"
+  changed_when: "umc_permissions_append_udm_groups_result.stdout is not search('No modification: ')"
+  register: "umc_permissions_append_udm_groups_result"
   tags:
     - "umc_permissions"
     - "umc_permissions_allow_groups_add_to_users"
 
-- name: "Allow users to be added to groups"
+- name: "umc_permissions | Allow users to be added to groups"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -209,12 +159,14 @@
       - "--dn"
       - "cn=udm-groups,cn=operations,cn=UMC,cn=univention,{{ umc_permissions_basedn }}"
       - "--append"
-      - "operation=udm/syntax/choices:objectType=users/user"
+      - "operation=udm/syntax/choices objectType=users/user"
+  changed_when: "umc_permissions_append_udm_users_result.stdout is not search('No modification: ')"
+  register: "umc_permissions_append_udm_users_result"
   tags:
     - "umc_permissions"
     - "umc_permissions_allow_users_add_to_groups"
 
-- name: "Set passwordreset/blacklist"
+- name: "umc_permissions | Set passwordreset/blacklist"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/passwordreset/blacklist/groups: "{{ umc_permissions_passwordreset_blacklist_groups }}"
@@ -223,7 +175,7 @@
     - "umc_permissions_policy_selfservice_blacklist"
 
 
-- name: "Set passwordreset/whitelist"
+- name: "umc_permissions | Set passwordreset/whitelist"
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/self-service/passwordreset/whitelist/groups: "{{ umc_permissions_passwordreset_whitelist_groups }}"
