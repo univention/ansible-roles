@@ -71,6 +71,16 @@
     - "custom_facts"
     - "custom_facts_deployment"
 
+- name: "custom_facts | Remove finsihed file when exists"
+  ansible.builtin.file:
+    path: "/etc/ansible/facts.d/deployment_finished.fact"
+    state: "absent"
+  changed_when: false
+  failed_when: false
+  tags:
+    - "custom_facts"
+    - "custom_facts_remove_finished"
+
 - name: "custom_facts | Copy custom facts script to machine"
   ansible.builtin.copy:
     src: "files/ucr.fact"

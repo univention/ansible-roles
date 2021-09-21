@@ -96,7 +96,9 @@
       - "--dn"
       - "{{ configure_saml_single_server_item }}"
       - "--ignore_not_exists"
-  changed_when: "configure_saml_single_server_remove_default_saml_provider_result is not search('Object not found')"
+  # In force join above, the default provider are added on each run, there a changed will always be deteceted
+  # changed_when: "configure_saml_single_server_remove_default_saml_provider_result is not search('Object not found')"
+  changed_when: false
   register: "configure_saml_single_server_remove_default_saml_provider_result"
   loop:
     # yamllint disable rule:line-length

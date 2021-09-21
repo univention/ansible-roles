@@ -175,7 +175,7 @@
     - name: "ucs_join | Use DHCP network setting"
       univention.ucs_modules.univention_config_registry:
         kvlist:
-          - key: "interfaces/{{ ucs_join_network_config_interface }}"
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/type"
             value: "dhcp"
       check_mode: false
       when: "ucs_join_network_config_type == 'dhcp'"
@@ -185,8 +185,8 @@
     - name: "ucs_join | Use static network setting (interface)"
       univention.ucs_modules.univention_config_registry:
         kvlist:
-          - key: "interfaces/{{ ucs_join_network_config_interface }}"
-            value: ""
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/type"
+            value: "static"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/address"
             value: "{{ ucs_join_network_config_static_ip_config|ipaddr('address') }}"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/netmask"
@@ -203,8 +203,8 @@
     - name: "ucs_join | Use static network setting (additional interfaces)"
       univention.ucs_modules.univention_config_registry:
         kvlist:
-          - key: "interfaces/{{ ucs_join_item.key }}"
-            value: ""
+          - key: "interfaces/{{ ucs_join_item.key }}/type"
+            value: "static"
           - key: "interfaces/{{ ucs_join_item.key }}/address"
             value: "{{ ucs_join_item.value|ipaddr('address') }}"
           - key: "interfaces/{{ ucs_join_item.key }}/netmask"
@@ -236,7 +236,7 @@
     - name: "ucs_join | Use static network setting (dns)"
       univention.ucs_modules.univention_config_registry:
         kvlist:
-          - key: "dns/forwarder{{ ucs_join_index }}"
+          - key: "dns/forwarder{{ ucs_join_index +1 }}"
             value: "{{ ucs_join_item }}"
       check_mode: false
       loop: "{{ ucs_join_network_config_static_dns_servers|default([]) }}"

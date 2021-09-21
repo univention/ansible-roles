@@ -1,7 +1,7 @@
-Custom facts
+Custom facts (finished)
 =========
 
-This role gathers release information and store them on remote system.
+Store rollout finished information in custom facts directory.
 
 Requirements
 ------------
@@ -11,7 +11,7 @@ none
 Role Variables
 --------------
 
-- `custom_facts_templates`(list): filename(s) of templates which should be applied; default: `["deployment.fact.j2", "hotfixes.fact.j2"]`
+none
 
 Dependencies
 ------------

@@ -56,6 +56,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [configure_nextcloud_saml](#rolesconfigure_nextcloud_samlreadmemd)
 - [install_apps_ox_post](#rolesinstall_apps_ox_postreadmemd)
 - [portal_create_category](#rolesportal_create_categoryreadmemd)
+- [custom_facts_finished](#rolescustom_facts_finishedreadmemd)
 - [install_packages](#rolesinstall_packagesreadmemd)
 - [add_local_user](#rolesadd_local_userreadmemd)
 - [configure_directory_manager](#rolesconfigure_directory_managerreadmemd)
@@ -623,7 +624,7 @@ www.univention.com
 Custom facts
 =========
 
-This role gathers release information and store them an remote system.
+This role gathers release information and store them on remote system.
 
 Requirements
 ------------
@@ -1286,6 +1287,7 @@ Role Variables
 - `ox_connector_master_password`(string): The password of OX administrator.
 - `ox_connector_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
 - `ox_connector_template_name`(string): The name of default template; default: `"standard"`.
+- `ox_connector_hide_logging`(boolean): Toggle logging of sensitive information like password; default: `true`.
 
 Dependencies
 ------------
@@ -2484,6 +2486,45 @@ Role Variables
 - `portal_create_category_base_dn`(string):  The base DN that has been used when setting up the UCS server
 - `portal_create_category_categories`(map): The portal categories map.
 - `portal_create_category_install_list`(list): Combine apps/services/customization lists.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/custom_facts_finished/README.md
+
+Custom facts (finished)
+=========
+
+Store rollout finished information in custom facts directory.
+
+Requirements
+------------
+
+none
+
+Role Variables
+--------------
+
+none
 
 Dependencies
 ------------
