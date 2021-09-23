@@ -39,6 +39,11 @@
     {% if install_packages_additional_options is defined and install_packages_additional_options|length > 0 %}
     --set {{ install_packages_additional_options }}
     {% endif %}
+  changed_when:
+    - "install_packages_package_install.stderr is not search('must_not_be_installed')"
+  failed_when:
+    - "install_packages_package_install.rc > 0"
+    - "install_packages_package_install.stderr is not search('must_not_be_installed')"
   loop: "{{ install_packages_install_apps }}"
   loop_control:
     loop_var: "install_packages_item"
