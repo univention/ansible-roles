@@ -15,9 +15,15 @@
 {{- "]" if 'allowedGroups:' not in portal_entry_portal_entries_stdout_lines[loop.index]|default("")}}
 {{- "" if portal_entry_portal_entries_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') or portal_entry_portal_entries_stdout_lines[loop.index]|default("")|length == 0 else "," }}
 {% elif 'link:' in line -%}
+{% if ansible_local['ucr']['version/version']|default('99')|float < 5 -%}
 {{ "link: [" if 'link:' not in portal_entry_portal_entries_stdout_lines[loop.index-2]|default("")}}'{{ line.split(": ")[1] }}'
 {{- "]" if 'link:' not in portal_entry_portal_entries_stdout_lines[loop.index]|default("")}}
 {{- "" if portal_entry_portal_entries_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') or portal_entry_portal_entries_stdout_lines[loop.index]|default("")|length == 0 else "," }}
+{% else -%}
+{{ "link: {" if 'link:' not in portal_entry_portal_entries_stdout_lines[loop.index-2]|default("")}}'{{ line.split(": ")[1] }}": "{{- line.split(": ")[2] }}'
+{{- "}" if 'link:' not in portal_entry_portal_entries_stdout_lines[loop.index]|default("")}}
+{{- "" if portal_entry_portal_entries_stdout_lines[loop.index]|default("")|regex_search('^DN: cn=[a-zA-Z-]+') or portal_entry_portal_entries_stdout_lines[loop.index]|default("")|length == 0 else "," }}
+{% endif %}
 {% elif 'icon:' in line -%}
 {% elif '  ' not in line -%}
 {% elif line|length == 0 -%}
