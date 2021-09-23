@@ -24,6 +24,7 @@
     - "univention_upgrade_upgrade_check.rc > 0"
     - "univention_upgrade_upgrade_check.stderr is not search('update to UCS 5.0 is blocked')"
     - "univention_upgrade_upgrade_check.stdout is not search('but updater has been instructed to stop')"
+    - "univention_upgrade_upgrade_check.stdout is not search('No update available.')"
   tags:
     - "univention_upgrade"
     - "univention_upgrade_upgrade_check"
