@@ -8,7 +8,10 @@
       - "portal_entry_item['name']|length > 0"
       - "portal_entry_item['anonymous'] is undefined or portal_entry_item['anonymous'] is boolean"
       - "portal_entry_item['activated'] is undefined or portal_entry_item['activated'] is boolean"
-      - "portal_entry_item['link'] is undefined or portal_entry_item['link']|length > 0"
+      - "portal_entry_item['link'] is undefined or
+         (ansible_local['ucr']['version/version']|default('99')|float >= 5 or portal_entry_item['link']|length > 0)"
+      - "portal_entry_item['link'] is undefined or
+         (ansible_local['ucr']['version/version']|default('99')|float < 5 or portal_entry_item['link'] is mapping)"
       - "portal_entry_item['linkTarget'] is undefined or portal_entry_item['linkTarget']|length > 0"
       - "portal_entry_item['icon_file'] is undefined or portal_entry_item['icon_file']|length > 0"
       - "portal_entry_item['description'] is undefined or portal_entry_item['description'] is mapping"
@@ -107,8 +110,21 @@
           {% if portal_entry_icon_data != None and portal_entry_icon_data|length > 0 %}
             --set icon='{{ portal_entry_icon_data }}'
           {% endif %}
-          {% if 'link' in portal_entry_update_item %}
+          {% if 'link' in portal_entry_update_item and portal_entry_update_item['link'] is not mapping %}
             --set link='{{ portal_entry_update_item['link'] }}'
+          {% elif 'link' in portal_entry_update_item and portal_entry_update_item['link'] is mapping %}
+            {% for lang, text in (portal_entry_update_item['link']|default("{}")).items() %}
+              {% if lang in
+                  portal_entry_portal_entries_fact[portal_entry_update_item['name']]['link']|default([]) %}
+                {% if text != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['link'][lang] %}
+                  --remove link="{{ lang }} {{ portal_entry_portal_entries_fact[portal_entry_update_item['name']]
+                                                        ['link'][lang] }}"
+                  --append link='{{ lang }} "{{ text }}"'
+                {% endif %}
+              {% else %}
+                --append link='{{ lang }} "{{ text }}"'
+              {% endif %}
+            {% endfor %}
           {% endif %}
           --set anonymous='{{ "TRUE" if portal_entry_update_item['anonymous']|default(false) else "FALSE" }}'
           --set linkTarget={{ portal_entry_update_item['linktarget']|default('useportaldefault') }}

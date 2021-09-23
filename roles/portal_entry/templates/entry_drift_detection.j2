@@ -10,8 +10,18 @@
 {% if portal_entry_update_item['activated']|default(true)|bool|lower != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['activated']|default(true)|bool|string|lower -%}
 {% set ns.found = 'yes' -%}
 {% endif -%}
+{%- if ansible_local['ucr']['version/version']|default('99')|float < 5 -%}
 {% if portal_entry_update_item['link']|default("") not in portal_entry_portal_entries_fact[portal_entry_update_item['name']]['link']|default([]) -%}
 {% set ns.found = 'yes' -%}
+{% endif -%}
+{%- else -%}
+{% if 'link' in portal_entry_update_item -%}
+{% for link_key, link_value in portal_entry_update_item['link'].items() -%}
+{% if link_value != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['link'][link_key]|default("") -%}
+{% set ns.found = 'yes' -%}
+{% endif -%}
+{% endfor -%}
+{% endif -%}
 {% endif -%}
 {% if 'allowed_groups' in portal_entry_update_item -%}
 {% for group in portal_entry_update_item['allowed_groups'] -%}
