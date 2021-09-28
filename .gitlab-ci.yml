@@ -23,7 +23,7 @@ variables:
     for f in ${ROLE_FILES}
     do
       ROLE=$(echo ${f} | cut -d "/" -f2)
-      echo "- [${ROLE}](#$(echo ${f} | sed "s@\.@@g" | sed "s@/@@g" | tr '[:upper:]' '[:lower:]'))" >> README.md
+      echo "- [${ROLE}](https://github.com/univention/ansible-roles#$(echo ${f} | sed "s@\.@@g" | sed "s@/@@g" | tr '[:upper:]' '[:lower:]'))" >> README.md
     done
     # Add content of modules
     for f in ${ROLE_FILES}
