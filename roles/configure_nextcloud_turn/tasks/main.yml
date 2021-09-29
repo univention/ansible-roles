@@ -1,0 +1,24 @@
+---
+# tasks file for configure_nextcloud_turn
+
+- name: "NextCloud: Configure TURN server for Talk"
+  ansible.builtin.command:
+    argv:
+      - "univention-app"
+      - "shell"
+      - "nextcloud"
+      - "sudo"
+      - "-u"
+      - "www-data"
+      - "/var/www/html/occ"
+      - "talk:turn:add"
+      - "--secret"
+      - "{{ configure_nextcloud_turn_secret }}"
+      - "--"
+      - "{{ configure_nextcloud_turn_url }}"
+      - "udp,tcp"
+  when: "configure_nextcloud_turn_secret|length > 0 and configure_nextcloud_turn_url|length > 0"
+  changed_when: "configure_nextcloud_turn_result.stdout is search('Added')"
+  register: "configure_nextcloud_turn_result"
+  tags:
+    - "configure_nextcloud_turn"
