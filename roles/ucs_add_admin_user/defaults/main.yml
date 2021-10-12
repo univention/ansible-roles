@@ -6,3 +6,5 @@ ucs_add_admin_user_firstname: ""
 ucs_add_admin_user_lastname: ""
 ucs_add_admin_user_password: ""
 ucs_add_admin_user_recoveryemail: ""
+ucs_add_admin_user_attrib_list: {}
+ucs_add_admin_user_group_list: []

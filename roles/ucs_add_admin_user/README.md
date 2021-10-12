@@ -17,6 +17,8 @@ Role Variables
 - `ucs_add_admin_user_lastname`(string): The lastname for the administrative user.
 - `ucs_add_admin_user_password`(string): The password for the administrative user.
 - `ucs_add_admin_user_recoveryemail`(string): The recovery email address for the administrative user.
+- `ucs_add_admin_user_attrib_list`(map): A map of attributes & values to set for the administrative user.
+- `ucs_add_admin_user_group_list`(list): A list of group names to append the administrative user to.
 
 Dependencies
 ------------
