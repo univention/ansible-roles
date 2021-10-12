@@ -60,8 +60,9 @@
       - "modify"
       - "--dn"
       - "uid={{ ucs_add_admin_user_username }},cn=users,{{ ucs_add_admin_user_basedn }}"
-      - "--set {{ ucs_add_admin_user_attrib_item.key }}={{ ucs_add_admin_user_attrib_item.value }}"
-  loop: "{{ ucs_add_admin_user_attrib_list }}"
+      - "--set"
+      - "{{ ucs_add_admin_user_attrib_item.key }}={{ ucs_add_admin_user_attrib_item.value }}"
+  loop: "{{ ucs_add_admin_user_attrib_list|dict2items }}"
   loop_control:
     loop_var: "ucs_add_admin_user_attrib_item"
   when: "ucs_add_admin_user_attrib_list|length > 0"
