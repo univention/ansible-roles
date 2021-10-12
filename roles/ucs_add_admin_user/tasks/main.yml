@@ -1,7 +1,7 @@
 ---
 # tasks file for ucs_add_admin_user
 
-- name: "Add Admin User"
+- name: "ucs_add_admin_user | Add Admin User"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -24,7 +24,7 @@
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_add_user"
 
-- name: "Add Admin User to group Domain Admins"
+- name: "ucs_add_admin_user | Add Admin User to group Domain Admins"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -38,7 +38,7 @@
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_add_to_group"
 
-- name: "Set primary group to Domain Admins"
+- name: "ucs_add_admin_user | Set primary group to Domain Admins"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -52,7 +52,7 @@
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_set_primary_group"
 
-- name: "Set other options for Admin User"
+- name: "ucs_add_admin_user | Set other options for Admin User"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -70,7 +70,7 @@
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_modify_user"
 
-- name: "Add Admin User to other groups"
+- name: "ucs_add_admin_user | Add Admin User to other groups"
   ansible.builtin.command:
     argv:
       - "udm"
@@ -88,7 +88,7 @@
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_add_to_groups"
 
-- name: "Trigger password recovery mail"
+- name: "ucs_add_admin_user | Trigger password recovery mail"
   no_log: true
   ansible.builtin.expect:
     command: "umc-command passwordreset/send_token -o username={{ ucs_add_admin_user_username }} -o method=email"
