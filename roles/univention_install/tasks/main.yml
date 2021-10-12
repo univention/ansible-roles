@@ -1,6 +1,16 @@
 ---
 # tasks file for univention_install
 
+- name: "univention_install | Clean apt package cache"
+  ansible.builtin.command:
+    cmd: "apt clean"
+    warn: false
+  changed_when: false
+  when: "univention_install_clear_apt_cache"
+  tags:
+    - "univention_install"
+    - "univention_install_clean_package_cache"
+
 - name: "univention_install | Install via univention-install"
   ansible.builtin.command:
     cmd: "univention-install --yes {{ univention_install_name }}"

@@ -12,6 +12,7 @@ Role Variables
 --------------
 
 - `univention_install_name`(string): The name of the package to be installed.
+- `univention_install_clear_apt_cache`(bool): Clear all downloaded packages to reduce package conflicts; default: `false`.
 
 Dependencies
 ------------

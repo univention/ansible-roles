@@ -11,6 +11,16 @@
     - "univention_upgrade"
     - "univention_upgrade_ignore_apache_template_check"
 
+- name: "univention_upgrade | Clean apt package cache"
+  ansible.builtin.command:
+    cmd: "apt clean"
+    warn: false
+  changed_when: false
+  when: "univention_upgrade_clear_apt_cache"
+  tags:
+    - "univention_upgrade"
+    - "univention_upgrade_clean_package_cache"
+
 - name: "univention_upgrade | Check for upgrade"
   ansible.builtin.command: >
     univention-upgrade
