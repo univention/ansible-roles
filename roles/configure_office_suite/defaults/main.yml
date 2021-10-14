@@ -5,6 +5,7 @@ configure_office_suite_office_suite: "collabora-online"
 configure_office_suite_supported_office_suites:
   - "onlyoffice"
   - "collabora-online"
+  - "collabora"
 configure_office_suite_onlyoffice_formats:
   csv: "false"
   doc: "false"
