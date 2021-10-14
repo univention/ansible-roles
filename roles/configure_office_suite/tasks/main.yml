@@ -1,7 +1,7 @@
 ---
 # tasks file for configure_office_suite
 
-- name: "Assert that provided office suite is a supported value"
+- name: "configure_office_suite | Assert that provided office suite is a supported value"
   ansible.builtin.assert:
     that: "configure_office_suite_office_suite in configure_office_suite_supported_office_suites"
     fail_msg: |
@@ -11,7 +11,7 @@
     - "configure_office_suite"
     - "configure_office_suite_precheck"
 
-- name: "Run UCS install apps: Install Packages"
+- name: "configure_office_suite | Run UCS install apps: Install Packages"
   vars:
     install_packages_app_version_map: "{{ configure_office_suite_app_version_map }}"
     install_packages_temp_pw_file: "{{ configure_office_suite_temp_pw_file }}"
@@ -24,9 +24,9 @@
     - "configure_office_suite"
     - "configure_office_suite_install"
 
-- name: "Configure onlyoffice"
+- name: "configure_office_suite | Configure onlyoffice"
   block:
-    - name: "NextCloud: Set DocumentServerUrl"
+    - name: "configure_office_suite | NextCloud: Set DocumentServerUrl"
       ansible.builtin.command:
         argv:
           - "univention-app"
@@ -45,7 +45,7 @@
         - "configure_office_suite_only_office_nextcloud"
         - "configure_office_suite_only_office_nextcloud_document_server"
 
-    - name: "NextCloud: Set file formats"
+    - name: "configure_office_suite | NextCloud: Set file formats"
       ansible.builtin.command:
         argv:
           - "univention-app"
@@ -69,9 +69,9 @@
     - "configure_office_suite"
     - "configure_office_suite_only_office"
 
-- name: "Configure collabora-online"
+- name: "configure_office_suite | Configure collabora-online"
   block:
-    - name: "NextCloud: Disable certificate validation for CODE server"
+    - name: "configure_office_suite | NextCloud: Disable certificate validation for CODE server"
       ansible.builtin.command:
         argv:
           - "univention-app"
@@ -90,7 +90,7 @@
         - "configure_office_suite_collabora_online_nextcloud"
         - "configure_office_suite_collabora_online_nextcloud_disable_certificate_validation"
 
-    - name: "NextCloud: Install Collabora license"
+    - name: "configure_office_suite | NextCloud: Install Collabora license"
       ansible.builtin.command:
         argv:
           - "univention-app"
@@ -109,7 +109,7 @@
     - "configure_office_suite"
     - "configure_office_suite_collabora_online"
 
-- name: "Flush handlers to restart collabora"
+- name: "configure_office_suite | Flush handlers to restart collabora"
   ansible.builtin.meta: "flush_handlers"
   tags:
     - "configure_office_suite"
