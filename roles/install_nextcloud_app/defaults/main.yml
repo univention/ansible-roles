@@ -1,4 +1,4 @@
 ---
 # defaults file for install_nextcloud_app
-
 install_nextcloud_app_name: ""
+install_nextcloud_app_opertation: "install"

@@ -11,7 +11,7 @@
       - "-u"
       - "www-data"
       - "/var/www/html/occ"
-      - "app:install"
+      - "app:{{ install_nextcloud_app_opertation|default('install') }}"
       - "{{ install_nextcloud_app_name }}"
   when: "install_nextcloud_app_name|length > 0"
   changed_when: "install_nextcloud_app_result.stdout is not search('already installed')"
