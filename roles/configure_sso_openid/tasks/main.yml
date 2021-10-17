@@ -1,0 +1,216 @@
+---
+# tasks file for configure_sso_openid
+
+- name: "configure_sso_openid | Run UCS install apps: Install 'openid-connect-provider'"
+  vars:
+    install_packages_app_version_map: "{{ configure_sso_openid_app_version_map }}"
+    install_packages_temp_pw_file: "{{ configure_sso_openid_temp_pw_file }}"
+    install_packages_install_apps:
+      - "openid-connect-provider"
+  ansible.builtin.include_role:
+    name: "install_packages"
+  tags:
+    - "configure_sso_openid"
+    - "configure_sso_openid_install_openid_connect_provider"
+
+- name: "configure_sso_openid | Configure signing mehtod for JWT"
+  ansible.builtin.command:
+    cmd: |
+      univention-app
+      configure
+      openid-connect-provider
+      --set oidc/konnectd/signing_method={{ configure_sso_openid_signing_method }}
+  tags:
+    - "configure_sso_openid"
+    - "configure_sso_openid_configure_signing_method"
+
+- name: "configure_sso_openid | Settings for nextcloud"
+  block:
+    - name: "configure_sso_openid | Create OIDC provider for Nextcloud"
+      ansible.builtin.command:
+        cmd: |
+          udm
+          oidc/rpservice
+          create
+          --set name={{ configure_sso_openid_clients['nextcloud']['name']|default('nextcloud') }}
+          --position cn=oidc,cn=univention,{{ configure_sso_openid_basedn }}
+          --set clientid={{ configure_sso_openid_clients['nextcloud']['clientid']|default('nextcloud') }}
+          --set clientsecret={{ configure_sso_openid_clients['nextcloud']['clientsecret'] }}
+          --set trusted=yes
+          --set applicationtype=web
+          --set redirectURI=https://{{ configure_sso_openid_external_hostname }}/nextcloud/apps/user_oidc/code
+          --ignore_exists
+      changed_when: "configure_sso_openid_nextcloud_oidc_provider_result.stdout is not search('Object exists')"
+      register: "configure_sso_openid_nextcloud_oidc_provider_result"
+      tags:
+        - "configure_sso_openid_nextcloud_oidc_provider"
+
+    - name: "configure_sso_openid | Install 'user_oidc' nextcloud app"
+      vars:
+        install_nextcloud_app_name: "user_oidc"
+      ansible.builtin.include_role:
+        name: "install_nextcloud_app"
+      tags:
+        - "configure_sso_openid_nextcloud_install_user_oidc_app"
+
+    - name: "configure_sso_openid | Confgure nextcloud oidc provider"
+      ansible.builtin.command:
+        cmd: |
+          univention-app
+          shell
+          nextcloud
+          sudo
+          -u
+          www-data
+          /var/www/html/occ
+          user_oidc:provider
+          ucs
+          --clientid="{{ configure_sso_openid_clients['nextcloud']['clientid']|default('nextcloud') }}"
+          --clientsecret="{{ configure_sso_openid_clients['nextcloud']['clientsecret'] }}"
+          --discoveryuri="https://{{ configure_sso_openid_external_hostname }}/.well-known/openid-configuration"
+          --mapping-uid=preferred_username
+      tags:
+        - "configure_sso_openid_nextcloud_configure_oidc"
+
+    - name: "configure_sso_openid | Disable 'user_saml' nextcloud app"
+      vars:
+        install_nextcloud_app_name: "user_saml"
+        install_nextcloud_app_opertation: "disable"
+      ansible.builtin.include_role:
+        name: "install_nextcloud_app"
+      tags:
+        - "configure_sso_openid_nextcloud_disable_nextcloud_app"
+
+    - name: "configure_sso_openid | Remove nextcloud login screen"
+      ansible.builtin.command:
+        cmd: |
+          univention-app
+          shell
+          nextcloud
+          sudo
+          -u
+          www-data
+          /var/www/html/occ
+          config:app:set
+          --value=0
+          user_oidc
+          allow_multiple_user_backends
+      tags:
+        - "configure_sso_openid_nextcloud_remove_login_screen"
+
+  when:
+    - "'nextcloud' in configure_sso_openid_install_apps"
+    - "'nextcloud' in configure_sso_openid_clients"
+  tags:
+    - "configure_sso_openid"
+    - "configure_sso_openid_nextcloud"
+
+- name: "configure_sso_openid | Settings for open-xchange"
+  block:
+    - name: "configure_sso_openid | Create OIDC provider for open-xchange"
+      ansible.builtin.command:
+        cmd: |
+          udm
+          oidc/rpservice
+          create
+          --set name={{ configure_sso_openid_clients['ox']['name']|default('open-xchange') }}
+          --position cn=oidc,cn=univention,{{ configure_sso_openid_basedn }}
+          --set clientid={{ configure_sso_openid_clients['ox']['clientid']|default('open-xchange') }}
+          --set clientsecret={{ configure_sso_openid_clients['ox']['clientsecret'] }}
+          --set trusted=yes
+          --set applicationtype=web
+          --set redirectURI=https://{{ configure_sso_openid_external_hostname }}/appsuite/api/oidc/auth
+          --ignore_exists
+      tags:
+        - "configure_sso_openid_ox_oidc_provider"
+
+    - name: "configure_sso_openid | Disable 'user_saml' nextcloud app"
+      vars:
+        univention_install_name: "{{ configure_sso_openid_ox_items }}"
+      ansible.builtin.include_role:
+        name: "univention_install"
+      loop:
+        - "open-xchange-oidc-ucs"
+        - "open-xchange-authentication-ucs"
+        - "open-xchange-authentication-ucs-common"
+        - "open-xchange-oidc-ucs"
+        - "open-xchange-saml-ucs"
+      loop_control:
+        loop_var: "configure_sso_openid_ox_items"
+      tags:
+        - "configure_sso_openid_nextcloud_disable_nextcloud_app"
+
+    - name: "configure_sso_openid | Make sure, that properties file exists"
+      ansible.builtin.file:
+        path: "/opt/open-xchange/etc/openid.properties"
+        state: "touch"
+      tags:
+        - "configure_sso_openid_ox_create_poperties_file"
+    - name: "configure_sso_openid | Configure ox properties via UCR"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          ox/cfg/mailfilter.properties/com.openexchange.mail.filter.loginType: "global"
+          ox/cfg/mailfilter.properties/com.openexchange.mail.filter.passwordSource: "global"
+          ox/cfg/mail.properties/com.openexchange.mail.mailServerSource: "global"
+          ox/cfg/mail.properties/com.openexchange.mail.passwordSource: "global"
+          ox/cfg/authplugin.properties/com.openexchange.authentication.ucs.searchFilter: |
+            (&(objectClass=oxUserObject)(|(uid=%s)(mailPrimaryAddress=%s)))
+          ox/cfg/sessiond.properties/com.openexchange.sessiond.autologin: "false"
+          ox/cfg/openid.properties/com.openexchange.oidc.enabled: "true"
+          ox/cfg/openid.properties/com.openexchange.oidc.ucs.enabled: "true"
+          ox/cfg/openid.properties/com.openexchange.oidc.startDefaultBackend: "false"
+          ox/cfg/openid.properties/com.openexchange.oidc.clientId: |
+            {{ configure_sso_openid_clients['ox']['clientid']|default('open-xchange') }}
+          ox/cfg/openid.properties/com.openexchange.oidc.clientSecret: |
+            {{ configure_sso_openid_clients['ox']['clientsecret'] }}
+          ox/cfg/openid.properties/com.openexchange.oidc.opIssuer: |
+            https://{{ configure_sso_openid_external_hostname }}
+          ox/cfg/openid.properties/com.openexchange.oidc.ucs.userInfoEndpoint: |
+            https://{{ configure_sso_openid_external_hostname }}/konnect/v1/userinfo
+          ox/cfg/openid.properties/com.openexchange.oidc.opAuthorizationEndpoint: |
+            https://{{ configure_sso_openid_external_hostname }}/signin/v1/identifier/_/authorize
+          ox/cfg/openid.properties/com.openexchange.oidc.opTokenEndpoint: |
+            https://{{ configure_sso_openid_external_hostname }}/konnect/v1/token
+          ox/cfg/openid.properties/com.openexchange.oidc.opJwkSetEndpoint: |
+            https://{{ configure_sso_openid_external_hostname }}/konnect/v1/jwks.json
+          ox/cfg/openid.properties/com.openexchange.oidc.jwsAlgorithm: "{{ configure_sso_openid_signing_method }}"
+          ox/cfg/openid.properties/com.openexchange.oidc.scope: "email;openid;profile;offline_access"
+          ox/cfg/openid.properties/com.openexchange.oidc.userLookupClaim: "email"
+          ox/cfg/openid.properties/com.openexchange.oidc.rpRedirectURIAuth: |
+            https://{{ configure_sso_openid_external_hostname }}/appsuite/api/oidc/auth
+      tags:
+        - "configure_sso_openid_ox_configure_properties"
+
+    - name: "configure_sso_openid | Disable SAML in frondend"
+      ansible.builtin.template:
+        dest: "/opt/open-xchange/etc/as-config.yml"
+        src: "as-config.yaml.j2"
+      tags:
+        - "configure_sso_openid_ox_disable_saml_frondend"
+
+    - name: "configure_sso_openid | Adjust Dovecot ACL configuration"
+      ansible.builtin.template:
+        dest: "/etc/dovecot/conf.d/91-acl_user.conf"
+        src: "91-acl_user.conf.j2"
+      tags:
+        - "configure_sso_openid_ox_adjust_dovecot_acl_configuration"
+
+    - name: "configure_sso_openid | Restart dovecot"
+      ansible.builtin.service:
+        name: "dovecot"
+        state: "restarted"
+      tags:
+        - "configure_sso_openid_ox_restart_dovecot"
+
+    - name: "configure_sso_openid | Restart ox"
+      ansible.builtin.service:
+        name: "open-xchange"
+        state: "restarted"
+      tags:
+        - "configure_sso_openid_ox_restart_ox"
+  when:
+    - "'oxseforucs' in configure_sso_openid_install_apps"
+    - "'ox' in configure_sso_openid_clients"
+  tags:
+    - "configure_sso_openid"
+    - "configure_sso_openid_ox"

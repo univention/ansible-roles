@@ -17,6 +17,6 @@
       tags:
         - "workaround_high_mtu_reload_daemon"
 
-  when: "ansible_default_ipv4['mtu'] < 1500"
+  when: "ansible_default_ipv4['mtu']|default(1500) < 1500"
   tags:
     - "workaround_high_mtu"

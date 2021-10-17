@@ -22,6 +22,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [ucs_join](https://github.com/univention/ansible-roles#rolesucs_joinreadmemd)
 - [portal_deactivate_entry](https://github.com/univention/ansible-roles#rolesportal_deactivate_entryreadmemd)
 - [install_branding](https://github.com/univention/ansible-roles#rolesinstall_brandingreadmemd)
+- [configure_sso_openid](https://github.com/univention/ansible-roles#rolesconfigure_sso_openidreadmemd)
 - [force_package_list_update](https://github.com/univention/ansible-roles#rolesforce_package_list_updatereadmemd)
 - [portal_delete_category](https://github.com/univention/ansible-roles#rolesportal_delete_categoryreadmemd)
 - [install_apps_ox_pre](https://github.com/univention/ansible-roles#rolesinstall_apps_ox_prereadmemd)
@@ -942,6 +943,72 @@ none
 Example Playbook
 ----------------
 
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/configure_sso_openid/README.md
+
+Configure SSO OpenID Connect
+=========
+
+This role configures OpenID Connect OIDC for apps like open-xchange or nextcloud.
+
+Requirements
+------------
+
+- univention.ucs_modules
+    - univention_config_registry
+
+Role Variables
+--------------
+
+- `configure_sso_openid_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
+- `configure_sso_openid_temp_pw_file`(map): Tempfile object where univention app password is stored.
+- `configure_sso_openid_install_apps`(list): A list of applications to install.
+- `configure_sso_openid_basedn`(string): The systems base dn.
+- `configure_sso_openid_signing_method`(string): The signing method; default: `"RS256"`.
+- `configure_sso_openid_external_hostname`(string): The external hostname that is used to talk to the system.
+- `configure_sso_openid_clients`(map): A map of client configurations, supported `nexcloud` and `ox`.
+
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+### Configure OpenID clients
+
+```yaml
+- hosts: all
+  tasks:
+    - ansible.builtin.include_role:
+        name: "univention.ucs_roles.configure_sso_openid"
+      vars:
+        configure_sso_openid_clients:
+          nextcloud:
+            name: "nextcloud"
+            clientid: "nextcloud"
+            clientsecret: "notverysafe"
+          ox:
+            name: "open-xchange"
+            clientid: "open-xchange"
+            clientsecret: "notverysafe"
+        # ...
+```
 
 License
 -------
@@ -3248,6 +3315,7 @@ Role Variables
 --------------
 
 - `install_nextcloud_app_name`(string): The name of nextcloud app to be installed from store.
+- `install_nextcloud_app_opertation`(string): Define operation mode; default: `"install"`.
 
 Dependencies
 ------------

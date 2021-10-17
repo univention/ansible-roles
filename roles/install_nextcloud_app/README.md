@@ -12,6 +12,7 @@ Role Variables
 --------------
 
 - `install_nextcloud_app_name`(string): The name of nextcloud app to be installed from store.
+- `install_nextcloud_app_opertation`(string): Define operation mode; default: `"install"`.
 
 Dependencies
 ------------
