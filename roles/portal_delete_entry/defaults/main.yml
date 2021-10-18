@@ -1,6 +1,0 @@
----
-# defaults file for portal_delete_entry
-portal_delete_category_base_dn: ""
-portal_delete_entry_portal_dn: "cn=portals,cn=univention,{{ portal_delete_category_base_dn }}"
-portal_delete_entry_entries: {}
-portal_delete_entry_install_list: []

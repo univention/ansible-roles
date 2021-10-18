@@ -1,6 +1,0 @@
----
-# defaults file for portal_deactivate_category
-portal_deactivate_category_base_dn: ""
-portal_deactivate_category_portal_dn: "cn=portals,cn=univention,{{ portal_deactivate_category_base_dn }}"
-portal_deactivate_category_categories: {}
-portal_deactivate_category_install_list: []
