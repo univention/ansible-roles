@@ -175,13 +175,13 @@
             https://{{ configure_sso_openid_external_hostname }}/konnect/v1/jwks.json
           ox/cfg/openid.properties/com.openexchange.oidc.jwsAlgorithm: "{{ configure_sso_openid_signing_method }}"
           ox/cfg/openid.properties/com.openexchange.oidc.scope: "email;openid;profile;offline_access"
-          ox/cfg/openid.properties/com.openexchange.oidc.userLookupClaim: "email"
+          ox/cfg/openid.properties/com.openexchange.oidc.userLookupClaim: "preferred_username"
           ox/cfg/openid.properties/com.openexchange.oidc.rpRedirectURIAuth: |
             https://{{ configure_sso_openid_external_hostname }}/appsuite/api/oidc/auth
       tags:
         - "configure_sso_openid_ox_configure_properties"
 
-    - name: "configure_sso_openid | Disable SAML in frondend"
+    - name: "configure_sso_openid | Disable SAML in frontend"
       ansible.builtin.template:
         dest: "/opt/open-xchange/etc/as-config.yml"
         src: "as-config.yaml.j2"
