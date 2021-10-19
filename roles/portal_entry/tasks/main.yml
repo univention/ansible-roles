@@ -216,7 +216,7 @@
       portals/{{ portal_entry_append_item['parent'] }}
       modify
       --dn
-      cn={{ portal_entry_append_item['category'] }},cn={{ portal_entry_append_item['parent'] }},{ portal_entry_portal_dn }}
+      cn={{ portal_entry_append_item['category'] }},cn={{ portal_entry_append_item['parent'] }},{{ portal_entry_portal_dn }}
       --append
       {{ portal_entry_append_item['type'] }}=cn={{ portal_entry_append_item['name'] }},cn=entry,{{ portal_entry_portal_dn }}
     # yamllint enable rule:line-length
