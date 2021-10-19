@@ -11,7 +11,7 @@
 {% set ns.found = 'yes' -%}
 {% endif -%}
 {%- if ansible_local['ucr']['version/version']|default('99')|float < 5 -%}
-{% if portal_entry_update_item['link']|default("") not in portal_entry_portal_entries_fact[portal_entry_update_item['name']]['link']|default([]) -%}
+{% if portal_entry_update_item['link'][portal_entry_update_item['link']|first]|default("") != portal_entry_portal_entries_fact[portal_entry_update_item['name']]['link'][portal_entry_portal_entries_fact[portal_entry_update_item['name']]['link']|first]|default("") -%}
 {% set ns.found = 'yes' -%}
 {% endif -%}
 {%- else -%}

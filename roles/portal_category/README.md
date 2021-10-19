@@ -69,6 +69,8 @@ portal_category_categories:
     only:           # (string)           | Modify when app defined is in `portal_category_install_list`.
     parent:         # (string)           | The name of portal where the category should be appended to, f.e. "domain".
     state:          # (string, required) | State of entry, should be "present" or "absent".
+    ucs_versions:   # (list)             | A list of UCS version in which the category should be modified. When no
+                    #                    |   version is omitted, category will be modified on ALL ucs versions.
 ```
 
 

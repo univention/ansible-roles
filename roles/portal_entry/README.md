@@ -48,7 +48,9 @@ Example Playbook
               de_DE: "Anmelden"
               en_US: "Login"
             icon_file: "ucs_portal_login_icon.svg"
-            link: "/univention/saml/?location=%2Funivention%2Fportal%2F"
+            link:
+              de_DE: "/univention/saml/?location=%2Funivention%2Fportal%2F"
+              en_US: "/univention/saml/?location=%2Funivention%2Fportal%2F"
             linktarget: "samewindow"
             parent: "category"
             state: "present"
@@ -66,7 +68,9 @@ Example Playbook
               en_US: "My files"
             icon_file: "ucs_portal_files_icon.svg"
             linktarget: "newwindow"
-            link: "/nextcloud"
+            link:
+              de_DE: "/nextcloud"
+              en_US: "/nextcloud"
             only: "nextcloud"
             parent: "category"
             state: "present"
@@ -91,7 +95,9 @@ portal_entry_entries:
       de_DE:        # (string)           | F.e. german translation.
       en_US:        # (string)           | F.e. english translation.
     icon_file:      # (string)           | Name of predefined images or local images.
-    link:           # (string)           | Internal or external link.
+    link:           # (map)              | Internal or external link.
+      de_DE:        # (string)           | F.e. german translation.
+      en_US:        # (string)           | F.e. english translation.
     linktarget:     # (string)           | Link target f.e. "samewindow", "newwindow", "embedded" or "useportaldefault".
     only:           # (string)           | Modify when app defined is in `portal_entry_install_list`.
     parent:         # (string)           | The type where entry should be appended, f.e. "category" or "portal".
