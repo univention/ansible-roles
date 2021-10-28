@@ -239,8 +239,7 @@
         --dn "cn=oxDrive,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}"
         --set default={{ ox_connector_ox_drive_default }}
       tags:
-        - "install_apps_ox_post"
-        - "install_apps_ox_post_ox_drive_toggle"
+        - "ox_connector_ox_drive_toggle"
 
   when: "ox_connector_server_type|default('master') != 'backup'"
   tags:
