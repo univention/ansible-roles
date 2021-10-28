@@ -1,0 +1,83 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Copyright 2018 Univention GmbH
+#
+# http://www.univention.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+import univention.admin.uldap
+import univention.admin.license
+import univention.config_registry
+
+import os
+
+EXPORTER_DIR = '/var/lib/prometheus/node-exporter'
+
+
+def license_state(lo, ucr):
+    license = lo.search(
+        filter='(objectClass=univentionLicense)', attr=[
+            'univentionLicenseBaseDN'])[0][1].get('univentionLicenseBaseDN')[0]
+    if license == 'UCS Core Edition':
+        return 2
+    elif license == ucr.get('ldap/base'):  # Enterprise
+        return 1
+    else:
+        return 3
+
+
+if __name__ == '__main__':
+
+    ucr = univention.config_registry.ConfigRegistry()
+    ucr.load()
+    lo, position = univention.admin.uldap.getMachineConnection()
+    data = list()
+
+    ldap_filter_users = univention.admin.license._license.filters['2'][univention.admin.license._license.USERS]
+    ldap_filter_servers = '(&(|(objectClass=univentionDomainController)'
+    '(objectClass=univentionMemberServer))(!(univentionObjectFlag=docker)))'
+
+    users = len(lo.searchDn(filter=ldap_filter_users))
+    clients = len(lo.searchDn(filter=univention.admin.license.LDAP_FILTER_managedclients))
+    servers = len(lo.searchDn(filter=ldap_filter_servers))
+    license = license_state(lo, ucr)
+
+    data.append('ucs_user_count %s' % users)
+    data.append('ucs_client_count %s' % clients)
+    data.append('ucs_server_count %s' % servers)
+    data.append('ucs_license %s' % license)
+
+    master = ucr.get('ldap/master')
+
+    ucs_domain_info = 'ucs_domain_info{ldap_master="%s"} 1' % master
+    data.append(ucs_domain_info)
+
+    tmp_filename = os.path.join(EXPORTER_DIR, 'ucs-domain-info.%s' % os.getpid())
+    filename = os.path.join(EXPORTER_DIR, 'ucs-domain-info.prom')
+    with open(tmp_filename, 'wb') as f:
+        for d in data:
+            f.write(d + '\n')
+    os.rename(tmp_filename, filename)
