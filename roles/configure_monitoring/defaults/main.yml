@@ -1,4 +1,8 @@
 ---
 # defaults file for configure_monitoring
 
-configure_monitoring_ldap_enabled: "true"
+configure_monitoring_dashboard_client_version_map: {}
+configure_monitoring_dashboard_client_temp_file: {}
+configure_monitoring_dashboard_client_force_package_upgrade: false
+
+configure_monitoring_ldap_enabled: true

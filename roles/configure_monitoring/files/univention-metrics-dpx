@@ -1,0 +1,86 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Copyright 2021 Univention GmbH
+#
+# http://www.univention.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+import univention.admin.uldap
+import univention.config_registry
+import glob
+import os
+import subprocess
+
+EXPORTER_DIR = '/var/lib/prometheus/node-exporter'
+DATA_DIR = '/var/lib/univention-appcenter/apps/ox-connector/data/listener'
+
+ucr = univention.config_registry.ConfigRegistry()
+ucr.load()
+data = list()
+
+# Count json files in ox.connector queue
+try:
+    jsonCounter = len(glob.glob1(DATA_DIR, "*.json"))
+
+except Exception:
+    jsonCounter = '0'
+data.append('ucs_ox_connector_queue %s' % jsonCounter)
+
+# Get current and max ldap mdb size
+try:
+    mdbMax = ucr.get('ldap/database/mdb/maxsize')
+except Exception:
+    mdbMax = '0'
+data.append('ucs_ldab_mdb_maxsize %s' % mdbMax)
+
+# Get max ldap mdb pages size
+try:
+    pagesMax = subprocess.check_output(
+        'mdb_stat -e /var/lib/univention-ldap/translog | grep "Max pages" '
+        '| sed "s/://; s/  //; s/Max pages/ucs_ldap_max_pages/"', shell=True)
+except Exception:
+    pagesMax = 'Null'
+pagesMax = pagesMax.decode('utf-8')
+data.append(pagesMax)
+
+# Get current ldap mdb pages usage
+try:
+    pagesCurr = subprocess.check_output(
+        'mdb_stat -e /var/lib/univention-ldap/translog | grep "pages used" '
+        '| sed "s/://; s/  //; s/Number of pages used/ucs_ldap_current_pages/"', shell=True)
+except Exception:
+    pagesCurr = 'Null'
+pagesCurr = pagesCurr.decode('utf-8')
+data.append(pagesCurr)
+
+# Create file for prometheus-node-exporter
+tmp_filename = os.path.join(EXPORTER_DIR, 'ucs-dpx-info.%s' % os.getpid())
+filename = os.path.join(EXPORTER_DIR, 'ucs-dpx-info.prom')
+with open(tmp_filename, 'wb') as f:
+    for d in data:
+        f.write(d + '\n')
+if os.path.exists(tmp_filename):
+    os.rename(tmp_filename, filename)

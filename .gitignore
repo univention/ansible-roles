@@ -2,3 +2,4 @@
 .cache/
 *.tar.gz
 roles/configure_license/files/license_client.py
+.DS_Store

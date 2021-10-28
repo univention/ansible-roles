@@ -5,6 +5,7 @@ extends: "default"
 
 ignore: |
  .gitlab-ci.yml
+ *.cron
 
 rules:
   braces:

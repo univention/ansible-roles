@@ -1,0 +1,4 @@
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+# read basic metrics
+*/15 * * * * root /usr/sbin/univention-metrics-prometheus
