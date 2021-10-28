@@ -12,7 +12,7 @@
 - name: "install_apps_ox_pre | Set mail domain for external domain"
   ansible.builtin.command: >
     udm mail/domain create
-    --position "cn=domain,cn=mail,{{ install_apps_ox_pre_basedn }}"
+    --position "cn=mail,{{ install_apps_ox_pre_basedn }}"
     --set name="{{ install_apps_ox_pre_mail_domain }}"
     --ignore_exists
   changed_when: "install_apps_ox_pre_external_domain_result.stdout is not search('Object exists')"
