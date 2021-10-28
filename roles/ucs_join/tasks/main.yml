@@ -165,7 +165,7 @@
       check_mode: false
       tags:
         - "ucs_join_system_setup_successful"
-  when: "not ucs_join_system_setup_status.stat.exists"
+  when: "ucs_join_system_setup_status.stat.exists is false"
   tags:
     - "ucs_join"
     - "ucs_join_system_setup"
