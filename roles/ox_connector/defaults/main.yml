@@ -12,3 +12,4 @@ ox_connector_domain_prefix: ""
 ox_connector_soap_prefix: "ox-provisioning"
 ox_connector_template_name: "standard"
 ox_connector_hide_logging: true
+ox_connector_ox_drive_default: 0
