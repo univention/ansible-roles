@@ -81,3 +81,13 @@
   tags:
     - "configure_monitoring"
     - "configure_monitoring_ldap"
+
+- name: "configure_monitoring | Fix UCS5 Dashboard Client Defaults"
+  become: true
+  ansible.builtin.replace:
+    path: "/etc/systemd/system/prometheus-node-exporter.service.d/10-univention-path.conf"
+    regexp: "ExecStart="
+    replace: "#ExecStart="
+  tags:
+    - "configure_monitoring"
+    - "configure_monitoring_fix_dashboard_defaults"
