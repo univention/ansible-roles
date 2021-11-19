@@ -69,7 +69,7 @@
           --clientsecret="{{ configure_sso_openid_clients['nextcloud']['clientsecret'] }}"
           --discoveryuri="https://{{ configure_sso_openid_external_hostname }}/.well-known/openid-configuration"
           --mapping-uid=preferred_username
-          --uniqueUid=0
+          --unique-uid=0
           --check-bearer=1
       tags:
         - "configure_sso_openid_nextcloud_configure_oidc"
