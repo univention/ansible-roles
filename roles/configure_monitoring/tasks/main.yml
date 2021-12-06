@@ -86,7 +86,7 @@
   become: true
   ansible.builtin.replace:
     path: "/etc/systemd/system/prometheus-node-exporter.service.d/10-univention-path.conf"
-    regexp: "ExecStart="
+    regexp: "^ExecStart="
     replace: "#ExecStart="
   tags:
     - "configure_monitoring"
