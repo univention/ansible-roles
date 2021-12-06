@@ -54,8 +54,6 @@ variables:
         VERSION=${RELEASE_VERSION};
       fi
     - sed -i "/version. \"[0-9]\.[0-9]\.[0-9]\"/s/[0-9]\.[0-9]\.[0-9]/$VERSION/" galaxy.yml
-    # Download license client
-    - curl https://raw.githubusercontent.com/univention/univention-corporate-server/5.0-0/test/ucs-test/univention/testing/license_client.py --output ${CI_PROJECT_DIR}/roles/configure_license/files/license_client.py
   image: artifacts.knut.univention.de/upx/container-tooling/automation-ansible:main-41a9520a
   script:
     - ansible-galaxy collection build
