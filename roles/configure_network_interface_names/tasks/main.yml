@@ -1,0 +1,11 @@
+---
+# tasks file for configure_network_interface_names
+
+- name: "configure_network_interface_names | Set grub parameter"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      grub/append: "net.ifnames=0 biosdevname=0"
+    state: "{{ 'present' if configure_network_interface_names_use_old_names|bool else 'absent' }}"
+  tags:
+    - "configure_network_interface_names"
+    - "configure_network_interface_names_set_ucr"
