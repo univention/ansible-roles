@@ -8,3 +8,4 @@ add_local_user_user:
 
 add_local_user_default_shell: "/bin/bash"
 add_local_user_default_password_policy: "on_create"
+add_local_user_system_user: true

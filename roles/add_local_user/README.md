@@ -25,6 +25,7 @@ add_local_user_user:
 - `add_local_user_default_shell`(string): Default user shell; default: `/bin/bash`
 - `add_local_user_default_password_policy`(string): Default password update policy.
   Possible values are `"on_create"` and `"always"`; default `"on_create"`.
+- `add_local_user_system_user`(bool): `true` if the user should be a system user instead of a human; default: `true`.
 
 Dependencies
 ------------

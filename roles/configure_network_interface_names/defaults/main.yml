@@ -1,0 +1,3 @@
+---
+# defaults file for configure_network_interface_names
+configure_network_interface_names_use_old_names: true
