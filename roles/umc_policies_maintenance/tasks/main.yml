@@ -57,7 +57,7 @@
           - "--dn"
           - "cn=app-release-update,cn=policies,{{ umc_policies_maintenance_basedn }}"
           - "--set"
-          - "releaseVersion={{ umc_policies_maintenance_release_verion }}"
+          - "releaseVersion={{ umc_policies_maintenance_release_version }}"
       changed_when: "umc_policies_maintenance_edit_release_result.stdout is not search('No modification')"
       register: "umc_policies_maintenance_edit_release_result"
       tags:
