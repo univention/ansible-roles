@@ -57,8 +57,8 @@ if __name__ == '__main__':
     data = list()
 
     ldap_filter_users = univention.admin.license._license.filters['2'][univention.admin.license._license.USERS]
-    ldap_filter_servers = '(&(|(objectClass=univentionDomainController)'
-    '(objectClass=univentionMemberServer))(!(univentionObjectFlag=docker)))'
+    ldap_filter_servers = '(&(|(objectClass=univentionDomainController)' + \
+        '(objectClass=univentionMemberServer))(!(univentionObjectFlag=docker)))'
 
     users = len(lo.searchDn(filter=ldap_filter_users))
     clients = len(lo.searchDn(filter=univention.admin.license.LDAP_FILTER_managedclients))
