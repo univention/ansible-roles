@@ -1,0 +1,24 @@
+---
+# tasks file for dc_connector
+
+- name: "dc_connector | Install DC connector"
+  block:
+    - name: "dc_connector | Create DNS Alias"
+      ansible.builtin.command: |
+        udm dns/alias create
+          --superordinate "zoneName={{ dc_connector_domain_name }},cn=dns,{{ dc_connector_basedn }}"
+          --set name={{ dc_connector_soap_prefix }}
+          --set cname={{ dc_connector_domain_prefix }}
+          --ignore_exists
+      changed_when: "dc_connector_dns_alias.stdout is search('Object created')"
+      failed_when:
+        - "dc_connector_dns_alias.rc > 0"
+        - "'already in use' not in dc_connector_dns_alias.stdout"
+      register: "dc_connector_dns_alias"
+      when: "dc_connector_domain_prefix|default('')|length > 0"
+      tags:
+        - "dc_connector_dns_alias"
+
+  when: "dc_connector_server_type|default('master') != 'backup'"
+  tags:
+    - "dc_connector"
