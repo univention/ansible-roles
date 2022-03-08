@@ -72,6 +72,8 @@
                   - "{{ configure_license_temp_dir.path }}/license_client.py"
                   - "--shop"
                   - "{{ configure_license_shop_id }}"
+                  - "{{ '--proxy' if network_proxy_enabled == true }}"
+                  - "{{ network_proxy_http_proxy if network_proxy_enabled == true }}"
                   - "--username"
                   - "{{ configure_license_shop_username }}"
                   - "-u"

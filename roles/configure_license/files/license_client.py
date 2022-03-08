@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2014-2021 Univention GmbH
+# Copyright 2014-2022 Univention GmbH
 #
 # https://www.univention.de/
 #
@@ -41,7 +41,7 @@ from typing import Any, Dict, Iterable, Optional, Tuple  # noqa F401
 
 from six.moves.html_parser import HTMLParser
 from six.moves.http_client import HTTPSConnection, HTTPException, HTTPResponse  # noqa F401
-from six.moves.urllib.parse import urlencode
+from six.moves.urllib.parse import urlencode, urlparse
 
 
 class CredentialsMissing(Exception):
@@ -98,6 +98,7 @@ class TestLicenseClient(object):
         self.license_filename = 'ValidTest.license'
 
         self.connection = None  # type: Optional[HTTPSConnection]
+        self.proxy_url = None
         self.server_username = 'ucs-test'
         self.server_password = ''
         self.secret_file = '/etc/license.secret'
@@ -138,7 +139,16 @@ class TestLicenseClient(object):
         to the 'self.license_server_url'
         """
         self.log.debug("In 'create_connection'")
-        self.connection = HTTPSConnection(self.license_server_url)
+        if self.proxy_url is not None:
+            p = urlparse(self.proxy_url)
+            if p.scheme == 'http':
+                self.log.debug("Using http proxy {}:{}".format(p.hostname, p.port))
+                self.connection = HTTPSConnection(p.hostname, p.port)
+                self.connection.set_tunnel(self.license_server_url)
+            else:
+                self.log.error("Proxy scheme {} currently not supported".format(p.scheme))
+        else:
+            self.connection = HTTPSConnection(self.license_server_url)
 
     def close_connection(self):
         # type: () -> None
@@ -335,6 +345,7 @@ class TestLicenseClient(object):
 
         self.license_shop = args.pop('shop')
         self.server_username = args.pop('username')
+        self.proxy_url = args.pop('proxy')
         self.secret_file = args.pop('secret_file')
         license_file = args.pop('FileName')
         if license_file:
@@ -405,6 +416,9 @@ class TestLicenseClient(object):
             "--secret-file",
             help="password file",
             default=self.secret_file)
+        self.parser.add_argument(
+            "--proxy",
+            help="http proxy url")
 
         opts = self.parser.parse_args()
         args = vars(opts)  # converting Namespace to a dictionary
