@@ -40,8 +40,11 @@
     - "univention_upgrade_upgrade_check"
 
 - name: "univention_upgrade | Check if packages should be removed"
-  ansible.builtin.raw: |
-      echo "n" | univention-upgrade
+  ansible.builtin.expect:
+    responses:
+      "Do you want to continue [Y|n]?": "Y"
+    command: |
+      univention-upgrade
       --ignoressh
       --ignoreterm
       --disable-app-updates
