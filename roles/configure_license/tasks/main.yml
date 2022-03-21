@@ -68,20 +68,22 @@
 
             - name: "configure_license | Acquire a license via license tool"
               ansible.builtin.command:
-                argv:
-                  - "{{ configure_license_temp_dir.path }}/license_client.py"
-                  - "--shop"
-                  - "{{ configure_license_shop_id }}"
-                  - "{{ '--proxy' if network_proxy_enabled == true }}"
-                  - "{{ network_proxy_http_proxy if network_proxy_enabled == true }}"
-                  - "--username"
-                  - "{{ configure_license_shop_username }}"
-                  - "-u"
-                  - "{{ configure_license_max_users }}"
-                  - "-f"
-                  - "{{ configure_license_temp_dir.path }}/license.ldif"
-                  - "{{ configure_license_basedn }}"
-                  - "{{ configure_license_validity_date.stdout_lines[0]|default('unlimited') }}"
+                cmd: |
+                  {{ configure_license_temp_dir.path }}/license_client.py
+                  --shop
+                  {{ configure_license_shop_id }}
+                  {% if network_proxy_enabled == true %}
+                  --proxy
+                  {{ network_proxy_http_proxy }}
+                  {% endif %}
+                  --username
+                  {{ configure_license_shop_username }}
+                  -u
+                  {{ configure_license_max_users }}
+                  -f
+                  {{ configure_license_temp_dir.path }}/license.ldif
+                  {{ configure_license_basedn }}
+                  {{ configure_license_validity_date.stdout_lines[0]|default('unlimited') }}
                 creates: "{{ configure_license_temp_dir.path }}/license.ldif"
               tags:
                 - "configure_license_server_license_acquire"

@@ -25,9 +25,9 @@
   ansible.builtin.assert:
     that:
       - "ucs_join_network_config_static_ip_config|string|length > 0"
-      - "ucs_join_network_config_static_ip_config|ipaddr('address')|length > 0"
-      - "ucs_join_network_config_static_ip_config|ipaddr('netmask')|length > 0"
-      - "ucs_join_network_config_static_ip_config|ipaddr('network')|length > 0"
+      - "ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('address')|length > 0"
+      - "ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('netmask')|length > 0"
+      - "ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('network')|length > 0"
       - "ucs_join_network_config_static_gateway|string|length > 0"
       - "ucs_join_network_config_static_dns_servers|length > 0"
     fail_msg: |
@@ -188,13 +188,13 @@
           - key: "interfaces/{{ ucs_join_network_config_interface }}/type"
             value: "static"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/address"
-            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('address') }}"
+            value: "{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('address') }}"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/netmask"
-            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('netmask') }}"
+            value: "{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('netmask') }}"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/network"
-            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('network') }}"
+            value: "{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('network') }}"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/broadcast"
-            value: "{{ ucs_join_network_config_static_ip_config|ipaddr('broadcast') }}"
+            value: "{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when: "ucs_join_network_config_type != 'dhcp'"
       tags:
@@ -206,13 +206,13 @@
           - key: "interfaces/{{ ucs_join_item.key }}/type"
             value: "static"
           - key: "interfaces/{{ ucs_join_item.key }}/address"
-            value: "{{ ucs_join_item.value|ipaddr('address') }}"
+            value: "{{ ucs_join_item.value|ansible.utils.ipaddr('address') }}"
           - key: "interfaces/{{ ucs_join_item.key }}/netmask"
-            value: "{{ ucs_join_item.value|ipaddr('netmask') }}"
+            value: "{{ ucs_join_item.value|ansible.utils.ipaddr('netmask') }}"
           - key: "interfaces/{{ ucs_join_item.key }}/network"
-            value: "{{ ucs_join_item.value|ipaddr('network') }}"
+            value: "{{ ucs_join_item.value|ansible.utils.ipaddr('network') }}"
           - key: "interfaces/{{ ucs_join_item.key }}/broadcast"
-            value: "{{ ucs_join_item.value|ipaddr('broadcast') }}"
+            value: "{{ ucs_join_item.value|ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when: "ucs_join_network_config_type != 'dhcp'"
       loop: "{{ ucs_join_network_config_static_additional_interfaces|default([])|dict2items }}"
