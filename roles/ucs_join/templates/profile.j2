@@ -10,16 +10,16 @@ server/role="{{ 'domaincontroller_' + ucs_join_server_type|default('master') }}"
 interfaces/{{ ucs_join_network_config_interface }}/type="dhcp"
 {% elif ucs_join_network_config_type|default("dhcp") == "static" %}
 interfaces/{{ ucs_join_network_config_interface }}/type="static"
-interfaces/{{ ucs_join_network_config_interface }}/address="{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('address') | first }}"
-interfaces/{{ ucs_join_network_config_interface }}/netmask="{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('netmask') | first }}"
-interfaces/{{ ucs_join_network_config_interface }}/network="{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('network') | first }}"
-interfaces/{{ ucs_join_network_config_interface }}/broadcast="{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('broadcast') | first }}"
+interfaces/{{ ucs_join_network_config_interface }}/address="{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('address') }}"
+interfaces/{{ ucs_join_network_config_interface }}/netmask="{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('netmask') }}"
+interfaces/{{ ucs_join_network_config_interface }}/network="{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('network') }}"
+interfaces/{{ ucs_join_network_config_interface }}/broadcast="{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('broadcast') }}"
 {% for additional_interface in ucs_join_network_config_static_additional_interfaces|default([]) %}
 interfaces/{{ additional_interface }}/type="static"
-interfaces/{{ additional_interface }}/address="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ansible.utils.ipaddr('address') | first }}"
-interfaces/{{ additional_interface }}/netmask="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ansible.utils.ipaddr('netmask') | first }}"
-interfaces/{{ additional_interface }}/network="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ansible.utils.ipaddr('network') | first }}"
-interfaces/{{ additional_interface }}/broadcast="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ansible.utils.ipaddr('broadcast') | first }}"
+interfaces/{{ additional_interface }}/address="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ansible.utils.ipaddr('address') }}"
+interfaces/{{ additional_interface }}/netmask="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ansible.utils.ipaddr('netmask') }}"
+interfaces/{{ additional_interface }}/network="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ansible.utils.ipaddr('network') }}"
+interfaces/{{ additional_interface }}/broadcast="{{ ucs_join_network_config_static_additional_interfaces[additional_interface]|ansible.utils.ipaddr('broadcast') }}"
 {% endfor %}
 interfaces/primary={{ ucs_join_network_config_interface }}
 {% if ucs_join_server_type == 'master' %}
