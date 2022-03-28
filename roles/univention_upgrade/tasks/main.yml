@@ -27,7 +27,9 @@
     --check
     --setucr
     --updateto={{ univention_upgrade_version }}
+    {% if not univention_upgrade_app_updates %}
     --disable-app-updates
+    {% endif %}
   changed_when: false
   register: "univention_upgrade_upgrade_check"
   failed_when:
@@ -47,7 +49,9 @@
       univention-upgrade
       --ignoressh
       --ignoreterm
+      {% if not univention_upgrade_app_updates %}
       --disable-app-updates
+      {% endif %}
       --updateto={{ univention_upgrade_version }}
   changed_when: false
   failed_when: "univention_upgrade_deep_inspect_upgrade_check.stdout is search('REMOVED')"
@@ -63,7 +67,9 @@
     --ignoressh
     --ignoreterm
     --noninteractive
+    {% if not univention_upgrade_app_updates %}
     --disable-app-updates
+    {% endif %}
     --updateto={{ univention_upgrade_version }}
   check_mode: false
   delay: 10

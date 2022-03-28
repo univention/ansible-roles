@@ -15,6 +15,7 @@ Role Variables
 - `univention_upgrade_clear_apt_cache`(bool): Clear all downloaded packages to reduce package conflicts; default: `false`.
 - `univention_upgrade_removal_check`(bool): Check if packages will be removed during upgrade; default: `false`.
 - `univention_upgrade_reboot_after_upgrade`(bool): Reboot UCS after package upgrade; default: `false`.
+- `univention_upgrade_app_updates`(bool): Upgrade apps during univention-upgrade; default: `false`.
 
 Dependencies
 ------------
