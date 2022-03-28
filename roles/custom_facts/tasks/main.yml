@@ -71,7 +71,7 @@
     - "custom_facts"
     - "custom_facts_deployment"
 
-- name: "custom_facts | Remove finsihed file when exists"
+- name: "custom_facts | Remove finished file when exists"
   ansible.builtin.file:
     path: "/etc/ansible/facts.d/deployment_finished.fact"
     state: "absent"
