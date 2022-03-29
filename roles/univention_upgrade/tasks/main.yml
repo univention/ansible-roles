@@ -44,7 +44,7 @@
 - name: "univention_upgrade | Check if packages should be removed"
   ansible.builtin.expect:
     responses:
-      "Do you want to continue [Y|n]?": "Y"
+      "Do you want to continue [Y|n]?": "n"
     command: |
       univention-upgrade
       --ignoressh
