@@ -42,6 +42,7 @@
   ansible.posix.authorized_key:
     user: "{{ add_local_user_user['name'] }}"
     key: "{{ lookup('file', add_local_user_user['sshkey_file']) }}"
+    path: "/home/{{ add_local_user_user['name'] }}/.ssh/authorized_keys"
     manage_dir: true
     state: "{{ add_local_user_user['state']|default('present') }}"
   when:
@@ -63,3 +64,5 @@
     - "add_local_user"
     - "add_local_user_user"
     - "add_local_user_user_allow_login"
+
+...
