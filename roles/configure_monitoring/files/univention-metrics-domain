@@ -50,8 +50,7 @@ def license_state(lo, ucr):
         return 3
 
 
-if __name__ == '__main__':
-
+def main():
     ucr = univention.config_registry.ConfigRegistry()
     ucr.load()
     lo, position = univention.admin.uldap.getMachineConnection()
@@ -92,3 +91,9 @@ if __name__ == '__main__':
         for d in data:
             f.write(d + '\n')
     os.rename(tmp_filename, filename)
+
+
+if __name__ == '__main__':
+    main()
+
+# [EOF]
