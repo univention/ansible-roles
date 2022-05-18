@@ -39,8 +39,9 @@ EXPORTER_DIR = '/var/lib/prometheus/node-exporter'
 
 def license_state(lo, ucr):
     license = lo.search(
-        filter='(objectClass=univentionLicense)', attr=[
-            'univentionLicenseBaseDN'])[0][1].get('univentionLicenseBaseDN')[0]
+        filter='(objectClass=univentionLicense)',
+        attr=['univentionLicenseBaseDN'],
+    )[0][1].get('univentionLicenseBaseDN')[0]
     if license == 'UCS Core Edition':
         return 2
     elif license == ucr.get('ldap/base'):  # Enterprise
@@ -56,12 +57,20 @@ if __name__ == '__main__':
     lo, position = univention.admin.uldap.getMachineConnection()
     data = list()
 
-    ldap_filter_users = univention.admin.license._license.filters['2'][univention.admin.license._license.USERS]
-    ldap_filter_servers = '(&(|(objectClass=univentionDomainController)' + \
-        '(objectClass=univentionMemberServer))(!(univentionObjectFlag=docker)))'
+    ldap_filter_users = univention.admin.license._license.filters['2'][
+        univention.admin.license._license.USERS]
+    ldap_filter_servers = (
+        '(&(|(objectClass=univentionDomainController)'
+        '(objectClass=univentionMemberServer))'
+        '(!(univentionObjectFlag=docker)))'
+    )
 
     users = len(lo.searchDn(filter=ldap_filter_users))
-    clients = len(lo.searchDn(filter=univention.admin.license.LDAP_FILTER_managedclients))
+    clients = len(
+        lo.searchDn(
+            filter=univention.admin.license.LDAP_FILTER_managedclients
+        )
+    )
     servers = len(lo.searchDn(filter=ldap_filter_servers))
     license = license_state(lo, ucr)
 
@@ -75,7 +84,9 @@ if __name__ == '__main__':
     ucs_domain_info = 'ucs_domain_info{ldap_master="%s"} 1' % master
     data.append(ucs_domain_info)
 
-    tmp_filename = os.path.join(EXPORTER_DIR, 'ucs-domain-info.%s' % os.getpid())
+    tmp_filename = os.path.join(
+        EXPORTER_DIR, 'ucs-domain-info.%s' % os.getpid()
+    )
     filename = os.path.join(EXPORTER_DIR, 'ucs-domain-info.prom')
     with open(tmp_filename, 'wb') as f:
         for d in data:
