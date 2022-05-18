@@ -51,6 +51,8 @@ def license_state(lo, ucr):
 
 
 def main():
+    ldap_filter_ox = '(&(objectClass=oxUserObject)(isOxUser=OK))'
+
     ucr = univention.config_registry.ConfigRegistry()
     ucr.load()
     lo, position = univention.admin.uldap.getMachineConnection()
@@ -65,6 +67,7 @@ def main():
     )
 
     users = len(lo.searchDn(filter=ldap_filter_users))
+    ox_users = len(lo.searchDn(filter=ldap_filter_ox))
     clients = len(
         lo.searchDn(
             filter=univention.admin.license.LDAP_FILTER_managedclients
@@ -74,6 +77,7 @@ def main():
     license = license_state(lo, ucr)
 
     data.append('ucs_user_count %s' % users)
+    data.append('ucs_ox_user_count %s' % ox_users)
     data.append('ucs_client_count %s' % clients)
     data.append('ucs_server_count %s' % servers)
     data.append('ucs_license %s' % license)
