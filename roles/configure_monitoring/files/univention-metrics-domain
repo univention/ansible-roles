@@ -39,8 +39,9 @@ EXPORTER_DIR = '/var/lib/prometheus/node-exporter'
 
 def license_state(lo, ucr):
     license = lo.search(
-        filter='(objectClass=univentionLicense)', attr=[
-            'univentionLicenseBaseDN'])[0][1].get('univentionLicenseBaseDN')[0]
+        filter='(objectClass=univentionLicense)',
+        attr=['univentionLicenseBaseDN'],
+    )[0][1].get('univentionLicenseBaseDN')[0]
     if license == 'UCS Core Edition':
         return 2
     elif license == ucr.get('ldap/base'):  # Enterprise
@@ -49,23 +50,37 @@ def license_state(lo, ucr):
         return 3
 
 
-if __name__ == '__main__':
+def main():
+    ldap_filter_ox = '(&(objectClass=oxUserObject)(isOxUser=OK))'
+    ldap_filter_nextcloud = '(nextcloudEnabled=1)'
 
     ucr = univention.config_registry.ConfigRegistry()
     ucr.load()
     lo, position = univention.admin.uldap.getMachineConnection()
     data = list()
 
-    ldap_filter_users = univention.admin.license._license.filters['2'][univention.admin.license._license.USERS]
-    ldap_filter_servers = '(&(|(objectClass=univentionDomainController)' + \
-        '(objectClass=univentionMemberServer))(!(univentionObjectFlag=docker)))'
+    ldap_filter_users = univention.admin.license._license.filters['2'][
+        univention.admin.license._license.USERS]
+    ldap_filter_servers = (
+        '(&(|(objectClass=univentionDomainController)'
+        '(objectClass=univentionMemberServer))'
+        '(!(univentionObjectFlag=docker)))'
+    )
 
     users = len(lo.searchDn(filter=ldap_filter_users))
-    clients = len(lo.searchDn(filter=univention.admin.license.LDAP_FILTER_managedclients))
+    ox_users = len(lo.searchDn(filter=ldap_filter_ox))
+    nextcloud_users = len(lo.searchDn(filter=ldap_filter_nextcloud))
+    clients = len(
+        lo.searchDn(
+            filter=univention.admin.license.LDAP_FILTER_managedclients
+        )
+    )
     servers = len(lo.searchDn(filter=ldap_filter_servers))
     license = license_state(lo, ucr)
 
     data.append('ucs_user_count %s' % users)
+    data.append('ucs_ox_user_count %s' % ox_users)
+    data.append('ucs_nextcloud_user_count %s' % nextcloud_users)
     data.append('ucs_client_count %s' % clients)
     data.append('ucs_server_count %s' % servers)
     data.append('ucs_license %s' % license)
@@ -75,9 +90,17 @@ if __name__ == '__main__':
     ucs_domain_info = 'ucs_domain_info{ldap_master="%s"} 1' % master
     data.append(ucs_domain_info)
 
-    tmp_filename = os.path.join(EXPORTER_DIR, 'ucs-domain-info.%s' % os.getpid())
+    tmp_filename = os.path.join(
+        EXPORTER_DIR, 'ucs-domain-info.%s' % os.getpid()
+    )
     filename = os.path.join(EXPORTER_DIR, 'ucs-domain-info.prom')
     with open(tmp_filename, 'wb') as f:
         for d in data:
             f.write(d + '\n')
     os.rename(tmp_filename, filename)
+
+
+if __name__ == '__main__':
+    main()
+
+# [EOF]
