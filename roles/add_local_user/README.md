@@ -1,13 +1,13 @@
 Add local user
 =========
 
-This role creates a local user and allows login.
+This role creates a local user with ssh login permissions.
 
 Requirements
 ------------
 
 - univention.ucs_modules
-    - univention_config_registry
+  - univention_config_registry
 
 Role Variables
 --------------
@@ -17,7 +17,7 @@ Role Variables
 add_local_user_user:
     name:         # username; default; "ansible"
     comment:      # user comment; default: "ansible user"
-    password:     # hased password of user; default:  "{{ "ansible"|password_hash('sha512') }}"
+    password:     # hashed password of user; default:  "{{ "ansible"|password_hash('sha512') }}"
     sshkey_file:  # ssh key filename; default: empty
     sshkey:       # ssh key as string; default: empty
     state:        # toggle if user should be present or absent; default: present
