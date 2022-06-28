@@ -51,8 +51,16 @@ def license_state(lo, ucr):
 
 
 def main():
-    ldap_filter_ox = '(&(objectClass=oxUserObject)(isOxUser=OK))'
-    ldap_filter_nextcloud = '(nextcloudEnabled=1)'
+    ldap_filter_ox = (
+        '(&(univentionObjectType=users/user)(objectClass=oxUserObject)(isOxUser=OK)'
+        '(!(&(shadowExpire=1)(krb5KDCFlags:1.2.840.113556.1.4.803:=128)'
+        '(|(sambaAcctFlags=[UD       ])(sambaAcctFlags=[ULD       ])))))'
+    )
+    ldap_filter_nextcloud = (
+        '(&(univentionObjectType=users/user)(nextcloudEnabled=1)'
+        '(!(&(shadowExpire=1)(krb5KDCFlags:1.2.840.113556.1.4.803:=128)'
+        '(|(sambaAcctFlags=[UD       ])(sambaAcctFlags=[ULD       ])))))'
+    )
 
     ucr = univention.config_registry.ConfigRegistry()
     ucr.load()
