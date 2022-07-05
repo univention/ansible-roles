@@ -1,0 +1,10 @@
+---
+
+- name: "configure_amazon_metadata_server | Enable or disable ucs call to the amazon metadata server"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      server/amazon: "{{ configure_amazon_metadata_server_call }}"
+  tags:
+    - "configure_amazon_metadata_server"
+
+...
