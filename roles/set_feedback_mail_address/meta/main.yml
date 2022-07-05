@@ -1,0 +1,29 @@
+---
+
+galaxy_info:
+  role_name: "set_feedback_mail_address"
+  author: "Èric Monné Mesalles <monne-mesalles.extern@univention.de>"
+  description: "Set the UCS feedback mail address"
+  company: "Univention GmbH"
+
+  issue_tracker_url: "https://forge.univention.org"
+
+  license: "GPL-3.0-or-later"
+
+  min_ansible_version: "1.2"
+
+  platforms:
+    - name: "Debian"
+      versions:
+        - "all"
+
+  galaxy_tags:
+    - "univention"
+    - "ucs"
+    - "web"
+    - "feedback"
+    - "mail"
+
+dependencies: []
+
+...
