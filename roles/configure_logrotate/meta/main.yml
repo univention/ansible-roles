@@ -1,0 +1,31 @@
+---
+
+galaxy_info:
+  role_name: "configure_logrotate"
+  author: "Univention"
+  description: "As is defined on the `ucr` the log files are rotated the set
+  number of times before being removed. This role is used to set those numbers."
+  company: "Univention GmbH"
+
+  issue_tracker_url: "https://forge.univention.org"
+
+  license: "GPL-3.0-or-later"
+
+  min_ansible_version: "1.2"
+
+  platforms:
+    - name: "Debian"
+      versions:
+        - "all"
+
+  galaxy_tags:
+    - "univention"
+    - "ucs"
+    - "monitoring"
+    - "logrotate"
+    - "syslog"
+    - "rotate"
+
+dependencies: []
+
+...
