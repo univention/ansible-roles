@@ -1,0 +1,29 @@
+---
+
+galaxy_info:
+  role_name: "configure_error_detail_show"
+  author: "Èric Monné Mesalles <monne-mesalles.extern@univention.de>"
+  description: "Configure error detail show"
+  company: "Univention GmbH"
+
+  issue_tracker_url: "https://forge.univention.org"
+
+  license: "GPL-3.0-or-later"
+
+  min_ansible_version: "1.2"
+
+  platforms:
+    - name: "Debian"
+      versions:
+        - "all"
+
+  galaxy_tags:
+    - "univention"
+    - "ucs"
+    - "errors"
+    - "tracebacks"
+    - "reporting"
+
+dependencies: []
+
+...
