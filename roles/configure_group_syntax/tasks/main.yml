@@ -1,0 +1,10 @@
+---
+
+- name: "configure_group_syntax |  Set group syntax on all nodes"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/modules/groups/group/properties/name/syntax: "{{ configure_group_syntax_group_syntax }}"
+  tags:
+    - "configure_group_syntax"
+
+...

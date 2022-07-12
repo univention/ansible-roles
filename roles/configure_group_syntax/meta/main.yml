@@ -1,0 +1,28 @@
+---
+
+galaxy_info:
+  role_name: "configure_group_syntax"
+  author: "Èric Monné Mesalles <monne-mesalles.extern@univention.de>"
+  description: "Configure the group syntax and ensure the consistency on all nodes"
+  company: "Univention GmbH"
+
+  issue_tracker_url: "https://forge.univention.org"
+
+  license: "GPL-3.0-or-later"
+
+  min_ansible_version: "1.2"
+
+  platforms:
+    - name: "Debian"
+      versions:
+        - "all"
+
+  galaxy_tags:
+    - "univention"
+    - "ucs"
+    - "group"
+    - "syntax"
+
+dependencies: []
+
+...
