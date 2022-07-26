@@ -32,7 +32,7 @@
         src: "multitenant-acls.j2"
         mode: "744"
       changed_when: false
-      no_log: "{{ install_multitenant_acls_hide_logging|default(true)|bool }}"
+      no_log: "{{ install_multitenant_acls_hide_logging | default(true) | bool }}"
       tags:
         - "install_multitenant_acls_copy_acl_template"
 
@@ -61,7 +61,7 @@
       tags:
         - "always"
         - "install_multitenant_acls_copy_acl_template"
-  when: "install_multitenant_acls_server_type|default('master') != 'backup'"
+  when: "install_multitenant_acls_server_type | default('master') != 'backup'"
   tags:
     - "install_multitenant_acls"
 

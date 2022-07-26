@@ -15,12 +15,12 @@
     kvlist:
       - key: "timeserver{{ '' if configure_ntp_servers_index == 0 else configure_ntp_servers_index+1 }}"
         value: "{{ configure_ntp_servers_item }}"
-  loop: "{{ configure_ntp_servers_timeservers|default([]) }}"
+  loop: "{{ configure_ntp_servers_timeservers | default([]) }}"
   loop_control:
     index_var: "configure_ntp_servers_index"
     loop_var: "configure_ntp_servers_item"
   register: "configure_ntp_servers_result"
-  when: "configure_ntp_servers_timeservers|default(false)"
+  when: "configure_ntp_servers_timeservers | default(false)"
   tags:
     - "configure_ntp_servers"
     - "configure_ntp_servers_set_ucr"

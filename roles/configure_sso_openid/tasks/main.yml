@@ -32,9 +32,9 @@
           udm
           oidc/rpservice
           create
-          --set name={{ configure_sso_openid_clients['nextcloud']['name']|default('nextcloud') }}
+          --set name={{ configure_sso_openid_clients['nextcloud']['name'] | default('nextcloud') }}
           --position cn=oidc,cn=univention,{{ configure_sso_openid_basedn }}
-          --set clientid={{ configure_sso_openid_clients['nextcloud']['clientid']|default('nextcloud') }}
+          --set clientid={{ configure_sso_openid_clients['nextcloud']['clientid'] | default('nextcloud') }}
           --set clientsecret={{ configure_sso_openid_clients['nextcloud']['clientsecret'] }}
           --set trusted=yes
           --set applicationtype=web
@@ -65,7 +65,7 @@
           /var/www/html/occ
           user_oidc:provider
           ucs
-          --clientid="{{ configure_sso_openid_clients['nextcloud']['clientid']|default('nextcloud') }}"
+          --clientid="{{ configure_sso_openid_clients['nextcloud']['clientid'] | default('nextcloud') }}"
           --clientsecret="{{ configure_sso_openid_clients['nextcloud']['clientsecret'] }}"
           --discoveryuri="https://{{ configure_sso_openid_external_hostname }}/.well-known/openid-configuration"
           --mapping-uid=preferred_username
@@ -115,9 +115,9 @@
           udm
           oidc/rpservice
           create
-          --set name={{ configure_sso_openid_clients['ox']['name']|default('open-xchange') }}
+          --set name={{ configure_sso_openid_clients['ox']['name'] | default('open-xchange') }}
           --position cn=oidc,cn=univention,{{ configure_sso_openid_basedn }}
-          --set clientid={{ configure_sso_openid_clients['ox']['clientid']|default('open-xchange') }}
+          --set clientid={{ configure_sso_openid_clients['ox']['clientid'] | default('open-xchange') }}
           --set clientsecret={{ configure_sso_openid_clients['ox']['clientsecret'] }}
           --set trusted=yes
           --set applicationtype=web
@@ -163,7 +163,7 @@
           ox/cfg/openid.properties/com.openexchange.oidc.ucs.enabled: "true"
           ox/cfg/openid.properties/com.openexchange.oidc.startDefaultBackend: "false"
           ox/cfg/openid.properties/com.openexchange.oidc.clientId: |
-            {{ configure_sso_openid_clients['ox']['clientid']|default('open-xchange') }}
+            {{ configure_sso_openid_clients['ox']['clientid'] | default('open-xchange') }}
           ox/cfg/openid.properties/com.openexchange.oidc.clientSecret: |
             {{ configure_sso_openid_clients['ox']['clientsecret'] }}
           ox/cfg/openid.properties/com.openexchange.oidc.opIssuer: |

@@ -58,7 +58,7 @@
           - "config:app:set"
           - "onlyoffice"
           - "defFormats"
-          - "--value={{ configure_office_suite_onlyoffice_formats|to_json }}"
+          - "--value={{ configure_office_suite_onlyoffice_formats | to_json }}"
       when: "'nextcloud' in configure_office_suite_install_apps"
       tags:
         - "configure_office_suite_only_office_nextcloud"
