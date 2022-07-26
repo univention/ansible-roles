@@ -21,6 +21,7 @@
     dest: "{{ install_service_new_portal_icon_dir }}/{{ install_service_new_portal_item['dest'] }}"
     src: "{{ install_service_new_portal_icon_dir }}/{{ install_service_new_portal_item['src'] }}"
     remote_src: true
+    mode: "0644"
   loop:
     - src: "udm-settings-portal_category.png"
       dest: "udm-portals-category.png"

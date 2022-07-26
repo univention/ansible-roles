@@ -21,6 +21,7 @@
   ansible.builtin.template:
     dest: "/usr/share/univention-self-service/email_bodies/{{ install_service_selfservices_item|basename }}"
     src: "{{ install_service_selfservices_item }}"
+    mode: "0644"
   loop: "{{ query('fileglob', 'files/selfservice-mails/*') }}"
   loop_control:
     loop_var: "install_service_selfservices_item"

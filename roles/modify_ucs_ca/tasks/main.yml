@@ -67,6 +67,7 @@
       ansible.builtin.copy:
         dest: "/etc/univention/ssl/{{ modify_ucs_ca_external_domain_name }}/openssl.cnf"
         content: "{{ modify_ucs_ca_current_new_file_content }}"
+        mode: "0640"
       tags:
         - "modify_ucs_ca_modify_replace_exising_file"
 

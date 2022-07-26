@@ -95,6 +95,7 @@
           ansible.builtin.copy:
             dest: "{{ configure_license_temp_dir.path }}/license.ldif"
             src: "{{ configure_license_file }}"
+            mode: "0640"
           when:
             - "configure_license_type == 'local_license'"
             - "configure_license_file|default(false)"

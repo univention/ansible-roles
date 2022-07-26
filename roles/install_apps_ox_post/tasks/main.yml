@@ -76,6 +76,7 @@
   ansible.builtin.template:
     dest: "/opt/open-xchange/etc/saml.properties"
     src: "saml.properties.j2"
+    mode: "0640"
   tags:
     - "install_apps_ox_post"
     - "install_apps_ox_post_saml_properties_file"

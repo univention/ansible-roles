@@ -41,6 +41,7 @@
   ansible.builtin.get_url:
     url: "https://github.com/diafygi/acme-tiny/archive/4.1.0.zip"
     dest: "{{ workaround_acmetiny_upgrade_temp_dir.path }}/acme-4.1.0.zip"
+    mode: "0640"
   tags:
     - "workaround_acmetiny_upgrade"
     - "workaround_acmetiny_upgrade_download"
@@ -59,6 +60,7 @@
     src: "{{ workaround_acmetiny_upgrade_temp_dir.path }}/acme-tiny-4.1.0/acme_tiny.py"
     dest: "/usr/share/univention-letsencrypt/acme_tiny.py"
     remote_src: true
+    mode: "0640"
   tags:
     - "workaround_acmetiny_upgrade"
     - "workaround_acmetiny_upgrade_copy"

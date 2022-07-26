@@ -6,6 +6,7 @@
       ansible.builtin.copy:
         dest: "/etc/systemd/system/docker.service.d/fixmtu.conf"
         src: "fixmtu.conf"
+        mode: "0644"
       tags:
         - "workaround_high_mtu_patch_serivce_config"
 
