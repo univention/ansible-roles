@@ -38,7 +38,7 @@
       changed_when: false
       tags:
         - "force_package_list_update_do_update_already_updated_flag"
-  when: "force_package_list_update_already_updated|default(false)|bool == false"
+  when: "not force_package_list_update_already_updated | default(false) | bool"
   tags:
     - "force_package_list_update_do_update"
     - "force_package_list_update"
