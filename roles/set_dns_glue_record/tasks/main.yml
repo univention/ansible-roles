@@ -1,5 +1,4 @@
 ---
-# tasks file for set_dns_glue_record
 
 - name: "Implement DNS glue record for external host name"
   block:
@@ -24,7 +23,8 @@
 
     - name: "Turn udm list output into yaml"
       ansible.builtin.set_fact:
-        set_dns_glue_record_glue_record_entries: "{{ set_dns_glue_record_ns_record_list.stdout | default('') | from_yaml }}"
+        set_dns_glue_record_glue_record_entries: "{{
+          set_dns_glue_record_ns_record_list.stdout | default('') | from_yaml }}"
         set_dns_glue_record_glue_record_counter: 0
         cacheable: false
       when: "'nameserver' in set_dns_glue_record_ns_record_list.stdout"
@@ -57,3 +57,5 @@
   when: "set_dns_glue_record_create_external_hostname_glue_record | bool"
   tags:
     - "set_dns_glue_record"
+
+...

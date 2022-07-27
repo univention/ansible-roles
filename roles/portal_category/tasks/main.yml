@@ -1,5 +1,4 @@
 ---
-# tasks file for portal_category
 
 - name: "portal_category | Validate portal category fields"
   ansible.builtin.assert:
@@ -41,7 +40,8 @@
   vars:
     portal_category_portal_categories_stdout_lines: "{{ portal_category_portal_categories.stdout_lines | default([]) }}"
   ansible.builtin.set_fact:
-    portal_category_portal_categories_fact: "{{ lookup('template', 'category_parse_udm_out_to_ansible.j2') | from_yaml }}"
+    portal_category_portal_categories_fact: "{{
+      lookup('template', 'category_parse_udm_out_to_ansible.j2') | from_yaml }}"
   changed_when: false
   tags:
     - "portal_category"
@@ -49,8 +49,10 @@
 
 - name: "portal_category | Update category in portal"
   vars:
-    portal_category_update_drift_detection: "{{ lookup('template', 'category_drift_detection.j2') | regex_replace('\n','')
-                                                  if portal_category_drift_detection | bool else 'yes' }}"
+    portal_category_update_drift_detection: "{{
+      lookup('template', 'category_drift_detection.j2')
+      | regex_replace('\n','')
+      if portal_category_drift_detection | bool else 'yes' }}"
   ansible.builtin.command: >-
     udm portals/category
     {% if portal_category_update_item['state'] is defined and portal_category_update_item['state'] == 'absent' %}
@@ -66,7 +68,9 @@
       {% endif %}
           {% for lang, text in (portal_category_update_item['display_name'] | default("{}")).items() %}
             {% if lang in
-               portal_category_portal_categories_fact[portal_category_update_item['name']]['displayName'] | default([]) %}
+              portal_category_portal_categories_fact[portal_category_update_item['name']]['displayName']
+              | default([])
+            %}
               {% if text !=
                    portal_category_portal_categories_fact[portal_category_update_item['name']]['displayName'][lang] %}
                 --remove displayName="{{ lang }} {{
@@ -160,3 +164,5 @@
   tags:
     - "portal_category"
     - "portal_category_remove_unscoped"
+
+...

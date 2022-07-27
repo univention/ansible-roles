@@ -1,5 +1,4 @@
 ---
-# tasks file for univention_repository_component
 
 - name: "univention_repository_component"
   vars:
@@ -62,7 +61,8 @@
         univention_repository_component: "{{ univention_repository_component
           | combine({univention_repository_component_keys: univention_repository_component_username}) }}"
       when:
-        - "univention_repository_component_username is defined and univention_repository_component_username | length > 0"
+        - "univention_repository_component_username is defined and univention_repository_component_username
+          | length > 0"
       tags:
         - "univention_repository_component"
         - "univention_repository_component_define_username"
@@ -77,7 +77,8 @@
           | combine({univention_repository_component_keys: univention_repository_component_password}) }}"
       no_log: "{{ univention_repository_component_hide_logging | default(true) | bool }}"
       when:
-        - "univention_repository_component_password is defined and univention_repository_component_password | length > 0"
+        - "univention_repository_component_password is defined and univention_repository_component_password
+          | length > 0"
       tags:
         - "univention_repository_component"
         - "univention_repository_component_define_password"
@@ -117,3 +118,5 @@
         - "univention_repository_component"
         - "univention_repository_component_activate"
   when: "univention_repository_component_name is defined and univention_repository_component_name | length > 0"
+
+...
