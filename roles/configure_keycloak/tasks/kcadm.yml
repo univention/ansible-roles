@@ -107,16 +107,16 @@
         - name: "Change current CSP config to string variable (KCADM)"
           ansible.builtin.set_fact:
             # yamllint disable-line rule:line-length
-            configure_keycloak_current_CSP_list: "{{ (configure_keycloak_kcadm_realm_output.stdout | from_json)['browserSecurityHeaders']['contentSecurityPolicy'] }}"
+            configure_keycloak_current_csp_list: "{{ (configure_keycloak_kcadm_realm_output.stdout | from_json)['browserSecurityHeaders']['contentSecurityPolicy'] }}"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_set_current_csp_list"
 
         - name: "Check if length is over limit (255 chars)"
           ansible.builtin.assert:
-            # (length configure_keycloak_current_CSP_list) + whitespace + (length configure_keycloak_host_url) <= 255
-            that: "(configure_keycloak_current_CSP_list | length) + 1 + (configure_keycloak_host_url | length) <= 255"
+            # (length configure_keycloak_current_csp_list) + whitespace + (length configure_keycloak_host_url) <= 255
+            that: "(configure_keycloak_current_csp_list | length) + 1 + (configure_keycloak_host_url | length) <= 255"
             fail_msg: "Appending host to current CSP list will result in an overflow. Limit is 255 chars."
-          when: "configure_keycloak_host_url not in configure_keycloak_current_CSP_list"
+          when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_assert_csp_length"
 
@@ -125,9 +125,9 @@
           ansible.builtin.command: >
             kcadm.sh update realms/{{ configure_keycloak_realm }}
             -s browserSecurityHeaders.xFrameOptions=""
-            -s browserSecurityHeaders.contentSecurityPolicy="{{ configure_keycloak_current_CSP_list[:-1] }} {{ configure_keycloak_host_url }};"
+            -s browserSecurityHeaders.contentSecurityPolicy="{{ configure_keycloak_current_csp_list[:-1] }} {{ configure_keycloak_host_url }};"
           # yamllint enable rule:line-length
-          when: "configure_keycloak_host_url not in configure_keycloak_current_CSP_list"
+          when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms"
 
