@@ -9,7 +9,7 @@
     - "configure_repository_get_facts"
 
 - name: "configure_repository | Configure default repository (with auth)"
-  blockinfile:
+  ansible.builtin.blockinfile:
     block: |
       machine {{ configure_repository_default_repository_server }}
       login {{ configure_repository_default_repository_username }}
