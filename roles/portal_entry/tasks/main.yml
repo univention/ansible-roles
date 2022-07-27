@@ -195,7 +195,6 @@
 
 
 - name: "portal_entry | Combine category and portals to facts"
-  vars:
   ansible.builtin.set_fact:
     portal_entry_portal_combined_fact: "{{ portal_entry_portal_categories_fact
                                               | combine(portal_entry_portal_portals_fact) }}"
