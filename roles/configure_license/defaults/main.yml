@@ -1,5 +1,4 @@
 ---
-# defaults file for configure_license
 
 configure_license_validity: ""
 configure_license_shop_password: ""
@@ -10,3 +9,5 @@ configure_license_basedn: ""
 configure_license_type: "server_license"
 configure_license_file: false
 configure_license_server_type: "master"
+
+...

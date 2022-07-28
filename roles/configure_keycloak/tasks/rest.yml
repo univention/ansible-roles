@@ -431,3 +431,5 @@
   delegate_to: "{{ configure_keycloak_keycloak_server }}"
   tags:
     - "keycloak_config"
+
+...

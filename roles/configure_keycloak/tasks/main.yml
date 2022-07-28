@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_keycloak
 
 - name: "Generate keycloak password"
   become: false
@@ -41,3 +40,5 @@
   tags:
     - "configure_keycloak"
     - "configure_keycloak_import_subtasks"
+
+...

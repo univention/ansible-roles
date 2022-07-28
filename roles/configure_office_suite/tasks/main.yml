@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_office_suite
 
 - name: "configure_office_suite | Assert that provided office suite is a supported value"
   ansible.builtin.assert:
@@ -114,3 +113,5 @@
   tags:
     - "configure_office_suite"
     - "configure_office_suite_flush_handlers"
+
+...

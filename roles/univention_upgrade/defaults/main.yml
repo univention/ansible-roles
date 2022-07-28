@@ -1,7 +1,9 @@
 ---
-# defaults file for univention_upgrade
+
 univention_upgrade_version: "4.4-99"
 univention_upgrade_clear_apt_cache: false
 univention_upgrade_removal_check: false
 univention_upgrade_reboot_after_upgrade: false
 univention_upgrade_app_updates: false
+
+...

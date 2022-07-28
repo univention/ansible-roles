@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_keycloak_saml
 
 - name: "configure_keycloak_saml | Modify Domain Users Group"
   # yamllint disable rule:line-length
@@ -56,3 +55,5 @@
   tags:
     - "configure_keycloak_saml"
     - "configure_keycloak_saml_modify_idp_configuration"
+
+...

@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_repository
 
 - name: "configure_repository | Get ucr variables"
   ansible.builtin.include_role:
@@ -58,3 +57,5 @@
   tags:
     - "configure_repository"
     - "configure_repository_default_repository"
+
+...

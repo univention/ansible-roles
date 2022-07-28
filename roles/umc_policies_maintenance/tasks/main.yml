@@ -1,5 +1,4 @@
 ---
-# tasks file for umc_policies_maintenance
 
 - name: "umc_policies_maintenance | Modify Univention Update Maintenance policies"
   block:
@@ -99,3 +98,5 @@
   tags:
     - "umc_policies_maintenance"
     - "umc_policies_maintenance_configure_cron"
+
+...

@@ -1,5 +1,4 @@
 ---
-# handlers file for install_lets_encrypt
 
 - name: "Restart postfix"
   ansible.builtin.service:
@@ -25,3 +24,5 @@
   ansible.builtin.command: "univention-app restart openid-connect-provider"
   # noqa ignore-errors
   ignore_errors: true
+
+...

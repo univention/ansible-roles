@@ -1,5 +1,4 @@
 ---
-# tasks file for ucs_join
 
 - name: "ucs_join | Check if all mandatory common vars are set"
   ansible.builtin.assert:
@@ -364,3 +363,5 @@
   tags:
     - "ucs_join"
     - "ucs_join_run_join_script"
+
+...

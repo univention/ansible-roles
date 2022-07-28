@@ -1,5 +1,4 @@
 ---
-# defaults file for configure_keycloak
 
 configure_keycloak_generate_oidc_broker_secret: true
 configure_keycloak_oidc_broker_secret: ""
@@ -23,3 +22,5 @@ configure_keycloak_realm_base_url: "{{ configure_keycloak_base_url }}/admin/real
 configure_keycloak_protocol_mapper_name: "identity-provider-mapper"
 configure_keycloak_import_mapper_name: "append IDP to username"
 configure_keycloak_hostname: "{{ inventory_hostname }}"
+
+...

@@ -1,6 +1,7 @@
 ---
-# defaults file for custom_facts
 
 custom_facts_templates:
   - "deployment.fact.j2"
   - "hotfixes.fact.j2"
+
+...

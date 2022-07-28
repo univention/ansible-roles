@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_saml_single_server
 
 - name: "configure_saml_single_server | Set basic UCR config variables"
   univention.ucs_modules.univention_config_registry:
@@ -117,3 +116,5 @@
   tags:
     - "configure_saml_single_server"
     - "configure_saml_single_server_remove_default_saml_provider"
+
+...

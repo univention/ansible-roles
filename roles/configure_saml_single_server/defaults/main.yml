@@ -1,5 +1,4 @@
 ---
-# defaults file for configure_saml_single_server
 
 configure_saml_single_server_external_hostname: ""
 configure_saml_single_admin_user_name: ""
@@ -10,3 +9,5 @@ configure_saml_single_server_remove_default_saml_provider: true
 configure_saml_single_server_domain_name: ""
 configure_saml_single_server_external_loadbalancer_ip: ""
 configure_saml_single_server_domain_prefix: "portal"
+
+...

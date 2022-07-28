@@ -1,5 +1,4 @@
 ---
-# tasks file for install_packages
 
 - name: "install_packages | Update package list"
   ansible.builtin.include_role:
@@ -61,3 +60,5 @@
   tags:
     - "install_apps"
     - "install_apps_install_app"
+
+...

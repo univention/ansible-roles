@@ -1,5 +1,4 @@
 ---
-# defaults file for univention_repository_component
 
 univention_repository_component_name: ""
 univention_repository_component_parts: ""
@@ -10,3 +9,5 @@ univention_repository_component_password: ""
 univention_repository_component_version: ""
 univention_repository_component_unmaintained: ""
 univention_repository_component_hide_logging: true
+
+...

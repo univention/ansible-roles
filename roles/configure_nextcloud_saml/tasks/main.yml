@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_nextcloud_saml
 
 - name: "Configure NextCloud app for single SAML backend"
   ansible.builtin.command:
@@ -17,3 +16,5 @@
       - "--value=0"
   tags:
     - "configure_nextcloud_saml"
+
+...

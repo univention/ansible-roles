@@ -1,5 +1,4 @@
 ---
-# tasks file for hardening
 
 - name: "hardening | Disable HTTP"
   univention.ucs_modules.univention_config_registry:
@@ -69,3 +68,5 @@
   tags:
     - "hardening_set_processes_limit"
     - "hardening"
+
+...

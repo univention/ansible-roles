@@ -1,7 +1,8 @@
 ---
-# defaults file for configure_network_proxy
 
 configure_network_proxy_enabled: false
 configure_network_proxy_http_proxy: ""
 configure_network_proxy_https_proxy: ""
 configure_network_proxy_no_proxy: ""
+
+...

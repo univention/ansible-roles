@@ -1,5 +1,4 @@
 ---
-# tasks file for install_multitenant_acls
 
 - name: "install_multitenant_acls | Enable ACL repository"
   ansible.builtin.include_role:
@@ -72,3 +71,5 @@
   tags:
     - "install_multitenant_acls"
     - "install_multitenant_acls_disable_nested_acl_groups"
+
+...

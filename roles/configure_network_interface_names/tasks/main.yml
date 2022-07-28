@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_network_interface_names
 
 - name: "configure_network_interface_names | Set grub parameter"
   univention.ucs_modules.univention_config_registry:
@@ -11,3 +10,5 @@
   tags:
     - "configure_network_interface_names"
     - "configure_network_interface_names_set_ucr"
+
+...

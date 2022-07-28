@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_apps_owncloud
 
 - name: "Configure OwnCloud SSO"
   block:
@@ -66,3 +65,5 @@
       ansible.builtin.meta: "flush_handlers"
   tags:
     - "configure_apps_owncloud"
+
+...

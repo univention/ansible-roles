@@ -1,5 +1,4 @@
 ---
-# tasks file for improve_usability_nextcloud
 
 - name: "NextCloud: Disable unneeded functionality"
   ansible.builtin.command:
@@ -20,3 +19,5 @@
     - "improve_usability"
     - "improve_usability_nextcloud"
     - "improve_usability_nextcloud_disable_functionality"
+
+...

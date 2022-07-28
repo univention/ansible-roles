@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_license
 
 - name: "configure_license | Import License"
   block:
@@ -123,3 +122,5 @@
   when: "configure_license_server_type | default('master') != 'backup'"
   tags:
     - "configure_license"
+
+...

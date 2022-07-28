@@ -1,5 +1,4 @@
 ---
-# tasks file for use_trusted_cert
 
 - name: "use_trusted_cert | Check if paths are set"
   ansible.builtin.assert:
@@ -52,3 +51,5 @@
   tags:
     - "use_trusted_cert"
     - "use_trusted_cert_restart_apache"
+
+...

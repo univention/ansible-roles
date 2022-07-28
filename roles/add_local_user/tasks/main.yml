@@ -1,5 +1,4 @@
 ---
-# tasks file for add-local-user
 
 - name: "add_local_user | Add a user"
   vars:

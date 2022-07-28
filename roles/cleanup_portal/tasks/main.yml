@@ -1,5 +1,4 @@
 ---
-# tasks file for cleanup_portal
 
 - name: "cleanup_portal | Install Dashboard"
   block:

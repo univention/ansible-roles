@@ -1,5 +1,4 @@
 ---
-# tasks file for extend_root_lvm_volume
 
 - name: "extend_root_lvm_volume | Extend system space to cover the whole disk"
   block:
@@ -52,3 +51,5 @@
   when: "extend_root_lvm_volume_extend_lvm_to_whole_disk|bool"
   tags:
     - "extend_root_lvm_volume"
+
+...

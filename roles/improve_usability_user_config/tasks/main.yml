@@ -1,5 +1,4 @@
 ---
-# tasks file for improve_usability_user_config
 
 - name: "improve_usability_user_config | Make Administrator an OX user"
   ansible.builtin.command:
@@ -141,3 +140,5 @@
   tags:
     - "improve_usability_user_config"
     - "improve_usability_user_config_hide_portal_settings"
+
+...

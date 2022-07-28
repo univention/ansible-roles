@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_sso_openid
 
 - name: "configure_sso_openid | Run UCS install apps: Install 'openid-connect-provider'"
   vars:
@@ -219,3 +218,5 @@
   tags:
     - "configure_sso_openid"
     - "configure_sso_openid_ox"
+
+...

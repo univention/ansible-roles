@@ -1,5 +1,4 @@
 ---
-# tasks file for ldapsearch_user
 
 - name: "ldapsearch_user | Create LDAPSearch user"
   block:
@@ -110,3 +109,5 @@
   when: "ldapsearch_user_server_type | default('master') != 'backup'"
   tags:
     - "ldapsearch_user"
+
+...

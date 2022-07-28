@@ -1,5 +1,4 @@
 ---
-# tasks file for install_branding
 
 - name: "install_branding | Enable branding repository"
   ansible.builtin.include_role:
@@ -23,3 +22,5 @@
   tags:
     - "install_branding"
     - "install_branding_update_packages"
+
+...

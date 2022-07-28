@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_ntp_servers
 
 - name: "configure_ntp_servers | Install NTP"
   ansible.builtin.include_role:
@@ -33,3 +32,5 @@
   tags:
     - "configure_ntp_servers"
     - "configure_ntp_servers_restart_ntp_deamon"
+
+...

@@ -1,5 +1,4 @@
 ---
-# tasks file for portal_cookie_banner
 
 - name: "portal_cookie_banner | Enable Cookie banner in portal"
   univention.ucs_modules.univention_config_registry:
@@ -22,3 +21,5 @@
   tags:
     - "portal_cookie_banner"
     - "portal_cookie_banner_content"
+
+...

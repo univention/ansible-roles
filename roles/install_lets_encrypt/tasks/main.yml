@@ -1,5 +1,4 @@
 ---
-# tasks file for install_lets_encrypt
 
 - name: "Update package list"
   ansible.builtin.include_role:
@@ -147,3 +146,5 @@
   tags:
     - "install_lets_encrypt"
     - "install_lets_encrypt_run_letsencrypt_config_script"
+
+...

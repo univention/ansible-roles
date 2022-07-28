@@ -1,5 +1,4 @@
 ---
-# tasks file for custom_facts
 
 - name: "custom_facts | Refresh date_time facts"
   ansible.builtin.setup:
@@ -97,3 +96,5 @@
   tags:
     - "custom_facts"
     - "custom_facts_refresh_ucr_facts"
+
+...

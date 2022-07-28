@@ -1,5 +1,4 @@
 ---
-# tasks file for portal_entry
 
 - name: "portal_entry | Validate portal entry fields"
   ansible.builtin.assert:
@@ -240,3 +239,5 @@
   when:
     - "portal_entry_remove_unscoped"
     - "portal_entry_remove_item.key not in portal_entry_entries | map(attribute='name')"
+
+...

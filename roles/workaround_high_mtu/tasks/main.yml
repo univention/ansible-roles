@@ -1,5 +1,5 @@
 ---
-# tasks file for workaround_high_mtu
+
 - name: "Handle docker HTTPS issues on high MTU"
   block:
     - name: "Patch docker Daemon to MTU 1400"
@@ -21,3 +21,5 @@
   when: "ansible_default_ipv4['mtu']|default(1500) < 1500"
   tags:
     - "workaround_high_mtu"
+
+...

@@ -1,4 +1,5 @@
 ---
-# defaults file for univention_firewall
 
 univention_firewall_telegraf: "ACCEPT"
+
+...

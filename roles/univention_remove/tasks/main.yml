@@ -1,5 +1,4 @@
 ---
-# tasks file for univention_remove
 
 - name: "univention_remove | Remove via univention-remove"
   ansible.builtin.command: "univention-remove --yes {{ univention_remove_name }}"
@@ -12,3 +11,5 @@
   tags:
     - "univention_remove"
     - "univention_remove_run"
+
+...

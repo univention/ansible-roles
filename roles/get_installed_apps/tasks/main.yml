@@ -1,5 +1,4 @@
 ---
-# tasks file for get_installed_apps
 
 - name: "get_installed_apps | Get app list"
   ansible.utils.cli_parse:
@@ -19,3 +18,5 @@
   tags:
     - "get_installed_apps_convert_list_to_dict"
     - "get_installed_apps"
+
+...

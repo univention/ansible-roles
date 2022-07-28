@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_monitoring
 
 - name: "configure_monitoring | Install App Dashboard Client"
   ansible.builtin.include_role:
@@ -91,3 +90,5 @@
   tags:
     - "configure_monitoring"
     - "configure_monitoring_fix_dashboard_defaults"
+
+...

@@ -1,5 +1,4 @@
 ---
-# tasks file for install_service_selfservices
 
 - name: "install_service_selfservices | Install New Portal app"
   ansible.builtin.include_role:
@@ -74,3 +73,5 @@
   tags:
     - "install_service_selfservices"
     - "install_service_selfservices_configure_portal_frame"
+
+...

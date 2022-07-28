@@ -1,6 +1,8 @@
 ---
-# defaults file for install_apps_ox_post
+
 install_apps_ox_post_basedn: ""
 install_apps_ox_post_external_hostname: ""
 install_apps_ox_post_ox_keystore_passphrase: ""
 install_apps_ox_post_ox_drive_default: 0
+
+...

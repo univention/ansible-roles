@@ -1,4 +1,5 @@
 ---
-# defaults file for univention_remove
 
 univention_remove_name: ""
+
+...
