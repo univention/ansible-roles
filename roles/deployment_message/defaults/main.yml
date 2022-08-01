@@ -1,5 +1,4 @@
 ---
-# defaults file for deployment_message
 
 deployment_message_verification_pause_duration: 20
 deployment_message_external_hostname: ""
@@ -7,3 +6,5 @@ deployment_message_domain_name: ""
 deployment_message_basedn: ""
 deployment_message_server_type: ""
 deployment_message_saml_config_type: ""
+
+...

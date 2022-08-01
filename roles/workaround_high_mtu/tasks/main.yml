@@ -1,11 +1,12 @@
 ---
-# tasks file for workaround_high_mtu
+
 - name: "Handle docker HTTPS issues on high MTU"
   block:
     - name: "Patch docker Daemon to MTU 1400"
       ansible.builtin.copy:
         dest: "/etc/systemd/system/docker.service.d/fixmtu.conf"
         src: "fixmtu.conf"
+        mode: "0644"
       tags:
         - "workaround_high_mtu_patch_serivce_config"
 
@@ -20,3 +21,5 @@
   when: "ansible_default_ipv4['mtu']|default(1500) < 1500"
   tags:
     - "workaround_high_mtu"
+
+...

@@ -1,5 +1,4 @@
 ---
-# tasks file for install_service_selfservices
 
 - name: "install_service_selfservices | Install New Portal app"
   ansible.builtin.include_role:
@@ -19,8 +18,9 @@
   vars:
     fqdn: "{{ install_service_selfservice_external_hostname }}"
   ansible.builtin.template:
-    dest: "/usr/share/univention-self-service/email_bodies/{{ install_service_selfservices_item|basename }}"
+    dest: "/usr/share/univention-self-service/email_bodies/{{ install_service_selfservices_item | basename }}"
     src: "{{ install_service_selfservices_item }}"
+    mode: "0644"
   loop: "{{ query('fileglob', 'files/selfservice-mails/*') }}"
   loop_control:
     loop_var: "install_service_selfservices_item"
@@ -47,7 +47,7 @@
     keys:
       umc/self-service/passwordreset/email/text_file: >-
         /usr/share/univention-self-service/email_bodies/{{ install_service_selfservice_password_reset_filename }}
-  when: "install_service_selfservice_password_reset_filename|length > 0"
+  when: "install_service_selfservice_password_reset_filename | length > 0"
   tags:
     - "install_service_selfservices"
     - "install_service_selfservices_configure_passwortreset_email"
@@ -73,3 +73,5 @@
   tags:
     - "install_service_selfservices"
     - "install_service_selfservices_configure_portal_frame"
+
+...

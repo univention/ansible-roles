@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_sso_openid
 
 - name: "configure_sso_openid | Run UCS install apps: Install 'openid-connect-provider'"
   vars:
@@ -32,9 +31,9 @@
           udm
           oidc/rpservice
           create
-          --set name={{ configure_sso_openid_clients['nextcloud']['name']|default('nextcloud') }}
+          --set name={{ configure_sso_openid_clients['nextcloud']['name'] | default('nextcloud') }}
           --position cn=oidc,cn=univention,{{ configure_sso_openid_basedn }}
-          --set clientid={{ configure_sso_openid_clients['nextcloud']['clientid']|default('nextcloud') }}
+          --set clientid={{ configure_sso_openid_clients['nextcloud']['clientid'] | default('nextcloud') }}
           --set clientsecret={{ configure_sso_openid_clients['nextcloud']['clientsecret'] }}
           --set trusted=yes
           --set applicationtype=web
@@ -65,7 +64,7 @@
           /var/www/html/occ
           user_oidc:provider
           ucs
-          --clientid="{{ configure_sso_openid_clients['nextcloud']['clientid']|default('nextcloud') }}"
+          --clientid="{{ configure_sso_openid_clients['nextcloud']['clientid'] | default('nextcloud') }}"
           --clientsecret="{{ configure_sso_openid_clients['nextcloud']['clientsecret'] }}"
           --discoveryuri="https://{{ configure_sso_openid_external_hostname }}/.well-known/openid-configuration"
           --mapping-uid=preferred_username
@@ -115,9 +114,9 @@
           udm
           oidc/rpservice
           create
-          --set name={{ configure_sso_openid_clients['ox']['name']|default('open-xchange') }}
+          --set name={{ configure_sso_openid_clients['ox']['name'] | default('open-xchange') }}
           --position cn=oidc,cn=univention,{{ configure_sso_openid_basedn }}
-          --set clientid={{ configure_sso_openid_clients['ox']['clientid']|default('open-xchange') }}
+          --set clientid={{ configure_sso_openid_clients['ox']['clientid'] | default('open-xchange') }}
           --set clientsecret={{ configure_sso_openid_clients['ox']['clientsecret'] }}
           --set trusted=yes
           --set applicationtype=web
@@ -146,6 +145,7 @@
       ansible.builtin.file:
         path: "/opt/open-xchange/etc/openid.properties"
         state: "touch"
+        mode: "0640"
       tags:
         - "configure_sso_openid_ox_create_poperties_file"
     - name: "configure_sso_openid | Configure ox properties via UCR"
@@ -162,7 +162,7 @@
           ox/cfg/openid.properties/com.openexchange.oidc.ucs.enabled: "true"
           ox/cfg/openid.properties/com.openexchange.oidc.startDefaultBackend: "false"
           ox/cfg/openid.properties/com.openexchange.oidc.clientId: |
-            {{ configure_sso_openid_clients['ox']['clientid']|default('open-xchange') }}
+            {{ configure_sso_openid_clients['ox']['clientid'] | default('open-xchange') }}
           ox/cfg/openid.properties/com.openexchange.oidc.clientSecret: |
             {{ configure_sso_openid_clients['ox']['clientsecret'] }}
           ox/cfg/openid.properties/com.openexchange.oidc.opIssuer: |
@@ -187,6 +187,7 @@
       ansible.builtin.template:
         dest: "/opt/open-xchange/etc/as-config.yml"
         src: "as-config.yaml.j2"
+        mode: "0640"
       tags:
         - "configure_sso_openid_ox_disable_saml_frondend"
 
@@ -194,6 +195,7 @@
       ansible.builtin.template:
         dest: "/etc/dovecot/conf.d/91-acl_user.conf"
         src: "91-acl_user.conf.j2"
+        mode: "0640"
       tags:
         - "configure_sso_openid_ox_adjust_dovecot_acl_configuration"
 
@@ -216,3 +218,5 @@
   tags:
     - "configure_sso_openid"
     - "configure_sso_openid_ox"
+
+...

@@ -1,8 +1,9 @@
 ---
-# defaults file for extend_root_lvm_volume
 
 extend_root_lvm_volume_extend_lvm_to_whole_disk: true
 extend_root_lvm_volume_lvm_disk: "vda"
 extend_root_lvm_volume_lvm_vg_name: "vg_ucs"
 extend_root_lvm_volume_lvm_data_volume: "root"
 extend_root_lvm_volume_existing_lvm_partition_number: 2
+
+...

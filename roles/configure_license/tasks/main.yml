@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_license
 
 - name: "configure_license | Import License"
   block:
@@ -31,12 +30,12 @@
             - name: "configure_license | Check if all vars are set"
               ansible.builtin.assert:
                 that:
-                  - "configure_license_validity|string|length > 0"
-                  - "configure_license_shop_password|string|length > 0"
-                  - "configure_license_shop_id|string|length > 0"
-                  - "configure_license_shop_username|string|length > 0"
-                  - "configure_license_max_users|string|length > 0"
-                  - "configure_license_basedn|string|length > 0"
+                  - "configure_license_validity | string | length > 0"
+                  - "configure_license_shop_password | string | length > 0"
+                  - "configure_license_shop_id | string | length > 0"
+                  - "configure_license_shop_username | string | length > 0"
+                  - "configure_license_max_users | string | length > 0"
+                  - "configure_license_basedn | string | length > 0"
                 fail_msg: |
                   At least one necessary variable is not set.
                   Skip this check with --skip-tags configure_license_server_license_check_preconditions
@@ -83,7 +82,7 @@
                   -f
                   {{ configure_license_temp_dir.path }}/license.ldif
                   {{ configure_license_basedn }}
-                  {{ configure_license_validity_date.stdout_lines[0]|default('unlimited') }}
+                  {{ configure_license_validity_date.stdout_lines[0] | default('unlimited') }}
                 creates: "{{ configure_license_temp_dir.path }}/license.ldif"
               tags:
                 - "configure_license_server_license_acquire"
@@ -95,9 +94,10 @@
           ansible.builtin.copy:
             dest: "{{ configure_license_temp_dir.path }}/license.ldif"
             src: "{{ configure_license_file }}"
+            mode: "0640"
           when:
             - "configure_license_type == 'local_license'"
-            - "configure_license_file|default(false)"
+            - "configure_license_file | default(false)"
           tags:
             - "configure_license_local_license"
 
@@ -119,6 +119,8 @@
         configure_license_status.rc > 0 or
         configure_license_status.stdout is search('FAILED') or
         ansible_local['ucr']['uuid/license'] is not defined
-  when: "configure_license_server_type|default('master') != 'backup'"
+  when: "configure_license_server_type | default('master') != 'backup'"
   tags:
     - "configure_license"
+
+...

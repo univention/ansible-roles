@@ -1,5 +1,4 @@
 ---
-# tasks file for univention_upgrade
 
 - name: "univention_upgrade | Allow modified apache templates"
   univention.ucs_modules.univention_config_registry:
@@ -90,3 +89,5 @@
   tags:
     - "univention_upgrade"
     - "univention_upgrade_reboot"
+
+...

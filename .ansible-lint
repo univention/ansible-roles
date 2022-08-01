@@ -25,6 +25,7 @@ use_default_rules: true
 
 # This makes linter to fully ignore rules/tags listed below
 skip_list:
+  - "no-changed-when"
   - "no-handler"
 
 # Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
@@ -49,7 +50,6 @@ enable_list:
   - "meta-no-info"
   - "meta-no-tags"
   - "meta-video-links"
-  - "no-changed-when"
   - "no-jinja-nesting"
   - "no-jinja-when"
   - "no-log-password"
@@ -92,3 +92,5 @@ extra_vars: {}
 # List of additional kind:pattern to be added at the top of the default
 # match list, first match determines the file kind.
 kinds: []
+
+...

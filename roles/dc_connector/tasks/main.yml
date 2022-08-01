@@ -1,5 +1,4 @@
 ---
-# tasks file for dc_connector
 
 - name: "dc_connector | Install DC connector"
   block:
@@ -22,3 +21,5 @@
   when: "dc_connector_server_type|default('master') != 'backup'"
   tags:
     - "dc_connector"
+
+...

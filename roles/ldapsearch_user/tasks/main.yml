@@ -1,5 +1,4 @@
 ---
-# tasks file for ldapsearch_user
 
 - name: "ldapsearch_user | Create LDAPSearch user"
   block:
@@ -7,16 +6,16 @@
       ansible.builtin.command: >
         udm users/ldap create
           --position "cn=users,{{ ldapsearch_user_basedn }}"
-          --set name="{{ ldapsearch_user_item.name|default(ldapsearch_user_item.username) }}"
+          --set name="{{ ldapsearch_user_item.name | default(ldapsearch_user_item.username) }}"
           --set username="{{ ldapsearch_user_item.username }}"
-          --set lastname="{{ ldapsearch_user_item.lastname|default(ldapsearch_user_item.username) }}"
+          --set lastname="{{ ldapsearch_user_item.lastname | default(ldapsearch_user_item.username) }}"
           --set password="{{ ldapsearch_user_item.password }}"
           --ignore_exists
       changed_when: "ldapsearch_user_create_result.stdout is not search('Object exists')"
       loop: "{{ ldapsearch_user_list }}"
       loop_control:
         loop_var: "ldapsearch_user_item"
-      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
+      no_log: "{{ ldapsearch_user_hide_logging | default(true) | bool }}"
       register: "ldapsearch_user_create_result"
       tags:
         - "ldapsearch_user_create"
@@ -24,15 +23,15 @@
     - name: "ldapsearch_user | Update LDAPSearch user"
       ansible.builtin.command: >
         udm users/ldap modify
-          --dn "uid={{ ldapsearch_user_item.name|default(ldapsearch_user_item.username) }},cn=users,{{
+          --dn "uid={{ ldapsearch_user_item.name | default(ldapsearch_user_item.username) }},cn=users,{{
                           ldapsearch_user_basedn }}"
           --set username="{{ ldapsearch_user_item.username }}"
-          --set lastname="{{ ldapsearch_user_item.lastname|default(ldapsearch_user_item.username) }}"
+          --set lastname="{{ ldapsearch_user_item.lastname | default(ldapsearch_user_item.username) }}"
       changed_when: "ldapsearch_user_update_result.stdout is not search('No modification')"
       loop: "{{ ldapsearch_user_list }}"
       loop_control:
         loop_var: "ldapsearch_user_item"
-      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
+      no_log: "{{ ldapsearch_user_hide_logging | default(true) | bool }}"
       register: "ldapsearch_user_update_result"
       tags:
         - "ldapsearch_user_update"
@@ -40,7 +39,7 @@
     - name: "ldapsearch_user | Update LDAPSearch user password"
       ansible.builtin.command: >
         udm users/ldap modify
-          --dn "uid={{ ldapsearch_user_item.name|default(ldapsearch_user_item.username) }},cn=users,{{
+          --dn "uid={{ ldapsearch_user_item.name | default(ldapsearch_user_item.username) }},cn=users,{{
                           ldapsearch_user_basedn }}"
           --set password="{{ ldapsearch_user_item.password }}"
       changed_when: "ldapsearch_user_update_password_result.stdout is search('Object modified:')"
@@ -50,7 +49,7 @@
       loop: "{{ ldapsearch_user_list }}"
       loop_control:
         loop_var: "ldapsearch_user_item"
-      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
+      no_log: "{{ ldapsearch_user_hide_logging | default(true) | bool }}"
       register: "ldapsearch_user_update_password_result"
       tags:
         - "ldapsearch_user_update_password"
@@ -59,16 +58,16 @@
       ansible.builtin.command: >
         udm users/ldap create
           --position "{{ ldapsearch_user_item.tenant_ou }},{{ ldapsearch_user_basedn }}"
-          --set name="{{ ldapsearch_user_item.name|default(ldapsearch_user_item.username) }}"
+          --set name="{{ ldapsearch_user_item.name | default(ldapsearch_user_item.username) }}"
           --set username="{{ ldapsearch_user_item.username }}"
-          --set lastname="{{ ldapsearch_user_item.lastname|default(ldapsearch_user_item.username) }}"
+          --set lastname="{{ ldapsearch_user_item.lastname | default(ldapsearch_user_item.username) }}"
           --set password="{{ ldapsearch_user_item.password }}"
           --ignore_exists
       changed_when: "ldapsearch_user_create_tenantbased_result.stdout is not search('Object exists')"
       loop: "{{ ldapsearch_user_list_tenantbased }}"
       loop_control:
         loop_var: "ldapsearch_user_item"
-      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
+      no_log: "{{ ldapsearch_user_hide_logging | default(true) | bool }}"
       register: "ldapsearch_user_create_tenantbased_result"
       tags:
         - "ldapsearch_user_create_tenantbased"
@@ -76,15 +75,15 @@
     - name: "ldapsearch_user | Update LDAPSearch user (per Tenant)"
       ansible.builtin.command: >
         udm users/ldap modify
-          --dn "uid={{ ldapsearch_user_item.name|default(ldapsearch_user_item.username) }},{{
+          --dn "uid={{ ldapsearch_user_item.name | default(ldapsearch_user_item.username) }},{{
                         ldapsearch_user_item.tenant_ou }},{{ ldapsearch_user_basedn }}"
           --set username="{{ ldapsearch_user_item.username }}"
-          --set lastname="{{ ldapsearch_user_item.lastname|default(ldapsearch_user_item.username) }}"
+          --set lastname="{{ ldapsearch_user_item.lastname | default(ldapsearch_user_item.username) }}"
       changed_when: "ldapsearch_user_update_tenantbased_result.stdout is not search('No modification')"
       loop: "{{ ldapsearch_user_list_tenantbased }}"
       loop_control:
         loop_var: "ldapsearch_user_item"
-      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
+      no_log: "{{ ldapsearch_user_hide_logging | default(true) | bool }}"
       register: "ldapsearch_user_update_tenantbased_result"
       tags:
         - "ldapsearch_user_update_tenantbased"
@@ -92,7 +91,7 @@
     - name: "ldapsearch_user | Update LDAPSearch user password (per Tenant)"
       ansible.builtin.command: >
         udm users/ldap modify
-          --dn "uid={{ ldapsearch_user_item.name|default(ldapsearch_user_item.username) }},{{
+          --dn "uid={{ ldapsearch_user_item.name | default(ldapsearch_user_item.username) }},{{
                         ldapsearch_user_item.tenant_ou }},{{ ldapsearch_user_basedn }}"
           --set password="{{ ldapsearch_user_item.password }}"
       changed_when: "ldapsearch_user_update_password_tenantbased_result.stdout is search('Object modified:')"
@@ -102,11 +101,13 @@
       loop: "{{ ldapsearch_user_list_tenantbased }}"
       loop_control:
         loop_var: "ldapsearch_user_item"
-      no_log: "{{ ldapsearch_user_hide_logging|default(true)|bool }}"
+      no_log: "{{ ldapsearch_user_hide_logging | default(true) | bool }}"
       register: "ldapsearch_user_update_password_tenantbased_result"
       tags:
         - "ldapsearch_user_update_password"
 
-  when: "ldapsearch_user_server_type|default('master') != 'backup'"
+  when: "ldapsearch_user_server_type | default('master') != 'backup'"
   tags:
     - "ldapsearch_user"
+
+...

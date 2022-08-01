@@ -1,5 +1,4 @@
 ---
-# tasks file for ucs_add_admin_user
 
 - name: "ucs_add_admin_user | Add Admin User"
   ansible.builtin.command:
@@ -62,10 +61,10 @@
       - "uid={{ ucs_add_admin_user_username }},cn=users,{{ ucs_add_admin_user_basedn }}"
       - "--set"
       - "{{ ucs_add_admin_user_attrib_item.key }}={{ ucs_add_admin_user_attrib_item.value }}"
-  loop: "{{ ucs_add_admin_user_attrib_list|dict2items }}"
+  loop: "{{ ucs_add_admin_user_attrib_list | dict2items }}"
   loop_control:
     loop_var: "ucs_add_admin_user_attrib_item"
-  when: "ucs_add_admin_user_attrib_list|length > 0"
+  when: "ucs_add_admin_user_attrib_list | length > 0"
   tags:
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_modify_user"
@@ -83,7 +82,7 @@
   loop: "{{ ucs_add_admin_user_group_list }}"
   loop_control:
     loop_var: "ucs_add_admin_user_group_item"
-  when: "ucs_add_admin_user_group_list|length > 0"
+  when: "ucs_add_admin_user_group_list | length > 0"
   tags:
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_add_to_groups"
@@ -98,3 +97,5 @@
   tags:
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_trigger_password_recovery"
+
+...

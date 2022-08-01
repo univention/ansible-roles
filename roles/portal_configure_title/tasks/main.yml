@@ -1,5 +1,4 @@
 ---
-# tasks file for portal_configure_title
 
 - name: "portal_configure_title | Get current title"
   ansible.builtin.command: >
@@ -58,3 +57,5 @@
   tags:
     - "portal_configure_title"
     - "portal_configure_title_update"
+
+...

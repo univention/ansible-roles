@@ -1,12 +1,11 @@
 ---
-# tasks file for configure_network_proxy
 
 - name: "configure_network_proxy | Configure http network proxy"
   univention.ucs_modules.univention_config_registry:
     keys:
-      proxy/http: "{{ configure_network_proxy_http_proxy|default('') }}"
-    state: "{{ 'present' if configure_network_proxy_enabled|bool else 'absent' }}"
-  when: "configure_network_proxy_http_proxy is defined and configure_network_proxy_http_proxy|length > 0"
+      proxy/http: "{{ configure_network_proxy_http_proxy | default('') }}"
+    state: "{{ 'present' if configure_network_proxy_enabled | bool else 'absent' }}"
+  when: "configure_network_proxy_http_proxy is defined and configure_network_proxy_http_proxy | length > 0"
   tags:
     - "configure_network_proxy"
     - "configure_network_proxy_http_proxy"
@@ -14,9 +13,9 @@
 - name: "configure_network_proxy | Configure https network proxy"
   univention.ucs_modules.univention_config_registry:
     keys:
-      proxy/https: "{{ configure_network_proxy_https_proxy|default('') }}"
-    state: "{{ 'present' if configure_network_proxy_enabled|bool else 'absent' }}"
-  when: "configure_network_proxy_https_proxy is defined and configure_network_proxy_https_proxy|length > 0"
+      proxy/https: "{{ configure_network_proxy_https_proxy | default('') }}"
+    state: "{{ 'present' if configure_network_proxy_enabled | bool else 'absent' }}"
+  when: "configure_network_proxy_https_proxy is defined and configure_network_proxy_https_proxy | length > 0"
   tags:
     - "configure_network_proxy"
     - "configure_network_proxy_https_proxy"
@@ -24,9 +23,11 @@
 - name: "configure_network_proxy | Configure no_proxy network proxy"
   univention.ucs_modules.univention_config_registry:
     keys:
-      proxy/no_proxy: "{{ configure_network_proxy_no_proxy|default('') }}"
-    state: "{{ 'present' if configure_network_proxy_enabled|bool else 'absent' }}"
-  when: "configure_network_proxy_no_proxy is defined and configure_network_proxy_no_proxy|length > 0"
+      proxy/no_proxy: "{{ configure_network_proxy_no_proxy | default('') }}"
+    state: "{{ 'present' if configure_network_proxy_enabled | bool else 'absent' }}"
+  when: "configure_network_proxy_no_proxy is defined and configure_network_proxy_no_proxy | length > 0"
   tags:
     - "configure_network_proxy"
     - "configure_network_proxy_no_proxy"
+
+...

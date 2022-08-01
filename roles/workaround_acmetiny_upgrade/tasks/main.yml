@@ -1,5 +1,5 @@
 ---
-# tasks file for workaround_acmetiny_upgrade
+
 #
 #         _   _                 ____
 # __/\__ | | | | ___ _ __ ___  | __ )  ___
@@ -26,6 +26,7 @@
 #         \_/\_/ \__,_|_|  |_| |_|_|_| |_|\__, |
 #                                         |___/
 #
+
 - name: "Install unzip & patch"
   ansible.builtin.apt:
     name:
@@ -41,6 +42,7 @@
   ansible.builtin.get_url:
     url: "https://github.com/diafygi/acme-tiny/archive/4.1.0.zip"
     dest: "{{ workaround_acmetiny_upgrade_temp_dir.path }}/acme-4.1.0.zip"
+    mode: "0640"
   tags:
     - "workaround_acmetiny_upgrade"
     - "workaround_acmetiny_upgrade_download"
@@ -59,6 +61,7 @@
     src: "{{ workaround_acmetiny_upgrade_temp_dir.path }}/acme-tiny-4.1.0/acme_tiny.py"
     dest: "/usr/share/univention-letsencrypt/acme_tiny.py"
     remote_src: true
+    mode: "0640"
   tags:
     - "workaround_acmetiny_upgrade"
     - "workaround_acmetiny_upgrade_copy"
@@ -80,3 +83,5 @@
   tags:
     - "workaround_acmetiny_upgrade"
     - "workaround_acmetiny_upgrade_path_refresh"
+
+...

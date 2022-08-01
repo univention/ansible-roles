@@ -1,21 +1,20 @@
 ---
-# tasks file for add-local-user
 
 - name: "add_local_user | Add a user"
   vars:
     add_local_user_random_password: "{{ lookup('password', '/dev/null length=40 chars=ascii_letters')
-                                          |password_hash('sha512') }}"
+                                          | password_hash('sha512') }}"
   ansible.builtin.user:
     name: "{{ add_local_user_user['name'] }}"
-    comment: "{{ add_local_user_user['comment']|default('') }}"
-    password: "{{ add_local_user_user['password']|default(add_local_user_random_password) }}"
-    shell: "{{ add_local_user_user['shell']|default(add_local_user_default_shell) }}"
-    system: "{{ add_local_user_user['system']|default(add_local_user_system_user) }}"
+    comment: "{{ add_local_user_user['comment'] | default('') }}"
+    password: "{{ add_local_user_user['password'] | default(add_local_user_random_password) }}"
+    shell: "{{ add_local_user_user['shell'] | default(add_local_user_default_shell) }}"
+    system: "{{ add_local_user_user['system'] | default(add_local_user_system_user) }}"
     update_password: "{{ add_local_user_user['update_password_policy']
-                           |default(add_local_user_default_password_policy) }}"
+                           | default(add_local_user_default_password_policy) }}"
     groups:
       - "sudo"
-    state: "{{ add_local_user_user['state']|default('present') }}"
+    state: "{{ add_local_user_user['state'] | default('present') }}"
   tags:
     - "add_local_user"
     - "add_local_user_user"
@@ -32,7 +31,7 @@
     user: "{{ add_local_user_user['name'] }}"
     key: "{{ add_local_user_user['sshkey'] }}"
     manage_dir: true
-  when: "'sshkey' in add_local_user_user and add_local_user_user['state']|default('present') == 'present'"
+  when: "'sshkey' in add_local_user_user and add_local_user_user['state'] | default('present') == 'present'"
   tags:
     - "add_local_user"
     - "add_local_user_user"
@@ -44,11 +43,11 @@
     key: "{{ lookup('file', add_local_user_user['sshkey_file']) }}"
     path: "/home/{{ add_local_user_user['name'] }}/.ssh/authorized_keys"
     manage_dir: true
-    state: "{{ add_local_user_user['state']|default('present') }}"
+    state: "{{ add_local_user_user['state'] | default('present') }}"
   when:
     - "'sshkey_file' in add_local_user_user"
     - "'sshkey' not in add_local_user_user"
-    - "add_local_user_user['state']|default('present') == 'present'"
+    - "add_local_user_user['state'] | default('present') == 'present'"
   tags:
     - "add_local_user"
     - "add_local_user_user"
@@ -59,7 +58,7 @@
     kvlist:
       - key: "auth/sshd/user/{{ add_local_user_user['name'] }}"
         value: "yes"
-    state: "{{ add_local_user_user['state']|default('present') }}"
+    state: "{{ add_local_user_user['state'] | default('present') }}"
   tags:
     - "add_local_user"
     - "add_local_user_user"

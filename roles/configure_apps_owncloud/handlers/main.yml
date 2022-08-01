@@ -1,8 +1,9 @@
 ---
-# handlers file for configure_apps_owncloud
 
 - name: "Restart OwnCloud"
   ansible.builtin.shell: "univention-app stop owncloud; univention-app start owncloud"
   tags:
     - "onfigure_apps_owncloud"
     - "configure_apps_owncloud_restart_owncloud"
+
+...

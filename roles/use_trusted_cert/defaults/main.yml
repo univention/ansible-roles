@@ -1,4 +1,6 @@
 ---
-# defaults file for use_trusted_cert
+
 use_trusted_cert_path_cert: ""
 use_trusted_cert_path_key: ""
+
+...

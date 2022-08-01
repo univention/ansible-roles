@@ -1,5 +1,4 @@
 ---
-# tasks file for umc_policies_maintenance
 
 - name: "umc_policies_maintenance | Modify Univention Update Maintenance policies"
   block:
@@ -79,23 +78,25 @@
       register: "umc_policies_maintenance_reference_result"
       tags:
         - "umc_policies_maintenance_reference"
-  when: "umc_policies_maintenance_autoupdate_enabled|default(true)"
+  when: "umc_policies_maintenance_autoupdate_enabled | default(true)"
   tags:
     - "umc_policies_maintenance"
     - "umc_policies_maintenance_configure_autoupdate"
 
 - name: "umc_policies_maintenance | Configure cron"
-  command:
+  ansible.builtin.command:
     cmd: |
       udm policies/maintenance
       modify
       --dn cn=app-update-schedule,cn=policies,{{ umc_policies_maintenance_basedn }}
-      --set cron={{ umc_policies_maintenance_autoupdate_enabled|bool|int }}
+      --set cron={{ umc_policies_maintenance_autoupdate_enabled | bool | int }}
   changed_when:
-    - "umc_policies_maintenance_autoupdate_enabled_result.stdout|default('') is not search('No modification')"
+    - "umc_policies_maintenance_autoupdate_enabled_result.stdout | default('') is not search('No modification')"
   check_mode: false
   register: "umc_policies_maintenance_autoupdate_enabled_result"
-  when: "not umc_policies_maintenance_autoupdate_enabled|default(true)"
+  when: "not umc_policies_maintenance_autoupdate_enabled | default(true)"
   tags:
     - "umc_policies_maintenance"
     - "umc_policies_maintenance_configure_cron"
+
+...

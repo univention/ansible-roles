@@ -1,14 +1,13 @@
 ---
-# tasks file for portal_category
 
 - name: "portal_category | Validate portal category fields"
   ansible.builtin.assert:
     that:
       - "portal_category_item['state'] == 'present' or portal_category_item['state'] == 'absent'"
-      - "portal_category_item['name']|length > 0"
+      - "portal_category_item['name'] | length > 0"
       - "portal_category_item['display_name'] is undefined or portal_category_item['display_name'] is mapping"
-      - "portal_category_item['only'] is undefined or portal_category_item['only']|length > 0"
-      - "portal_category_item['ucs_versions'] is undefined or portal_category_item['ucs_versions']|length > 0"
+      - "portal_category_item['only'] is undefined or portal_category_item['only'] | length > 0"
+      - "portal_category_item['ucs_versions'] is undefined or portal_category_item['ucs_versions'] | length > 0"
     fail_msg: |
       At least one variables is missing or not as expected. Required and optional values are:
 
@@ -20,7 +19,7 @@
 
       You can skip this check with --skip-tags portal_category_assert
     quiet: true
-  loop: "{{ portal_category_categories|default([])|flatten }}"
+  loop: "{{ portal_category_categories | default([]) | flatten }}"
   loop_control:
     loop_var: "portal_category_item"
   tags:
@@ -39,9 +38,10 @@
 
 - name: "portal_category | Parse current categories to facts"
   vars:
-    portal_category_portal_categories_stdout_lines: "{{ portal_category_portal_categories.stdout_lines|default([]) }}"
+    portal_category_portal_categories_stdout_lines: "{{ portal_category_portal_categories.stdout_lines | default([]) }}"
   ansible.builtin.set_fact:
-    portal_category_portal_categories_fact: "{{ lookup('template', 'category_parse_udm_out_to_ansible.j2')|from_yaml }}"
+    portal_category_portal_categories_fact: "{{
+      lookup('template', 'category_parse_udm_out_to_ansible.j2') | from_yaml }}"
   changed_when: false
   tags:
     - "portal_category"
@@ -49,8 +49,10 @@
 
 - name: "portal_category | Update category in portal"
   vars:
-    portal_category_update_drift_detection: "{{ lookup('template', 'category_drift_detection.j2')|regex_replace('\n','')
-                                                  if portal_category_drift_detection|bool else 'yes' }}"
+    portal_category_update_drift_detection: "{{
+      lookup('template', 'category_drift_detection.j2')
+      | regex_replace('\n','')
+      if portal_category_drift_detection | bool else 'yes' }}"
   ansible.builtin.command: >-
     udm portals/category
     {% if portal_category_update_item['state'] is defined and portal_category_update_item['state'] == 'absent' %}
@@ -64,9 +66,11 @@
         create
           --position cn=category,{{ portal_category_portal_dn }}
       {% endif %}
-          {% for lang, text in (portal_category_update_item['display_name']|default("{}")).items() %}
+          {% for lang, text in (portal_category_update_item['display_name'] | default("{}")).items() %}
             {% if lang in
-               portal_category_portal_categories_fact[portal_category_update_item['name']]['displayName']|default([]) %}
+              portal_category_portal_categories_fact[portal_category_update_item['name']]['displayName']
+              | default([])
+            %}
               {% if text !=
                    portal_category_portal_categories_fact[portal_category_update_item['name']]['displayName'][lang] %}
                 --remove displayName="{{ lang }} {{
@@ -80,17 +84,17 @@
           --set name='{{ portal_category_update_item['name'] }}'
     {% endif %}
   changed_when: "portal_category_create_category_result.stdout is not search('No modification')"
-  loop: "{{ portal_category_categories|default([])|flatten }}"
+  loop: "{{ portal_category_categories | default([]) | flatten }}"
   loop_control:
     loop_var: "portal_category_update_item"
   register: "portal_category_create_category_result"
   when:
     - "portal_category_update_drift_detection == 'yes'"
     - "portal_category_update_item['ucs_versions'] is not defined or
-          ansible_local['ucr']['version/version']|default('99') is in portal_category_update_item['ucs_versions']"
+          ansible_local['ucr']['version/version'] | default('99') is in portal_category_update_item['ucs_versions']"
     - "('only' not in portal_category_update_item) or
               ('only' in portal_category_update_item and
-                portal_category_install_list|intersect([portal_category_update_item['only']]|flatten)
+                portal_category_install_list | intersect([portal_category_update_item['only']] | flatten)
               )"
   tags:
     - "portal_category"
@@ -102,26 +106,26 @@
     --position "cn=portal,{{ portal_category_portal_dn }}"
   changed_when: false
   register: "portal_category_portals_portal"
-  when: "portal_category_drift_detection|bool or portal_category_remove_unscoped|bool"
+  when: "portal_category_drift_detection | bool or portal_category_remove_unscoped | bool"
   tags:
     - "portal_category"
     - "portal_category_get_portal"
 
 - name: "portal_category | Parse current portals to facts"
   vars:
-    portal_category_portals_portal_stdout_lines: "{{ portal_category_portals_portal.stdout_lines|default([]) }}"
+    portal_category_portals_portal_stdout_lines: "{{ portal_category_portals_portal.stdout_lines | default([]) }}"
   ansible.builtin.set_fact:
-    portal_category_portals_portal_fact: "{{ lookup('template', 'portal_parse_udm_out_to_ansible.j2')|from_yaml }}"
+    portal_category_portals_portal_fact: "{{ lookup('template', 'portal_parse_udm_out_to_ansible.j2') | from_yaml }}"
   changed_when: false
-  when: "portal_category_drift_detection|bool or portal_category_remove_unscoped|bool"
+  when: "portal_category_drift_detection | bool or portal_category_remove_unscoped | bool"
   tags:
     - "portal_category"
     - "portal_category_parse_portal"
 
 - name: "portal_category | Append category to portal"
   vars:
-    portal_category_append_drift_detection: "{{ lookup('template', 'append_drift_detection.j2')|regex_replace('\n','')
-                                                 if portal_category_drift_detection|bool else 'yes' }}"
+    portal_category_append_drift_detection: "{{ lookup('template', 'append_drift_detection.j2') | regex_replace('\n','')
+                                                 if portal_category_drift_detection | bool else 'yes' }}"
   ansible.builtin.command:
     # yamllint disable rule:line-length
     cmd: |
@@ -134,14 +138,14 @@
       categories=cn={{ portal_category_append_item['name'] }},cn=category,{{ portal_category_portal_dn }}
     # yamllint enable rule:line-length
   changed_when: "portal_category_append_category_result.stdout is not search('No modification')"
-  loop: "{{ portal_category_categories|selectattr('state', 'equalto', 'present')|default([])|flatten }}"
+  loop: "{{ portal_category_categories | selectattr('state', 'equalto', 'present') | default([]) | flatten }}"
   loop_control:
     loop_var: "portal_category_append_item"
   register: "portal_category_append_category_result"
   when:
     - "portal_category_append_drift_detection == 'yes'"
     - "portal_category_append_item['ucs_versions'] is not defined or
-          ansible_local['ucr']['version/version']|default('99') is in portal_category_append_item['ucs_versions']"
+          ansible_local['ucr']['version/version'] | default('99') is in portal_category_append_item['ucs_versions']"
   tags:
     - "portal_category"
     - "portal_category_append_category"
@@ -151,12 +155,14 @@
     udm portals/category
     remove
     --dn cn={{ portal_category_remove_item.key }},cn=category,{{ portal_category_portal_dn }}
-  loop: "{{ portal_category_portal_categories_fact|dict2items }}"
+  loop: "{{ portal_category_portal_categories_fact | dict2items }}"
   loop_control:
     loop_var: "portal_category_remove_item"
   when:
     - "portal_category_remove_unscoped"
-    - "portal_category_remove_item.key not in portal_category_categories|map(attribute='name')"
+    - "portal_category_remove_item.key not in portal_category_categories | map(attribute='name')"
   tags:
     - "portal_category"
     - "portal_category_remove_unscoped"
+
+...

@@ -1,5 +1,4 @@
 ---
-# tasks file for umc_permissions
 
 - name: "umc_permissions | Hide remaining UMC modules per UCR and empty favorites"
   univention.ucs_modules.univention_config_registry:
@@ -182,3 +181,5 @@
   tags:
     - "umc_permissions"
     - "umc_permissions_policy_selfservice_whitelist"
+
+...

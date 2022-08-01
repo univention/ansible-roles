@@ -1,5 +1,4 @@
 ---
-# tasks file for univention_firewall
 
 - name: "Configure Telegraf port in firewall"
   univention.ucs_modules.univention_config_registry:
@@ -16,3 +15,5 @@
   tags:
     - "univention_firewall"
     - "univention_firewall_restart"
+
+...

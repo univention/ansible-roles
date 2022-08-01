@@ -1,4 +1,5 @@
 ---
-# defaults file for disable_piwik_tracking
 
 disable_piwik_tracking_disable: true
+
+...

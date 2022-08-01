@@ -1,11 +1,10 @@
 ---
-# tasks file for configure_keycloak
 
 - name: "Generate keycloak password"
   become: false
   ansible.builtin.set_fact:
-    configure_keycloak_password: "{{ lookup('password', '/dev/null')|to_uuid }}"
-  when: "configure_keycloak_generate_oidc_broker_secret|bool"
+    configure_keycloak_password: "{{ lookup('password', '/dev/null') | to_uuid }}"
+  when: "configure_keycloak_generate_oidc_broker_secret | bool"
   no_log: true
   tags:
     - "configure_keycloak"
@@ -16,11 +15,11 @@
   ansible.builtin.assert:
     that:
       - "configure_keycloak_oidc_broker_secret is defined"
-      - "configure_keycloak_oidc_broker_secret|bool"
+      - "configure_keycloak_oidc_broker_secret | bool"
     fail_msg: >
       Keycloak broker secret is not set but needed
       We can't continue with keycloak server configureation
-  when: "not configure_keycloak_generate_oidc_broker_secret|bool"
+  when: "not configure_keycloak_generate_oidc_broker_secret | bool"
   tags:
     - "configure_keycloak"
     - "configure_keycloak_password_assert_client"
@@ -29,15 +28,17 @@
   become: false
   ansible.builtin.set_fact:
     configure_keycloak_password: "{{ configure_keycloak_oidc_broker_secret }}"
-  when: "not configure_keycloak_generate_oidc_broker_secret|bool"
+  when: "not configure_keycloak_generate_oidc_broker_secret | bool"
   no_log: true
   tags:
     - "configure_keycloak"
     - "configure_keycloak_set_password"
 
 - name: "Configure keycloak server"
-  ansible.builtin.include_tasks: "{{ configure_keycloak_config_method|lower }}.yml"
+  ansible.builtin.include_tasks: "{{ configure_keycloak_config_method | lower }}.yml"
   when: "configure_keycloak_config_type == 'dynamic'"
   tags:
     - "configure_keycloak"
     - "configure_keycloak_import_subtasks"
+
+...

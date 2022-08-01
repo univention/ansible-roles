@@ -12,7 +12,7 @@
           - "--server"
           - "https://{{ configure_keycloak_keycloak_server }}/auth/"
           - "--realm"
-          - "{{ configure_keycloak_auth_realm|default('master') }}"
+          - "{{ configure_keycloak_auth_realm | default('master') }}"
           - "--user"
           - "{{ configure_keycloak_admin_username }}"
           - "--password"
@@ -107,16 +107,16 @@
         - name: "Change current CSP config to string variable (KCADM)"
           ansible.builtin.set_fact:
             # yamllint disable-line rule:line-length
-            configure_keycloak_current_CSP_list: "{{ (configure_keycloak_kcadm_realm_output.stdout|from_json)['browserSecurityHeaders']['contentSecurityPolicy'] }}"
+            configure_keycloak_current_csp_list: "{{ (configure_keycloak_kcadm_realm_output.stdout | from_json)['browserSecurityHeaders']['contentSecurityPolicy'] }}"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_set_current_csp_list"
 
         - name: "Check if length is over limit (255 chars)"
           ansible.builtin.assert:
-            # (length configure_keycloak_current_CSP_list) + whitespace + (length configure_keycloak_host_url) <= 255
-            that: "(configure_keycloak_current_CSP_list|length) + 1 + (configure_keycloak_host_url|length) <= 255"
+            # (length configure_keycloak_current_csp_list) + whitespace + (length configure_keycloak_host_url) <= 255
+            that: "(configure_keycloak_current_csp_list | length) + 1 + (configure_keycloak_host_url | length) <= 255"
             fail_msg: "Appending host to current CSP list will result in an overflow. Limit is 255 chars."
-          when: "configure_keycloak_host_url not in configure_keycloak_current_CSP_list"
+          when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_assert_csp_length"
 
@@ -125,13 +125,13 @@
           ansible.builtin.command: >
             kcadm.sh update realms/{{ configure_keycloak_realm }}
             -s browserSecurityHeaders.xFrameOptions=""
-            -s browserSecurityHeaders.contentSecurityPolicy="{{ configure_keycloak_current_CSP_list[:-1] }} {{ configure_keycloak_host_url }};"
+            -s browserSecurityHeaders.contentSecurityPolicy="{{ configure_keycloak_current_csp_list[:-1] }} {{ configure_keycloak_host_url }};"
           # yamllint enable rule:line-length
-          when: "configure_keycloak_host_url not in configure_keycloak_current_CSP_list"
+          when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms"
 
-      when: "configure_keycloak_display_matrix_in_iframe|bool"
+      when: "configure_keycloak_display_matrix_in_iframe | bool"
       tags:
         - "configure_keycloak_insert_fqdn"
 
@@ -158,22 +158,22 @@
       ansible.builtin.assert:
         that:
           - "configure_keycloak_client_secret is defined"
-          - "configure_keycloak_client_secret|bool"
+          - "configure_keycloak_client_secret | bool"
         fail_msg: >
           Client not configured but password not set.
           We can't continue with keycloak server configureation
-      when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
+      when: "configure_keycloak_kcadm_client_output.stdout | from_json | length == 0"
       tags:
         - "configure_keycloak_assert_client_secret"
 
     - name: "Check that client callback url is set (KCADM)"
       ansible.builtin.assert:
         that:
-          - "configure_keycloak_client_callback_url|bool"
+          - "configure_keycloak_client_callback_url | bool"
         fail_msg: >
           Client not configured but client callback url not set.
           We can't continue with keycloak server configureation
-      when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
+      when: "configure_keycloak_kcadm_client_output.stdout | from_json | length == 0"
       tags:
         - "configure_keycloak_assert_client_callback"
 
@@ -187,8 +187,8 @@
         -s clientId={{ configure_keycloak_client_id }}
         -s clientAuthenticatorType="client-secret"
         -s secret={{ configure_keycloak_client_secret }}
-        -s redirectUris={{ configure_keycloak_callback_url_list|to_json }}
-      when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
+        -s redirectUris={{ configure_keycloak_callback_url_list | to_json }}
+      when: "configure_keycloak_kcadm_client_output.stdout | from_json | length == 0"
       tags:
         - "configure_keycloak_create_client"
 
@@ -196,7 +196,7 @@
       ansible.builtin.command:
         cmd: "kcadm.sh get clients -q clientId={{ configure_keycloak_client_id }} -r {{ configure_keycloak_realm }}"
       register: "configure_keycloak_kcadm_client_output_second"
-      when: "configure_keycloak_kcadm_client_output.stdout|from_json|length == 0"
+      when: "configure_keycloak_kcadm_client_output.stdout | from_json | length == 0"
       tags:
         - "configure_keycloak_get_client_info"
 
@@ -209,7 +209,7 @@
 
     - name: "configure user.session.note to pass 'sourceidp' to the client (KCADM)"
       vars:
-        configure_keycloak_client_uuid: "{{ (configure_keycloak_kcadm_client_output.stdout|from_json)[0]['id'] }}"
+        configure_keycloak_client_uuid: "{{ (configure_keycloak_kcadm_client_output.stdout | from_json)[0]['id'] }}"
       ansible.builtin.command: >
         kcadm.sh create clients/{{ configure_keycloak_client_uuid }}/protocol-mappers/models
         -r {{ configure_keycloak_realm }}
@@ -229,3 +229,5 @@
   delegate_to: "{{ configure_keycloak_keycloak_server }}"
   tags:
     - "keycloak_config"
+
+...

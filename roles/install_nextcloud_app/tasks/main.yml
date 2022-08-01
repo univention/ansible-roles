@@ -1,5 +1,4 @@
 ---
-# tasks file for install_nextcloud_app
 
 - name: "NextCloud: Install given app"
   ansible.builtin.command:
@@ -11,9 +10,9 @@
       - "-u"
       - "www-data"
       - "/var/www/html/occ"
-      - "app:{{ install_nextcloud_app_opertation|default('install') }}"
+      - "app:{{ install_nextcloud_app_opertation | default('install') }}"
       - "{{ install_nextcloud_app_name }}"
-  when: "install_nextcloud_app_name|length > 0"
+  when: "install_nextcloud_app_name | length > 0"
   changed_when: "install_nextcloud_app_result.stdout is not search('already installed')"
   failed_when:
     - "install_nextcloud_app_result.rc > 0"
@@ -21,3 +20,5 @@
   register: "install_nextcloud_app_result"
   tags:
     - "install_nextcloud_app"
+
+...

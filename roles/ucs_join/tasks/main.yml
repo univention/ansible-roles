@@ -1,18 +1,17 @@
 ---
-# tasks file for ucs_join
 
 - name: "ucs_join | Check if all mandatory common vars are set"
   ansible.builtin.assert:
     that:
-      - "ucs_join_server_type|string|length > 0"
+      - "ucs_join_server_type | string | length > 0"
       - "ucs_join_server_type == 'master' or ucs_join_server_type == 'backup'"
-      - "ucs_join_admin_user_name|string|length > 0"
-      - "ucs_join_root_password|string|length > 0"
-      - "ucs_join_hostname|string|length > 0"
-      - "ucs_join_domain_name|string|length > 0"
-      - "ucs_join_basedn|string|length > 0"
-      - "ucs_join_network_config_interface|string|length > 0"
-      - "ucs_join_network_config_type|string|length > 0"
+      - "ucs_join_admin_user_name | string | length > 0"
+      - "ucs_join_root_password | string | length > 0"
+      - "ucs_join_hostname | string | length > 0"
+      - "ucs_join_domain_name | string | length > 0"
+      - "ucs_join_basedn | string | length > 0"
+      - "ucs_join_network_config_interface | string | length > 0"
+      - "ucs_join_network_config_type | string | length > 0"
     fail_msg: |
       At least one necessary variable is not set.
       Skip this check with --skip-tags ucs_join_check_common_preconditions
@@ -24,12 +23,12 @@
 - name: "ucs_join | Check if all static network setting vars are set"
   ansible.builtin.assert:
     that:
-      - "ucs_join_network_config_static_ip_config|string|length > 0"
-      - "ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('address')|length > 0"
-      - "ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('netmask')|length > 0"
-      - "ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('network')|length > 0"
-      - "ucs_join_network_config_static_gateway|string|length > 0"
-      - "ucs_join_network_config_static_dns_servers|length > 0"
+      - "ucs_join_network_config_static_ip_config | string | length > 0"
+      - "ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('address') | length > 0"
+      - "ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('netmask') | length > 0"
+      - "ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('network') | length > 0"
+      - "ucs_join_network_config_static_gateway | string | length > 0"
+      - "ucs_join_network_config_static_dns_servers | length > 0"
     fail_msg: |
       At least one necessary variable is not set.
       Skip this check with --skip-tags ucs_join_check_static_network_preconditions
@@ -42,7 +41,7 @@
 - name: "ucs_join | Check if backup vars are set"
   ansible.builtin.assert:
     that:
-      - "ucs_join_master_server|string|length > 0"
+      - "ucs_join_master_server | string | length > 0"
     fail_msg: |
       At least one necessary variable is not set.
       Skip this check with --skip-tags ucs_join_check_backup_preconditions
@@ -57,7 +56,7 @@
     ucs_join_final_root_password: "{{ ucs_join_derive_root_password_prefix + '@' + inventory_hostname.split('-')[-1] }}"
   changed_when: false
   no_log: "{{ ucs_join_hide_logging }}"
-  when: "ucs_join_derive_root_password_from_hostname|bool"
+  when: "ucs_join_derive_root_password_from_hostname | bool"
   tags:
     - "always"
     - "ucs_join"
@@ -68,7 +67,7 @@
     ucs_join_final_root_password: "{{ ucs_join_root_password }}"
   changed_when: false
   no_log: "{{ ucs_join_hide_logging }}"
-  when: "not ucs_join_derive_root_password_from_hostname|bool"
+  when: "not ucs_join_derive_root_password_from_hostname | bool"
   tags:
     - "always"
     - "ucs_join"
@@ -98,7 +97,7 @@
     - name: "ucs_join | primary | Carry out UCS join (primary/standalone)"
       ansible.builtin.command: "/usr/lib/univention-system-setup/scripts/setup-join.sh"
       check_mode: false
-      when: "ucs_join_server_type|default('master') != 'backup'"
+      when: "ucs_join_server_type | default('master') != 'backup'"
       tags:
         - "ucs_join_system_setup_primary"
         - "ucs_join_system_setup_standalone"
@@ -153,7 +152,7 @@
           tags:
             - "ucs_join_system_setup_backup_cleanup_admin_pw_file"
             - "cleanup"
-      when: "ucs_join_server_type|default('master') == 'backup'"
+      when: "ucs_join_server_type | default('master') == 'backup'"
       tags:
         - "ucs_join_system_setup_backup"
 
@@ -188,13 +187,13 @@
           - key: "interfaces/{{ ucs_join_network_config_interface }}/type"
             value: "static"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/address"
-            value: "{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('address') }}"
+            value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('address') }}"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/netmask"
-            value: "{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('netmask') }}"
+            value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('netmask') }}"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/network"
-            value: "{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('network') }}"
+            value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('network') }}"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/broadcast"
-            value: "{{ ucs_join_network_config_static_ip_config|ansible.utils.ipaddr('broadcast') }}"
+            value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when: "ucs_join_network_config_type != 'dhcp'"
       tags:
@@ -206,16 +205,16 @@
           - key: "interfaces/{{ ucs_join_item.key }}/type"
             value: "static"
           - key: "interfaces/{{ ucs_join_item.key }}/address"
-            value: "{{ ucs_join_item.value|ansible.utils.ipaddr('address') }}"
+            value: "{{ ucs_join_item.value | ansible.utils.ipaddr('address') }}"
           - key: "interfaces/{{ ucs_join_item.key }}/netmask"
-            value: "{{ ucs_join_item.value|ansible.utils.ipaddr('netmask') }}"
+            value: "{{ ucs_join_item.value | ansible.utils.ipaddr('netmask') }}"
           - key: "interfaces/{{ ucs_join_item.key }}/network"
-            value: "{{ ucs_join_item.value|ansible.utils.ipaddr('network') }}"
+            value: "{{ ucs_join_item.value | ansible.utils.ipaddr('network') }}"
           - key: "interfaces/{{ ucs_join_item.key }}/broadcast"
-            value: "{{ ucs_join_item.value|ansible.utils.ipaddr('broadcast') }}"
+            value: "{{ ucs_join_item.value | ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when: "ucs_join_network_config_type != 'dhcp'"
-      loop: "{{ ucs_join_network_config_static_additional_interfaces|default([])|dict2items }}"
+      loop: "{{ ucs_join_network_config_static_additional_interfaces | default([]) | dict2items }}"
       loop_control:
         loop_var: "ucs_join_item"
       tags:
@@ -227,7 +226,7 @@
           - key: "interfaces/{{ ucs_join_item['interface'] }}/route/{{ ucs_join_item['index'] }}"
             value: "{{ ucs_join_item['route'] }}"
       check_mode: false
-      loop: "{{ ucs_join_network_config_static_routes|default([]) }}"
+      loop: "{{ ucs_join_network_config_static_routes | default([]) }}"
       loop_control:
         loop_var: "ucs_join_item"
       tags:
@@ -239,7 +238,7 @@
           - key: "dns/forwarder{{ ucs_join_index +1 }}"
             value: "{{ ucs_join_item }}"
       check_mode: false
-      loop: "{{ ucs_join_network_config_static_dns_servers|default([]) }}"
+      loop: "{{ ucs_join_network_config_static_dns_servers | default([]) }}"
       loop_control:
         index_var: "ucs_join_index"
         loop_var: "ucs_join_item"
@@ -364,3 +363,5 @@
   tags:
     - "ucs_join"
     - "ucs_join_run_join_script"
+
+...

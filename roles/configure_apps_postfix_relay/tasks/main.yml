@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_apps_postfix_relay
 
 - name: "configure_apps_postfix_relay | Set mail relayhost"
   univention.ucs_modules.univention_config_registry:
@@ -55,3 +54,5 @@
   tags:
     - "configure_apps_postfix_relay"
     - "configure_apps_postfix_relay_restart_postfix"
+
+...

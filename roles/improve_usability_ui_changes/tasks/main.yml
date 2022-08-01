@@ -1,5 +1,4 @@
 ---
-# tasks file for improve_usability_ui_changes
 
 - name: "improve_usability_ui_changes | Remove setupSettingsContextMenu from setupMenus()"
   ansible.builtin.lineinfile:
@@ -27,3 +26,5 @@
   tags:
     - "improve_usability_ui_changes"
     - "improve_usability_ui_changes_username_max_length"
+
+...

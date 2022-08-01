@@ -1,5 +1,7 @@
 ---
-# defaults file for umc_permissions
+
 umc_permissions_basedn: ""
 umc_permissions_passwordreset_blacklist_groups: ""
 umc_permissions_passwordreset_whitelist_groups: ""
+
+...

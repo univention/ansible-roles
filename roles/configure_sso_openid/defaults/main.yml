@@ -1,5 +1,5 @@
 ---
-# defaults file for configure_sso_openid
+
 configure_sso_openid_app_version_map: {}
 configure_sso_openid_temp_pw_file: {}
 configure_sso_openid_install_apps: []
@@ -15,3 +15,5 @@ configure_sso_openid_clients:
     name: "open-xchange"
     clientid: "open-xchange"
     clientsecret: "notverysafe"
+
+...

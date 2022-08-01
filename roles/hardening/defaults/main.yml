@@ -1,5 +1,6 @@
 ---
-# defaults file for hardening
 
 hardening_disable_http: true
 ansible_processor_cores: "1"
+
+...

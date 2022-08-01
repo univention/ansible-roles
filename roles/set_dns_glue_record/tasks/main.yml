@@ -1,12 +1,11 @@
 ---
-# tasks file for set_dns_glue_record
 
 - name: "Implement DNS glue record for external host name"
   block:
     - name: "Check if all vars are set"
       ansible.builtin.assert:
         that:
-          - "set_dns_glue_record_glue_record_nameserver|length > 0"
+          - "set_dns_glue_record_glue_record_nameserver | length > 0"
         fail_msg: |
           At least one necessary variable is not set.
           Skip this check with --skip-tags set_dns_glue_record_check_preconditions
@@ -24,7 +23,8 @@
 
     - name: "Turn udm list output into yaml"
       ansible.builtin.set_fact:
-        set_dns_glue_record_glue_record_entries: "{{ set_dns_glue_record_ns_record_list.stdout|default('')|from_yaml }}"
+        set_dns_glue_record_glue_record_entries: "{{
+          set_dns_glue_record_ns_record_list.stdout | default('') | from_yaml }}"
         set_dns_glue_record_glue_record_counter: 0
         cacheable: false
       when: "'nameserver' in set_dns_glue_record_ns_record_list.stdout"
@@ -33,9 +33,9 @@
 
     - name: "Find out if glue record already is set"
       ansible.builtin.set_fact:
-        set_dns_glue_record_glue_record_counter: "{{ set_dns_glue_record_glue_record_counter|int + 1 }}"
+        set_dns_glue_record_glue_record_counter: "{{ set_dns_glue_record_glue_record_counter | int + 1 }}"
         cacheable: false
-      loop: "{{ glue_record_entries|default([]) }}"
+      loop: "{{ glue_record_entries | default([]) }}"
       loop_control:
         loop_var: "set_dns_glue_record_item"
       when: "item['nameserver'] == set_dns_glue_record_glue_record_nameserver and
@@ -50,10 +50,12 @@
         --set zone={{ set_dns_glue_record_host_name }}
         --set nameserver={{ set_dns_glue_record_glue_record_nameserver }}
         --ignore_exists
-      when: "set_dns_glue_record_glue_record_counter|default(0) == 0"
+      when: "set_dns_glue_record_glue_record_counter | default(0) == 0"
       tags:
         - "set_dns_glue_record_create_dns_record"
 
-  when: "set_dns_glue_record_create_external_hostname_glue_record|bool"
+  when: "set_dns_glue_record_create_external_hostname_glue_record | bool"
   tags:
     - "set_dns_glue_record"
+
+...

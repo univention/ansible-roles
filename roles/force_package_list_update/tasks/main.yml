@@ -1,5 +1,4 @@
 ---
-# tasks file for force_package_list_update
 
 - name: "force_package_list_update | Check if error is in package list"
   ansible.builtin.command:
@@ -38,7 +37,7 @@
       changed_when: false
       tags:
         - "force_package_list_update_do_update_already_updated_flag"
-  when: "force_package_list_update_already_updated|default(false)|bool == false"
+  when: "not force_package_list_update_already_updated | default(false) | bool"
   tags:
     - "force_package_list_update_do_update"
     - "force_package_list_update"
@@ -49,3 +48,5 @@
   tags:
     - "force_package_list_update_refresh_facts"
     - "force_package_list_update"
+
+...

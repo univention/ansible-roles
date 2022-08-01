@@ -1,5 +1,4 @@
 ---
-# defaults file for configure_office_suite
 
 configure_office_suite_office_suite: "collabora-online"
 configure_office_suite_supported_office_suites:
@@ -39,3 +38,5 @@ configure_office_suite_collabora_license_key: ""
 configure_office_suite_app_version_map: {}
 configure_office_suite_temp_pw_file: ""
 configure_office_suite_install_apps: []
+
+...

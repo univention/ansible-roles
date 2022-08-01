@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_monitoring
 
 - name: "configure_monitoring | Install App Dashboard Client"
   ansible.builtin.include_role:
@@ -77,7 +76,7 @@
 - name: "configure_monitoring | Configure LDAP monitor"
   univention.ucs_modules.univention_config_registry:
     keys:
-      ldap/monitor: "{{ configure_monitoring_ldap_enabled|default('true') }}"
+      ldap/monitor: "{{ configure_monitoring_ldap_enabled | default('true') }}"
   tags:
     - "configure_monitoring"
     - "configure_monitoring_ldap"
@@ -91,3 +90,5 @@
   tags:
     - "configure_monitoring"
     - "configure_monitoring_fix_dashboard_defaults"
+
+...

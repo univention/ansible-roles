@@ -1,5 +1,4 @@
 ---
-# tasks file for install_service_new_portal
 
 - name: "Install New Portal app"
   ansible.builtin.include_role:
@@ -21,6 +20,7 @@
     dest: "{{ install_service_new_portal_icon_dir }}/{{ install_service_new_portal_item['dest'] }}"
     src: "{{ install_service_new_portal_icon_dir }}/{{ install_service_new_portal_item['src'] }}"
     remote_src: true
+    mode: "0644"
   loop:
     - src: "udm-settings-portal_category.png"
       dest: "udm-portals-category.png"
@@ -33,3 +33,5 @@
   tags:
     - "install_service_new_portal"
     - "install_service_new_portal_install_icons"
+
+...

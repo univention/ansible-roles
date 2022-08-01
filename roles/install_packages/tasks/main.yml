@@ -1,5 +1,4 @@
 ---
-# tasks file for install_packages
 
 - name: "install_packages | Update package list"
   ansible.builtin.include_role:
@@ -28,7 +27,7 @@
       if install_packages_item in install_packages_app_version_map
       else '' }}"
     install_packages_package_name: "{{ install_packages_service_name_list[install_packages_item]
-                                         |default(install_packages_item) }}"
+                                         | default(install_packages_item) }}"
   ansible.builtin.command: >
     univention-app
     install
@@ -36,7 +35,7 @@
     --noninteractive
     --pwdfile
     {{ install_packages_temp_pw_file.path }}
-    {% if install_packages_additional_options is defined and install_packages_additional_options|length > 0 %}
+    {% if install_packages_additional_options is defined and install_packages_additional_options | length > 0 %}
     --set {{ install_packages_additional_options }}
     {% endif %}
   changed_when:
@@ -49,8 +48,8 @@
     loop_var: "install_packages_item"
   when: >
     install_packages_package_name not in install_packages_currently_installed_apps or
-    (install_packages_force_package_upgrade|bool and
-      (install_packages_package_version|length > 0) and
+    (install_packages_force_package_upgrade | bool and
+      (install_packages_package_version | length > 0) and
       (install_packages_currently_installed_apps[package_name] != install_packages_package_version[1:]))
   register: "install_packages_package_install"
   retries: 10
@@ -61,3 +60,5 @@
   tags:
     - "install_apps"
     - "install_apps_install_app"
+
+...

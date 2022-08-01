@@ -1,5 +1,4 @@
 ---
-# handlers file for install_apps_ox_post
 
 - name: "Restart dovecot"
   ansible.builtin.service:
@@ -10,3 +9,5 @@
   ansible.builtin.service:
     name: "open-xchange"
     state: "restarted"
+
+...

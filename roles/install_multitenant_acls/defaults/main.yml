@@ -1,5 +1,4 @@
 ---
-# defaults file for install_multitenant_acls
 install_multitenant_acls_customer_name: ""
 install_multitenant_acls_multitenant_acls: []
 install_multitenant_acls_json_path: ""
@@ -14,3 +13,5 @@ install_multitenant_acls_customer_repo_username: ""
 install_multitenant_acls_customer_repo_server: ""
 install_multitenant_acls_customer_repo_password: ""
 install_multitenant_acls_customer_repo_prefix: "apt/{{ install_multitenant_acls_customer_repo_username }}"
+
+...

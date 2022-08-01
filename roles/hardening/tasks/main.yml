@@ -1,12 +1,11 @@
 ---
-# tasks file for hardening
 
 - name: "hardening | Disable HTTP"
   univention.ucs_modules.univention_config_registry:
     keys:
       apache2/force_https: "yes"
   register: "hardening_disable_http_result"
-  when: "hardening_disable_http|bool"
+  when: "hardening_disable_http | bool"
   tags:
     - "hardening_disable_http"
     - "hardening"
@@ -17,7 +16,7 @@
     state: "restarted"
   changed_when: false
   when:
-    - "hardening_disable_http|bool"
+    - "hardening_disable_http | bool"
     - "hardening_disable_http_result.changed"
   tags:
     - "hardening_restart_http"
@@ -65,7 +64,9 @@
 - name: "hardening | Set processes limit to cpu cores"
   univention.ucs_modules.univention_config_registry:
     keys:
-      umc/server/processes: "{{ ansible_processor_cores|quote }}"
+      umc/server/processes: "{{ ansible_processor_cores | quote }}"
   tags:
     - "hardening_set_processes_limit"
     - "hardening"
+
+...

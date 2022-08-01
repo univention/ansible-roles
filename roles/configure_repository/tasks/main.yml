@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_repository
 
 - name: "configure_repository | Get ucr variables"
   ansible.builtin.include_role:
@@ -9,7 +8,7 @@
     - "configure_repository_get_facts"
 
 - name: "configure_repository | Configure default repository (with auth)"
-  blockinfile:
+  ansible.builtin.blockinfile:
     block: |
       machine {{ configure_repository_default_repository_server }}
       login {{ configure_repository_default_repository_username }}
@@ -18,8 +17,8 @@
     path: "/etc/apt/auth.conf"
     mode: "0644"
   when:
-    - "configure_repository_default_repository_server|length > 0"
-    - "configure_repository_default_repository_username|length > 0"
+    - "configure_repository_default_repository_server | length > 0"
+    - "configure_repository_default_repository_username | length > 0"
   tags:
     - "configure_repository"
     - "configure_repository_default_repository_auth_debian"
@@ -31,8 +30,8 @@
       repository/credentials/username: "{{ configure_repository_default_repository_username }}"
       repository/credentials/password: "{{ configure_repository_default_repository_password }}"
   when:
-    - "configure_repository_default_repository_server|length > 0"
-    - "configure_repository_default_repository_username|length > 0"
+    - "configure_repository_default_repository_server | length > 0"
+    - "configure_repository_default_repository_username | length > 0"
   tags:
     - "configure_repository"
     - "configure_repository_default_repository_auth_ucr"
@@ -41,8 +40,8 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       # yamllint disable-line rule:line-length
-      repository/online/server: "{{ configure_repository_default_repository_prefix|default('https://') }}{{ configure_repository_default_repository_server }}{{ '/' + configure_repository_default_repository_path if configure_repository_default_repository_path|length > 0 }}/"
-  when: "configure_repository_default_repository_server|length > 0"
+      repository/online/server: "{{ configure_repository_default_repository_prefix | default('https://') }}{{ configure_repository_default_repository_server }}{{ '/' + configure_repository_default_repository_path if configure_repository_default_repository_path | length > 0 }}/"
+  when: "configure_repository_default_repository_server | length > 0"
   tags:
     - "configure_repository"
     - "configure_repository_default_repository"
@@ -53,8 +52,10 @@
       # yamllint disable-line rule:line-length
       - key: "repository/online/component/{{ ansible_local['ucr']['version/version'] }}-{{ ansible_local['ucr']['version/patchlevel'] }}-errata/server"
         # yamllint disable-line rule:line-length
-        value: "{{ configure_repository_default_repository_prefix|default('https://') }}{{ configure_repository_default_repository_server }}{{ '/' + configure_repository_default_repository_path if configure_repository_default_repository_path|length > 0 }}/{{ ansible_local['ucr']['version/version'] }}/maintained/"
-  when: "configure_repository_default_repository_server|length > 0"
+        value: "{{ configure_repository_default_repository_prefix | default('https://') }}{{ configure_repository_default_repository_server }}{{ '/' + configure_repository_default_repository_path if configure_repository_default_repository_path | length > 0 }}/{{ ansible_local['ucr']['version/version'] }}/maintained/"
+  when: "configure_repository_default_repository_server | length > 0"
   tags:
     - "configure_repository"
     - "configure_repository_default_repository"
+
+...

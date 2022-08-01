@@ -6,7 +6,7 @@
     - name: "Authenticate to keycloak server (REST)"
       ansible.builtin.uri:
         # yamllint disable-line rule:line-length
-        url: "{{ configure_keycloak_base_url }}/realms/{{ configure_keycloak_auth_realm|default('master') }}/protocol/openid-connect/token"
+        url: "{{ configure_keycloak_base_url }}/realms/{{ configure_keycloak_auth_realm | default('master') }}/protocol/openid-connect/token"
         method: "POST"
         body_format: "form-urlencoded"
         body:
@@ -198,7 +198,7 @@
         - name: "Check if length is over limit (255 chars)"
           ansible.builtin.assert:
             # (length configure_keycloak_current_csp_list) + whitespace + (length configure_keycloak_host_url) <= 255
-            that: "(configure_keycloak_current_csp_list|length) + 1 + (configure_keycloak_host_url|length) <= 255"
+            that: "(configure_keycloak_current_csp_list | length) + 1 + (configure_keycloak_host_url | length) <= 255"
             fail_msg: "Appending host to current CSP list will result in an overflow. Limit is 255 chars."
           when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
           tags:
@@ -218,7 +218,7 @@
               Authorization: "Bearer {{ configure_keycloak_auth_token }}"
             body:
               # yamllint disable-line rule:line-length
-              browserSecurityHeaders: "{{ configure_keycloak_current_securityheaders_object|combine(configure_keycloak_browsersecurity_changes) }}"
+              browserSecurityHeaders: "{{ configure_keycloak_current_securityheaders_object | combine(configure_keycloak_browsersecurity_changes) }}"
             follow_redirects: true
             validate_certs: false
             status_code:
@@ -230,7 +230,7 @@
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms"
 
-      when: "configure_keycloak_display_matrix_in_iframe|bool"
+      when: "configure_keycloak_display_matrix_in_iframe | bool"
       tags:
         - "configure_keycloak_insert_fqdn"
 
@@ -271,7 +271,7 @@
           - 202
       when: >-
         configure_keycloak_import_mapper_name not in
-          configure_keycloak_idp_import_mappers_list.json|map(attribute='name')|list
+          configure_keycloak_idp_import_mappers_list.json | map(attribute='name') | list
       tags:
         - "keycloak_config_username_import_mapping"
 
@@ -292,13 +292,13 @@
     - name: "Extract relevant client from list (if any)"
       ansible.builtin.set_fact:
         # yamllint disable-line rule:line-length
-        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json|selectattr('clientId', 'equalto', configure_keycloak_client_id)|list)|first|default({}) }}"
+        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json | selectattr('clientId', 'equalto', configure_keycloak_client_id) | list) | first | default({}) }}"
 
     - name: "Check that client secret is set (REST)"
       ansible.builtin.assert:
         that:
           - "configure_keycloak_client_secret is defined"
-          - "configure_keycloak_client_secret|bool"
+          - "configure_keycloak_client_secret | bool"
         fail_msg: >
           Client not configured but password not set.
           We can't continue with keycloak server configureation
@@ -307,7 +307,7 @@
     - name: "Check that client callback url is set (REST)"
       ansible.builtin.assert:
         that:
-          - "keycloak_client_callback_url|bool"
+          - "keycloak_client_callback_url | bool"
         fail_msg: >
           Client not configured but client callback url not set.
           We can't continue with keycloak server configureation
@@ -355,7 +355,7 @@
     - name: "Refresh kcadm client output variable (REST)"
       ansible.builtin.set_fact:
         # yamllint disable-line rule:line-length
-        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json|selectattr('clientId', 'equalto', configure_keycloak_client_id)|list)|first|default({}) }}"
+        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json | selectattr('clientId', 'equalto', configure_keycloak_client_id) | list) | first | default({}) }}"
       when: "not configure_keycloak_kcadm_client_output_second is skipped"
 
     - name: "Get protocol mapper list (REST)"
@@ -377,7 +377,7 @@
     - name: "Extract protocol mapper object"
       ansible.builtin.set_fact:
         # yamllint disable-line rule:line-length
-        configure_keycloak_protocol_mapper_object: "{{ (configure_keycloak_protocol_mapper_list.json|selectattr('name', 'equalto', configure_keycloak_protocol_mapper_name)|list)|first|default({}) }}"
+        configure_keycloak_protocol_mapper_object: "{{ (configure_keycloak_protocol_mapper_list.json | selectattr('name', 'equalto', configure_keycloak_protocol_mapper_name) | list) | first | default({}) }}"
 
     - name: "Delete existing protocol-mapper (REST)"
       vars:
@@ -431,3 +431,5 @@
   delegate_to: "{{ configure_keycloak_keycloak_server }}"
   tags:
     - "keycloak_config"
+
+...

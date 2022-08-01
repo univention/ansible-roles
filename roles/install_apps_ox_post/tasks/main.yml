@@ -1,5 +1,4 @@
 ---
-# tasks file for install_apps_ox_post
 
 - name: "Update package list"
   ansible.builtin.include_role:
@@ -44,6 +43,7 @@
     - "install_apps_ox_post_password_source"
 
 - name: "Get dovecot admin password"
+  # noqa: command-instead-of-module
   ansible.builtin.command: "sed -e 's|.*{PLAIN}||;s|:.*||' /etc/dovecot/master-users"
   register: "install_apps_ox_post_dovecot_admin_password"
   no_log: true
@@ -76,6 +76,7 @@
   ansible.builtin.template:
     dest: "/opt/open-xchange/etc/saml.properties"
     src: "saml.properties.j2"
+    mode: "0640"
   tags:
     - "install_apps_ox_post"
     - "install_apps_ox_post_saml_properties_file"
@@ -211,3 +212,5 @@
   tags:
     - "install_apps_ox_post"
     - "install_apps_ox_post_restart_services"
+
+...

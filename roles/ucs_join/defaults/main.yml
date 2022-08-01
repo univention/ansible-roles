@@ -1,5 +1,4 @@
 ---
-# defaults file for ucs_join
 
 ucs_join_derive_root_password_from_hostname: true
 ucs_join_derive_root_password_prefix: ""
@@ -18,3 +17,5 @@ ucs_join_network_config_interface: "eth0"
 ucs_join_network_config_static_additional_interfaces: []
 ucs_join_network_config_static_routes: []
 ucs_join_hide_logging: true
+
+...

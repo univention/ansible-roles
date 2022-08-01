@@ -1,9 +1,11 @@
 ---
-# tasks file for cleanup_portal
 
 - name: "cleanup_portal | Install Dashboard"
   block:
     - name: "Allow Domain Admin group access to dashboard features"
+      # exit codes
+      #  0: on "Object modified: <dn>" and "No modification: <dn>"
+      #  3: on "E: object not found"
       ansible.builtin.command:
         argv:
           - "udm"
@@ -18,6 +20,8 @@
         - "{{ cleanup_portal_admin_dashboard_dn }}"
       loop_control:
         loop_var: "cleanup_portal_item"
+      register: "cleanup_portal_output1"
+      changed_when: "cleanup_portal_output1 | regex_search('Object modified: cn=')"
       tags:
         - "cleanup_portal_domain_admin_permissions"
 
@@ -33,8 +37,11 @@
           - "{{ cleanup_portal_prometheus_dn }}"
           - "--append"
           - "{{ cleanup_portal_admin_dashboard_dn }}"
+      register: "cleanup_portal_output2"
+      changed_when: "cleanup_portal_output2 | regex_search('Object modified: cn=')"
       tags:
         - "cleanup_portal_add_portal_entries"
+
     - name: "cleanup_portal | Remove portal entries from domain admin category"
       ansible.builtin.command:
         argv:
@@ -47,6 +54,8 @@
           - "{{ cleanup_portal_prometheus_dn }}"
           - "--remove"
           - "{{ cleanup_portal_admin_dashboard_dn }}"
+      register: "cleanup_portal_output3"
+      changed_when: "cleanup_portal_output3 | regex_search('Object modified: cn=')"
       tags:
         - "cleanup_portal_remove_portal_entries"
 
@@ -65,8 +74,12 @@
         - "{{ cleanup_portal_admin_dashboard_dn }}"
       loop_control:
         loop_var: "cleanup_portal_item"
+      register: "cleanup_portal_output4"
+      changed_when: "cleanup_portal_output4 | regex_search('Object modified: cn=')"
       tags:
         - "cleanup_portal_deactivate_portal_entries"
   when: "'dashboard' in cleanup_portal_install_services"
   tags:
     - "cleanup_portal"
+
+...

@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_apps_owncloud
 
 - name: "Configure OwnCloud SSO"
   block:
@@ -28,6 +27,7 @@
       ansible.builtin.template:
         dest: "{{ configure_apps_owncloud_tempfile_docker_override.path }}"
         src: "owncloud_univention_override_sh.j2"
+        mode: "0640"
       tags:
         - "configure_apps_owncloud_docker_override_script"
 
@@ -65,3 +65,5 @@
       ansible.builtin.meta: "flush_handlers"
   tags:
     - "configure_apps_owncloud"
+
+...

@@ -1,5 +1,4 @@
 ---
-# tasks file for remove_packages
 
 - name: "Remove Univention app packages"
   vars:
@@ -7,7 +6,7 @@
           if remove_packages_item in remove_packages_app_version_map
           else '' }}"
     remove_packages_package_name: "{{ remove_packages_service_name_list[remove_packages_item]
-                                        |default(remove_packages_item) }}"
+                                        | default(remove_packages_item) }}"
   ansible.builtin.command:
     cmd: |
       univention-app
@@ -20,8 +19,8 @@
     loop_var: "remove_packages_item"
   when:
     - "remove_packages_package_name in remove_packages_currently_installed_apps"
-    - "remove_packages_force_package_upgrade|bool"
-    - "remove_packages_package_version|length > 0"
+    - "remove_packages_force_package_upgrade | bool"
+    - "remove_packages_package_version | length > 0"
     - "remove_packages_currently_installed_apps[package_name] != remove_packages_package_version[1:]"
   register: "remove_packages_package_removal"
   retries: 10
@@ -29,3 +28,5 @@
   until: "remove_packages_package_removal.rc == 0"
   tags:
     - "remove_packages"
+
+...

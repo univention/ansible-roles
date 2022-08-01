@@ -1,5 +1,5 @@
 ---
-# defaults file for configure_directory_manager
+
 configure_directory_manager_mailprimaryaddress_required: false
 configure_directory_manager_firstname_required: false
 configure_directory_manager_wizard_disabled: "False"
@@ -10,3 +10,5 @@ configure_directory_manager_pwdchangenextlogin_visible: "False"
 configure_directory_manager_pwdchangenextlogin_default: "True"
 configure_directory_manager_autosearch: "False"
 configure_directory_manager_username_syntax: "uid"
+
+...

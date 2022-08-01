@@ -1,5 +1,4 @@
 ---
-# tasks file for configure_apps_postfix
 
 - name: "Create domain rewrite map"
   ansible.builtin.lineinfile:
@@ -7,6 +6,7 @@
     line: "/^(.*)@{{ configure_apps_postfix_domain_name }}$/      \\${1}@{{ configure_apps_postfix_external_hostname }}"
     create: true
     state: "present"
+    mode: "0644"
   register: "configure_apps_postfix_domain_rewrite_task"
   tags:
     - "configure_apps_postfix"
@@ -18,6 +18,7 @@
     line: "smtp_generic_maps = regexp:/etc/postfix/generic"
     create: true
     state: "present"
+    mode: "0644"
   tags:
     - "configure_apps_postfix"
     - "configure_apps_postfix_use_map"
@@ -37,3 +38,5 @@
   tags:
     - "configure_apps_postfix"
     - "configure_apps_postfix_set_mail_destination"
+
+...
