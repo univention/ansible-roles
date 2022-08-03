@@ -1,0 +1,40 @@
+---
+
+- name: "configure_password_policies | Assert policy is given"
+  ansible.builtin.assert:
+    that:
+      - "configure_password_policies_dn is defined"
+    fail_msg: "The dn of a policy is needed."
+    quiet: true
+  tags:
+    - "configure_password_policies"
+    - "configure_password_policies_assert_dn_is_given"
+
+- name: "configure_password_policies | Assert pwQualityCheck is true"
+  univention.ucs_modules.univention_directory_manager:
+    module: "policies/pwhistory"
+    state: "present"
+    set_properties:
+      - property: "pwQualityCheck"
+        value: "TRUE"
+    dn: "{{ configure_password_policies_dn }}"
+  tags:
+    - "configure_password_policies"
+    - "configure_password_policies_set_pwQuality"
+
+- name: "configure_password_policies | Set UCR properties"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      password/quality/length/min: "{{ configure_password_policies_quality_min_lenght }}"
+      password/quality/required/chars: "{{ configure_password_policies_quality_required_chars }}"
+      password/quality/forbidden/chars: "{{ configure_password_policies_quality_forbidden_chars }}"
+      password/quality/credit/digits: "{{ configure_password_policies_quality_credit_digits }}"
+      password/quality/credit/upper: "{{ configure_password_policies_quality_credit_upper }}"
+      password/quality/credit/other: "{{ configure_password_policies_quality_credit_other }}"
+      password/quality/credit/lower: "{{ configure_password_policies_quality_credit_lower }}"
+      password/quality/mspolicy: "{{ configure_password_policies_quality_mspolicy }}"
+  tags:
+    - "configure_password_policies"
+    - "configure_password_policies_set_ucr_variables"
+
+...
