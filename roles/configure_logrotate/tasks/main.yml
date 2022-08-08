@@ -1,0 +1,67 @@
+---
+
+- name: "configure_logrotate | Set logrotate compress"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      logrotate/compress: "{{ configure_logrotate_compress }}"
+  tags:
+    - "configure_logrotate_compress"
+    - "configure_logrotate"
+
+- name: "configure_logrotate | Set logrotate mode and owner"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      logrotate/create: "{{ configure_logrotate_create }}"
+  tags:
+    - "configure_logrotate_create"
+    - "configure_logrotate"
+
+- name: "configure_logrotate | Set logrotate missing-ok"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      logrotate/missingok: "{{ configure_logrotate_missingok }}"
+  tags:
+    - "configure_logrotate_missingok"
+    - "configure_logrotate"
+
+- name: "configure_logrotate | Set logrotate no-if-empty"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      logrotate/notifempty: "{{ configure_logrotate_notifempty }}"
+  tags:
+    - "configure_logrotate_notifempty"
+    - "configure_logrotate"
+
+- name: "configure_logrotate | Set logrotate rotate count"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      logrotate/rotate/count: "{{ configure_logrotate_rotate_count }}"
+  tags:
+    - "configure_logrotate_rotate_count"
+    - "configure_logrotate"
+
+- name: "configure_logrotate | Set logrotate handling"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      logrotate/rotate: "{{ configure_logrotate_rotate_handling }}"
+  tags:
+    - "configure_logrotate_rotate_handling"
+    - "configure_logrotate"
+
+- name: "configure_logrotate | Set syslog logrotate count"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      logrotate/syslog/rotate/count: "{{ configure_logrotate_syslog_rotate_count }}"
+  tags:
+    - "configure_logrotate_syslog_rotate_count"
+    - "configure_logrotate"
+
+- name: "configure_logrotate | Set syslog logrotate handling"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      logrotate/syslog/rotate: "{{ configure_logrotate_syslog_rotate_handling }}"
+  tags:
+    - "configure_logrotate_syslog_rotate_handling"
+    - "configure_logrotate"
+
+...

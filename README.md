@@ -14,6 +14,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [remove_packages](https://github.com/univention/ansible-roles#rolesremove_packagesreadmemd)
 - [configure_apps_postfix_relay](https://github.com/univention/ansible-roles#rolesconfigure_apps_postfix_relayreadmemd)
 - [configure_directory_manager](https://github.com/univention/ansible-roles#rolesconfigure_directory_managerreadmemd)
+- [configure_error_detail_show](https://github.com/univention/ansible-roles#rolesconfigure_error_detail_showreadmemd)
 - [umc_policies_maintenance](https://github.com/univention/ansible-roles#rolesumc_policies_maintenancereadmemd)
 - [cleanup_portal](https://github.com/univention/ansible-roles#rolescleanup_portalreadmemd)
 - [install_apps_ox_pre](https://github.com/univention/ansible-roles#rolesinstall_apps_ox_prereadmemd)
@@ -32,6 +33,8 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [portal_configure_title](https://github.com/univention/ansible-roles#rolesportal_configure_titlereadmemd)
 - [portal_entry](https://github.com/univention/ansible-roles#rolesportal_entryreadmemd)
 - [get_installed_apps](https://github.com/univention/ansible-roles#rolesget_installed_appsreadmemd)
+- [configure_logrotate](https://github.com/univention/ansible-roles#rolesconfigure_logrotatereadmemd)
+- [configure_group_syntax](https://github.com/univention/ansible-roles#rolesconfigure_group_syntaxreadmemd)
 - [configure_saml_single_server](https://github.com/univention/ansible-roles#rolesconfigure_saml_single_serverreadmemd)
 - [workaround_acmetiny_upgrade](https://github.com/univention/ansible-roles#rolesworkaround_acmetiny_upgradereadmemd)
 - [install_multitenant_acls](https://github.com/univention/ansible-roles#rolesinstall_multitenant_aclsreadmemd)
@@ -39,6 +42,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [custom_facts](https://github.com/univention/ansible-roles#rolescustom_factsreadmemd)
 - [ucs_join](https://github.com/univention/ansible-roles#rolesucs_joinreadmemd)
 - [univention_install](https://github.com/univention/ansible-roles#rolesunivention_installreadmemd)
+- [configure_amazon_metadata_server](https://github.com/univention/ansible-roles#rolesconfigure_amazon_metadata_serverreadmemd)
 - [univention_upgrade](https://github.com/univention/ansible-roles#rolesunivention_upgradereadmemd)
 - [umc_permissions](https://github.com/univention/ansible-roles#rolesumc_permissionsreadmemd)
 - [ldapsearch_user](https://github.com/univention/ansible-roles#rolesldapsearch_userreadmemd)
@@ -50,6 +54,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [ucs_add_admin_user](https://github.com/univention/ansible-roles#rolesucs_add_admin_userreadmemd)
 - [improve_usability_user_config](https://github.com/univention/ansible-roles#rolesimprove_usability_user_configreadmemd)
 - [force_package_list_update](https://github.com/univention/ansible-roles#rolesforce_package_list_updatereadmemd)
+- [set_feedback_mail_address](https://github.com/univention/ansible-roles#rolesset_feedback_mail_addressreadmemd)
 - [configure_monitoring](https://github.com/univention/ansible-roles#rolesconfigure_monitoringreadmemd)
 - [set_dns_glue_record](https://github.com/univention/ansible-roles#rolesset_dns_glue_recordreadmemd)
 - [configure_sso_openid](https://github.com/univention/ansible-roles#rolesconfigure_sso_openidreadmemd)
@@ -488,6 +493,49 @@ Role Variables
 - `configure_directory_manager_pwdchangenextlogin_default`(string): Sets default value for password change on next login; default: `"True"`.
 - `configure_directory_manager_autosearch`(string): Toggles wether the user autosearch is enabled; default: `"False"`.
 - `configure_directory_manager_username_syntax`(string): Set the username syntax; default `"uid"`.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/configure_error_detail_show/README.md
+
+Configure error detail show
+=========
+
+This role configures if the error messages will display the details.
+
+Requirements
+------------
+
+- univention.ucs_modules
+   - univention_config_registry
+
+Role Variables
+--------------
+
+- `configure_error_detail_show_http_tracebacks`(bool): Defines whether tracebacks are shown to the user in error cases; default: `false`
+- `configure_error_detail_show_directory_manager_rest_tracebacks`(bool): Defines whether tracebacks are shown to the user in error cases; default: `false`
+- `configure_error_detail_show_saml_idp_errors`(bool): Defines if error information and stack traces allowed to be shown to the user; default: `false`
+- `configure_error_detail_show_saml_idp_error_reporting`(bool): Defines if error information and stack traces can be reported via email to the technical contact mail address; default: `false`
 
 Dependencies
 ------------
@@ -1397,6 +1445,96 @@ www.univention.com
 
 ---
 
+# roles/configure_logrotate/README.md
+
+Configure Logrotate
+=========
+
+As is defined on the `ucr` the log files are rotated the set number of times
+before being removed. This role is used to set those numbers.
+
+Requirements
+------------
+
+- univention.ucs_modules
+   - univention_config_registry
+
+Role Variables
+--------------
+- `configure_logrotate_compress`(bool): If this option is activated, log files are compressed during rotation; default: yes
+- `configure_logrotate_create`(string): Configures mode, owner and group of a log file after rotation; default: 640 root adm
+- `configure_logrotate_missingok`(bool): If this option is activated, proceed without printing an error message if a logfile is missing; default: yes
+- `configure_logrotate_notifempty`(bool): If this option is activated, empty logfiles are not rotated; default: yes
+- `configure_logrotate_rotate_count`(number): The rotation interval for system log files; default: 12
+- `configure_logrotate_rotate_handling`(string): Log files are rotated according to criterion described by `man logrotate.conf`; default: weekly
+- `configure_logrotate_syslog_rotate_count`(number): The rotation interval for syslog file; default: 7 * "rotate/count"
+- `configure_logrotate_syslog_rotate_handling`(string): Syslog file is rotated according to criterion described by `man logrotate.conf`; default: daily
+
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/configure_group_syntax/README.md
+
+Configure group syntax
+=========
+
+Configure the group syntax and ensure the consistency on all nodes
+
+Requirements
+------------
+
+- univention.ucs_modules
+   - univention_config_registry
+
+Role Variables
+--------------
+
+- `configure_group_syntax_group_syntax`(string): group syntax desired value; default: `gid`
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
 # roles/configure_saml_single_server/README.md
 
 Configure SAML single server
@@ -1752,6 +1890,47 @@ Role Variables
 
 - `univention_install_name`(string): The name of the package to be installed.
 - `univention_install_clear_apt_cache`(bool): Clear all downloaded packages to reduce package conflicts; default: `false`.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/configure_amazon_metadata_server/README.md
+
+
+Configure amazon metadata server
+================================
+
+Enable or disable UCS calling Amazon's metadata server
+
+Requirements
+------------
+
+- univention.ucs_modules
+   - univention_config_registry
+
+Role Variables
+--------------
+
+- `configure_amazon_metadata_server_call`(boolen): Defines if the amazon metadata server should be called; default: `false`
 
 Dependencies
 ------------
@@ -2261,6 +2440,45 @@ none
 Example Playbook
 ----------------
 
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/set_feedback_mail_address/README.md
+
+Set feedback mail address
+=========
+
+
+Requirements
+------------
+
+- univention.ucs_modules
+   - univention_config_registry
+
+Role Variables
+--------------
+- `set_feedback_mail_address_web_feedback_mail`(string): Email address configured to send the traceback if occurs an error in the Univention Management Console; default: `feedback@univention.de`
+
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
 
 
 License

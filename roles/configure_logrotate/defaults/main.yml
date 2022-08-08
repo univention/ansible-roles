@@ -1,0 +1,12 @@
+---
+
+configure_logrotate_compress: "yes"
+configure_logrotate_create: "640 root adm"
+configure_logrotate_missingok: "yes"
+configure_logrotate_notifempty: "yes"
+configure_logrotate_rotate_count: 12
+configure_logrotate_rotate_handling: "weekly"
+configure_logrotate_syslog_rotate_count: "{{ 7 * configure_logrotate_rotate_count }}"
+configure_logrotate_syslog_rotate_handling: "daily"
+
+...

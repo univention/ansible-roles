@@ -1,0 +1,28 @@
+---
+
+galaxy_info:
+  role_name: "configure_amazon_metadata_server"
+  author: "Èric Monné Mesalles <monne-mesalles.extern@univention.de>"
+  description: "Enable or disable the UCS call to the amazon metadata server"
+  company: "Univention GmbH"
+
+  issue_tracker_url: "https://forge.univention.org"
+
+  license: "GPL-3.0-or-later"
+
+  min_ansible_version: "1.2"
+
+  platforms:
+    - name: "Debian"
+      versions:
+        - "all"
+
+  galaxy_tags:
+    - "univention"
+    - "ucs"
+    - "amazon"
+    - "metadata"
+
+dependencies: []
+
+...
