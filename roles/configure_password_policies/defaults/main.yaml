@@ -1,9 +1,9 @@
 ---
 
 configure_password_policies_quality_min_lenght: "8"
-configure_password_policies_quality_required_chars: "none"
-configure_password_policies_quality_forbidden_chars: "none"
-configure_password_policies_quality_credit_digits: "8"
+configure_password_policies_quality_required_chars: ""
+configure_password_policies_quality_forbidden_chars: ""
+configure_password_policies_quality_credit_digits: "1"
 configure_password_policies_quality_credit_upper: "1"
 configure_password_policies_quality_credit_other: "1"
 configure_password_policies_quality_credit_lower: "1"

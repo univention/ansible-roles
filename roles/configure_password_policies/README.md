@@ -19,7 +19,7 @@ Role Variables
 - `configure_password_policies_quality_min_lenght`(string): Sets the minimum password length; default: `8`
 - `configure_password_policies_quality_required_chars`(string): Sets required chars for setting new passwords; default: `none`
 - `configure_password_policies_quality_forbidden_chars`(string): Sets forbidden chars for setting new passwords; default: `none`
-- `configure_password_policies_quality_credit_digits`(string): Sets the minimum number of digits in the new password; ; default: `8`
+- `configure_password_policies_quality_credit_digits`(string): Sets the minimum number of digits in the new password; ; default: `1`
 - `configure_password_policies_quality_credit_upper`(string): Sets the minimum number of upper case letters; default: `1`
 - `configure_password_policies_quality_credit_other`(string): Sets the minimum number of chars wich are neither digits nor letters; default: `1`
 - `configure_password_policies_quality_credit_lower`(string): Sets the minimum number of lower case letters; default: `1`
