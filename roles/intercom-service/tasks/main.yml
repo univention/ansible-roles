@@ -57,7 +57,7 @@
           ansible.builtin.uri:
             url: "https://{{ kc_domain }}/auth/admin/realms/{{ intercom_service_realm_name }}/clients/{{ intercom_service_settings_client_id }}/client-secret"
             headers:
-              'Accept': 'application/json'
+              'Accept': "application/json"
               'Authorization': "Bearer {{ access_token['json']['access_token'] }}"
             method: "GET"
             return_content: true
@@ -72,7 +72,7 @@
     - name: "Check existence of matrix secret"
       ansible.builtin.stat:
         path: "/etc/matrix.secret"
-      register: matrix_secret_file
+      register: "matrix_secret_file"
   
     - name: "Failure if matrix secret does not exists"
       ansible.builtin.fail:
@@ -104,6 +104,6 @@
   when: "test_is_installed.rc == 1"
   no_log: "{{ intercom_service_hide_logging | default(true) | bool }}"
   tags:
-      - "intercom_service"
+    - "intercom_service"
 
 ...
