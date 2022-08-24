@@ -1,0 +1,27 @@
+---
+
+galaxy_info:
+  role_name: "intercom_service"
+  author: "Univention"
+  description: "Install Intercom Service"
+  company: "Univention GmbH"
+
+  issue_tracker_url: "https://forge.univention.org"
+
+  license: "GPL-3.0-or-later"
+
+  min_ansible_version: "2.10"
+
+  platforms:
+    - name: "Debian"
+      versions:
+        - "all"
+
+  galaxy_tags:
+    - "univention"
+    - "ucs"
+    - "bootstrap"
+
+dependencies: []
+
+...
