@@ -2,7 +2,7 @@
 
 - name: "Check if intercom-service is already installed"
   ansible.builtin.shell: "univention-app info | grep intercom-service"
-  register: test_is_installed
+  register: "test_is_installed"
   failed_when: "test_is_installed.rc == 2"
   changed_when: false
   when: "intercom_service_server_type | default('primary') != 'backup'"
@@ -12,95 +12,95 @@
 
 - name: "Install Intercom"
   block:
-  - name: "Check existence of portal secret"
-    ansible.builtin.stat:
-      path: "/etc/intercom-portal.secret"
-    register: portal_secret_file
-
-  - name: "Write portal_secret for intercom"
-    ansible.builtin.copy:
-      content: "lookup('community.general.random_string', length=30)"
-      dest: "/etc/intercom-portal.secret"
-    when: not portal_secret_file.stat.exists
-
-  - name: "Check existence of intercom secret"
-    ansible.builtin.stat:
-      path: "/etc/intercom.secret"
-    register: intercom_secret_file
-
-  - name: "Write intercom_secret for intercom"
-    ansible.builtin.copy:
-      content: "lookup('community.general.random_string', length=30)"
-      dest: "/etc/intercom.secret"
-    when: not intercom_secret_file.stat.exists
-
-  - name: "Check existence of intercom_client secret"
-    ansible.builtin.stat:
-      path: "/etc/intercom-client.secret"
-    register: intercom_client_secret_file
-
-  - name: "Create intercom_client_secret_file"
-    block:
-      - name: "get authentication token"
-        ansible.builtin.uri:
-          url: "http://{{ keycloak_bind_address }}:{{ keycloak_http_port }}/auth/realms/master/protocol/openid-connect/token"
-          method: "POST"
-          body_format: "form-urlencoded"
-          body:
-            client_id: "admin-cli"
-            username: "{{ keycloak_admin_username }}"
-            password: "{{ keycloak_admin_password }}"
-            grant_type: "password"
-        register: "access_token"
-
-      - name: "get matrix client-secret"
-        ansible.builtin.uri:
-          url: "https://{{ kc_domain }}/auth/admin/realms/{{ intercom_service_realm_name }}/clients/{{ intercom_service_settings_client_id }}/client-secret"
-          headers:
-            'Accept': 'application/json'
-            'Authorization': "Bearer {{ access_token['json']['access_token'] }}"
-          method: "GET"
-          return_content: true
-        register: "client_secret"
-
-      - name: "set client secret"
-        ansible.builtin.copy:
-          content: "{{ client_secret['json']['value'] }}"
-          dest: "/etc/intercom-client.secret"
-    when: not intercom_client_secret_file.stat.exists
-
-  - name: "Check existence of matrix secret"
-    ansible.builtin.stat:
-      path: "/etc/matrix.secret"
-    register: matrix_secret_file
-
-  - name: "Failure if matrix secret does not exists"
-    ansible.builtin.fail:
-      msg: " Check if /etc/matrix.secret exists!"
-    when: not matrix_secret_file.stat.exists
-
-  - name: "Install ICS"
-    ansible.builtin.shell: |
-      univention-app install intercom-service --pwdfile {{ intercom_service_temp_pw_file.path }} --noninteractive --set \
-        "intercom-service/settings/proxy={{ intercom_service_settings_proxy }}" \
-        "intercom/settings/client-id={{ intercom_service_settings_client_id }}" \
-        "intercom/settings/intercom-url={{ intercom_service_settings_intercom_url }}" \
-        "intercom/settings/base-url={{ intercom_service_settings_base_url }}" \
-        "intercom/settings/origin-regex={{ intercom_service_settings_origin_regex }}" \
-        "intercom/keycloak/url={{ intercom_service_keycloak_url }} " \
-        "intercom/keycloak/realm-name={{ intercom_service_keycloak_realm_name }}" \
-        "intercom/matrix/url={{ intercom_service_matrix_url }}" \
-        "intercom/matrix/server-name={{ intercom_service_matrix_server_name }}" \
-        "intercom/matrix/login-type={{ intercom_service_matrix_login-type }}" \
-        "intercom/matrix/nordeck-mode={{ intercom_service_matrix_nordeck_mode }}" \
-        "ntercom/matrix/nordeck-url={{ intercom_service_nordeck_url }}" \
-        "intercom/portal/portal-url={{ iintercom_service_portal_url }}" \
-        "intercom/ox/ox-origin={{ intercom_service_ox_origin }}" \
-        "intercom/ox/ox-audience={{ intercom_service_ox_audience }}" \
-        "intercom-service/nextcloud/url={{ intercom_service_nc_url }}" \
-        "intercom-service/nextcloud/origin={{ intercom_service_nc_origin }}"
-    when: intercom_matrix_secret_file.stat.exists
-
+    - name: "Check existence of portal secret"
+      ansible.builtin.stat:
+        path: "/etc/intercom-portal.secret"
+      register: "portal_secret_file"
+  
+    - name: "Write portal_secret for intercom"
+      ansible.builtin.copy:
+        content: "lookup('community.general.random_string', length=30)"
+        dest: "/etc/intercom-portal.secret"
+      when: "not portal_secret_file.stat.exists"
+  
+    - name: "Check existence of intercom secret"
+      ansible.builtin.stat:
+        path: "/etc/intercom.secret"
+      register: "intercom_secret_file"
+  
+    - name: "Write intercom_secret for intercom"
+      ansible.builtin.copy:
+        content: "lookup('community.general.random_string', length=30)"
+        dest: "/etc/intercom.secret"
+      when: "not intercom_secret_file.stat.exists"
+  
+    - name: "Check existence of intercom_client secret"
+      ansible.builtin.stat:
+        path: "/etc/intercom-client.secret"
+      register: "intercom_client_secret_file"
+  
+    - name: "Create intercom_client_secret_file"
+      block:
+        - name: "get authentication token"
+          ansible.builtin.uri:
+            url: "http://{{ keycloak_bind_address }}:{{ keycloak_http_port }}/auth/realms/master/protocol/openid-connect/token"
+            method: "POST"
+            body_format: "form-urlencoded"
+            body:
+              client_id: "admin-cli"
+              username: "{{ keycloak_admin_username }}"
+              password: "{{ keycloak_admin_password }}"
+              grant_type: "password"
+          register: "access_token"
+  
+        - name: "get matrix client-secret"
+          ansible.builtin.uri:
+            url: "https://{{ kc_domain }}/auth/admin/realms/{{ intercom_service_realm_name }}/clients/{{ intercom_service_settings_client_id }}/client-secret"
+            headers:
+              'Accept': 'application/json'
+              'Authorization': "Bearer {{ access_token['json']['access_token'] }}"
+            method: "GET"
+            return_content: true
+          register: "client_secret"
+  
+        - name: "set client secret"
+          ansible.builtin.copy:
+            content: "{{ client_secret['json']['value'] }}"
+            dest: "/etc/intercom-client.secret"
+      when: "not intercom_client_secret_file.stat.exists"
+  
+    - name: "Check existence of matrix secret"
+      ansible.builtin.stat:
+        path: "/etc/matrix.secret"
+      register: matrix_secret_file
+  
+    - name: "Failure if matrix secret does not exists"
+      ansible.builtin.fail:
+        msg: " Check if /etc/matrix.secret exists!"
+      when: "not matrix_secret_file.stat.exists"
+  
+    - name: "Install ICS"
+      ansible.builtin.shell: |
+        univention-app install intercom-service --pwdfile {{ intercom_service_temp_pw_file.path }} --noninteractive --set \
+          "intercom-service/settings/proxy={{ intercom_service_settings_proxy }}" \
+          "intercom/settings/client-id={{ intercom_service_settings_client_id }}" \
+          "intercom/settings/intercom-url={{ intercom_service_settings_intercom_url }}" \
+          "intercom/settings/base-url={{ intercom_service_settings_base_url }}" \
+          "intercom/settings/origin-regex={{ intercom_service_settings_origin_regex }}" \
+          "intercom/keycloak/url={{ intercom_service_keycloak_url }} " \
+          "intercom/keycloak/realm-name={{ intercom_service_keycloak_realm_name }}" \
+          "intercom/matrix/url={{ intercom_service_matrix_url }}" \
+          "intercom/matrix/server-name={{ intercom_service_matrix_server_name }}" \
+          "intercom/matrix/login-type={{ intercom_service_matrix_login_type }}" \
+          "intercom/matrix/nordeck-mode={{ intercom_service_matrix_nordeck_mode }}" \
+          "ntercom/matrix/nordeck-url={{ intercom_service_nordeck_url }}" \
+          "intercom/portal/portal-url={{ iintercom_service_portal_url }}" \
+          "intercom/ox/ox-origin={{ intercom_service_ox_origin }}" \
+          "intercom/ox/ox-audience={{ intercom_service_ox_audience }}" \
+          "intercom-service/nextcloud/url={{ intercom_service_nc_url }}" \
+          "intercom-service/nextcloud/origin={{ intercom_service_nc_origin }}"
+      when: "intercom_matrix_secret_file.stat.exists"
+  
   when: "test_is_installed.rc == 1"
   no_log: "{{ intercom_service_hide_logging | default(true) | bool }}"
   tags:

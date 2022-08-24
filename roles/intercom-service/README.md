@@ -25,7 +25,7 @@ Role Variables
 - `intercom_service_keycloak_realm_name`(string): Name of the realm containing the configured OIDC Intercom client; default: `ucs`
 - `intercom_service_matrix_url`(string): The URL on which the Matrix server is reachable default: `https://matrix.{{ intercom_service_domain_name }}`
 - `intercom_service_matrix_server_name`(string): The server name of the matrix server; default: `https://matrix.{{ intercom_service_domain_name }}`
-- `intercom_service_matrix_login-type`(string): The login-type ICS should use on the matrix server; default: `uk.half-shot.msc2778.login.application_service`
+- `intercom_service_matrix_login_type`(string): The login-type ICS should use on the matrix server; default: `uk.half-shot.msc2778.login.application_service`
 - `intercom_service_matrix_nordeck_mode`(string): The connection mode of the Nordeck-bot; default: `test`
 - `intercom_service_nordeck_url`(string): The URL on which Nordeck-bot is listening; default: `https://meetings-widget-bot.{{ intercom_service_domain_name }}`
 - `intercom_service_portal_url`(string): The URL on which the Univention-Portal is listening; default: `https://portal.{{ intercom_service_domain_name }}`
