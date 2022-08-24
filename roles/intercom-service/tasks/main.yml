@@ -43,7 +43,9 @@
       block:
         - name: "get authentication token"
           ansible.builtin.uri:
-            url: "http://{{ keycloak_bind_address }}:{{ keycloak_http_port }}/auth/realms/master/protocol/openid-connect/token"
+            url: >
+                "http://{{ keycloak_bind_address }}:{{ keycloak_http_port }}
+                /auth/realms/master/protocol/openid-connect/token"
             method: "POST"
             body_format: "form-urlencoded"
             body:
@@ -55,7 +57,9 @@
   
         - name: "get matrix client-secret"
           ansible.builtin.uri:
-            url: "https://{{ kc_domain }}/auth/admin/realms/{{ intercom_service_realm_name }}/clients/{{ intercom_service_settings_client_id }}/client-secret"
+            url: >
+                "https://{{ kc_domain }}/auth/admin/realms/{{ intercom_service_realm_name }}
+                /clients/{{ intercom_service_settings_client_id }}/client-secret"
             headers:
               'Accept': "application/json"
               'Authorization': "Bearer {{ access_token['json']['access_token'] }}"
@@ -81,7 +85,8 @@
   
     - name: "Install ICS"
       ansible.builtin.shell: |
-        univention-app install intercom-service --pwdfile {{ intercom_service_temp_pw_file.path }} --noninteractive --set \
+        univention-app install intercom-service --pwdfile {{ intercom_service_temp_pw_file.path }}
+        --noninteractive --set \
           "intercom-service/settings/proxy={{ intercom_service_settings_proxy }}" \
           "intercom/settings/client-id={{ intercom_service_settings_client_id }}" \
           "intercom/settings/intercom-url={{ intercom_service_settings_intercom_url }}" \
