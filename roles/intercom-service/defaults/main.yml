@@ -1,6 +1,5 @@
 ---
 
-intercom_service_server_type: ""
 intercom_service_domain_name: "" 
 intercom_service_hide_logging: true
 intercom_service_settings_proxy: "False"

@@ -12,7 +12,6 @@ none
 Role Variables
 --------------
 
-- `intercom_service_server_type`(string): On which type of UCS Server to act. default: `""`.
 - `intercom_service_hide_logging`(boolean): Toggle template logging; default: `true`.
 - `intercom_service_domain_name`(string): The domain name. default: `""` 
 - `intercom_service_temp_pw_file`: The tmp file within the administrator password.

@@ -5,7 +5,6 @@
   register: "test_is_installed"
   failed_when: "test_is_installed.rc == 2"
   changed_when: false
-  when: "intercom_service_server_type | default('primary') != 'backup'"
   no_log: "{{ intercom_service_hide_logging | default(true) | bool }}"
   tags:
     - "intercom_service"
