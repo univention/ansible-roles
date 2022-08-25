@@ -69,7 +69,6 @@
         "intercom-service/ox/ox-audience={{ intercom_service_ox_audience }}" \
         "intercom-service/nextcloud/url={{ intercom_service_nc_url }}" \
         "intercom-service/nextcloud/origin={{ intercom_service_nc_origin }}"
-      when: "matrix_secret_file.stat.exists"
   
   when: "test_is_installed.rc == 1"
   no_log: "{{ intercom_service_hide_logging | default(true) | bool }}"
