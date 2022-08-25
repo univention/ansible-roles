@@ -30,12 +30,14 @@
 
 - name: "install_service_selfservices | Configure Univention Config Registry"
   vars:
-    install_service_selfservice_attributes: >-
+    install_service_selfservice_udm_attributes: >-
       jpegPhoto,e-mail,roomnumber,departmentNumber,country,homeTelephoneNumber,mobileTelephoneNumber,homePostalAddress
+    install_service_selfservice_ldap_attributes: >-
+      jpegPhoto,mail,roomnumber,departmentNumber,st,homePhone,mobile,homePostalAddress
   univention.ucs_modules.univention_config_registry:
     keys:
-      self-service/udm_attributes: "{{ install_service_selfservice_attributes }}"
-      self-service/ldap_attributes: "{{ install_service_selfservice_attributes }}"
+      self-service/udm_attributes: "{{ install_service_selfservice_udm_attributes }}"
+      self-service/ldap_attributes: "{{ install_service_selfservice_ldap_attributes }}"
       umc/self-service/profiledata/enabled: "true"
       umc/self-service/passwordreset/token_validity_period: "172800"
   tags:
