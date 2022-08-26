@@ -1,0 +1,82 @@
+---
+
+- name: "Check if intercom-service is already installed"
+  ansible.builtin.shell: "set -o pipefail && univention-app info | grep intercom-service"
+  register: "test_is_installed"
+  failed_when: "test_is_installed.rc == 2"
+  args:
+    executable: "/bin/bash"
+  changed_when: false
+  no_log: "{{ intercom_service_hide_logging | default(true) | bool }}"
+  tags:
+    - "intercom_service"
+
+- name: "Install Intercom"
+  block:
+    - name: "Check existence of portal secret"
+      ansible.builtin.stat:
+        path: "/etc/intercom-portal.secret"
+      register: "portal_secret_file"
+
+    - name: "Write portal_secret for intercom"
+      ansible.builtin.copy:
+        content: "{{ lookup('password', '/dev/null length=30 chars=ascii_letters') }}"
+        dest: "/etc/intercom-portal.secret"
+        mode: "644"
+      when: "not portal_secret_file.stat.exists"
+
+    - name: "Check existence of intercom secret"
+      ansible.builtin.stat:
+        path: "/etc/intercom.secret"
+      register: "intercom_secret_file"
+
+    - name: "Write intercom_secret for intercom"
+      ansible.builtin.copy:
+        content: "{{ lookup('password', '/dev/null length=30 chars=ascii_letters') }}"
+        dest: "/etc/intercom.secret"
+        mode: "644"
+      when: "not intercom_secret_file.stat.exists"
+
+    - name: "Check existence of intercom_client secret"
+      ansible.builtin.stat:
+        path: "/etc/intercom-client.secret"
+      register: "intercom_client_secret_file"
+
+    - name: "Check existence of matrix secret"
+      ansible.builtin.stat:
+        path: "/etc/matrix.secret"
+      register: "matrix_secret_file"
+
+    - name: "Failure if one of the secrets does not exist"
+      ansible.builtin.fail:
+        msg: "Check if /etc/matrix.secret and /etc/intercom-client.secret exists!"
+      when: "not matrix_secret_file.stat.exists or not intercom_client_secret_file.stat.exists"
+
+    - name: "Install ICS"
+      ansible.builtin.command: >
+        univention-app install intercom-service --pwdfile {{ intercom_service_temp_pw_file.path }}
+        --noninteractive --set
+        "intercom-service/settings/proxy={{ intercom_service_settings_proxy }}"
+        "intercom-service/settings/client-id={{ intercom_service_settings_client_id }}"
+        "intercom-service/settings/intercom-url={{ intercom_service_settings_intercom_url }}"
+        "intercom-service/settings/base-url={{ intercom_service_settings_base_url }}"
+        "intercom-service/settings/origin-regex={{ intercom_service_settings_origin_regex }}"
+        "intercom-service/keycloak/url={{ intercom_service_keycloak_url }} "
+        "intercom-service/keycloak/realm-name={{ intercom_service_keycloak_realm_name }}"
+        "intercom-service/matrix/url={{ intercom_service_matrix_url }}"
+        "intercom-service/matrix/server-name={{ intercom_service_matrix_server_name }}"
+        "intercom-service/matrix/login-type={{ intercom_service_matrix_login_type }}"
+        "intercom-service/matrix/nordeck-mode={{ intercom_service_matrix_nordeck_mode }}"
+        "intercom-service/matrix/nordeck-url={{ intercom_service_nordeck_url }}"
+        "intercom-service/portal/portal-url={{ intercom_service_portal_url }}"
+        "intercom-service/ox/ox-origin={{ intercom_service_ox_origin }}"
+        "intercom-service/ox/ox-audience={{ intercom_service_ox_audience }}"
+        "intercom-service/nextcloud/url={{ intercom_service_nc_url }}"
+        "intercom-service/nextcloud/origin={{ intercom_service_nc_origin }}"
+
+  when: "test_is_installed.rc == 1"
+  no_log: "{{ intercom_service_hide_logging | default(true) | bool }}"
+  tags:
+    - "intercom_service"
+
+...

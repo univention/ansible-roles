@@ -1,0 +1,23 @@
+---
+
+intercom_service_domain_name: ""
+intercom_service_hide_logging: true
+intercom_service_settings_proxy: "False"
+intercom_service_settings_client_id: "intercom"
+intercom_service_settings_intercom_url: "https://ics.{{ intercom_service_domain_name }}"
+intercom_service_settings_base_url: "https://ics.{{ intercom_service_domain_name }}"
+intercom_service_settings_origin_regex: "{{ intercom_service_domain_name }}"
+intercom_service_keycloak_url: "https://id.{{ intercom_service_domain_name }}"
+intercom_service_keycloak_realm_name: "ucs"
+intercom_service_matrix_url: "https://matrix.{{ intercom_service_domain_name }}"
+intercom_service_matrix_server_name: "https://matrix.{{ intercom_service_domain_name }}"
+intercom_service_matrix_login_type: "uk.half-shot.msc2778.login.application_service"
+intercom_service_matrix_nordeck_mode: "test"
+intercom_service_nordeck_url: "https://meetings-widget-bot.{{ intercom_service_domain_name }}"
+intercom_service_portal_url: "https://portal.{{ intercom_service_domain_name }}"
+intercom_service_ox_origin: "https://webmail.{{ intercom_service_domain_name }}"
+intercom_service_ox_audience: "oxoidc"
+intercom_service_nc_url: "https://fs.{{ intercom_service_domain_name }}"
+intercom_service_nc_origin: "https://fs.{{ intercom_service_domain_name }}"
+
+...
