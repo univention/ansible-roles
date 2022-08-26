@@ -13,7 +13,7 @@ Role Variables
 --------------
 
 - `intercom_service_hide_logging`(boolean): Toggle template logging; default: `true`.
-- `intercom_service_domain_name`(string): The domain name. default: `""` 
+- `intercom_service_domain_name`(string): The domain name. default: `""`
 - `intercom_service_temp_pw_file`: The tmp file within the administrator password.
 - `intercom_service_settings_proxy`(string): Wether to allow connections via proxy server instead of backend directly; default: `"False"`
 - `intercom_service_settings_client_id`(string): The keycloak client ID; default: `intercom`

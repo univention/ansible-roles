@@ -5,7 +5,7 @@
   register: "test_is_installed"
   failed_when: "test_is_installed.rc == 2"
   args:
-    executable: /bin/bash
+    executable: "/bin/bash"
   changed_when: false
   no_log: "{{ intercom_service_hide_logging | default(true) | bool }}"
   tags:
@@ -24,12 +24,12 @@
         dest: "/etc/intercom-portal.secret"
         mode: "644"
       when: "not portal_secret_file.stat.exists"
-  
+
     - name: "Check existence of intercom secret"
       ansible.builtin.stat:
         path: "/etc/intercom.secret"
       register: "intercom_secret_file"
-  
+
     - name: "Write intercom_secret for intercom"
       ansible.builtin.copy:
         content: "{{ lookup('password', '/dev/null length=30 chars=ascii_letters') }}"
@@ -41,17 +41,17 @@
       ansible.builtin.stat:
         path: "/etc/intercom-client.secret"
       register: "intercom_client_secret_file"
-  
+
     - name: "Check existence of matrix secret"
       ansible.builtin.stat:
         path: "/etc/matrix.secret"
       register: "matrix_secret_file"
-  
+
     - name: "Failure if one of the secrets does not exist"
       ansible.builtin.fail:
         msg: "Check if /etc/matrix.secret and /etc/intercom-client.secret exists!"
       when: "not matrix_secret_file.stat.exists or not intercom_client_secret_file.stat.exists"
-  
+
     - name: "Install ICS"
       ansible.builtin.command: >
         univention-app install intercom-service --pwdfile {{ intercom_service_temp_pw_file.path }}
@@ -73,7 +73,7 @@
         "intercom-service/ox/ox-audience={{ intercom_service_ox_audience }}"
         "intercom-service/nextcloud/url={{ intercom_service_nc_url }}"
         "intercom-service/nextcloud/origin={{ intercom_service_nc_origin }}"
-  
+
   when: "test_is_installed.rc == 1"
   no_log: "{{ intercom_service_hide_logging | default(true) | bool }}"
   tags:
