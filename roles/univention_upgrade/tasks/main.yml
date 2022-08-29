@@ -41,17 +41,16 @@
     - "univention_upgrade_upgrade_check"
 
 - name: "univention_upgrade | Check if packages should be removed"
-  ansible.builtin.expect:
-    responses:
-      "Do you want to continue [Y|n]?": "n"
-    command: |
-      univention-upgrade
-      --ignoressh
-      --ignoreterm
-      {% if not univention_upgrade_app_updates %}
-      --disable-app-updates
-      {% endif %}
-      --updateto={{ univention_upgrade_version }}
+  ansible.builtin.shell: >
+    set -o pipefail &&
+    echo "n" |
+    univention-upgrade
+    --ignoressh
+    --ignoreterm
+    --disable-app-updates
+    --updateto={{ univention_upgrade_version }}
+  args:
+    executable: "/bin/bash"
   changed_when: false
   failed_when: "univention_upgrade_deep_inspect_upgrade_check.stdout is search('REMOVED')"
   register: "univention_upgrade_deep_inspect_upgrade_check"
