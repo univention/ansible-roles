@@ -2,7 +2,7 @@ Intercom Service
 =========
 
 This role installs and comfigures the intercom service.
-For further information have a look at https://docs.software-univention.de/intercom-service/latest/index.html
+For further information have a look at https://docs.software-univention.de/intercom_service/latest/index.html
 
 Requirements
 ------------
