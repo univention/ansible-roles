@@ -162,6 +162,7 @@
         --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
         --set name="Benutzer mit Groupware-Konto"
         --set oxAccess="{{ ox_connector_template_name }}"
+        --set isOxUser="OK"
       changed_when: "ox_connector_modify_usertemplate.stdout is search('Object modified')"
       failed_when:
         - "ox_connector_modify_usertemplate.rc != 0"
