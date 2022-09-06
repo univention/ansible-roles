@@ -162,7 +162,6 @@
         --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
         --set name="Benutzer mit Groupware-Konto"
         --set oxAccess="{{ ox_connector_template_name }}"
-        --set isOxUser="OK"
       changed_when: "ox_connector_modify_usertemplate.stdout is search('Object modified')"
       failed_when:
         - "ox_connector_modify_usertemplate.rc != 0"
@@ -187,14 +186,11 @@
     - name: "ox_connector | Set oxDisplayName in usertemplate"
       ansible.builtin.command: >
         udm settings/usertemplate modify
-        --dn
-        'cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}'
-        --set
-        oxDisplayName="<firstname> <lastname> (<username>)"
-        --set
-        mailPrimaryAddress=""
-        --set
-        e-mail=""
+        --dn 'cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}'
+        --set oxDisplayName="<firstname> <lastname> (<username>)"
+        --set mailPrimaryAddress=""
+        --set e-mail=""
+        --set isOxUser="OK"
       changed_when:
         - "ox_connector_modify_usertemplate_set_oxdisplayname_in_user_template.stdout is search('Object modified')"
       register: "ox_connector_modify_usertemplate_set_oxdisplayname_in_user_template"
