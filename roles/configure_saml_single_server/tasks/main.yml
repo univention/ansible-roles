@@ -1,5 +1,4 @@
 ---
-
 - name: "configure_saml_single_server | Set basic UCR config variables"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -30,8 +29,13 @@
   # yamllint enable rule:line-length
   changed_when: "configure_saml_single_server_ipmanagedclients.stdout is search('Object created')"
   failed_when:
+    # we are fine when ...
+    #   - everything is "ok" (rc == 0)
+    #   - we have an error, but we see "[ip] already in use" in either stdout or stderr
+    #     (we basically are OK with that specific error)
     - "configure_saml_single_server_ipmanagedclients.rc > 0"
     - "'already in use' not in configure_saml_single_server_ipmanagedclients.stdout"
+    - "'already in use' not in configure_saml_single_server_ipmanagedclients.stderr"
   register: "configure_saml_single_server_ipmanagedclients"
   when:
     - "configure_saml_single_server_external_loadbalancer_ip is defined"
@@ -116,5 +120,3 @@
   tags:
     - "configure_saml_single_server"
     - "configure_saml_single_server_remove_default_saml_provider"
-
-...
