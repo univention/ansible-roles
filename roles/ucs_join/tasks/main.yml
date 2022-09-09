@@ -12,6 +12,9 @@
       - "ucs_join_basedn | string | length > 0"
       - "ucs_join_network_config_interface | string | length > 0"
       - "ucs_join_network_config_type | string | length > 0"
+      - "ucs_join_nameservers is iterable"
+      - "ucs_join_nameservers | list | select('search', 'nameserver([1-3]+)') | length > 0"
+      - "ucs_join_nameservers | list | select('search', '^(?!nameserver[1-3]+)') | length == 0"
     fail_msg: |
       At least one necessary variable is not set.
       Skip this check with --skip-tags ucs_join_check_common_preconditions
@@ -202,33 +205,33 @@
     - name: "ucs_join | Use static network setting (additional interfaces)"
       univention.ucs_modules.univention_config_registry:
         kvlist:
-          - key: "interfaces/{{ ucs_join_item.key }}/type"
+          - key: "interfaces/{{ ucs_join_network_static_additional_interfaces_item.key }}/type"
             value: "static"
-          - key: "interfaces/{{ ucs_join_item.key }}/address"
-            value: "{{ ucs_join_item.value | ansible.utils.ipaddr('address') }}"
-          - key: "interfaces/{{ ucs_join_item.key }}/netmask"
-            value: "{{ ucs_join_item.value | ansible.utils.ipaddr('netmask') }}"
-          - key: "interfaces/{{ ucs_join_item.key }}/network"
-            value: "{{ ucs_join_item.value | ansible.utils.ipaddr('network') }}"
-          - key: "interfaces/{{ ucs_join_item.key }}/broadcast"
-            value: "{{ ucs_join_item.value | ansible.utils.ipaddr('broadcast') }}"
+          - key: "interfaces/{{ ucs_join_network_static_additional_interfaces_item.key }}/address"
+            value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('address') }}"
+          - key: "interfaces/{{ ucs_join_network_static_additional_interfaces_item.key }}/netmask"
+            value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('netmask') }}"
+          - key: "interfaces/{{ ucs_join_network_static_additional_interfaces_item.key }}/network"
+            value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('network') }}"
+          - key: "interfaces/{{ ucs_join_network_static_additional_interfaces_item.key }}/broadcast"
+            value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when: "ucs_join_network_config_type != 'dhcp'"
       loop: "{{ ucs_join_network_config_static_additional_interfaces | default([]) | dict2items }}"
       loop_control:
-        loop_var: "ucs_join_item"
+        loop_var: "ucs_join_network_static_additional_interfaces_item"
       tags:
         - "ucs_join_network_settings_static_additional_interfaces"
 
     - name: "ucs_join | Use static network setting (network routes)"
       univention.ucs_modules.univention_config_registry:
         kvlist:
-          - key: "interfaces/{{ ucs_join_item['interface'] }}/route/{{ ucs_join_item['index'] }}"
-            value: "{{ ucs_join_item['route'] }}"
+          - key: "interfaces/{{ ucs_join_routes_item['interface'] }}/route/{{ ucs_join_routes_item['index'] }}"
+            value: "{{ ucs_join_routes_item['route'] }}"
       check_mode: false
       loop: "{{ ucs_join_network_config_static_routes | default([]) }}"
       loop_control:
-        loop_var: "ucs_join_item"
+        loop_var: "ucs_join_routes_item"
       tags:
         - "ucs_join_network_settings_static_routes"
 
@@ -236,15 +239,15 @@
       univention.ucs_modules.univention_config_registry:
         kvlist:
           - key: "dns/forwarder{{ ucs_join_index +1 }}"
-            value: "{{ ucs_join_item }}"
+            value: "{{ ucs_join_network_config_static_dns_servers_item }}"
       check_mode: false
       loop: "{{ ucs_join_network_config_static_dns_servers | default([]) }}"
       loop_control:
-        index_var: "ucs_join_index"
-        loop_var: "ucs_join_item"
+        index_var: "ucs_join_network_config_static_dns_servers_index"
+        loop_var: "ucs_join_network_config_static_dns_servers_item"
       when: "ucs_join_network_config_type != 'dhcp'"
       tags:
-        - "ucs_join_network_settingsstatic_dns"
+        - "ucs_join_network_settings_static_dns"
 
   when: "ucs_join_system_setup_status.stat.exists"
   tags:
@@ -317,6 +320,30 @@
   tags:
     - "ucs_join_system_setup_facts"
     - "ucs_join"
+
+- name: "ucs_join | configure nameserver"
+  block:
+    - name: "ucs_join | Refresh facts"
+      ansible.builtin.setup:
+      changed_when: false
+
+    - name: "ucs_join | {{ ansible_local['ucr']['server/role'] | split('_') | last }} | configure nameserver"
+      univention.ucs_modules.univention_config_registry:
+        state: "{{ ucs_join_nameservers_item.value.state | default('present') }}"
+        kvlist:
+          - key: "{{ ucs_join_nameservers_item.key }}"
+            value: "{{ ucs_join_nameservers_item.value.server | default('8.8.8.8') }}"
+      loop: "{{ ucs_join_nameservers | dict2items }}"
+      loop_control:
+        loop_var: "ucs_join_nameservers_item"
+      when:
+        - "ucs_join_nameservers_item.key | regex_search('nameserver([1-3]+)')"
+      tags:
+        - "ucs_join_configure_namserver"
+  tags:
+    - "always"
+    - "ucs_join"
+    - "ucs_join_namserver"
 
 - name: "ucs_join | Run Univention Join Scripts"
   block:
