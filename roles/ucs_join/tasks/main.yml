@@ -238,7 +238,7 @@
     - name: "ucs_join | Use static network setting (dns)"
       univention.ucs_modules.univention_config_registry:
         kvlist:
-          - key: "dns/forwarder{{ ucs_join_index +1 }}"
+          - key: "dns/forwarder{{ ucs_join_network_config_static_dns_servers_index +1 }}"
             value: "{{ ucs_join_network_config_static_dns_servers_item }}"
       check_mode: false
       loop: "{{ ucs_join_network_config_static_dns_servers | default([]) }}"
