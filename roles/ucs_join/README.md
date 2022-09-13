@@ -21,6 +21,7 @@ Role Variables
 - `ucs_join_hostname`(string): Remote hostname; default `{{ inventory_hostname }}`.
 - `ucs_join_domain_name`(string): The system's dns domain name.
 - `ucs_join_basedn`(string): The LDAP base domain name.
+- `ucs_join_nameservers`(dict): Configure the nameservers1-3.
 - `ucs_join_network_config_type`(string): Choose `dhcp` or `static` with the former being the default. If you choose "static" you'll have to add `ucs_join_network_config_static-*` variable as well; default: `dhcp`.
 - `ucs_join_network_config_static_ip_config`(map): The server's IPv4 address in one of the following two forms: `<ip address>/<netmask>` or CIDR form (`<ip address>/<prefix length>`. Both forms are functionally equal. Example: `192.168.0.1/255.255.255.240` or `192.168.0.1/28`.
 - `ucs_join_network_config_static_dns_servers`(list): A list of DNS servers to use in case of static network configuration. If `ucs_join_server_type` is `backup` this variable is ignored and the `master` server will be used instead.
@@ -87,6 +88,35 @@ Example Playbook
             index: 1
             route: "net 10.10.0.0 netmask 255.255.0.0 gw 10.10.0.1 metric 100"
         # ...
+```
+
+### Configure nameservers
+
+Matrix: How the nameservers should configured.
+
+All domaincontroller_* has a dns server installed.
+
+|             | domaincontroller_master | domaincontroller_backup | domaincontroller_slave  | memberserver            |
+|-------------|-------------------------|-------------------------|-------------------------|-------------------------|
+| nameserver1 | host_ip_address         | host_ip_address         | host_ip_address         | domaincontroller_master |
+| nameserver2 | fallback_nameserver     | domaincontroller_master | domaincontroller_master | domaincontroller_backup |
+| nameserver3 |                         | fallback_nameserver     | domaincontroller_backup | domaincontroller_slave  |
+
+```yaml
+- hosts: all
+  tasks:
+    - ansible.builtin.include_role:
+        name: "univention.ucs_roles.ucs_join"
+      vars:
+        ucs_join_nameservers:
+          nameserver1:
+            # local ip
+            server: "{{ ansible_local['ucr']['interfaces/' + ansible_local['ucr']['interfaces/primary'] + '/address'] }}"
+          nameserver2:
+            server: "8.8.8.8"
+            state: 'present'
+          nameserver3:
+            state: 'absent'
 ```
 
 License
