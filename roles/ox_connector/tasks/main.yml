@@ -160,7 +160,7 @@
       ansible.builtin.command: >
         udm settings/usertemplate modify
         --dn "cn=open-xchange groupware account,cn=templates,cn=univention,{{ ox_connector_basedn }}"
-        --set name="Benutzer mit Groupware-Konto"
+        --set name="{{ ox_connector_usertemplate_name }}"
         --set oxAccess="{{ ox_connector_template_name }}"
         --ignore_not_exists
       changed_when: "ox_connector_modify_usertemplate.stdout is search('Object modified')"
@@ -187,7 +187,7 @@
     - name: "ox_connector | Set oxDisplayName in usertemplate"
       ansible.builtin.command: >
         udm settings/usertemplate modify
-        --dn 'cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}'
+        --dn 'cn={{ ox_connector_usertemplate_name }},cn=templates,cn=univention,{{ ox_connector_basedn }}'
         --set oxDisplayName="<firstname> <lastname> (<username>)"
         --set mailPrimaryAddress=""
         --set e-mail=""
@@ -236,9 +236,9 @@
 
 - name: "ox_connector | Add default dn to users"
   univention.ucs_modules.univention_config_registry:
-    keys:
-      directory/manager/web/modules/users/user/add/default: >-
-        cn=Benutzer mit Groupware-Konto,cn=templates,cn=univention,{{ ox_connector_basedn }}
+    kvlist:
+      - key: "directory/manager/web/modules/users/user/add/default"
+        value: "cn={{ ox_connector_usertemplate_name }},cn=templates,cn=univention,{{ ox_connector_basedn }}"
   tags:
     - "ox_connector_default_dn"
 
