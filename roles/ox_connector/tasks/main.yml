@@ -168,7 +168,7 @@
         - "ox_connector_modify_usertemplate.rc != 0"
         - "ox_connector_modify_usertemplate.rc == 3 and
             'object not found' not in ox_connector_modify_usertemplate.stdout"
-        - "ox_connector_modify_usertemplate.stdout is not search('Already exists')"
+        - "ox_connector_modify_usertemplate.stderr is not search('Already exists')"
       register: "ox_connector_modify_usertemplate"
       tags:
         - "ox_connector_modify_usertemplate"
