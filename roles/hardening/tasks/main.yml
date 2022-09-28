@@ -10,6 +10,12 @@
     - "hardening_disable_http"
     - "hardening"
 
+- name: "hardening | Set apache2 server-signature and server-tokens"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      apache2/server-signature: "{{ hardening_apache2_server_signature }}"
+      apache2/server-tokens: "{{ hardening_apache2_server_tokens }}"
+
 - name: "hardening | Restart apache"
   ansible.builtin.service:
     name: "apache2"

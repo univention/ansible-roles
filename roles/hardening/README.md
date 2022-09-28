@@ -13,6 +13,8 @@ Role Variables
 --------------
 
 - `hardening_disable_http`(bool): If set to `true`, `http` will be disabled in apache2. Only `https` will be available; default: `true`
+- `hardening_apache2_server_tokens`(string): Set apache2 configuration to `Prod`, `Major`, `Minor`, `Min`, `OS`or `Full`. Details: https://httpd.apache.org/docs/2.4/mod/core.html#servertokens ; default: `Prod`
+- `hardening_apache2_server_signature`(string): Set apache2 configuration to `Off` , `EMail` or `On`. Details: https://httpd.apache.org/docs/2.4/mod/core.html#serversignature ; default: `Off`
 
 Dependencies
 ------------
