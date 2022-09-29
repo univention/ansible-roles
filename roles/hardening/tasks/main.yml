@@ -15,6 +15,7 @@
     keys:
       apache2/server-signature: "{{ hardening_apache2_server_signature }}"
       apache2/server-tokens: "{{ hardening_apache2_server_tokens }}"
+  register: "hardening_apache2_server_result"
 
 - name: "hardening | Restart apache"
   ansible.builtin.service:
@@ -22,8 +23,9 @@
     state: "restarted"
   changed_when: false
   when:
-    - "hardening_disable_http | bool"
-    - "hardening_disable_http_result.changed"
+    - "hardening_disable_http | bool and hardening_disable_http_result.changed
+      or hardening_apache2_server_result.changed"
+
   tags:
     - "hardening_restart_http"
     - "hardening"
