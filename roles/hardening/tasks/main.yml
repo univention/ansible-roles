@@ -184,7 +184,7 @@
 - name: "hardening | Disable saml idp show error"
   univention.ucs_modules.univention_config_registry:
     keys:
-      saml/idp/show-errors: "false"
+      saml/idp/show-errors: "False"
   register: "hardening_disable_saml_idp_show_errors"
   when: "hardening_disable_saml_idp_show_errors | bool"
   tags:
@@ -194,7 +194,7 @@
 - name: "hardening | Disable saml idp error reporting"
   univention.ucs_modules.univention_config_registry:
     keys:
-      saml/idp/show-error-reporting: "false"
+      saml/idp/show-error-reporting: "False"
   register: "hardening_disable_saml_idp_error_reporting"
   when: "hardening_disable_saml_idp_error_reporting | bool"
   tags:
