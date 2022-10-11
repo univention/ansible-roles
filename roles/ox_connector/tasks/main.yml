@@ -184,7 +184,12 @@
       tags:
         - "ox_connector_remove_duplicate_usertemplate"
 
+    - name: "ox_connector | Existence of Usertemplate"
+      ansible.builtin.command: "udm settings/usertemplate list"
+      register: "ox_connector_usertemplate_exists"
+
     - name: "ox_connector | Set oxDisplayName in usertemplate"
+      when: "ox_connector_template_name in ox_connector_usertemplate_exists.stdout"
       ansible.builtin.command: >
         udm settings/usertemplate modify
         --dn 'cn={{ ox_connector_usertemplate_name }},cn=templates,cn=univention,{{ ox_connector_basedn }}'
