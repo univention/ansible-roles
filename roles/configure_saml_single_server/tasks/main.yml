@@ -65,6 +65,15 @@
     - "configure_saml_single_server"
     - "configure_saml_single_server_restart_apache"
 
+- name: "configure_saml_single_server | Wait IDP to be there"
+  ansible.builtin.uri:
+    url: "https://{{ configure_saml_single_server_external_hostname }}/simplesamlphp/saml2/idp/metadata.php"
+    method: "GET"
+  register: "configure_saml_single_server_metadata_result"
+  until: "configure_saml_single_server_metadata_result.status == 200"
+  retries: 5
+  delay: 10
+
 - name: "configure_saml_single_server | Set UCR idp server variable"
   univention.ucs_modules.univention_config_registry:
     keys:
