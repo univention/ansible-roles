@@ -195,12 +195,22 @@
             value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('netmask') }}"
           - key: "interfaces/{{ ucs_join_network_config_interface }}/network"
             value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('network') }}"
-          - key: "interfaces/{{ ucs_join_network_config_interface }}/broadcast"
-            value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when: "ucs_join_network_config_type != 'dhcp'"
       tags:
         - "ucs_join_network_settings_static_interface"
+
+    - name: "ucs_join | Use static network setting [broadcast] (interface)"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "interfaces/{{ ucs_join_network_config_interface }}/broadcast"
+            value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('broadcast') }}"
+      check_mode: false
+      when:
+        - "ucs_join_network_config_type != 'dhcp'"
+        - "ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('broadcast') | length > 0"
+      tags:
+        - "ucs_join_network_settings_static_interface_broadcast"
 
     - name: "ucs_join | Use static network setting (additional interfaces)"
       univention.ucs_modules.univention_config_registry:
@@ -222,6 +232,23 @@
         loop_var: "ucs_join_network_static_additional_interfaces_item"
       tags:
         - "ucs_join_network_settings_static_additional_interfaces"
+
+    - name: "ucs_join | Use static network setting [broadcast] (additional interfaces)"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "interfaces/{{ ucs_join_network_settings_static_additional_interfaces_broadcast_item.key }}/broadcast"
+            value: "{{ ucs_join_network_settings_static_additional_interfaces_broadcast_item.value
+                        | ansible.utils.ipaddr('broadcast') }}"
+      check_mode: false
+      when:
+        - "ucs_join_network_config_type != 'dhcp'"
+        - "ucs_join_network_settings_static_additional_interfaces_broadcast_item.value
+              | ansible.utils.ipaddr('broadcast') | length > 0"
+      loop: "{{ ucs_join_network_config_static_additional_interfaces | default([]) | dict2items }}"
+      loop_control:
+        loop_var: "ucs_join_network_settings_static_additional_interfaces_broadcast_item"
+      tags:
+        - "ucs_join_network_settings_static_additional_interfaces_broadcast"
 
     - name: "ucs_join | Use static network setting (network routes)"
       univention.ucs_modules.univention_config_registry:
