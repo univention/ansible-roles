@@ -2,5 +2,22 @@
 
 hardening_disable_http: true
 ansible_processor_cores: "1"
+hardening_hsts: true
+hardening_apache2_ssl_tlsv13: true
+hardening_apache2_server_signature: "Off"
+hardening_apache2_server_tokens: "Prod"
+hardening_apache2_ciphersuite: "HIGH"
+hardening_honorcipherorder: true
+hardening_umc_session_cookie: true
+hardening_umc_secure_cookie: true
+hardening_umc_cookie_samesite: "Strict"
+hardening_saml_idp_language_cookie_samesite: "Strict"
+hardening_saml_idp_language_cookie: true
+hardening_saml_idp_session_cookie_samesite: "Strict"
+hardening_saml_idp_session_cookie: true
+hardening_disable_umc_http_tracebacks: true
+hardening_disable_udm_rest_tracebacks: true
+hardening_disable_saml_idp_error_reporting: true
+hardening_disable_saml_idp_show_errors: true
 
 ...

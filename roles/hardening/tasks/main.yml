@@ -10,14 +10,56 @@
     - "hardening_disable_http"
     - "hardening"
 
+- name: "hardening | Disable apache ssl tlsv12 and tlsv11"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      apache2/ssl/tlsv13: "yes"
+  register: "hardening_apache2_ssl_tlsv13"
+  when: "hardening_apache2_ssl_tlsv13 | bool"
+  tags:
+    - "hardening_apache2_ssl_tlsv13"
+    - "hardening"
+
+- name: "hardening | Apache2 Enable HTTP Strict Transport Security"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      apache2/hsts: "yes"
+  register: "hardening_hsts_result"
+  when: "hardening_hsts | bool"
+  tags:
+    - "hardening_hsts"
+    - "hardening"
+
+- name: "hardening | Apache2 honorcipherorder"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      apache2/ssl/honorcipherorder: "yes"
+  register: "hardening_honorcipherorder_result"
+  when: "hardening_honorcipherorder | bool"
+  tags:
+    - "hardening_honorcipherorder"
+    - "hardening"
+
+- name: "hardening | Configure apache2"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      apache2/server-signature: "{{ hardening_apache2_server_signature }}"
+      apache2/server-tokens: "{{ hardening_apache2_server_tokens }}"
+      apache2/ssl/ciphersuite: "{{ hardening_apache2_ciphersuite }}"
+  register: "hardening_apache2_result"
+
 - name: "hardening | Restart apache"
   ansible.builtin.service:
     name: "apache2"
     state: "restarted"
   changed_when: false
   when:
-    - "hardening_disable_http | bool"
-    - "hardening_disable_http_result.changed"
+    - "hardening_disable_http | bool and hardening_disable_http_result.changed
+      or hardening_hsts | bool and hardening_hsts_result.changed
+      or hardening_honorcipherorder | bool and hardening_honorcipherorder_result.changed
+      or hardening_apache2_ssl_tlsv13 | bool and hardening_apache2_ssl_tlsv13.changed
+      or hardening_apache2_result.changed"
+
   tags:
     - "hardening_restart_http"
     - "hardening"
@@ -49,6 +91,7 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/http/enforce-secure-cookie: "true"
+  when: "hardening_umc_secure_cookie | bool"
   tags:
     - "hardening_secure_cookie_flag"
     - "hardening"
@@ -57,6 +100,15 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       umc/http/enforce-session-cookie: "true"
+  when: "hardening_umc_session_cookie | bool"
+  tags:
+    - "hardening_session_cookies_enforcement"
+    - "hardening"
+
+- name: "hardening | UMC cookies samesite"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/http/cookie/samesite: "{{ hardening_umc_cookie_samesite }}"
   tags:
     - "hardening_session_cookies_enforcement"
     - "hardening"
@@ -67,6 +119,86 @@
       umc/server/processes: "{{ ansible_processor_cores | quote }}"
   tags:
     - "hardening_set_processes_limit"
+    - "hardening"
+
+- name: "hardening | Disable directory manager rest tracebacks"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/rest/show-tracebacks: "false"
+  register: "hardening_disable_udm_rest_tracebacks"
+  when: "hardening_disable_udm_rest_tracebacks | bool"
+  tags:
+    - "hardening_disable_udm_rest_tracebacks"
+    - "hardening"
+
+- name: "hardening | Disable umc http tracebacks"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      umc/http/show_tracebacks: "false"
+  register: "hardening_disable_umc_https_tracebacks"
+  when: "hardening_disable_umc_http_tracebacks | bool"
+  tags:
+    - "hardening_disable_umc_http_tracebacks"
+    - "hardening"
+
+- name: "hardening | Ser secure saml idp language-cookie (and saml/idp/https)"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      saml/idp/https: "true"
+      saml/idp/language-cookie/secure: "yes"
+  register: "hardening_saml_idp_language_cookie"
+  when: "hardening_saml_idp_language_cookie | bool"
+  tags:
+    - "hardening_saml_idp_language_cookie"
+    - "hardening"
+
+- name: "hardening | Ser secure saml idp session-cookie (and saml/idp/https)"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      saml/idp/https: "true"
+      saml/idp/session-cookie/secure: "yes"
+  register: "hardening_saml_idp_session_cookie"
+  when: "hardening_saml_idp_session_cookie | bool"
+  tags:
+    - "hardening_saml_idp_session_cookie"
+    - "hardening"
+
+- name: "hardening | Set saml idp session cookie samesite"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      saml/idp/session-cookie/samesite: "{{ hardening_saml_idp_session_cookie_samesite }}"
+  register: "hardening_saml_idp_session_cookie_samesite"
+  tags:
+    - "hardening_disable_saml_idp_session_cookie_samesite"
+    - "hardening"
+
+- name: "hardening | Set saml idp language cookie samesite"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      saml/idp/language-cookie/samesite: "{{ hardening_saml_idp_language_cookie_samesite }}"
+  register: "hardening_saml_idp_language_cookie_samesite"
+  tags:
+    - "hardening_disable_saml_idp_language_cookie_samesite"
+    - "hardening"
+
+- name: "hardening | Disable saml idp show error"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      saml/idp/show-errors: "False"
+  register: "hardening_disable_saml_idp_show_errors"
+  when: "hardening_disable_saml_idp_show_errors | bool"
+  tags:
+    - "hardening_disable_saml_idp_show_errors"
+    - "hardening"
+
+- name: "hardening | Disable saml idp error reporting"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      saml/idp/show-error-reporting: "False"
+  register: "hardening_disable_saml_idp_error_reporting"
+  when: "hardening_disable_saml_idp_error_reporting | bool"
+  tags:
+    - "hardening_disable_saml_idp_error_reporting"
     - "hardening"
 
 ...
