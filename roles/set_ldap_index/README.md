@@ -1,4 +1,4 @@
-Configure UCS license
+Configure LDAP Index
 =========
 
 This role adds/removes additional ldap indexes. Slapd.service is stopped. Run this role only in maintenance.

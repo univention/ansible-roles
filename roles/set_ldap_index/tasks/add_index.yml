@@ -22,7 +22,7 @@
             argv:
               - "/usr/share/univention-ldap/ldap_setup_index"
               - "--add-{{ ldap_search_syntax }}"
-              - "{{ set_ldap_index_rm_index }}"
+              - "{{ set_ldap_index_add_index }}"
 
         - name: "set_ldap_index | Start slapd.service"
           ansible.builtin.systemd:

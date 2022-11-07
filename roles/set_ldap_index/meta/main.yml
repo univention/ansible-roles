@@ -3,7 +3,7 @@
 galaxy_info:
   role_name: "set_ldap_index"
   author: "Univention"
-  description: "Apply UCS license or obtain a new one."
+  description: "Add LDAP indexes."
   company: "Univention GmbH"
 
   issue_tracker_url: "https://forge.univention.org"
@@ -21,7 +21,7 @@ galaxy_info:
     - "univention"
     - "ucs"
     - "bootstrap"
-    - "license"
+    - "index"
 
 dependencies: []
 
