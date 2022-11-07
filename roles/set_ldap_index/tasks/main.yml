@@ -1,0 +1,67 @@
+---
+
+- name: "set_ldap_index | add index eq"
+  ansible.builtin.include_tasks: "add_index.yml"
+  vars:
+    ldap_search_syntax: "eq"
+    set_ldap_index_add_index: "{{ set_ldap_index_equality_add }}"
+  when:
+    - "set_ldap_index_equality_add | length > 0"
+
+- name: "set_ldap_index | add index approx"
+  ansible.builtin.include_tasks: "add_index.yml"
+  vars:
+    ldap_search_syntax: "approx"
+    set_ldap_index_add_index: "{{ set_ldap_index_approx_add }}"
+  when:
+    - "set_ldap_index_approx_add | length > 0"
+
+- name: "set_ldap_index | add index presence"
+  ansible.builtin.include_tasks: "add_index.yml"
+  vars:
+    ldap_search_syntax: "pres"
+    set_ldap_index_add_index: "{{ set_ldap_index_presence_add }}"
+  when:
+    - "set_ldap_index_presence_add | length > 0"
+
+- name: "set_ldap_index | add index sub"
+  ansible.builtin.include_tasks: "add_index.yml"
+  vars:
+    ldap_search_syntax: "sub"
+    set_ldap_index_add_index: "{{ set_ldap_index_substring_add }}"
+  when:
+    - "set_ldap_index_substring_add | length > 0"
+
+- name: "set_ldap_index | rm index eq"
+  ansible.builtin.include_tasks: "rm_index.yml"
+  vars:
+    ldap_search_syntax: "eq"
+    set_ldap_index_rm_index: "{{ set_ldap_index_equality_rm }}"
+  when:
+    - "set_ldap_index_equality_rm | length > 0"
+
+- name: "set_ldap_index | rm index approx"
+  ansible.builtin.include_tasks: "rm_index.yml"
+  vars:
+    ldap_search_syntax: "approx"
+    set_ldap_index_rm_index: "{{ set_ldap_index_approx_rm }}"
+  when:
+    - "set_ldap_index_approx_rm | length > 0"
+
+- name: "set_ldap_index | rm index presence"
+  ansible.builtin.include_tasks: "rm_index.yml"
+  vars:
+    ldap_search_syntax: "pres"
+    set_ldap_index_rm_index: "{{ set_ldap_index_presence_rm }}"
+  when:
+    - "set_ldap_index_presence_rm | length > 0"
+
+- name: "set_ldap_index | rm index substring"
+  ansible.builtin.include_tasks: "rm_index.yml"
+  vars:
+    ldap_search_syntax: "sub"
+    set_ldap_index_rm_index: "{{ set_ldap_index_substring_rm }}"
+  when:
+    - "set_ldap_index_substring_rm | length > 0"
+
+...

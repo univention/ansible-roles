@@ -1,0 +1,31 @@
+---
+
+- name: "set_ldap_index | remove {{ ldap_search_syntax }} "
+  block:
+    - name: "set_ldap_index | Check current indexes"
+      ansible.builtin.command:
+        cmd: "ucr get ldap/index/{{ ldap_search_syntax }}"
+      changed_when: false
+      failed_when: false
+      register: "set_ldap_index_status"
+
+    - name: "set_ldap_index | {{ ldap_search_syntax }} index"
+      block:
+        - name: "set_ldap_index | Stop slapd.service"
+          ansible.builtin.systemd:
+            name: "slapd"
+            state: "stopped"
+
+        - name: "set_ldap_index | run {{ ldap_search_syntax }}"
+          ansible.builtin.command:
+            argv:
+              - "/usr/share/univention-ldap/ldap_setup_index"
+              - "--rm-{{ ldap_search_syntax }}"
+              - "{{ set_ldap_index_rm_index }}"
+
+        - name: "set_ldap_index | Start slapd.service"
+          ansible.builtin.systemd:
+            name: "slapd"
+            state: "started"
+      when:
+        - "set_ldap_index_rm_index in set_ldap_index_status.stdout"
