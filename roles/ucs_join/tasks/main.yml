@@ -223,8 +223,6 @@
             value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('netmask') }}"
           - key: "interfaces/{{ ucs_join_network_static_additional_interfaces_item.key }}/network"
             value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('network') }}"
-          - key: "interfaces/{{ ucs_join_network_static_additional_interfaces_item.key }}/broadcast"
-            value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when: "ucs_join_network_config_type != 'dhcp'"
       loop: "{{ ucs_join_network_config_static_additional_interfaces | default([]) | dict2items }}"
