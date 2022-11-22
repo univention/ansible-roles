@@ -10,6 +10,7 @@
       - "portal_entry_item['link'] is undefined or portal_entry_item['link'] is mapping"
       - "portal_entry_item['linkTarget'] is undefined or portal_entry_item['linkTarget'] | length > 0"
       - "portal_entry_item['icon_file'] is undefined or portal_entry_item['icon_file'] | length > 0"
+      - "portal_entry_item['icon_base64'] is undefined or portal_entry_item['icon_base64'] | length > 0"
       - "portal_entry_item['description'] is undefined or portal_entry_item['description'] is mapping"
       - "portal_entry_item['display_name'] is undefined or portal_entry_item['display_name'] is mapping"
       - "portal_entry_item['allowedGroups'] is undefined or ((portal_entry_item['allowedGroups'] is not mapping)
@@ -24,7 +25,8 @@
       - activated(boolean), default true
       - link(string)
       - linktarget(string), default "useportaldefault"
-      - icon_file(string)
+      - icon_file(string), string contains reference to a filename from the files directory
+      - icon_base64(string), string contains base64 encoded svg icon
       - description(dict)
       - display_name(dict)
       - only(string)
@@ -60,9 +62,12 @@
 
 - name: "portal_entry | Update entry in portal"
   vars:
-    portal_entry_icon_data: "{{ lookup('file', portal_entry_update_item['icon_file']) | string | b64encode
+    portal_entry_icon_from_file: "{{ lookup('file', portal_entry_update_item['icon_file']) | string | b64encode
                 if 'icon_file' in portal_entry_update_item else
                   None }}"
+    portal_entry_icon_data: "{{ portal_entry_update_item['icon_base64']
+                if 'icon_base64' in portal_entry_update_item else
+                  portal_entry_icon_from_file }}"
     portal_entry_update_drift_detection: "{{ lookup('template', 'entry_drift_detection.j2') | regex_replace('\n','')
                                               if portal_entry_drift_detection | bool else 'yes' }}"
   ansible.builtin.command: >-
