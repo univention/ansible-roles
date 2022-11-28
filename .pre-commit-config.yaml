@@ -17,19 +17,19 @@ repos:
       - id: "trailing-whitespace"
 
   - repo: "https://github.com/adrienverge/yamllint"
-    rev: "v1.27.1"
+    rev: "v1.28.0"
     hooks:
       - id: "yamllint"
         args:
           - "-c=.yamllint"
 
   - repo: "https://github.com/ansible/ansible-lint"
-    rev: "v6.3.0"
+    rev: "v6.9.0"
     hooks:
       - id: "ansible-lint"
 
-  - repo: "https://gitlab.com/pycqa/flake8"
-    rev: "4.0.1"
+  - repo: "https://github.com/PyCQA/flake8"
+    rev: "6.0.0"
     hooks:
       - id: "flake8"
 

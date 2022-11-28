@@ -4,6 +4,11 @@
   block:
     - name: "set_ldap_index | Check current indexes"
       ansible.builtin.command:
+        cmd: "univention-ldapsearch -s base -b cn=subschema objectclass=subschema objectclasses attributetypes"
+      register: "set_ldap_index_check_schema_existence"
+
+    - name: "set_ldap_index | Check current indexes"
+      ansible.builtin.command:
         cmd: "ucr get ldap/index/{{ ldap_search_syntax }}"
       changed_when: false
       failed_when: false
@@ -29,3 +34,4 @@
             state: "started"
       when:
         - "set_ldap_index_rm_index in set_ldap_index_status.stdout"
+        - "set_ldap_index_rm_index in set_ldap_index_check_schema_existence.stdout"
