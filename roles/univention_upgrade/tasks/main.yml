@@ -26,7 +26,10 @@
     --check
     --setucr
     --updateto={{ univention_upgrade_version }}
-    {% if not univention_upgrade_app_updates %}
+    {% if univention_upgrade_app_updates %}
+    --pwdfile {{ univention_upgrade_password_file }}
+    --username {{ univention_upgrade_username }}
+    {% else %}
     --disable-app-updates
     {% endif %}
   changed_when: false
@@ -65,7 +68,10 @@
     --ignoressh
     --ignoreterm
     --noninteractive
-    {% if not univention_upgrade_app_updates %}
+    {% if univention_upgrade_app_updates %}
+    --pwdfile {{ univention_upgrade_password_file }}
+    --username {{ univention_upgrade_username }}
+    {% else %}
     --disable-app-updates
     {% endif %}
     --updateto={{ univention_upgrade_version }}
