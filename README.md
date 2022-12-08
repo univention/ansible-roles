@@ -1434,6 +1434,7 @@ portal_entry_entries:
       de_DE:        # (string)           | F.e. german translation.
       en_US:        # (string)           | F.e. english translation.
     icon_file:      # (string)           | Name of predefined images or local images.
+    icon_base64:    # (string)           | Image as base64 encoded string. This variables overrides the input from 'icon_file'!
     link:           # (map)              | Internal or external link.
       de_DE:        # (string)           | F.e. german translation.
       en_US:        # (string)           | F.e. english translation.
