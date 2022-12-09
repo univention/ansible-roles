@@ -75,6 +75,7 @@ Example Playbook
             parent: "category"
             state: "present"
             type: "entries"
+            target: "tab_nextcloud"
           # ...
 ```
 
@@ -100,6 +101,7 @@ portal_entry_entries:
       de_DE:        # (string)           | F.e. german translation.
       en_US:        # (string)           | F.e. english translation.
     linktarget:     # (string)           | Link target f.e. "samewindow", "newwindow", "embedded" or "useportaldefault".
+    target:         # (string)           | Link target name, to open link in the same tab_group. Works only from UCS 5.0.
     only:           # (string)           | Modify when app defined is in `portal_entry_install_list`.
     parent:         # (string)           | The type where entry should be appended, f.e. "category" or "portal".
     state:          # (string, required) | State of entry, should be "present" or "absent".

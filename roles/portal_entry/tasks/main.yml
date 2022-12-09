@@ -9,6 +9,7 @@
       - "portal_entry_item['activated'] is undefined or portal_entry_item['activated'] is boolean"
       - "portal_entry_item['link'] is undefined or portal_entry_item['link'] is mapping"
       - "portal_entry_item['linkTarget'] is undefined or portal_entry_item['linkTarget'] | length > 0"
+      - "portal_entry_item['target'] is undefined or portal_entry_item['target'] | length > 0"
       - "portal_entry_item['icon_file'] is undefined or portal_entry_item['icon_file'] | length > 0"
       - "portal_entry_item['icon_base64'] is undefined or portal_entry_item['icon_base64'] | length > 0"
       - "portal_entry_item['description'] is undefined or portal_entry_item['description'] is mapping"
@@ -25,6 +26,7 @@
       - activated(boolean), default true
       - link(string)
       - linktarget(string), default "useportaldefault"
+      - target(string)
       - icon_file(string), string contains reference to a filename from the files directory
       - icon_base64(string), string contains base64 encoded svg icon
       - description(dict)
@@ -127,6 +129,10 @@
                 --append link='{{ lang }} "{{ text }}"'
               {% endif %}
             {% endfor %}
+          {% endif %}
+          {% if 'target' in portal_entry_update_item and
+              ansible_local['ucr']['version/version'] | default('99') | float >= 5 %}
+                --set target={{ portal_entry_update_item['target'] }}
           {% endif %}
           --set anonymous='{{ "TRUE" if portal_entry_update_item['anonymous'] | default(false) else "FALSE" }}'
           --set linkTarget={{ portal_entry_update_item['linktarget'] | default('useportaldefault') }}
