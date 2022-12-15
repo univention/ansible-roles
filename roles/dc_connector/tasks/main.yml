@@ -18,6 +18,73 @@
       tags:
         - "dc_connector_dns_alias"
 
+    - name: "dovecot_connector | Install dovecot-connector"
+      vars:
+        install_packages_app_version_map: "{{ dovecot_connector_app_version_map }}"
+        install_packages_temp_pw_file: "{{ dovecot_connector_temp_pw_file }}"
+        install_packages_install_apps:
+          - "dovecot-connector"
+        install_packages_additional_options: >
+          DCC_ADM_ACCEPTED_EXIT_CODES="{{ dovecot_connector_adm_accepted_exit_codes }}"
+          DCC_ADM_HOST="{{ dovecot_connector_adm_host }}"
+          DCC_ADM_PORT="{{ dovecot_connector_adm_port }}"
+          DCC_ADM_USERNAME="{{ dovecot_connector_adm_username }}"
+          DCC_ADM_PASSWORD="{{ dovecot_connector_adm_password }}"
+          DCC_ADM_URI="{{ dovecot_connector_adm_uri }}"
+          DCC_DC_VMAIL_TEMPLATE="{{ dovecot_connector_dc_vmail_template }}"
+          DCC_LOGLEVEL="{{ dovecot_connector_loglevel }}"
+      ansible.builtin.include_role:
+        name: "install_packages"
+      no_log: "{{ dovecot_connector_hide_logging }}"
+      tags:
+        - "dovecot_connector_install"
+
+    - name: "dovecot_connector | Get current settings"
+      ansible.builtin.command:
+        cmd: "univention-app configure dovecot-connector --list"
+      changed_when: false
+      register: "dovecot_connector_get_current_settings_result"
+      tags:
+        - "dovecot_connector_get_current_settings"
+
+    - name: "dovecot_connector | Check if settings are still correct"
+      vars:
+        dovecot_connector_settings_correct: true
+      ansible.builtin.set_fact:
+        dovecot_connector_settings_correct: "{{ dovecot_connector_settings_correct
+          if (dovecot_connector_get_current_settings_result.stdout is search(dovecot_connector_item)) else false }}"
+      loop:
+        - "DCC_ADM_ACCEPTED_EXIT_CODES: '{{ dovecot_connector_adm_accepted_exit_codes }}'"
+        - "DCC_ADM_HOST: '{{ dovecot_connector_adm_host }}'"
+        - "DCC_ADM_PORT: {{ dovecot_connector_adm_port }}"
+        - "DCC_ADM_USERNAME: '{{ dovecot_connector_adm_username }}'"
+        - "DCC_ADM_PASSWORD: '{{ dovecot_connector_adm_password }}'"
+        - "DCC_ADM_URI: '{{ dovecot_connector_adm_uri }}'"
+        - "DCC_DC_VMAIL_TEMPLATE: '{{ dovecot_connector_dc_vmail_template }}'"
+        - "DCC_LOGLEVEL: '{{ dovecot_connector_loglevel }}'"
+      loop_control:
+        loop_var: "dovecot_connector_item"
+      no_log: "{{ dovecot_connector_hide_logging }}"
+      tags:
+        - "dovecot_connector_check_settings"
+
+    - name: "dovecot_connector | Configure settings"
+      ansible.builtin.command:
+        cmd: >
+          univention-app configure dovecot-connector --set
+          DCC_ADM_ACCEPTED_EXIT_CODES="{{ dovecot_connector_adm_accepted_exit_codes }}"
+          DCC_ADM_HOST="{{ dovecot_connector_adm_host }}"
+          DCC_ADM_PORT={{ dovecot_connector_adm_port }}
+          DCC_ADM_USERNAME="{{ dovecot_connector_adm_username }}"
+          DCC_ADM_PASSWORD="{{ dovecot_connector_adm_password }}"
+          DCC_ADM_URI="{{ dovecot_connector_adm_uri }}"
+          DCC_DC_VMAIL_TEMPLATE="{{ dovecot_connector_dc_vmail_template }}"
+          DCC_LOGLEVEL="{{ dovecot_connector_loglevel }}"
+
+      no_log: "{{ dovecot_connector_hide_logging }}"
+      when: "not dovecot_connector_settings_correct"
+      tags:
+        - "dovecot_connector_configure"
   when: "dc_connector_server_type|default('master') != 'backup'"
   tags:
     - "dc_connector"

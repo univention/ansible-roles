@@ -18,7 +18,17 @@ Role Variables
 - `ox_connector_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`.
 The default is `master`, which also means "standalone".
 If `backup` is chosen the following variable also has to be set; default: `master`.
-
+- `dovecot_connector_app_version_map`(map): A dictionary that maps application names to specific version of dovecot connector. default: `""`
+- `dovecot_connector_temp_pw_file`:
+- `dovecot_connector_adm_accepted_exit_codes`(string):
+- `dovecot_connector_adm_host`(string): ""
+- `dovecot_connector_adm_port`(string): ""
+- `dovecot_connector_adm_username`(string): ""
+- `dovecot_connector_adm_password`(string): ""
+- `dovecot_connector_adm_uri`(string): ""
+- `dovecot_connector_dc_vmail_template`(string): ""
+- `dovecot_connector_loglevel`(string): ""
+- `dovecot_connector_hide_logging`(bool): default: `true`
 
 Dependencies
 ------------

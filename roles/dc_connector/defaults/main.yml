@@ -1,9 +1,19 @@
 ---
 
-dc_connector_server_type: "master"
-dc_connector_basedn: ""
-dc_connector_domain_name: ""
-dc_connector_domain_prefix: ""
-dc_connector_soap_prefix: "dc-provisioning"
+dovecot_connector_server_type: "master"
+dovecot_connector_basedn: ""
+dovecot_connector_domain_name: ""
+dovecot_connector_domain_prefix: ""
+dovecot_connector_soap_prefix: "dc-provisioning"
+dovecot_connector_app_version_map:
+dovecot_connector_adm_accepted_exit_codes: ""
+dovecot_connector_adm_host: ""
+dovecot_connector_adm_port: ""
+dovecot_connector_adm_username: ""
+dovecot_connector_adm_password: ""
+dovecot_connector_adm_uri: ""
+dovecot_connector_dc_vmail_template: ""
+dovecot_connector_loglevel: ""
+dovecot_connector_hide_logging: true
 
 ...
