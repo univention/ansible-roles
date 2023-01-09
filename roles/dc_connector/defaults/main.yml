@@ -1,9 +1,0 @@
----
-
-dc_connector_server_type: "master"
-dc_connector_basedn: ""
-dc_connector_domain_name: ""
-dc_connector_domain_prefix: ""
-dc_connector_soap_prefix: "dc-provisioning"
-
-...

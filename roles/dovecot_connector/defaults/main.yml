@@ -1,0 +1,20 @@
+---
+
+dovecot_connector_server_type: "master"
+dovecot_connector_basedn: ""
+dovecot_connector_domain_name: ""
+dovecot_connector_domain_prefix: "portal"
+dovecot_connector_soap_prefix: "dc-provisioning"
+dovecot_connector_app_version_map:
+  dovecot-connector: "1.0.1"
+dovecot_connector_adm_accepted_exit_codes: "68 75"
+dovecot_connector_adm_host: "{{ dovecot_connector_soap_prefix }}.{{ dovecot_connector_domain_name }}"
+dovecot_connector_adm_port: "443"
+dovecot_connector_adm_username: ""
+dovecot_connector_adm_password: ""
+dovecot_connector_adm_uri: "https://{dcc_adm_host}:{dcc_adm_port:d}/doveadm/v1"
+dovecot_connector_dc_vmail_template: "/data/usr/local/dovecot/vmail/{uuid[0]}{uuid[1]}/{uuid}"
+dovecot_connector_loglevel: "INFO"
+dovecot_connector_hide_logging: true
+
+...
