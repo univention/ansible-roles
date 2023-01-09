@@ -1,9 +1,9 @@
 ---
 
 galaxy_info:
-  role_name: "dc_connector"
+  role_name: "dovecot_connector"
   author: "Univention"
-  description: "Install and configure dc-connector."
+  description: "Install and configure dovecot-connector."
   company: "Univention GmbH"
 
   issue_tracker_url: "https://forge.univention.org"
