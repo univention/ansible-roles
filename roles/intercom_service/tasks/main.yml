@@ -18,13 +18,6 @@
         path: "/etc/intercom-portal.secret"
       register: "portal_secret_file"
 
-    - name: "Write portal_secret for intercom"
-      ansible.builtin.copy:
-        content: "{{ lookup('password', '/dev/null length=30 chars=ascii_letters') }}"
-        dest: "/etc/intercom-portal.secret"
-        mode: "644"
-      when: "not portal_secret_file.stat.exists"
-
     - name: "Check existence of intercom secret"
       ansible.builtin.stat:
         path: "/etc/intercom.secret"
@@ -49,8 +42,13 @@
 
     - name: "Failure if one of the secrets does not exist"
       ansible.builtin.fail:
-        msg: "Check if /etc/matrix.secret and /etc/intercom-client.secret exists!"
-      when: "not matrix_secret_file.stat.exists or not intercom_client_secret_file.stat.exists"
+        msg: "Check if /etc/matrix.secret
+        /etc/intercom-portal.secret
+        and /etc/intercom-client.secret exists!"
+      when:
+        - "not matrix_secret_file.stat.exists or
+          not intercom_client_secret_file.stat.exists or
+          not portal_secret_file.stat.exists"
 
     - name: "Install ICS"
       ansible.builtin.command: >
