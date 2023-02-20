@@ -13,7 +13,6 @@
 - name: "univention_upgrade | Clean apt package cache"
   ansible.builtin.command:
     cmd: "apt clean"
-    warn: false
   changed_when: false
   when: "univention_upgrade_clear_apt_cache"
   tags:
