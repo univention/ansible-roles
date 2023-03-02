@@ -226,7 +226,7 @@
             value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('network') }}"
       check_mode: false
       when: "ucs_join_network_config_type != 'dhcp'"
-      loop: "{{ ucs_join_network_config_static_additional_interfaces | default([]) | dict2items }}"
+      loop: "{{ ucs_join_network_config_static_additional_interfaces | default({}) | dict2items }}"
       loop_control:
         loop_var: "ucs_join_network_static_additional_interfaces_item"
       tags:
@@ -243,7 +243,7 @@
         - "ucs_join_network_config_type != 'dhcp'"
         - "ucs_join_network_settings_static_additional_interfaces_broadcast_item.value
               | ansible.utils.ipaddr('broadcast')"
-      loop: "{{ ucs_join_network_config_static_additional_interfaces | default([]) | dict2items }}"
+      loop: "{{ ucs_join_network_config_static_additional_interfaces | default({}) | dict2items }}"
       loop_control:
         loop_var: "ucs_join_network_settings_static_additional_interfaces_broadcast_item"
       tags:
