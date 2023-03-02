@@ -197,7 +197,7 @@
           - key: "interfaces/{{ ucs_join_network_config_interface }}/network"
             value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('network') }}"
       check_mode: false
-      when: "ucs_join_network_config_type != 'dhcp'"
+      when: "ucs_join_network_config_type == 'static'"
       tags:
         - "ucs_join_network_settings_static_interface"
 
@@ -208,7 +208,7 @@
             value: "{{ ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when:
-        - "ucs_join_network_config_type != 'dhcp'"
+        - "ucs_join_network_config_type == 'static'"
         - "ucs_join_network_config_static_ip_config | ansible.utils.ipaddr('broadcast')"
       tags:
         - "ucs_join_network_settings_static_interface_broadcast"
@@ -225,7 +225,7 @@
           - key: "interfaces/{{ ucs_join_network_static_additional_interfaces_item.key }}/network"
             value: "{{ ucs_join_network_static_additional_interfaces_item.value | ansible.utils.ipaddr('network') }}"
       check_mode: false
-      when: "ucs_join_network_config_type != 'dhcp'"
+      when: "ucs_join_network_config_type == 'static'"
       loop: "{{ ucs_join_network_config_static_additional_interfaces | default({}) | dict2items }}"
       loop_control:
         loop_var: "ucs_join_network_static_additional_interfaces_item"
@@ -240,7 +240,7 @@
                         | ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when:
-        - "ucs_join_network_config_type != 'dhcp'"
+        - "ucs_join_network_config_type == 'static'"
         - "ucs_join_network_settings_static_additional_interfaces_broadcast_item.value
               | ansible.utils.ipaddr('broadcast')"
       loop: "{{ ucs_join_network_config_static_additional_interfaces | default({}) | dict2items }}"
@@ -271,7 +271,7 @@
       loop_control:
         index_var: "ucs_join_network_config_static_dns_servers_index"
         loop_var: "ucs_join_network_config_static_dns_servers_item"
-      when: "ucs_join_network_config_type != 'dhcp'"
+      when: "ucs_join_network_config_type == 'static'"
       tags:
         - "ucs_join_network_settings_static_dns"
 
