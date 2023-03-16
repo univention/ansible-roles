@@ -35,19 +35,12 @@
         path: "/etc/intercom-client.secret"
       register: "intercom_client_secret_file"
 
-    - name: "Check existence of matrix secret"
-      ansible.builtin.stat:
-        path: "/etc/matrix.secret"
-      register: "matrix_secret_file"
-
     - name: "Failure if one of the secrets does not exist"
       ansible.builtin.fail:
-        msg: "Check if /etc/matrix.secret
-        /etc/intercom-portal.secret
-        and /etc/intercom-client.secret exists!"
+        msg: "/etc/intercom-portal.secret
+          and /etc/intercom-client.secret exists!"
       when:
-        - "not matrix_secret_file.stat.exists or
-          not intercom_client_secret_file.stat.exists or
+        - "not intercom_client_secret_file.stat.exists or
           not portal_secret_file.stat.exists"
 
     - name: "Install ICS"
