@@ -235,7 +235,7 @@
     # it is part of the applied pre-OX-Connector UCS mailstack ldap schema.
     # The decision in which context(s) to provision a group is based upon:
     # - isOxGroup=OX and
-    # - the group has members that are OX-Users (isOxUser=OK) 
+    # - the group has members that are OX-Users (isOxUser=OK)
     # Then the group will be provisioned in all contexts it has members for.
     - name: "ox_connector | Disable UDMWeb for Group"
       ansible.builtin.command: >
