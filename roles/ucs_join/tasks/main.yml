@@ -97,8 +97,19 @@
       tags:
         - "ucs_join_system_setup_profile"
 
+    - name: "ucs_join | Use offline repository"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "repository/online"
+            value: "no"
+      no_log: "{{ ucs_join_hide_logging }}"
+      tags:
+        - "ucs_join_system_setup_ensure_offline_repository"
+
     - name: "ucs_join | primary | Carry out UCS join (primary/standalone)"
       ansible.builtin.command: "/usr/lib/univention-system-setup/scripts/setup-join.sh"
+      environment:
+        DEBIAN_FRONTEND: "noninteractive"
       check_mode: false
       when: "ucs_join_server_type | default('master') != 'backup'"
       tags:
@@ -141,6 +152,8 @@
             /usr/lib/univention-system-setup/scripts/setup-join.sh
             --dcaccount "{{ ucs_join_admin_user_name }}"
             --password_file "{{ ucs_join_admin_pw_file.path }}"
+          environment:
+            DEBIAN_FRONTEND: "noninteractive"
           check_mode: false
           tags:
             - "ucs_join_system_setup_backup_run"
@@ -397,6 +410,8 @@
         univention-run-join-scripts
         -dcaccount "{{ ucs_join_admin_user_name }}"
         -dcpwd "{{ ucs_join_admin_pw_file.path }}"
+      environment:
+        DEBIAN_FRONTEND: "noninteractive"
       changed_when: false
       when: "ucs_join_admin_pw_file is not skipped"
       tags:
