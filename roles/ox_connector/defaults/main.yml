@@ -1,5 +1,4 @@
 ---
-
 ox_connector_basedn: ""
 ox_connector_app_version_map: ""
 ox_connector_temp_pw_file: ""
@@ -12,5 +11,8 @@ ox_connector_soap_prefix: "ox-provisioning"
 ox_connector_template_name: "standard"
 ox_connector_hide_logging: true
 ox_connector_usertemplate_name: "Benutzer mit Groupware-Konto"
+ox_connector_default_context: "9999"
+ox_connector_imap_server: "imap://127.0.0.1:143"
+ox_connector_smtp_server: "smtp://127.0.0.1:26"
 
 ...

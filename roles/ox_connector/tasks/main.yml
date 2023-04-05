@@ -25,10 +25,10 @@
         install_packages_install_apps:
           - "ox-connector"
         install_packages_additional_options: >
-          DEFAULT_CONTEXT=9999
+          DEFAULT_CONTEXT={{ ox_connector_default_context }}
           OX_SOAP_SERVER=https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}
-          OX_IMAP_SERVER=imap://127.0.0.1:143
-          OX_SMTP_SERVER=smtp://127.0.0.1:26
+          OX_IMAP_SERVER={{ ox_connector_imap_server }}
+          OX_SMTP_SERVER={{ ox_connector_smtp_server }}
           OX_MASTER_ADMIN={{ ox_connector_master_admin }}
           OX_MASTER_PASSWORD={{ ox_connector_master_password }}
       ansible.builtin.include_role:
@@ -55,6 +55,9 @@
         - "OX_SOAP_SERVER: 'https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}'"
         - "OX_MASTER_ADMIN: '{{ ox_connector_master_admin }}'"
         - "OX_MASTER_PASSWORD: '{{ ox_connector_master_password }}'"
+        - "OX_IMAP_SERVER: '{{ ox_connector_imap_server }}'"
+        - "OX_SMTP_SERVER: '{{ ox_connector_smtp_server }}'"
+        - "DEFAULT_CONTEXT: {{ ox_connector_default_context }}"
       loop_control:
         loop_var: "ox_connector_item"
       no_log: "{{ ox_connector_hide_logging }}"
@@ -68,6 +71,9 @@
           OX_SOAP_SERVER=https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}
           OX_MASTER_ADMIN={{ ox_connector_master_admin }}
           OX_MASTER_PASSWORD={{ ox_connector_master_password }}
+          OX_IMAP_SERVER={{ ox_connector_imap_server }}
+          OX_SMTP_SERVER={{ ox_connector_smtp_server }}
+          DEFAULT_CONTEXT={{ ox_connector_default_context }}
       no_log: "{{ ox_connector_hide_logging }}"
       when: "not ox_connector_settings_correct"
       tags:
@@ -101,8 +107,8 @@
       ansible.builtin.command: >
         udm oxmail/oxcontext create
         --position "cn=open-xchange,{{ ox_connector_basedn }}"
-        --set contextid=9999
-        --set name=9999
+        --set contextid={{ ox_connector_default_context }}
+        --set name={{ ox_connector_default_context }}
         --ignore_exists
       changed_when: "ox_connector_ox_context.stdout is search('Object created')"
       register: "ox_connector_ox_context"
@@ -224,6 +230,23 @@
       register: "ox_connector_disable_udmweb_ressource"
       tags:
         - "ox_connector_disable_udmweb_ressource"
+
+    # The oxContextGroup is not evaluated in the OX-Connector anyway, but
+    # it is part of the applied pre-OX-Connector UCS mailstack ldap schema.
+    # The decision in which context(s) to provision a group is based upon:
+    # - isOxGroup=OX and
+    # - the group has members that are OX-Users (isOxUser=OK)
+    # Then the group will be provisioned in all contexts it has members for.
+    - name: "ox_connector | Disable UDMWeb for Group"
+      ansible.builtin.command: >
+        udm settings/extended_attribute modify \
+          --dn "cn=oxContextGroup,cn=open-xchange,cn=custom attributes,cn=univention,{{ ox_connector_basedn }}" \
+          --set mayChange=0 \
+          --set disableUDMWeb=1
+      changed_when: "ox_connector_disable_udmweb_group.stdout is search('Object modified')"
+      register: "ox_connector_disable_udmweb_group"
+      tags:
+        - "ox_connector_disable_udmweb_group"
 
     - name: "ox_connector | Set oxAccess default template"
       ansible.builtin.command: >
