@@ -112,10 +112,11 @@
     - name: "univention_repository_component | Activate  {{ univention_repository_component_name }} component"
       univention.ucs_modules.univention_config_registry:
         keys: "{{ univention_repository_component }}"
+      register: "udm"
+      failed_when:
+        - "udm.changed"
+        - "udm.rc > 0"
       tags:
         - "univention_repository_component"
         - "univention_repository_component_activate"
-      register: "udm"
-      failed_when:
-        - udm.stdout is search("notAfter")
   when: "univention_repository_component_name is defined and univention_repository_component_name | length > 0"
