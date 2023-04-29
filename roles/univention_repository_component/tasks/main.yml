@@ -1,5 +1,4 @@
 ---
-
 - name: "univention_repository_component"
   vars:
     univention_repository_component: {}
@@ -9,7 +8,7 @@
         univention_repository_component_keys: "repository/online/component/{{ univention_repository_component_name }}"
       ansible.builtin.set_fact:
         univention_repository_component: "{{ univention_repository_component
-                                               | combine({univention_repository_component_keys: 'yes'}) }}"
+          | combine({univention_repository_component_keys: 'yes'}) }}"
       tags:
         - "univention_repository_component"
         - "univention_repository_component_enable_component"
@@ -67,7 +66,6 @@
         - "univention_repository_component"
         - "univention_repository_component_define_username"
 
-
     - name: "univention_repository_component | Define password in {{ univention_repository_component_name }} component"
       vars:
         univention_repository_component_keys: >-
@@ -97,7 +95,7 @@
         - "univention_repository_component_define_version"
 
     - name: "univention_repository_component
-              | Define unmaintained in {{ univention_repository_component_name }} component"
+        | Define unmaintained in {{ univention_repository_component_name }} component"
       vars:
         univention_repository_component_keys: >-
           repository/online/component/{{ univention_repository_component_name }}/unmaintained
@@ -114,9 +112,11 @@
     - name: "univention_repository_component | Activate  {{ univention_repository_component_name }} component"
       univention.ucs_modules.univention_config_registry:
         keys: "{{ univention_repository_component }}"
+      register: "udm"
+      failed_when:
+        - "udm.changed"
+        - "udm.rc > 0"
       tags:
         - "univention_repository_component"
         - "univention_repository_component_activate"
   when: "univention_repository_component_name is defined and univention_repository_component_name | length > 0"
-
-...
