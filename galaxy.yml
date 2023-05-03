@@ -45,7 +45,11 @@ tags:
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
 dependencies:
-  "univention.ucs_modules": ">=0.0.1"
+  "univention.ucs_modules": ">=1.2.0"
+  "ansible.posix": ">=1.0.0"
+  "ansible.utils": ">=2.9.0"
+  "community.general": ">=6.5.0"
+  "community.crypto": ">=2.11.1"
 
 # The URL of the originating SCM repository
 repository: "https://github.com/univention/ansible-roles"
