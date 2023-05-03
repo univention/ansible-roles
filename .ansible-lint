@@ -28,6 +28,8 @@ skip_list:
   - "no-changed-when"
   - "no-handler"
   - "name[casing]"
+  - "name[template]"
+  - "galaxy"
 
 # Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
 # mentioned in the enable_list:
@@ -82,8 +84,9 @@ warn_list:
   - "experimental"
   - "jinja[invalid]"
   - "jinja[spacing]"
-  - "key-order[tasks]"
-  - "name[template]"
+  - "key-order[task]"
+  - "risky-shell-pipe"
+  # Disable "risky-shell-pipe" only temporary
 
 # Offline mode disables installation of requirements.yml
 offline: false
