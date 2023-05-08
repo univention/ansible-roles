@@ -85,8 +85,6 @@ warn_list:
   - "jinja[invalid]"
   - "jinja[spacing]"
   - "key-order[task]"
-  - "risky-shell-pipe"
-  # Disable "risky-shell-pipe" only temporary
 
 # Offline mode disables installation of requirements.yml
 offline: false
@@ -101,5 +99,3 @@ extra_vars: {}
 # List of additional kind:pattern to be added at the top of the default
 # match list, first match determines the file kind.
 kinds: []
-
-...

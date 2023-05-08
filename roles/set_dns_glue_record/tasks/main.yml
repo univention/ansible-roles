@@ -1,5 +1,4 @@
 ---
-
 - name: "Implement DNS glue record for external host name"
   block:
     - name: "Check if all vars are set"
@@ -14,6 +13,7 @@
 
     - name: "Check if DNS forwarding already exists"
       ansible.builtin.shell: >
+        set -o pipefail
         udm dns/ns_record list
         --position relativeDomainName={{ set_dns_glue_record_host_name }},{{ set_dns_glue_record_superordinate }}
         | sed '/^$/d; s/^DN:/- &/'
@@ -38,8 +38,9 @@
       loop: "{{ glue_record_entries | default([]) }}"
       loop_control:
         loop_var: "set_dns_glue_record_item"
-      when: "item['nameserver'] == set_dns_glue_record_glue_record_nameserver and
-            item['zone'] == set_dns_glue_record_host_name"
+      when:
+        "item['nameserver'] == set_dns_glue_record_glue_record_nameserver and
+        item['zone'] == set_dns_glue_record_host_name"
       tags:
         - "set_dns_glue_record_check_record_already_exists"
 
@@ -57,5 +58,3 @@
   when: "set_dns_glue_record_create_external_hostname_glue_record | bool"
   tags:
     - "set_dns_glue_record"
-
-...
