@@ -1,5 +1,4 @@
 ---
-
 - name: "Configure OwnCloud SSO"
   block:
     - name: "Refresh facts"
@@ -7,6 +6,7 @@
 
     - name: "Get owncloud oidc secret from LDAP"
       ansible.builtin.shell: >
+        set -o pipefail
         univention-ldapsearch
         "(&(univentionObjectType=oidc/rpservice)(clientid=owncloud))" clientsecret -xLLL | sed -ne "s|clientsecret: ||p"
       register: "configure_apps_owncloud_oidc_secret_output"
@@ -65,5 +65,3 @@
       ansible.builtin.meta: "flush_handlers"
   tags:
     - "configure_apps_owncloud"
-
-...
