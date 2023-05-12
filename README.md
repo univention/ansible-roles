@@ -29,6 +29,7 @@ This repository only contains ansible roles usable in an ansible-playbook to ins
 - [configure_repository](https://github.com/univention/ansible-roles#rolesconfigure_repositoryreadmemd)
 - [configure_apps_postfix](https://github.com/univention/ansible-roles#rolesconfigure_apps_postfixreadmemd)
 - [univention_remove](https://github.com/univention/ansible-roles#rolesunivention_removereadmemd)
+- [univention_prune_kernels](https://github.com/univention/ansible-roles#rolesunivention_prune_kernelsreadmemd)
 - [set_ldap_index](https://github.com/univention/ansible-roles#rolesset_ldap_indexreadmemd)
 - [improve_usability_nextcloud](https://github.com/univention/ansible-roles#rolesimprove_usability_nextcloudreadmemd)
 - [portal_configure_title](https://github.com/univention/ansible-roles#rolesportal_configure_titlereadmemd)
@@ -1190,6 +1191,43 @@ Role Variables
 --------------
 
 - `univention_remove_name`(string): The name of the package to be removed.
+
+Dependencies
+------------
+
+none
+
+Example Playbook
+----------------
+
+
+License
+-------
+
+GNU General Public License v3.0
+
+Author Information
+------------------
+
+Univention GmbH
+www.univention.com
+
+---
+
+# roles/univention_prune_kernels/README.md
+
+Prune Kernels Univention UCS
+=========
+
+This role prunes kernels for UCS servers in order to free space at /boot.
+
+Requirements
+------------
+
+none
+
+Role Variables
+--------------
 
 Dependencies
 ------------
