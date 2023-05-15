@@ -71,8 +71,8 @@
     method: "GET"
   register: "configure_saml_single_server_metadata_result"
   until: "configure_saml_single_server_metadata_result.status == 200"
-  retries: 5
-  delay: 10
+  retries: 90
+  delay: 3
 
 - name: "configure_saml_single_server | Set UCR idp server variable"
   univention.ucs_modules.univention_config_registry:
