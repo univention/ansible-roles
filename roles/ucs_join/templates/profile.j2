@@ -33,7 +33,7 @@ dns/forwarder{{ loop.index }}="{{ dns_server }}"
 {% endif %}
 gateway="{{ ucs_join_network_config_static_gateway }}"
 {% endif %}
-{% if ucs_join_server_type == 'backup' %}
+{% if ucs_join_server_type != 'master' %}
 nameserver1="{{ ucs_join_master_server }}"
 {% endif %}
 {% for routes in ucs_join_network_config_static_routes|default([]) %}
