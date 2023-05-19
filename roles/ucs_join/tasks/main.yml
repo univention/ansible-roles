@@ -4,7 +4,7 @@
   ansible.builtin.assert:
     that:
       - "ucs_join_server_type | string | length > 0"
-      - "ucs_join_server_type in ['master', 'backup', 'slave']"
+      - "ucs_join_server_type in ['master', 'backup', 'slave', 'member']"
       - "ucs_join_admin_user_name | string | length > 0"
       - "ucs_join_root_password | string | length > 0"
       - "ucs_join_hostname | string | length > 0"
