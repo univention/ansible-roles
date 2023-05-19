@@ -116,6 +116,14 @@
         - "ucs_join_system_setup_primary"
         - "ucs_join_system_setup_standalone"
 
+    - name: "ucs_join | Ensure custom facts directory exists"
+      ansible.builtin.file:
+        path: "/etc/ansible/facts.d"
+        state: "directory"
+        mode: "0755"
+      tags:
+        - "ucs_join_custom_facts_directory"
+
     - name: "ucs_join | primary | Create UCS join profile from template"
       ansible.builtin.template:
         src: "system-setup-vars.j2"
