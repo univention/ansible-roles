@@ -4,7 +4,7 @@
   ansible.builtin.assert:
     that:
       - "ucs_join_server_type | string | length > 0"
-      - "ucs_join_server_type == 'master' or ucs_join_server_type == 'backup'"
+      - "ucs_join_server_type in ['master', 'backup', 'slave', 'member']"
       - "ucs_join_admin_user_name | string | length > 0"
       - "ucs_join_root_password | string | length > 0"
       - "ucs_join_hostname | string | length > 0"
@@ -14,8 +14,7 @@
       - "ucs_join_network_config_type | string | length > 0"
       - "ucs_join_network_config_type == 'static' or ucs_join_network_config_type == 'dhcp'"
       - "ucs_join_nameservers is iterable"
-      - "ucs_join_nameservers | list | select('search', 'nameserver([1-3]+)') | length > 0"
-      - "ucs_join_nameservers | list | select('search', '^(?!nameserver[1-3]+)') | length == 0"
+      - "ucs_join_nameservers | list | select('search', '^nameserver[1-3]$') | length > 0"
     fail_msg: |
       At least one necessary variable is not set.
       Skip this check with --skip-tags ucs_join_check_common_preconditions
@@ -42,18 +41,19 @@
     - "ucs_join"
     - "ucs_join_check_static_network_preconditions"
 
-- name: "ucs_join | Check if backup vars are set"
+- name: "ucs_join | Check that all vars for a domain join are set"
   ansible.builtin.assert:
     that:
       - "ucs_join_master_server | string | length > 0"
+      - "ucs_join_master_server | ansible.utils.ipaddr('address') | length > 0"
     fail_msg: |
       At least one necessary variable is not set.
-      Skip this check with --skip-tags ucs_join_check_backup_preconditions
+      Skip this check with --skip-tags ucs_join_check_domain_join_preconditions
   changed_when: false
-  when: "ucs_join_server_type == 'backup'"
+  when: "ucs_join_server_type | default('master') != 'master'"
   tags:
     - "ucs_join"
-    - "ucs_join_check_backup_preconditions"
+    - "ucs_join_check_domain_join_preconditions"
 
 - name: "ucs_join | Get derived admin password"
   ansible.builtin.set_fact:
@@ -88,6 +88,10 @@
     - "ucs_join_system_setup_check"
 
 - name: "ucs_join | Carry out system setup"
+  when: "not ucs_join_system_setup_status.stat.exists"
+  tags:
+    - "ucs_join"
+    - "ucs_join_system_setup"
   block:
     - name: "ucs_join | Create UCS join profile from template"
       ansible.builtin.template:
@@ -108,10 +112,18 @@
       environment:
         DEBIAN_FRONTEND: "noninteractive"
       check_mode: false
-      when: "ucs_join_server_type | default('master') != 'backup'"
+      when: "ucs_join_server_type | default('master') == 'master'"
       tags:
         - "ucs_join_system_setup_primary"
         - "ucs_join_system_setup_standalone"
+
+    - name: "ucs_join | Ensure custom facts directory exists"
+      ansible.builtin.file:
+        path: "/etc/ansible/facts.d"
+        state: "directory"
+        mode: "0755"
+      tags:
+        - "ucs_join_custom_facts_directory"
 
     - name: "ucs_join | primary | Create UCS join profile from template"
       ansible.builtin.template:
@@ -122,7 +134,10 @@
       tags:
         - "ucs_join_system_setup_profile"
 
-    - name: "ucs_join | backup | Carry out UCS join (backup)"
+    - name: "ucs_join | domain join | Carry out UCS join ({{ ucs_join_server_type }})"
+      when: "ucs_join_server_type | default('master') != 'master'"
+      tags:
+        - "ucs_join_system_setup_domain_join"
       block:
         - name: "ucs_join | Create temporary admin password file"
           ansible.builtin.tempfile:
@@ -131,9 +146,9 @@
           check_mode: false
           register: "ucs_join_admin_pw_file"
           tags:
-            - "ucs_join_system_setup_backup_admin_pw_file_temp"
+            - "ucs_join_system_setup_domain_join_admin_pw_file_temp"
 
-        - name: "ucs_join | backup | Write admin password into temporary file"
+        - name: "ucs_join | domain join | Write admin password into temporary file"
           ansible.builtin.copy:
             dest: "{{ ucs_join_admin_pw_file.path }}"
             content: "{{ ucs_join_root_password }}"
@@ -142,9 +157,9 @@
           check_mode: false
           no_log: "{{ ucs_join_hide_logging }}"
           tags:
-            - "ucs_join_system_setup_backup_admin_pw_file"
+            - "ucs_join_system_setup_domain_join_admin_pw_file"
 
-        - name: "ucs_join | backup | Carry out UCS join (backup)"
+        - name: "ucs_join | domain join | Carry out UCS join ({{ ucs_join_server_type }})"
           ansible.builtin.shell:
             cmd: >
               set -o pipefail &&
@@ -157,21 +172,18 @@
             DEBIAN_FRONTEND: "noninteractive"
           check_mode: false
           tags:
-            - "ucs_join_system_setup_backup_run"
+            - "ucs_join_system_setup_domain_join_run"
 
       always:
-        - name: "ucs_join | backup | Make sure that the temporary admin password file is gone"
+        - name: "ucs_join | domain join | Make sure that the temporary admin password file is gone"
           ansible.builtin.file:
             path: "{{ ucs_join_admin_pw_file.path }}"
             state: "absent"
           changed_when: false
           check_mode: false
           tags:
-            - "ucs_join_system_setup_backup_cleanup_admin_pw_file"
+            - "ucs_join_system_setup_domain_join_cleanup_admin_pw_file"
             - "cleanup"
-      when: "ucs_join_server_type | default('master') == 'backup'"
-      tags:
-        - "ucs_join_system_setup_backup"
 
     - name: "ucs_join | Create successful system-setup marker"
       ansible.builtin.file:
@@ -181,12 +193,12 @@
       check_mode: false
       tags:
         - "ucs_join_system_setup_successful"
-  when: "not ucs_join_system_setup_status.stat.exists"
-  tags:
-    - "ucs_join"
-    - "ucs_join_system_setup"
 
 - name: "ucs_join | Change network settings when system already initialized"
+  when: "ucs_join_system_setup_status.stat.exists"
+  tags:
+    - "ucs_join"
+    - "ucs_join_network_settings"
   block:
     - name: "ucs_join | Use DHCP network setting"
       univention.ucs_modules.univention_config_registry:
@@ -277,7 +289,7 @@
     - name: "ucs_join | Use static network setting (dns)"
       univention.ucs_modules.univention_config_registry:
         kvlist:
-          - key: "dns/forwarder{{ ucs_join_network_config_static_dns_servers_index +1 }}"
+          - key: "dns/forwarder{{ ucs_join_network_config_static_dns_servers_index + 1 }}"
             value: "{{ ucs_join_network_config_static_dns_servers_item }}"
       check_mode: false
       loop: "{{ ucs_join_network_config_static_dns_servers | default([]) }}"
@@ -287,11 +299,6 @@
       when: "ucs_join_network_config_type == 'static'"
       tags:
         - "ucs_join_network_settings_static_dns"
-
-  when: "ucs_join_system_setup_status.stat.exists"
-  tags:
-    - "ucs_join"
-    - "ucs_join_network_settings"
 
 - name: "ucs_join | Check if previous setup vars are set"
   ansible.builtin.stat:
@@ -303,6 +310,10 @@
     - "ucs_join_system_setup_vars"
 
 - name: "ucs_join | Check if user wants to change unsupported vars"
+  when: "ucs_join_system_setup_vars_file.stat.exists"
+  tags:
+    - "ucs_join_system_setup_facts"
+    - "ucs_join"
   block:
     - name: "ucs_join | Create temporary file"
       ansible.builtin.tempfile:
@@ -355,36 +366,27 @@
       tags:
         - "ucs_join_system_setup_facts_temp_removal"
         - "cleanup"
-  when: "ucs_join_system_setup_vars_file.stat.exists"
-  tags:
-    - "ucs_join_system_setup_facts"
-    - "ucs_join"
 
 - name: "ucs_join | configure nameserver"
-  block:
-    - name: "ucs_join | Refresh facts"
-      ansible.builtin.setup:
-      changed_when: false
-
-    - name: "ucs_join | {{ ansible_local['ucr']['server/role'] | split('_') | last }} | configure nameserver"
-      univention.ucs_modules.univention_config_registry:
-        state: "{{ ucs_join_nameservers_item.value.state | default('present') }}"
-        kvlist:
-          - key: "{{ ucs_join_nameservers_item.key }}"
-            value: "{{ ucs_join_nameservers_item.value.server | default('8.8.8.8') }}"
-      loop: "{{ ucs_join_nameservers | dict2items }}"
-      loop_control:
-        loop_var: "ucs_join_nameservers_item"
-      when:
-        - "ucs_join_nameservers_item.key | regex_search('nameserver([1-3]+)')"
-      tags:
-        - "ucs_join_configure_namserver"
+  univention.ucs_modules.univention_config_registry:
+    state: "{{ ucs_join_nameservers_item.value.state | default('present') }}"
+    kvlist:
+      - key: "{{ ucs_join_nameservers_item.key }}"
+        value: "{{ ucs_join_nameservers_item.value.server | default('8.8.8.8') }}"
+  loop: "{{ ucs_join_nameservers | dict2items }}"
+  loop_control:
+    loop_var: "ucs_join_nameservers_item"
+  when:
+    - "ucs_join_nameservers_item.key | regex_search('^nameserver[1-3]$')"
   tags:
     - "always"
     - "ucs_join"
-    - "ucs_join_namserver"
+    - "ucs_join_configure_namserver"
 
 - name: "ucs_join | Run Univention Join Scripts"
+  tags:
+    - "ucs_join"
+    - "ucs_join_run_join_script"
   block:
     - name: "ucs_join | Create temporary admin password file"
       ansible.builtin.tempfile:
@@ -426,8 +428,5 @@
       tags:
         - "ucs_join_run_join_script_cleanup_admin_pw_file"
         - "cleanup"
-  tags:
-    - "ucs_join"
-    - "ucs_join_run_join_script"
 
 ...
