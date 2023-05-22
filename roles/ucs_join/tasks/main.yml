@@ -99,7 +99,14 @@
         - "ucs_join_system_setup_profile"
 
     - name: "ucs_join | primary | Carry out UCS join (primary/standalone)"
-      ansible.builtin.command: "/usr/lib/univention-system-setup/scripts/setup-join.sh"
+      ansible.builtin.shell:
+        cmd: >
+          set -o pipefail &&
+          /usr/lib/univention-system-setup/scripts/setup-join.sh
+          |& /usr/bin/tee -a /var/log/univention/setup.log
+        executable: "/bin/bash"
+      environment:
+        DEBIAN_FRONTEND: "noninteractive"
       check_mode: false
       when: "ucs_join_server_type | default('master') != 'backup'"
       tags:
@@ -138,10 +145,16 @@
             - "ucs_join_system_setup_backup_admin_pw_file"
 
         - name: "ucs_join | backup | Carry out UCS join (backup)"
-          ansible.builtin.command: >
-            /usr/lib/univention-system-setup/scripts/setup-join.sh
-            --dcaccount "{{ ucs_join_admin_user_name }}"
-            --password_file "{{ ucs_join_admin_pw_file.path }}"
+          ansible.builtin.shell:
+            cmd: >
+              set -o pipefail &&
+              /usr/lib/univention-system-setup/scripts/setup-join.sh
+              --dcaccount "{{ ucs_join_admin_user_name }}"
+              --password_file "{{ ucs_join_admin_pw_file.path }}"
+              |& /usr/bin/tee -a /var/log/univention/setup.log
+            executable: "/bin/bash"
+          environment:
+            DEBIAN_FRONTEND: "noninteractive"
           check_mode: false
           tags:
             - "ucs_join_system_setup_backup_run"
