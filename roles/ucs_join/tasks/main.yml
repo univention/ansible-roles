@@ -125,6 +125,14 @@
       tags:
         - "ucs_join_custom_facts_directory"
 
+    - name: "ucs_join | resync bind listener module"
+      ansible.builtin.command: >
+        /usr/sbin/univention-directory-listener-ctrl
+        resync bind
+      changed_when: false
+      tags:
+        - "ucs_join_resync_bind_listener"
+
     - name: "ucs_join | primary | Create UCS join profile from template"
       ansible.builtin.template:
         src: "system-setup-vars.j2"
