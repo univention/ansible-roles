@@ -127,7 +127,7 @@
 
     - name: "ucs_join | resync bind listener module"
       ansible.builtin.command: >
-        univention-directory-listener-ctrl
+        /usr/sbin/univention-directory-listener-ctrl
         resync bind
       changed_when: false
       tags:
