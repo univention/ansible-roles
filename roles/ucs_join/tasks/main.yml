@@ -126,6 +126,7 @@
         - "ucs_join_custom_facts_directory"
 
     - name: "ucs_join | resync bind listener module"
+      when: "ucs_join_server_type | default('master') == 'master'"
       ansible.builtin.command: >
         /usr/sbin/univention-directory-listener-ctrl
         resync bind
@@ -181,6 +182,15 @@
           check_mode: false
           tags:
             - "ucs_join_system_setup_domain_join_run"
+
+        - name: "ucs_join | resync bind listener module"
+          when: "ucs_join_server_type | default('master') != 'master'"
+          ansible.builtin.command: >
+            /usr/sbin/univention-directory-listener-ctrl
+            resync bind
+          changed_when: false
+          tags:
+            - "ucs_join_resync_bind_listener_non_primary"
 
       always:
         - name: "ucs_join | domain join | Make sure that the temporary admin password file is gone"
