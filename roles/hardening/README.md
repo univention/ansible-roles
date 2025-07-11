@@ -1,7 +1,9 @@
 Hardening system
 =========
 
-This role reduces security risks by disabling default settings, like root login.
+This role reduces security risks by disabling default settings, like root login. Because everything is set by UCR variables, the configuration is only valid for the system where this role has been executed.
+
+The settings are loosely based on this article: <https://help.univention.com/t/ucs-and-security-hardening/6059>
 
 Requirements
 ------------
@@ -30,6 +32,9 @@ Role Variables
 - `hardening_disable_udm_rest_tracebacks`(bool): If set to `true` tracebacks are no longer shown to the user in ror case for udm REST; default: `true`
 - `hardening_disable_saml_idp_errors`(bool): If set to `true` tracebacks are no longer shown to the user in error case for the saml idp; default: `true`
 - `hardening_disable_saml_idp_error_reporting`(bool): If set to `true` error information and stack traces can not be reported via email to the technical contact mail address; default: `true`
+- `hardening_sshd_permitroot`(bool): If set to `false`, then root login via SSH gets disabled; default: `false`
+- `hardening_auth_sshd_restrict`(bool): If set to `true`, only users which are explicitly allowed (see next point) can login with SSH; default: `true`
+- `hardening_auth_sshd_user`(list): allows to define multiple user objects which should be allowed to use SSH.
 
 
 Dependencies
@@ -39,6 +44,13 @@ none
 
 Example Playbook
 ----------------
+
+```yaml
+---
+- hosts: myhosts
+  roles:
+    - role: 'hardening'
+```
 
 
 License
