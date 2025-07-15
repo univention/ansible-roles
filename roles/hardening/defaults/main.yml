@@ -23,6 +23,6 @@ hardening_sshd_permitroot: false
 hardening_auth_sshd_restrict: true
 # define users which should have ssh access
 hardening_auth_sshd_users:
-  - ansible
+hardening_auth_sshd_users: []
 
 ...

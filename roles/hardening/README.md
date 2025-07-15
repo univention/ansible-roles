@@ -34,7 +34,7 @@ Role Variables
 - `hardening_disable_saml_idp_error_reporting`(bool): If set to `true` error information and stack traces can not be reported via email to the technical contact mail address; default: `true`
 - `hardening_sshd_permitroot`(bool): If set to `false`, then root login via SSH gets disabled; default: `false`
 - `hardening_auth_sshd_restrict`(bool): If set to `true`, only users which are explicitly allowed (see next point) can login with SSH; default: `true`
-- `hardening_auth_sshd_user`(list): allows to define multiple user objects which should be allowed to use SSH.
+- `hardening_auth_sshd_user`(list): allows to define multiple user objects which should be allowed to use SSH, default: `[]`
 
 
 Dependencies
@@ -50,6 +50,8 @@ Example Playbook
 - hosts: myhosts
   roles:
     - role: 'hardening'
+      variables:
+         hardening_sshd_permitroot: true
 ```
 
 
