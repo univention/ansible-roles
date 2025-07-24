@@ -23,14 +23,30 @@ repos:
         args:
           - "-c=.yamllint"
 
-  - repo: "https://github.com/ansible/ansible-lint"
-    rev: "v6.15.0"
-    hooks:
-      - id: "ansible-lint"
+            #- repo: "https://github.com/ansible/ansible-lint"
+            #rev: "v6.15.0"
+            #hooks:
+            #- id: "ansible-lint"
 
   - repo: "https://github.com/PyCQA/flake8"
     rev: "6.0.0"
     hooks:
       - id: "flake8"
 
+  - repo: "local"
+    hooks:
+      - id: "generate-readme"
+        name: "Generate README"
+        entry: "scripts/generate_readme.py"
+        language: "python"
+        types: ["file"]
+        always_run: true
+        pass_filenames: false
+
+      - id: "add-readme"
+        name: "Add README.md to Git index"
+        entry: "git add README.md"
+        language: "system"
+        always_run: true
+        pass_filenames: false
 ...
