@@ -81,7 +81,6 @@
         value: "{{ hardening_auth_sshd_restrict }}"
       - key: "auth/sshd/user/{{ item }}"
         value: "yes"
-    # loop: "{{ lookup('ansible.builtin.dict', hardening_auth_sshd_user) }}"
   register: "hardening_enable_ssh_access_for_non_root_users"
   tags:
     - "hardening_enable_ssh_access_for_non_root_users"
