@@ -1,5 +1,5 @@
 include:
-  - project: "univention/customers/dataport/dps/helper/ci-tooling"
+  - project: "univention/prof-services/customers/phoenix/dps/helper/ci-tooling"
     ref: "main"
     file: ".gitlab-ci-ansible.yml"
 
