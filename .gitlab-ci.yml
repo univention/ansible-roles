@@ -3,11 +3,10 @@
 ######################################
 
 variables:
-
   ENV_CFG: "${CI_PROJECT_DIR}/tests/ucs-kvm.cfg"
   TDP_VERSION: &TDP_VERSION "v6.1.1"
   UCS_VERSION:
-    value: "5.2-1"
+    value: "5.2-5"
     description: "UCS version to be used X.Y-Z"
 
 workflow:
