@@ -21,6 +21,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Gather custom facts"
+  hosts: "all"
+  roles:
+    - role: "custom_facts"
+```
 
 License
 -------

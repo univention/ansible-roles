@@ -22,7 +22,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure group syntax"
+  hosts: "all"
+  roles:
+    - role: "configure_group_syntax"
+```
 
 License
 -------

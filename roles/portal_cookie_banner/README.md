@@ -29,6 +29,21 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure cookie banner"
+  hosts: "all"
+  roles:
+    - role: "portal_cookie_banner"
+      vars:
+        portal_cookie_banner_data:
+          de:
+            title: "Wir verwenden Cookies"
+            text: "Diese Website verwendet Cookies."
+          en:
+            title: "We are using cookies"
+            text: "This website uses cookies."
+```
 
 License
 -------

@@ -33,6 +33,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure password policies"
+  hosts: "all"
+  roles:
+    - role: "configure_password_policies"
+      vars:
+        configure_password_policies_dn: >-
+          cn=default-settings,cn=pwhistory,cn=users,cn=policies,cn=system,dc=example,dc=com
+```
+
 License
 -------
 

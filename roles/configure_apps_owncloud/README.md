@@ -21,7 +21,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure OwnCloud app"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_owncloud"
+```
 
 License
 -------

@@ -39,6 +39,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Update SSH keys"
+  hosts: "all"
+  roles:
+    - role: "update_users_ssh_keys"
+      vars:
+        update_users_ssh_keys_user: "root"
+```
 
 License
 -------

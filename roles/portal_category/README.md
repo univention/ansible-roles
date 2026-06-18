@@ -26,9 +26,12 @@ Example Playbook
 ----------------
 
 ```yaml
-- hosts: all
+---
+- name: "Manage portal categories"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Manage portal categories"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.portal_category"
       vars:
         portal_category_base_dn: "dc=ansible,dc=univention,dc=de"

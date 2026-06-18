@@ -28,6 +28,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install self-service"
+  hosts: "all"
+  roles:
+    - role: "install_service_selfservice"
+      vars:
+        install_service_selfservice_external_hostname: "ucs.example.com"
+```
+
 License
 -------
 

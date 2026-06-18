@@ -22,6 +22,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure firewall rules"
+  hosts: "all"
+  roles:
+    - role: "univention_firewall"
+```
 
 License
 -------

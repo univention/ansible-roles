@@ -26,6 +26,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure repository"
+  hosts: "all"
+  roles:
+    - role: "configure_repository"
+      vars:
+        configure_repository_default_repository_server: "repo.example.com"
+        configure_repository_default_repository_path: "/univention-repository"
+```
 
 License
 -------

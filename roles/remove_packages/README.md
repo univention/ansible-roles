@@ -26,6 +26,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Remove Univention apps"
+  hosts: "all"
+  roles:
+    - role: "remove_packages"
+      vars:
+        remove_packages_temp_pw_file: "{{ temp_pw_file }}"
+        remove_packages_remove_apps:
+          - "nextcloud"
+```
 
 License
 -------

@@ -21,6 +21,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Remove package"
+  hosts: "all"
+  roles:
+    - role: "univention_remove"
+      vars:
+        univention_remove_name: "nano"
+```
 
 License
 -------

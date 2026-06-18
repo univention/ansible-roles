@@ -22,6 +22,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure network interface names"
+  hosts: "all"
+  roles:
+    - role: "configure_network_interface_names"
+```
 
 License
 -------

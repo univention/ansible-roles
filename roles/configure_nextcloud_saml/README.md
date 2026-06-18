@@ -21,6 +21,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Nextcloud SAML"
+  hosts: "all"
+  roles:
+    - role: "configure_nextcloud_saml"
+```
 
 License
 -------

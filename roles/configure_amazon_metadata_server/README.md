@@ -23,6 +23,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Amazon metadata server"
+  hosts: "all"
+  roles:
+    - role: "configure_amazon_metadata_server"
+```
 
 License
 -------

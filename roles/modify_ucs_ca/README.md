@@ -23,6 +23,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Modify UCS certificates"
+  hosts: "all"
+  roles:
+    - role: "modify_ucs_ca"
+      vars:
+        modify_ucs_ca_external_domain_name: "portal.example.com"
+        modify_ucs_ca_external_domain_part: "example.com"
+        modify_ucs_ca_external_domain_prefix: "portal"
+```
 
 License
 -------

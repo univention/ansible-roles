@@ -111,15 +111,17 @@ Role Variables
 --------------
 
 - `add_local_user_user`(map): A map containing user information:
+
 ```
 add_local_user_user:
     name:         # username; default; "ansible"
     comment:      # user comment; default: "ansible user"
-    password:     # hashed password of user; default:  "{{ "ansible"|password_hash('sha512') }}"
+    password:     # hashed password of user; default:  "{{ 'ansible'|password_hash('sha512') }}"
     sshkey_file:  # ssh key filename; default: empty
     sshkey:       # ssh key as string; default: empty
     state:        # toggle if user should be present or absent; default: present
 ```
+
 - `add_local_user_default_shell`(string): Default user shell; default: `/bin/bash`
 - `add_local_user_default_password_policy`(string): Default password update policy.
   Possible values are `"on_create"` and `"always"`; default `"on_create"`.
@@ -128,11 +130,23 @@ add_local_user_user:
 Dependencies
 ------------
 
-none
+`passlib`
 
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Add a testuser"
+  hosts: "all"
+  roles:
+    - role: "add_local_user"
+      vars:
+        add_local_user_user_name: "testuser"
+        add_local_user_user_comment: "For testing the add_local_user_user role"
+        add_local_user_user_password: "{{ 'univention' | password_hash('sha512') }}"
+        add_local_user_user_state: "present"
+```
 
 License
 -------
@@ -177,6 +191,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Cleanup portal entries"
+  hosts: "all"
+  roles:
+    - role: "cleanup_portal"
+      vars:
+        cleanup_portal_basedn: "dc=example,dc=com"
+        cleanup_portal_install_services:
+          - "dashboard"
+```
 
 License
 -------
@@ -218,6 +243,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Amazon metadata server"
+  hosts: "all"
+  roles:
+    - role: "configure_amazon_metadata_server"
+```
 
 License
 -------
@@ -257,7 +289,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure Nextcloud app"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_nextcloud"
+```
 
 License
 -------
@@ -297,7 +335,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure OwnCloud app"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_owncloud"
+```
 
 License
 -------
@@ -344,7 +388,16 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure Postfix"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_postfix"
+      vars:
+        configure_apps_postfix_domain_name: "example.com"
+        configure_apps_postfix_external_hostname: "mail.example.com"
+```
 
 License
 -------
@@ -390,7 +443,18 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure Postfix relay"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_postfix_relay"
+      vars:
+        configure_apps_postfix_relay_enabled: true
+        configure_apps_postfix_relay_host: "smtp.example.com"
+        configure_apps_postfix_relay_username: "relayuser"
+        configure_apps_postfix_relay_password: "relaypassword"
+```
 
 License
 -------
@@ -440,6 +504,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure directory manager"
+  hosts: "all"
+  roles:
+    - role: "configure_directory_manager"
+```
 
 License
 -------
@@ -483,6 +554,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure error detail display"
+  hosts: "all"
+  roles:
+    - role: "configure_error_detail_show"
+```
 
 License
 -------
@@ -523,7 +601,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure group syntax"
+  hosts: "all"
+  roles:
+    - role: "configure_group_syntax"
+```
 
 License
 -------
@@ -584,6 +668,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Keycloak"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak"
+      vars:
+        configure_keycloak_keycloak_server: "keycloak.example.com"
+        configure_keycloak_admin_username: "admin"
+        configure_keycloak_admin_password: "secret"
+        configure_keycloak_client_id: "ucs-client"
+```
 
 License
 -------
@@ -629,7 +725,17 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure Keycloak client"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak_client"
+      vars:
+        configure_keycloak_client_basedn: "dc=example,dc=com"
+        configure_keycloak_client_keycloak_server_id: "keycloak"
+        configure_keycloak_client_keycloak_server: "keycloak.example.com"
+```
 
 License
 -------
@@ -670,7 +776,16 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure Keycloak SAML"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak_saml"
+      vars:
+        configure_keycloak_saml_basedn: "dc=example,dc=com"
+        configure_keycloak_saml_sp_base_url: "https://sp.example.com"
+```
 
 License
 -------
@@ -727,6 +842,21 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure UCS license"
+  hosts: "all"
+  roles:
+    - role: "configure_license"
+      vars:
+        configure_license_type: "server_license"
+        configure_license_basedn: "dc=example,dc=com"
+        configure_license_max_users: 500
+        configure_license_shop_id: 12345
+        configure_license_shop_username: "shopuser"
+        configure_license_shop_password: "shoppassword"
+        configure_license_validity: "12 weeks"
+```
 
 License
 -------
@@ -775,7 +905,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure logrotate"
+  hosts: "all"
+  roles:
+    - role: "configure_logrotate"
+```
 
 License
 -------
@@ -816,6 +952,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure monitoring"
+  hosts: "all"
+  roles:
+    - role: "configure_monitoring"
+      vars:
+        configure_monitoring_ldap_enabled: "true"
+```
 
 License
 -------
@@ -856,6 +1001,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure network interface names"
+  hosts: "all"
+  roles:
+    - role: "configure_network_interface_names"
+```
 
 License
 -------
@@ -899,6 +1051,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure network proxy"
+  hosts: "all"
+  roles:
+    - role: "configure_network_proxy"
+      vars:
+        configure_network_proxy_enabled: true
+        configure_network_proxy_http_proxy: "http://192.168.1.100:3128"
+        configure_network_proxy_https_proxy: "https://192.168.1.100:3128"
+        configure_network_proxy_no_proxy: "localhost,127.0.0.1,univention.de"
+```
 
 License
 -------
@@ -938,6 +1102,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Nextcloud SAML"
+  hosts: "all"
+  roles:
+    - role: "configure_nextcloud_saml"
+```
 
 License
 -------
@@ -977,6 +1148,17 @@ none
 
 Example Playbook
 ----------------
+
+```yaml
+---
+- name: "Configure Nextcloud TURN server"
+  hosts: "all"
+  roles:
+    - role: "configure_nextcloud_turn"
+      vars:
+        configure_nextcloud_turn_secret: "turn-secret"
+        configure_nextcloud_turn_url: "turn:turn.example.com:3478"
+```
 
 License
 -------
@@ -1018,6 +1200,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure NTP servers"
+  hosts: "all"
+  roles:
+    - role: "configure_ntp_servers"
+```
 
 License
 -------
@@ -1063,6 +1252,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure office suite"
+  hosts: "all"
+  roles:
+    - role: "configure_office_suite"
+      vars:
+        configure_office_suite_office_suite: "collabora-online"
+```
 
 License
 -------
@@ -1114,6 +1312,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure password policies"
+  hosts: "all"
+  roles:
+    - role: "configure_password_policies"
+      vars:
+        configure_password_policies_dn: >-
+          cn=default-settings,cn=pwhistory,cn=users,cn=policies,cn=system,dc=example,dc=com
+```
+
 License
 -------
 
@@ -1157,6 +1366,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure repository"
+  hosts: "all"
+  roles:
+    - role: "configure_repository"
+      vars:
+        configure_repository_default_repository_server: "repo.example.com"
+        configure_repository_default_repository_path: "/univention-repository"
+```
 
 License
 -------
@@ -1205,6 +1424,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure SAML single server"
+  hosts: "all"
+  roles:
+    - role: "configure_saml_single_server"
+      vars:
+        configure_saml_single_server_external_hostname: "ucs.example.com"
+        configure_saml_single_server_domain_name: "example.com"
+        configure_saml_single_server_basedn: "dc=example,dc=com"
+```
 
 License
 -------
@@ -1255,9 +1485,12 @@ Example Playbook
 ### Configure OpenID clients
 
 ```yaml
-- hosts: all
+---
+- name: "Configure SSO OpenID Connect"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Configure SSO OpenID Connect"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.configure_sso_openid"
       vars:
         configure_sso_openid_clients:
@@ -1310,6 +1543,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Gather custom facts"
+  hosts: "all"
+  roles:
+    - role: "custom_facts"
+```
 
 License
 -------
@@ -1349,6 +1589,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Mark deployment finished"
+  hosts: "all"
+  roles:
+    - role: "custom_facts_finished"
+```
 
 License
 -------
@@ -1394,7 +1641,19 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Print deployment message"
+  hosts: "all"
+  roles:
+    - role: "deployment_message"
+      vars:
+        deployment_message_external_hostname: "ucs.example.com"
+        deployment_message_domain_name: "example.com"
+        deployment_message_basedn: "dc=example,dc=com"
+        deployment_message_server_type: "master"
+        deployment_message_saml_config_type: "standalone"
+```
 
 License
 -------
@@ -1435,6 +1694,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Disable IPv6"
+  hosts: "all"
+  roles:
+    - role: "disable_ipv6"
+```
 
 License
 -------
@@ -1475,6 +1741,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Disable Piwik tracking"
+  hosts: "all"
+  roles:
+    - role: "disable_piwik_tracking"
+```
 
 License
 -------
@@ -1531,6 +1804,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Dovecot connector"
+  hosts: "all"
+  roles:
+    - role: "dovecot_connector"
+      vars:
+        dovecot_connector_basedn: "dc=example,dc=com"
+        dovecot_connector_adm_password: "secret"
+        dovecot_connector_adm_username: "doveadm"
+        dovecot_connector_domain_name: "example.com"
+```
 
 License
 -------
@@ -1577,6 +1862,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Extend root LVM volume"
+  hosts: "all"
+  roles:
+    - role: "extend_root_lvm_volume"
+      vars:
+        extend_root_lvm_volume_extend_lvm_to_whole_disk: true
+        extend_root_lvm_volume_lvm_disk: "vda"
+```
 
 License
 -------
@@ -1616,7 +1911,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Update package lists"
+  hosts: "all"
+  roles:
+    - role: "force_package_list_update"
+```
 
 License
 -------
@@ -1657,6 +1958,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Get installed apps"
+  hosts: "all"
+  roles:
+    - role: "get_installed_apps"
+```
 
 License
 -------
@@ -1715,6 +2023,19 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Harden UCS system"
+  hosts: "all"
+  roles:
+    - role: "hardening"
+      vars:
+        # hardening_disable_root_login: false  # uncomment to keep root login enabled
+        hardening_disable_http: true
+        hardening_hsts: true
+        hardening_umc_session_cookie: true
+        hardening_umc_secure_cookie: true
+```
 
 License
 -------
@@ -1754,6 +2075,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Improve Nextcloud usability"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_nextcloud"
+```
 
 License
 -------
@@ -1793,6 +2121,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Improve UI usability"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_ui_changes"
+      vars:
+        improve_usability_ui_changes_basedn: "dc=example,dc=com"
+```
 
 License
 -------
@@ -1835,6 +2172,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Improve user configuration"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_user_config"
+      vars:
+        improve_usability_user_config_basedn: "dc=example,dc=com"
+        improve_usability_user_config_external_hostname: "ucs.example.com"
+```
 
 License
 -------
@@ -1882,6 +2229,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Post-install Open-Xchange"
+  hosts: "all"
+  roles:
+    - role: "install_apps_ox_post"
+      vars:
+        install_apps_ox_post_basedn: "dc=example,dc=com"
+        install_apps_ox_post_external_hostname: "ox.example.com"
+        install_apps_ox_post_ox_keystore_passphrase: "keystore-secret"
+```
 
 License
 -------
@@ -1924,6 +2282,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Pre-install Open-Xchange"
+  hosts: "all"
+  roles:
+    - role: "install_apps_ox_pre"
+      vars:
+        install_apps_ox_pre_external_hostname: "ox.example.com"
+        install_apps_ox_pre_basedn: "dc=example,dc=com"
+```
 
 License
 -------
@@ -1969,6 +2337,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install branding package"
+  hosts: "all"
+  roles:
+    - role: "install_branding"
+      vars:
+        install_branding_customer_repo_name: "customer-repo"
+        install_branding_customer_repo_server: "repo.example.com"
+        install_branding_customer_branding_package: "customer-branding"
+```
 
 License
 -------
@@ -2016,6 +2395,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install Let's Encrypt"
+  hosts: "all"
+  roles:
+    - role: "install_lets_encrypt"
+      vars:
+        install_lets_encrypt_external_hostname: "ucs.example.com"
+```
 
 License
 -------
@@ -2080,6 +2468,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install multitenant ACLs"
+  hosts: "all"
+  roles:
+    - role: "install_multitenant_acls"
+      vars:
+        install_multitenant_acls_customer_name: "example-customer"
+```
 
 License
 -------
@@ -2120,6 +2517,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install Nextcloud app"
+  hosts: "all"
+  roles:
+    - role: "install_nextcloud_app"
+      vars:
+        install_nextcloud_app_name: "contacts"
+```
 
 License
 -------
@@ -2164,6 +2570,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install Univention apps"
+  hosts: "all"
+  roles:
+    - role: "install_packages"
+      vars:
+        install_packages_temp_pw_file: "{{ temp_pw_file }}"
+        install_packages_install_apps:
+          - "nextcloud"
+```
 
 License
 -------
@@ -2205,6 +2622,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install new portal service"
+  hosts: "all"
+  roles:
+    - role: "install_service_new_portal"
+```
 
 License
 -------
@@ -2250,6 +2674,16 @@ none
 
 Example Playbook
 ----------------
+
+```yaml
+---
+- name: "Install self-service"
+  hosts: "all"
+  roles:
+    - role: "install_service_selfservice"
+      vars:
+        install_service_selfservice_external_hostname: "ucs.example.com"
+```
 
 License
 -------
@@ -2312,7 +2746,9 @@ Example Playbook
 ## Intercom Service
 
 ```yaml
-- hosts: all
+---
+- name: "Install Intercom Service"
+  hosts: "all"
   tasks:
     - name: "Install Intercom Service via Appcenter"
       ansible.builtin.include_role:
@@ -2322,7 +2758,6 @@ Example Playbook
         intercom_service_domain_name: "ucs.test.intranet"
         intercom_service_temp_pw_file: "{{ temp_file }}"
         intercom_service_keycloak_realm_name: "your_keycloak_realm"
-
 ```
 
 License
@@ -2370,9 +2805,12 @@ Example Playbook
 ### Configure LDAPSearch user
 
 ```yaml
-- hosts: all
+---
+- name: "Configure LDAPSearch users"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Configure LDAPSearch users"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ldapsearch_user"
       vars:
         ldapsearch_user_list:
@@ -2386,9 +2824,12 @@ Example Playbook
 ### Configure LDAPSearch user (per tenant)
 
 ```yaml
-- hosts: all
+---
+- name: "Configure LDAPSearch users"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Configure LDAPSearch users"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ldapsearch_user"
       vars:
         ldapsearch_user_list_tenantbased:
@@ -2440,6 +2881,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Modify UCS certificates"
+  hosts: "all"
+  roles:
+    - role: "modify_ucs_ca"
+      vars:
+        modify_ucs_ca_external_domain_name: "portal.example.com"
+        modify_ucs_ca_external_domain_part: "example.com"
+        modify_ucs_ca_external_domain_prefix: "portal"
+```
 
 License
 -------
@@ -2495,6 +2947,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure OX connector"
+  hosts: "all"
+  roles:
+    - role: "ox_connector"
+      vars:
+        ox_connector_basedn: "dc=example,dc=com"
+        ox_connector_master_admin: "oxadmin"
+        ox_connector_master_password: "secret"
+        ox_connector_domain_name: "example.com"
+```
 
 License
 -------
@@ -2539,9 +3003,12 @@ Example Playbook
 ----------------
 
 ```yaml
-- hosts: all
+---
+- name: "Manage portal categories"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Manage portal categories"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.portal_category"
       vars:
         portal_category_base_dn: "dc=ansible,dc=univention,dc=de"
@@ -2631,6 +3098,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure portal title"
+  hosts: "all"
+  roles:
+    - role: "portal_configure_title"
+      vars:
+        portal_configure_title_basedn: "dc=example,dc=com"
+        portal_configure_title_titles:
+          - "en_US \"My Portal (Univention)\""
+          - "de_DE \"Mein Portal (Univention)\""
+```
 
 License
 -------
@@ -2678,6 +3157,21 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure cookie banner"
+  hosts: "all"
+  roles:
+    - role: "portal_cookie_banner"
+      vars:
+        portal_cookie_banner_data:
+          de:
+            title: "Wir verwenden Cookies"
+            text: "Diese Website verwendet Cookies."
+          en:
+            title: "We are using cookies"
+            text: "This website uses cookies."
+```
 
 License
 -------
@@ -2724,9 +3218,12 @@ Example Playbook
 ### Create a public login and file store
 
 ```yaml
-- hosts: all
+---
+- name: "Manage portal entries"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Manage portal entries"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.portal_entry"
       vars:
         portal_entry_base_dn: "dc=ansible,dc=univention,dc=de"
@@ -2855,6 +3352,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Remove Univention apps"
+  hosts: "all"
+  roles:
+    - role: "remove_packages"
+      vars:
+        remove_packages_temp_pw_file: "{{ temp_pw_file }}"
+        remove_packages_remove_apps:
+          - "nextcloud"
+```
 
 License
 -------
@@ -2900,6 +3408,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Set DNS glue record"
+  hosts: "all"
+  roles:
+    - role: "set_dns_glue_record"
+      vars:
+        set_dns_glue_record_glue_record_nameserver: "ns1.example.com"
+        set_dns_glue_record_domain_name: "example.com"
+        set_dns_glue_record_basedn: "dc=example,dc=com"
+        set_dns_glue_record_host_name: "ucs"
+```
 
 License
 -------
@@ -2939,6 +3459,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Set feedback mail address"
+  hosts: "all"
+  roles:
+    - role: "set_feedback_mail_address"
+```
 
 License
 -------
@@ -2986,16 +3513,16 @@ none
 Example Playbook
 ----------------
 
-- hosts: ucs_master
-  become: true
-  tasks:
-    - name: "include role for setting ldap index"
-      ansible.builtin.include_role:
-        name: "roles/set_ldap_index"
+```yaml
+---
+- name: "Set LDAP index"
+  hosts: "all"
+  roles:
+    - role: "set_ldap_index"
       vars:
         set_ldap_index_equality_add: "isOxUser"
-        set_ldap_index_approx_rm "aAAARecord"
-
+        set_ldap_index_approx_rm: "aAAARecord"
+```
 
 License
 -------
@@ -3042,6 +3569,20 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Add admin user"
+  hosts: "all"
+  roles:
+    - role: "ucs_add_admin_user"
+      vars:
+        ucs_add_admin_user_basedn: "dc=example,dc=com"
+        ucs_add_admin_user_username: "adminuser"
+        ucs_add_admin_user_firstname: "Admin"
+        ucs_add_admin_user_lastname: "User"
+        ucs_add_admin_user_password: "secret"
+        ucs_add_admin_user_recoveryemail: "admin@example.com"
+```
 
 License
 -------
@@ -3102,9 +3643,12 @@ Example Playbook
 ### Configure static network interface
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_type: "static"
@@ -3120,9 +3664,12 @@ Example Playbook
 ### Configure additional network interfaces
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_type: "static"
@@ -3135,9 +3682,12 @@ Example Playbook
 ### Configure additional network routes
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_static_routes:
@@ -3163,20 +3713,24 @@ All domaincontroller_* has a dns server installed.
 | nameserver3 |                         | fallback_nameserver     | domaincontroller_backup | domaincontroller_slave  |
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_nameservers:
           nameserver1:
             # local ip
+            # yamllint disable-line rule:line-length
             server: "{{ ansible_local['ucr']['interfaces/' + ansible_local['ucr']['interfaces/primary'] + '/address'] }}"
           nameserver2:
             server: "8.8.8.8"
-            state: 'present'
+            state: "present"
           nameserver3:
-            state: 'absent'
+            state: "absent"
 ```
 
 License
@@ -3220,6 +3774,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure UMC permissions"
+  hosts: "all"
+  roles:
+    - role: "umc_permissions"
+      vars:
+        umc_permissions_basedn: "dc=example,dc=com"
+```
 
 License
 -------
@@ -3265,6 +3828,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure maintenance policies"
+  hosts: "all"
+  roles:
+    - role: "umc_policies_maintenance"
+      vars:
+        umc_policies_maintenance_basedn: "dc=example,dc=com"
+        umc_policies_maintenance_release_version: "5.2-0"
+```
 
 License
 -------
@@ -3305,6 +3878,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure firewall rules"
+  hosts: "all"
+  roles:
+    - role: "univention_firewall"
+```
 
 License
 -------
@@ -3345,6 +3925,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install package"
+  hosts: "all"
+  roles:
+    - role: "univention_install"
+      vars:
+        univention_install_name: "ntp"
+```
 
 License
 -------
@@ -3382,6 +3971,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Prune old kernels"
+  hosts: "all"
+  roles:
+    - role: "univention_prune_kernels"
+```
 
 License
 -------
@@ -3421,6 +4017,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Remove package"
+  hosts: "all"
+  roles:
+    - role: "univention_remove"
+      vars:
+        univention_remove_name: "nano"
+```
 
 License
 -------
@@ -3467,6 +4072,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Enable repository component"
+  hosts: "all"
+  roles:
+    - role: "univention_repository_component"
+      vars:
+        univention_repository_component_name: "my-custom-repo"
+        univention_repository_component_server: "repo.example.com"
+        univention_repository_component_prefix: "https://"
+        univention_repository_component_parts: "maintained"
+```
 
 License
 -------
@@ -3512,6 +4129,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Upgrade UCS"
+  hosts: "all"
+  roles:
+    - role: "univention_upgrade"
+      vars:
+        univention_upgrade_version: "5.2-99"
+```
 
 License
 -------
@@ -3569,6 +4195,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Update SSH keys"
+  hosts: "all"
+  roles:
+    - role: "update_users_ssh_keys"
+      vars:
+        update_users_ssh_keys_user: "root"
+```
 
 License
 -------
@@ -3611,6 +4246,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install trusted certificate"
+  hosts: "all"
+  roles:
+    - role: "use_trusted_cert"
+      vars:
+        use_trusted_cert_path_cert: "/path/to/certificate.pem"
+        use_trusted_cert_path_key: "/path/to/private.key"
+```
 
 License
 -------
@@ -3651,6 +4296,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Workaround acme-tiny upgrade"
+  hosts: "all"
+  roles:
+    - role: "workaround_acmetiny_upgrade"
+      vars:
+        workaround_acmetiny_upgrade_temp_dir: "/tmp/acme-workaround"
+```
 
 License
 -------
@@ -3691,6 +4345,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Workaround high MTU"
+  hosts: "all"
+  roles:
+    - role: "workaround_high_mtu"
+```
 
 License
 -------

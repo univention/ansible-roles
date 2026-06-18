@@ -29,16 +29,16 @@ none
 Example Playbook
 ----------------
 
-- hosts: ucs_master
-  become: true
-  tasks:
-    - name: "include role for setting ldap index"
-      ansible.builtin.include_role:
-        name: "roles/set_ldap_index"
+```yaml
+---
+- name: "Set LDAP index"
+  hosts: "all"
+  roles:
+    - role: "set_ldap_index"
       vars:
         set_ldap_index_equality_add: "isOxUser"
-        set_ldap_index_approx_rm "aAAARecord"
-
+        set_ldap_index_approx_rm: "aAAARecord"
+```
 
 License
 -------

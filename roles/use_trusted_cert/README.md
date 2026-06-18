@@ -24,6 +24,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install trusted certificate"
+  hosts: "all"
+  roles:
+    - role: "use_trusted_cert"
+      vars:
+        use_trusted_cert_path_cert: "/path/to/certificate.pem"
+        use_trusted_cert_path_key: "/path/to/private.key"
+```
 
 License
 -------

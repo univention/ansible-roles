@@ -22,6 +22,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Workaround high MTU"
+  hosts: "all"
+  roles:
+    - role: "workaround_high_mtu"
+```
 
 License
 -------

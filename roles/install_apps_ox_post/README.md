@@ -29,6 +29,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Post-install Open-Xchange"
+  hosts: "all"
+  roles:
+    - role: "install_apps_ox_post"
+      vars:
+        install_apps_ox_post_basedn: "dc=example,dc=com"
+        install_apps_ox_post_external_hostname: "ox.example.com"
+        install_apps_ox_post_ox_keystore_passphrase: "keystore-secret"
+```
 
 License
 -------

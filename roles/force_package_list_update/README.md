@@ -21,7 +21,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Update package lists"
+  hosts: "all"
+  roles:
+    - role: "force_package_list_update"
+```
 
 License
 -------

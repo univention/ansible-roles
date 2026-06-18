@@ -28,9 +28,12 @@ Example Playbook
 ### Create a public login and file store
 
 ```yaml
-- hosts: all
+---
+- name: "Manage portal entries"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Manage portal entries"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.portal_entry"
       vars:
         portal_entry_base_dn: "dc=ansible,dc=univention,dc=de"

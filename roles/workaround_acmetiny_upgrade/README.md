@@ -22,6 +22,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Workaround acme-tiny upgrade"
+  hosts: "all"
+  roles:
+    - role: "workaround_acmetiny_upgrade"
+      vars:
+        workaround_acmetiny_upgrade_temp_dir: "/tmp/acme-workaround"
+```
 
 License
 -------

@@ -27,7 +27,19 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Print deployment message"
+  hosts: "all"
+  roles:
+    - role: "deployment_message"
+      vars:
+        deployment_message_external_hostname: "ucs.example.com"
+        deployment_message_domain_name: "example.com"
+        deployment_message_basedn: "dc=example,dc=com"
+        deployment_message_server_type: "master"
+        deployment_message_saml_config_type: "standalone"
+```
 
 License
 -------

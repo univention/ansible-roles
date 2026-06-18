@@ -25,6 +25,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure error detail display"
+  hosts: "all"
+  roles:
+    - role: "configure_error_detail_show"
+```
 
 License
 -------

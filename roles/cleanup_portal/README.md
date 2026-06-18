@@ -26,6 +26,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Cleanup portal entries"
+  hosts: "all"
+  roles:
+    - role: "cleanup_portal"
+      vars:
+        cleanup_portal_basedn: "dc=example,dc=com"
+        cleanup_portal_install_services:
+          - "dashboard"
+```
 
 License
 -------

@@ -28,6 +28,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Extend root LVM volume"
+  hosts: "all"
+  roles:
+    - role: "extend_root_lvm_volume"
+      vars:
+        extend_root_lvm_volume_extend_lvm_to_whole_disk: true
+        extend_root_lvm_volume_lvm_disk: "vda"
+```
 
 License
 -------

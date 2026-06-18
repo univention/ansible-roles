@@ -26,6 +26,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install Univention apps"
+  hosts: "all"
+  roles:
+    - role: "install_packages"
+      vars:
+        install_packages_temp_pw_file: "{{ temp_pw_file }}"
+        install_packages_install_apps:
+          - "nextcloud"
+```
 
 License
 -------

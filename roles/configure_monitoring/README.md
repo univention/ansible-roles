@@ -22,6 +22,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure monitoring"
+  hosts: "all"
+  roles:
+    - role: "configure_monitoring"
+      vars:
+        configure_monitoring_ldap_enabled: "true"
+```
 
 License
 -------

@@ -25,6 +25,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure network proxy"
+  hosts: "all"
+  roles:
+    - role: "configure_network_proxy"
+      vars:
+        configure_network_proxy_enabled: true
+        configure_network_proxy_http_proxy: "http://192.168.1.100:3128"
+        configure_network_proxy_https_proxy: "https://192.168.1.100:3128"
+        configure_network_proxy_no_proxy: "localhost,127.0.0.1,univention.de"
+```
 
 License
 -------

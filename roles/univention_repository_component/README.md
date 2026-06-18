@@ -28,6 +28,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Enable repository component"
+  hosts: "all"
+  roles:
+    - role: "univention_repository_component"
+      vars:
+        univention_repository_component_name: "my-custom-repo"
+        univention_repository_component_server: "repo.example.com"
+        univention_repository_component_prefix: "https://"
+        univention_repository_component_parts: "maintained"
+```
 
 License
 -------

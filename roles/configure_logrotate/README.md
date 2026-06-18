@@ -30,7 +30,13 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure logrotate"
+  hosts: "all"
+  roles:
+    - role: "configure_logrotate"
+```
 
 License
 -------

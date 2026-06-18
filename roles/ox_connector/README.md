@@ -37,6 +37,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure OX connector"
+  hosts: "all"
+  roles:
+    - role: "ox_connector"
+      vars:
+        ox_connector_basedn: "dc=example,dc=com"
+        ox_connector_master_admin: "oxadmin"
+        ox_connector_master_password: "secret"
+        ox_connector_domain_name: "example.com"
+```
 
 License
 -------

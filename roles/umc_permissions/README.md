@@ -24,6 +24,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure UMC permissions"
+  hosts: "all"
+  roles:
+    - role: "umc_permissions"
+      vars:
+        umc_permissions_basedn: "dc=example,dc=com"
+```
 
 License
 -------

@@ -28,6 +28,20 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Add admin user"
+  hosts: "all"
+  roles:
+    - role: "ucs_add_admin_user"
+      vars:
+        ucs_add_admin_user_basedn: "dc=example,dc=com"
+        ucs_add_admin_user_username: "adminuser"
+        ucs_add_admin_user_firstname: "Admin"
+        ucs_add_admin_user_lastname: "User"
+        ucs_add_admin_user_password: "secret"
+        ucs_add_admin_user_recoveryemail: "admin@example.com"
+```
 
 License
 -------

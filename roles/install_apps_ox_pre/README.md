@@ -24,6 +24,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Pre-install Open-Xchange"
+  hosts: "all"
+  roles:
+    - role: "install_apps_ox_pre"
+      vars:
+        install_apps_ox_pre_external_hostname: "ox.example.com"
+        install_apps_ox_pre_basedn: "dc=example,dc=com"
+```
 
 License
 -------

@@ -24,6 +24,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Improve user configuration"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_user_config"
+      vars:
+        improve_usability_user_config_basedn: "dc=example,dc=com"
+        improve_usability_user_config_external_hostname: "ucs.example.com"
+```
 
 License
 -------

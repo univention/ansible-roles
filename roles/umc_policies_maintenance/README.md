@@ -27,6 +27,16 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure maintenance policies"
+  hosts: "all"
+  roles:
+    - role: "umc_policies_maintenance"
+      vars:
+        umc_policies_maintenance_basedn: "dc=example,dc=com"
+        umc_policies_maintenance_release_version: "5.2-0"
+```
 
 License
 -------

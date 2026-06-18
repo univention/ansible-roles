@@ -27,6 +27,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Set DNS glue record"
+  hosts: "all"
+  roles:
+    - role: "set_dns_glue_record"
+      vars:
+        set_dns_glue_record_glue_record_nameserver: "ns1.example.com"
+        set_dns_glue_record_domain_name: "example.com"
+        set_dns_glue_record_basedn: "dc=example,dc=com"
+        set_dns_glue_record_host_name: "ucs"
+```
 
 License
 -------

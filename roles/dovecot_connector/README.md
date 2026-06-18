@@ -38,6 +38,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Dovecot connector"
+  hosts: "all"
+  roles:
+    - role: "dovecot_connector"
+      vars:
+        dovecot_connector_basedn: "dc=example,dc=com"
+        dovecot_connector_adm_password: "secret"
+        dovecot_connector_adm_username: "doveadm"
+        dovecot_connector_domain_name: "example.com"
+```
 
 License
 -------

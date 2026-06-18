@@ -23,6 +23,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install new portal service"
+  hosts: "all"
+  roles:
+    - role: "install_service_new_portal"
+```
 
 License
 -------

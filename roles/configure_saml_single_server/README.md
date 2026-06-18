@@ -30,6 +30,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure SAML single server"
+  hosts: "all"
+  roles:
+    - role: "configure_saml_single_server"
+      vars:
+        configure_saml_single_server_external_hostname: "ucs.example.com"
+        configure_saml_single_server_domain_name: "example.com"
+        configure_saml_single_server_basedn: "dc=example,dc=com"
+```
 
 License
 -------

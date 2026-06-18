@@ -38,6 +38,21 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure UCS license"
+  hosts: "all"
+  roles:
+    - role: "configure_license"
+      vars:
+        configure_license_type: "server_license"
+        configure_license_basedn: "dc=example,dc=com"
+        configure_license_max_users: 500
+        configure_license_shop_id: 12345
+        configure_license_shop_username: "shopuser"
+        configure_license_shop_password: "shoppassword"
+        configure_license_validity: "12 weeks"
+```
 
 License
 -------

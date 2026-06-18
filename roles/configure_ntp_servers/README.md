@@ -23,6 +23,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure NTP servers"
+  hosts: "all"
+  roles:
+    - role: "configure_ntp_servers"
+```
 
 License
 -------

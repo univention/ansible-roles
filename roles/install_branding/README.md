@@ -27,6 +27,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install branding package"
+  hosts: "all"
+  roles:
+    - role: "install_branding"
+      vars:
+        install_branding_customer_repo_name: "customer-repo"
+        install_branding_customer_repo_server: "repo.example.com"
+        install_branding_customer_branding_package: "customer-branding"
+```
 
 License
 -------

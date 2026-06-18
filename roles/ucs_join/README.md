@@ -42,9 +42,12 @@ Example Playbook
 ### Configure static network interface
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_type: "static"
@@ -60,9 +63,12 @@ Example Playbook
 ### Configure additional network interfaces
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_type: "static"
@@ -75,9 +81,12 @@ Example Playbook
 ### Configure additional network routes
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_static_routes:
@@ -103,20 +112,24 @@ All domaincontroller_* has a dns server installed.
 | nameserver3 |                         | fallback_nameserver     | domaincontroller_backup | domaincontroller_slave  |
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_nameservers:
           nameserver1:
             # local ip
+            # yamllint disable-line rule:line-length
             server: "{{ ansible_local['ucr']['interfaces/' + ansible_local['ucr']['interfaces/primary'] + '/address'] }}"
           nameserver2:
             server: "8.8.8.8"
-            state: 'present'
+            state: "present"
           nameserver3:
-            state: 'absent'
+            state: "absent"
 ```
 
 License

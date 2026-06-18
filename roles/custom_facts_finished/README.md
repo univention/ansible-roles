@@ -21,6 +21,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Mark deployment finished"
+  hosts: "all"
+  roles:
+    - role: "custom_facts_finished"
+```
 
 License
 -------

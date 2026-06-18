@@ -46,6 +46,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install multitenant ACLs"
+  hosts: "all"
+  roles:
+    - role: "install_multitenant_acls"
+      vars:
+        install_multitenant_acls_customer_name: "example-customer"
+```
 
 License
 -------

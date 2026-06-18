@@ -27,7 +27,18 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure Postfix relay"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_postfix_relay"
+      vars:
+        configure_apps_postfix_relay_enabled: true
+        configure_apps_postfix_relay_host: "smtp.example.com"
+        configure_apps_postfix_relay_username: "relayuser"
+        configure_apps_postfix_relay_password: "relaypassword"
+```
 
 License
 -------

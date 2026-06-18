@@ -19,6 +19,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Prune old kernels"
+  hosts: "all"
+  roles:
+    - role: "univention_prune_kernels"
+```
 
 License
 -------

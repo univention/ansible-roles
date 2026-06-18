@@ -32,9 +32,12 @@ Example Playbook
 ### Configure OpenID clients
 
 ```yaml
-- hosts: all
+---
+- name: "Configure SSO OpenID Connect"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Configure SSO OpenID Connect"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.configure_sso_openid"
       vars:
         configure_sso_openid_clients:

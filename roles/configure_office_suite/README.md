@@ -27,6 +27,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure office suite"
+  hosts: "all"
+  roles:
+    - role: "configure_office_suite"
+      vars:
+        configure_office_suite_office_suite: "collabora-online"
+```
 
 License
 -------

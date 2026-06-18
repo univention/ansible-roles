@@ -27,6 +27,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Upgrade UCS"
+  hosts: "all"
+  roles:
+    - role: "univention_upgrade"
+      vars:
+        univention_upgrade_version: "5.2-99"
+```
 
 License
 -------

@@ -21,6 +21,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Improve Nextcloud usability"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_nextcloud"
+```
 
 License
 -------

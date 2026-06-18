@@ -44,7 +44,9 @@ Example Playbook
 ## Intercom Service
 
 ```yaml
-- hosts: all
+---
+- name: "Install Intercom Service"
+  hosts: "all"
   tasks:
     - name: "Install Intercom Service via Appcenter"
       ansible.builtin.include_role:
@@ -54,7 +56,6 @@ Example Playbook
         intercom_service_domain_name: "ucs.test.intranet"
         intercom_service_temp_pw_file: "{{ temp_file }}"
         intercom_service_keycloak_realm_name: "your_keycloak_realm"
-
 ```
 
 License

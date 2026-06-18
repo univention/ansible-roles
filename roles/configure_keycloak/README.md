@@ -42,6 +42,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Keycloak"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak"
+      vars:
+        configure_keycloak_keycloak_server: "keycloak.example.com"
+        configure_keycloak_admin_username: "admin"
+        configure_keycloak_admin_password: "secret"
+        configure_keycloak_client_id: "ucs-client"
+```
 
 License
 -------

@@ -22,6 +22,17 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure Nextcloud TURN server"
+  hosts: "all"
+  roles:
+    - role: "configure_nextcloud_turn"
+      vars:
+        configure_nextcloud_turn_secret: "turn-secret"
+        configure_nextcloud_turn_url: "turn:turn.example.com:3478"
+```
+
 License
 -------
 

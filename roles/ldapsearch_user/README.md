@@ -28,9 +28,12 @@ Example Playbook
 ### Configure LDAPSearch user
 
 ```yaml
-- hosts: all
+---
+- name: "Configure LDAPSearch users"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Configure LDAPSearch users"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ldapsearch_user"
       vars:
         ldapsearch_user_list:
@@ -44,9 +47,12 @@ Example Playbook
 ### Configure LDAPSearch user (per tenant)
 
 ```yaml
-- hosts: all
+---
+- name: "Configure LDAPSearch users"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Configure LDAPSearch users"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ldapsearch_user"
       vars:
         ldapsearch_user_list_tenantbased:

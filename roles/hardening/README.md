@@ -40,6 +40,19 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Harden UCS system"
+  hosts: "all"
+  roles:
+    - role: "hardening"
+      vars:
+        # hardening_disable_root_login: false  # uncomment to keep root login enabled
+        hardening_disable_http: true
+        hardening_hsts: true
+        hardening_umc_session_cookie: true
+        hardening_umc_secure_cookie: true
+```
 
 License
 -------

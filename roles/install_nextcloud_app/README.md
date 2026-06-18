@@ -22,6 +22,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install Nextcloud app"
+  hosts: "all"
+  roles:
+    - role: "install_nextcloud_app"
+      vars:
+        install_nextcloud_app_name: "contacts"
+```
 
 License
 -------

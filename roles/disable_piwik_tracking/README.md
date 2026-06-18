@@ -22,6 +22,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Disable Piwik tracking"
+  hosts: "all"
+  roles:
+    - role: "disable_piwik_tracking"
+```
 
 License
 -------

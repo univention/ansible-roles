@@ -31,6 +31,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure directory manager"
+  hosts: "all"
+  roles:
+    - role: "configure_directory_manager"
+```
 
 License
 -------

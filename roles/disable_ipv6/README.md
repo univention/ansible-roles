@@ -22,6 +22,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Disable IPv6"
+  hosts: "all"
+  roles:
+    - role: "disable_ipv6"
+```
 
 License
 -------

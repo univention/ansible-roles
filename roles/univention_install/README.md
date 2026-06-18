@@ -22,6 +22,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install package"
+  hosts: "all"
+  roles:
+    - role: "univention_install"
+      vars:
+        univention_install_name: "ntp"
+```
 
 License
 -------

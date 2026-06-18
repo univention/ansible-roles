@@ -22,6 +22,18 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Configure portal title"
+  hosts: "all"
+  roles:
+    - role: "portal_configure_title"
+      vars:
+        portal_configure_title_basedn: "dc=example,dc=com"
+        portal_configure_title_titles:
+          - "en_US \"My Portal (Univention)\""
+          - "de_DE \"Mein Portal (Univention)\""
+```
 
 License
 -------

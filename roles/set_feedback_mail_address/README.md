@@ -21,6 +21,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Set feedback mail address"
+  hosts: "all"
+  roles:
+    - role: "set_feedback_mail_address"
+```
 
 License
 -------

@@ -28,7 +28,16 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure Postfix"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_postfix"
+      vars:
+        configure_apps_postfix_domain_name: "example.com"
+        configure_apps_postfix_external_hostname: "mail.example.com"
+```
 
 License
 -------

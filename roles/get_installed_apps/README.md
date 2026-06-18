@@ -22,6 +22,13 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Get installed apps"
+  hosts: "all"
+  roles:
+    - role: "get_installed_apps"
+```
 
 License
 -------

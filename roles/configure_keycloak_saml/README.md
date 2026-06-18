@@ -22,7 +22,16 @@ none
 Example Playbook
 ----------------
 
-
+```yaml
+---
+- name: "Configure Keycloak SAML"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak_saml"
+      vars:
+        configure_keycloak_saml_basedn: "dc=example,dc=com"
+        configure_keycloak_saml_sp_base_url: "https://sp.example.com"
+```
 
 License
 -------

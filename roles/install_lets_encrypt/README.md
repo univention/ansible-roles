@@ -29,6 +29,15 @@ none
 Example Playbook
 ----------------
 
+```yaml
+---
+- name: "Install Let's Encrypt"
+  hosts: "all"
+  roles:
+    - role: "install_lets_encrypt"
+      vars:
+        install_lets_encrypt_external_hostname: "ucs.example.com"
+```
 
 License
 -------
