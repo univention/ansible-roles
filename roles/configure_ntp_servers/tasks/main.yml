@@ -19,7 +19,7 @@
     index_var: "configure_ntp_servers_index"
     loop_var: "configure_ntp_servers_item"
   register: "configure_ntp_servers_result"
-  when: "configure_ntp_servers_timeservers | default(false)"
+  when: "configure_ntp_servers_timeservers | default([]) | length > 0"
   tags:
     - "configure_ntp_servers"
     - "configure_ntp_servers_set_ucr"

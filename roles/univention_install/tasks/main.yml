@@ -4,7 +4,7 @@
   ansible.builtin.command:
     cmd: "apt clean"
   changed_when: false
-  when: "univention_install_clear_apt_cache"
+  when: "univention_install_clear_apt_cache | bool"
   tags:
     - "univention_install"
     - "univention_install_clean_package_cache"

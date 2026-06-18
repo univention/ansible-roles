@@ -17,7 +17,7 @@
           ansible.builtin.assert:
             that:
               - "configure_keycloak_client_oidc_broker_secret is defined"
-              - "configure_keycloak_client_oidc_broker_secret|bool"
+              - "configure_keycloak_client_oidc_broker_secret | length > 0"
             fail_msg: >
               Keycloak broker secret is not set but needed
               We can't continue with keycloak server configureation

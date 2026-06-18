@@ -12,7 +12,7 @@
   ansible.builtin.set_fact:
     modify_ucs_ca_current_alternative_names_list: "{{ modify_ucs_ca_current_alternative_names_list | default([])
                                                         + ['DNS:' + modify_ucs_ca_item] }}"
-  with_items:
+  loop:
     - "{{ inventory_hostname_short }}"
     - "{{ inventory_hostname_short }}.{{ modify_ucs_ca_external_domain_part }}"
     - "{{ inventory_hostname }}"

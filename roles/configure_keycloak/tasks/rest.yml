@@ -300,7 +300,7 @@
       ansible.builtin.assert:
         that:
           - "configure_keycloak_client_secret is defined"
-          - "configure_keycloak_client_secret | bool"
+          - "configure_keycloak_client_secret | length > 0"
         fail_msg: >
           Client not configured but password not set.
           We can't continue with keycloak server configureation
@@ -309,7 +309,7 @@
     - name: "Check that client callback url is set (REST)"
       ansible.builtin.assert:
         that:
-          - "keycloak_client_callback_url | bool"
+          - "keycloak_client_callback_url | length > 0"
         fail_msg: >
           Client not configured but client callback url not set.
           We can't continue with keycloak server configureation

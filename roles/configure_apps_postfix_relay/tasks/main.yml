@@ -5,7 +5,7 @@
     keys:
       mail/relayhost: "{{ configure_apps_postfix_relay_host }}:{{ configure_apps_postfix_relay_port }}"
   register: "configure_apps_postfix_relay_relayhost_result"
-  when: "configure_apps_postfix_relay_enabled"
+  when: "configure_apps_postfix_relay_enabled | bool"
   tags:
     - "configure_apps_postfix_relay"
     - "configure_apps_postfix_relay_relayhost"
