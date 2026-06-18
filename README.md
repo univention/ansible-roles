@@ -47,7 +47,7 @@
 - [install_nextcloud_app](roles/install_nextcloud_app/README.md#rolesinstall_nextcloud_appreadmemd)
 - [install_packages](roles/install_packages/README.md#rolesinstall_packagesreadmemd)
 - [install_service_new_portal](roles/install_service_new_portal/README.md#rolesinstall_service_new_portalreadmemd)
-- [install_service_selfservices](roles/install_service_selfservices/README.md#rolesinstall_service_selfservicesreadmemd)
+- [install_service_selfservice](roles/install_service_selfservice/README.md#rolesinstall_service_selfservicereadmemd)
 - [intercom_service](roles/intercom_service/README.md#rolesintercom_servicereadmemd)
 - [ldapsearch_user](roles/ldapsearch_user/README.md#rolesldapsearch_userreadmemd)
 - [modify_ucs_ca](roles/modify_ucs_ca/README.md#rolesmodify_ucs_careadmemd)
@@ -2202,9 +2202,9 @@ www.univention.com
 
 ---
 
-# install_service_selfservices
+# install_service_selfservice
 
-Install selfservices service
+Install selfservice service
 =========
 
 This role installs selfservice services.
@@ -2213,7 +2213,7 @@ Requirements
 ------------
 
 - univention.ucs_modules
-   - univention_config_registry
+  - univention_config_registry
 
 Role Variables
 --------------
@@ -2234,7 +2234,6 @@ none
 Example Playbook
 ----------------
 
-
 License
 -------
 
@@ -2244,7 +2243,7 @@ Author Information
 ------------------
 
 Univention GmbH
-www.univention.com
+<www.univention.com>
 
 ---
 
