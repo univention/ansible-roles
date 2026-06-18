@@ -1,0 +1,114 @@
+######################################
+# GitLab Pipelines for ansible-roles #
+######################################
+
+variables:
+  ENV_CFG: "${CI_PROJECT_DIR}/tests/ucs-kvm.cfg"
+  TDP_VERSION: &TDP_VERSION "v6.1.1"
+  UCS_VERSION:
+    value: "5.2-5"
+    description: "UCS version to be used X.Y-Z"
+
+workflow:
+  rules:
+    - if: &MERGE_TO_MAIN $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+    - if: &PUSH_TO_MAIN $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+
+include:
+  - project: univention/prof-services/internal/devops/test-dev-pipeline
+    ref: *TDP_VERSION
+    file:
+      - jobs-library.yml
+
+stages:
+  - deploy
+  - test
+  - release
+
+########
+# DEPLOY
+########
+
+create_vms:
+  stage: deploy
+  extends: .tdp_create_vms
+  needs: []
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+    on_stop: terminate_deployment
+  artifacts:
+    when: always
+  rules:
+    - if: *MERGE_TO_MAIN
+      when: always
+    - when: never
+  resource_group: env-${CI_COMMIT_REF_SLUG}
+
+
+manage_vms:
+  stage: deploy
+  extends: .tdp_manage_deployment
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+  rules:
+    - if: *MERGE_TO_MAIN
+    - when: never
+  resource_group: env-${CI_COMMIT_REF_SLUG}
+
+terminate_deployment:
+  stage: deploy
+  extends: .tdp_stop_deployment
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+  needs:
+    - job: create_vms
+  rules:
+    - if: *MERGE_TO_MAIN
+      when: manual
+    - when: never
+  resource_group: env-${CI_COMMIT_REF_SLUG}
+
+######
+#TEST#
+######
+
+run_molecule_tests:
+  stage: test
+  extends: .tdp_run_playbooks
+  needs:
+    - create_vms
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+  script:
+    - section_start "install_requirements" "Installing requirements  - EXPAND"
+    - |
+      echo "TODO: Install requirements for molecule"
+    - section_end "run_playbooks"
+  timeout: 3 hours
+  rules:
+    - if: *MERGE_TO_MAIN
+    - when: never
+  resource_group: env-${CI_COMMIT_REF_SLUG}
+  interruptible: false
+
+#########
+# RELEASE
+#########
+
+publish_on_galaxy:
+  stage: release
+  script:
+    - |
+      echo "TODO: Publish to galaxy"
+  rules:
+    - if: *PUSH_TO_MAIN
+    - when: never
+
+sync_to_github:
+  stage: release
+  script:
+    - |
+      echo "TODO: Sync to GitHub"
+  rules:
+    - if: *PUSH_TO_MAIN
+    - when: never

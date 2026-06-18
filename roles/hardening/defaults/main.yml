@@ -19,5 +19,9 @@ hardening_disable_umc_http_tracebacks: true
 hardening_disable_udm_rest_tracebacks: true
 hardening_disable_saml_idp_error_reporting: true
 hardening_disable_saml_idp_show_errors: true
+hardening_sshd_permitroot: false
+hardening_auth_sshd_restrict: true
+# define users which should have ssh access
+hardening_auth_sshd_users: []
 
 ...

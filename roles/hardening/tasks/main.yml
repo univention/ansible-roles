@@ -65,15 +65,25 @@
     - "hardening"
 
 - name: "hardening | Deactivate root login"
-  ansible.builtin.lineinfile:
-    path: "/etc/ssh/sshd_config"
-    line: "PermitRootLogin no"
-    regex: "^PermitRootLogin.*"
-    validate: "sshd -t -f %s"
-    state: "present"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      sshd/permitroot: "{{ hardening_sshd_permitroot }}"
   register: "hardening_disable_root_login_result"
   tags:
     - "hardening_disable_ssh_root_password_login_ssh_config"
+    - "hardening"
+
+- name: "hardening | enable ssh access for non-root users"
+  loop: "{{ hardening_auth_sshd_users }}"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "auth/sshd/restrict"
+        value: "{{ hardening_auth_sshd_restrict }}"
+      - key: "auth/sshd/user/{{ item }}"
+        value: "yes"
+  register: "hardening_enable_ssh_access_for_non_root_users"
+  tags:
+    - "hardening_enable_ssh_access_for_non_root_users"
     - "hardening"
 
 - name: "hardening | Restart ssh"
@@ -83,6 +93,7 @@
   changed_when: false
   when:
     - "hardening_disable_root_login_result.changed"
+    - "hardening_enable_ssh_access_for_non_root_users.changed"
   tags:
     - "hardening_restart_ssh"
     - "hardening"
@@ -141,7 +152,7 @@
     - "hardening_disable_umc_http_tracebacks"
     - "hardening"
 
-- name: "hardening | Ser secure saml idp language-cookie (and saml/idp/https)"
+- name: "hardening | Set secure saml idp language-cookie (and saml/idp/https)"
   univention.ucs_modules.univention_config_registry:
     keys:
       saml/idp/https: "true"
@@ -152,7 +163,7 @@
     - "hardening_saml_idp_language_cookie"
     - "hardening"
 
-- name: "hardening | Ser secure saml idp session-cookie (and saml/idp/https)"
+- name: "hardening | Set secure saml idp session-cookie (and saml/idp/https)"
   univention.ucs_modules.univention_config_registry:
     keys:
       saml/idp/https: "true"
