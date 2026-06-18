@@ -1,6 +1,9 @@
 ---
 
 - name: "dovecot_connector | Install DC connector"
+  when: "dovecot_connector_server_type | default('master') != 'backup'"
+  tags:
+    - "dovecot_connector"
   block:
     - name: "Assert variables"
       ansible.builtin.assert:
@@ -95,8 +98,5 @@
       when: "not dovecot_connector_settings_correct"
       tags:
         - "dovecot_connector_configure"
-  when: "dovecot_connector_server_type | default('master') != 'backup'"
-  tags:
-    - "dovecot_connector"
 
 ...

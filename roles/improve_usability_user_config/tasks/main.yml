@@ -74,6 +74,10 @@
     - "improve_usability_user_config_nextcloud_auth"
 
 - name: "improve_usability_user_config | Modify OX user template"
+  when: "'oxseforucs' in improve_usability_user_config_install_apps"
+  tags:
+    - "improve_usability_user_config"
+    - "improve_usability_user_config_user_template"
   block:
     - name: "improve_usability_user_config | Change primary mail address in OX user template"
       ansible.builtin.command: >
@@ -114,11 +118,6 @@
       tags:
         - "improve_usability_user_config"
         - "improve_usability_user_config_directory_manager_settings"
-
-  when: "'oxseforucs' in improve_usability_user_config_install_apps"
-  tags:
-    - "improve_usability_user_config"
-    - "improve_usability_user_config_user_template"
 
 - name: "improve_usability_user_config | Remove selfservice user template"
   ansible.builtin.command: >

@@ -1,6 +1,9 @@
 ---
 
 - name: "extend_root_lvm_volume | Extend system space to cover the whole disk"
+  when: "extend_root_lvm_volume_extend_lvm_to_whole_disk|bool"
+  tags:
+    - "extend_root_lvm_volume"
   block:
     - name: "extend_root_lvm_volume | Ensure that lvm commands are available"
       ansible.builtin.package:
@@ -47,9 +50,5 @@
         size: "+100%FREE"
       tags:
         - "extend_root_lvm_volume_resize"
-
-  when: "extend_root_lvm_volume_extend_lvm_to_whole_disk|bool"
-  tags:
-    - "extend_root_lvm_volume"
 
 ...

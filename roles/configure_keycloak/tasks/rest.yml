@@ -2,6 +2,9 @@
 
 - name: "Configure keycloak server using the REST API"
   become: false
+  delegate_to: "{{ configure_keycloak_keycloak_server }}"
+  tags:
+    - "keycloak_config"
   block:
     - name: "Authenticate to keycloak server (REST)"
       ansible.builtin.uri:
@@ -172,6 +175,9 @@
     - name: "Insert FQDN into CSP list"
       vars:
         configure_keycloak_host_url: "https://{{ configure_keycloak_fqdn }}/"
+      when: "configure_keycloak_display_matrix_in_iframe | bool"
+      tags:
+        - "configure_keycloak_insert_fqdn"
       block:
         - name: "Get keycloak realm info (REST)"
           ansible.builtin.uri:
@@ -208,7 +214,7 @@
           vars:
             configure_keycloak_browsersecurity_changes:
               contentSecurityPolicy: >-
-                {{ configure_keycloak_current_csp_list[-1] }} {{ configure_keycloak_browsersecurity_changes }};
+                {{ configure_keycloak_current_csp_list }} {{ configure_keycloak_host_url }}
               xFrameOptions: ""
           ansible.builtin.uri:
             url: "{{ configure_keycloak_realm_base_url }}"
@@ -229,10 +235,6 @@
           when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms"
-
-      when: "configure_keycloak_display_matrix_in_iframe | bool"
-      tags:
-        - "configure_keycloak_insert_fqdn"
 
     - name: "Get a list of existing import mappings (REST)"
       ansible.builtin.uri:
@@ -427,9 +429,5 @@
           - 202
       tags:
         - "keycloak_config_set_sourceidp_note"
-
-  delegate_to: "{{ configure_keycloak_keycloak_server }}"
-  tags:
-    - "keycloak_config"
 
 ...

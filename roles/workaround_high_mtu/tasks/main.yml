@@ -1,6 +1,9 @@
 ---
 
 - name: "Handle docker HTTPS issues on high MTU"
+  when: "ansible_default_ipv4['mtu']|default(1500) < 1500"
+  tags:
+    - "workaround_high_mtu"
   block:
     - name: "Patch docker Daemon to MTU 1400"
       ansible.builtin.copy:
@@ -17,9 +20,5 @@
         name: "docker"
       tags:
         - "workaround_high_mtu_reload_daemon"
-
-  when: "ansible_default_ipv4['mtu']|default(1500) < 1500"
-  tags:
-    - "workaround_high_mtu"
 
 ...

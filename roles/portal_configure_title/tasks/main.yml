@@ -26,6 +26,10 @@
     - "portal_configure_title_check_titles"
 
 - name: "portal_configure_title | Update portal title"
+  when: "portal_configure_title_existing is not defined or not portal_configure_title_existing"
+  tags:
+    - "portal_configure_title"
+    - "portal_configure_title_update"
   block:
     - name: "portal_configure_title | Change portal title"
       ansible.builtin.command: >
@@ -53,9 +57,5 @@
       register: "portal_configure_title_append_title_result"
       tags:
         - "portal_configure_title_update_append_title"
-  when: "portal_configure_title_existing is not defined or not portal_configure_title_existing"
-  tags:
-    - "portal_configure_title"
-    - "portal_configure_title_update"
 
 ...

@@ -1,7 +1,7 @@
 ---
 
 galaxy_info:
-  role_name: "install_service_selfservices"
+  role_name: "install_service_selfservice"
   author: "Univention"
   description: "Intall and configure portal selfservice."
   company: "Univention GmbH"
@@ -23,7 +23,7 @@ galaxy_info:
     - "bootstrap"
     - "apps"
     - "install"
-    - "selfservices"
+    - "selfservice"
 
 dependencies: []
 

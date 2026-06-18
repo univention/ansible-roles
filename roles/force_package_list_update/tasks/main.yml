@@ -11,6 +11,10 @@
     - "force_package_list_update"
 
 - name: "force_package_list_update | Check if packages list already updated"
+  when: "not force_package_list_update_already_updated | default(false) | bool"
+  tags:
+    - "force_package_list_update_do_update"
+    - "force_package_list_update"
   block:
     - name: "force_package_list_update | Update debian package lists"
       ansible.builtin.apt:
@@ -25,9 +29,9 @@
       ansible.builtin.command: "univention-app update"
       changed_when: false
       delay: 10
-      register: "force_package_list_univention_app_update_result"
+      register: "force_package_list_update_univention_app_update_result"
       retries: 3
-      until: "force_package_list_univention_app_update_result.rc == 0"
+      until: "force_package_list_update_univention_app_update_result.rc == 0"
       tags:
         - "force_package_list_update_do_update_app_update"
 
@@ -37,10 +41,6 @@
       changed_when: false
       tags:
         - "force_package_list_update_do_update_already_updated_flag"
-  when: "not force_package_list_update_already_updated | default(false) | bool"
-  tags:
-    - "force_package_list_update_do_update"
-    - "force_package_list_update"
 
 - name: "force_package_list_update | Refresh facts"
   ansible.builtin.setup:

@@ -24,6 +24,9 @@
     - "install_multitenant_acls_disable_kerberos"
 
 - name: "install_multitenant_acls | Install Multitenat ACLs"
+  when: "install_multitenant_acls_server_type | default('master') != 'backup'"
+  tags:
+    - "install_multitenant_acls"
   block:
     - name: "install_multitenant_acls | Copy ACL template to machine"
       ansible.builtin.template:
@@ -60,9 +63,6 @@
       tags:
         - "always"
         - "install_multitenant_acls_copy_acl_template"
-  when: "install_multitenant_acls_server_type | default('master') != 'backup'"
-  tags:
-    - "install_multitenant_acls"
 
 - name: "install_multitenant_acls | Disable nested ACL groups"
   univention.ucs_modules.univention_config_registry:

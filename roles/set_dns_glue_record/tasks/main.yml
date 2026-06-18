@@ -1,5 +1,8 @@
 ---
 - name: "Implement DNS glue record for external host name"
+  when: "set_dns_glue_record_create_external_hostname_glue_record | bool"
+  tags:
+    - "set_dns_glue_record"
   block:
     - name: "Check if all vars are set"
       ansible.builtin.assert:
@@ -54,7 +57,3 @@
       when: "set_dns_glue_record_glue_record_counter | default(0) == 0"
       tags:
         - "set_dns_glue_record_create_dns_record"
-
-  when: "set_dns_glue_record_create_external_hostname_glue_record | bool"
-  tags:
-    - "set_dns_glue_record"

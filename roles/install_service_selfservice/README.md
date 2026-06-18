@@ -1,4 +1,4 @@
-Install selfservices service
+Install selfservice service
 =========
 
 This role installs selfservice services.
@@ -7,7 +7,7 @@ Requirements
 ------------
 
 - univention.ucs_modules
-   - univention_config_registry
+  - univention_config_registry
 
 Role Variables
 --------------
@@ -28,7 +28,6 @@ none
 Example Playbook
 ----------------
 
-
 License
 -------
 
@@ -38,4 +37,4 @@ Author Information
 ------------------
 
 Univention GmbH
-www.univention.com
+<www.univention.com>

@@ -1,6 +1,9 @@
 ---
 
 - name: "ox_connector | Install OX connector"
+  when: "ox_connector_server_type|default('master') != 'backup'"
+  tags:
+    - "ox_connector"
   block:
     - name: "ox_connector | Create DNS Alias"
       ansible.builtin.command: |
@@ -258,9 +261,6 @@
       tags:
         - "ox_connector_disable_udmweb_user"
 
-  when: "ox_connector_server_type|default('master') != 'backup'"
-  tags:
-    - "ox_connector"
 
 - name: "ox_connector | Add default dn to users"
   univention.ucs_modules.univention_config_registry:

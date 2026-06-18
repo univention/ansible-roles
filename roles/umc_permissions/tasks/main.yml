@@ -11,6 +11,9 @@
     - "umc_permissions_ucr"
 
 - name: "umc_permissions | Manage cn=only-users-and-groups,cn=UMC,cn=policies"
+  tags:
+    - "umc_permissions"
+    - "umc_permissions_policy"
   block:
     - name: "umc_permissions | Modifly policies/umc"
       ansible.builtin.command:
@@ -49,11 +52,11 @@
       register: "umc_permissions_policy_reference_result"
       tags:
         - "umc_permissions_policy_add_reference"
-  tags:
-    - "umc_permissions"
-    - "umc_permissions_policy"
 
 - name: "umc_permissions | Manage cn=udm-usertemplates,cn=operations,cn=UMC,cn=univention"
+  tags:
+    - "umc_permissions"
+    - "umc_permissions_policy_usertemplate"
   block:
     - name: "umc_permissions | Add settings/umc_operationset"
       ansible.builtin.command:
@@ -90,11 +93,11 @@
       register: "umc_permissions_append_udm_usertemplate_result"
       tags:
         - "umc_permissions_policy_usertemplate_add_policy"
-  tags:
-    - "umc_permissions"
-    - "umc_permissions_policy_usertemplate"
 
 - name: "umc_permissions | Manage cn=udm-reports,cn=operations,cn=UMC,cn=univention"
+  tags:
+    - "umc_permissions"
+    - "umc_permissions_policy_userreports"
   block:
     - name: "umc_permissions | Add settings/umc_operationset"
       ansible.builtin.command:
@@ -129,9 +132,6 @@
       register: "umc_permissions_append_udm_reports_result"
       tags:
         - "umc_permissions_policy_userreports_add_policy"
-  tags:
-    - "umc_permissions"
-    - "umc_permissions_policy_userreports"
 
 - name: "umc_permissions | Allow groups to be added to user"
   ansible.builtin.command:

@@ -4,7 +4,7 @@
   ansible.builtin.copy:
     dest: "/var/lib/univention-appcenter/apps/nextcloud/data/skeleton"
     src: "files/nextcloud-skeleton/"
-    directory_mode: 0755
+    directory_mode: "0755"
     mode: "preserve"
   tags:
     - "configure_apps_nextcloud"

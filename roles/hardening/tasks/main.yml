@@ -116,7 +116,7 @@
 - name: "hardening | Set processes limit to cpu cores"
   univention.ucs_modules.univention_config_registry:
     keys:
-      umc/server/processes: "{{ ansible_processor_cores | quote }}"
+      umc/server/processes: "{{ hardening_processor_cores | quote }}"
   tags:
     - "hardening_set_processes_limit"
     - "hardening"

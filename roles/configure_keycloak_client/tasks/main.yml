@@ -1,9 +1,17 @@
 ---
 
 - name: "Configure UCS server for keycoak auth"
+  when: "configure_keycloak_client_config_type != 'none'"
+  tags:
+    - "configure_keycloak_client"
   block:
     - name: "Make sure the keycloak broker secret is set"
       become: false
+      when: >
+        configure_keycloak_client_keycloak_password is undefined or
+        configure_keycloak_client_keycloak_password|length == 0
+      tags:
+        - "configure_keycloak_client_password"
       block:
         - name: "Check that broker secret variable is set"
           ansible.builtin.assert:
@@ -18,11 +26,6 @@
           ansible.builtin.set_fact:
             configure_keycloak_client_keycloak_password: "{{ configure_keycloak_client_oidc_broker_secret }}"
           no_log: true
-      when: >
-        configure_keycloak_client_keycloak_password is undefined or
-        configure_keycloak_client_keycloak_password|length == 0
-      tags:
-        - "configure_keycloak_client_password"
 
     - name: "Configure keycloak"
       # yamllint disable rule:line-length
@@ -47,9 +50,5 @@
       no_log: true
       tags:
         - "configure_keycloak_client_configure"
-
-  when: "configure_keycloak_client_config_type != 'none'"
-  tags:
-    - "configure_keycloak_client"
 
 ...

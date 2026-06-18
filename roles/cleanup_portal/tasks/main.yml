@@ -1,6 +1,9 @@
 ---
 
 - name: "cleanup_portal | Install Dashboard"
+  when: "'dashboard' in cleanup_portal_install_services"
+  tags:
+    - "cleanup_portal"
   block:
     - name: "Allow Domain Admin group access to dashboard features"
       # exit codes
@@ -78,8 +81,5 @@
       changed_when: "cleanup_portal_output4 | regex_search('Object modified: cn=')"
       tags:
         - "cleanup_portal_deactivate_portal_entries"
-  when: "'dashboard' in cleanup_portal_install_services"
-  tags:
-    - "cleanup_portal"
 
 ...

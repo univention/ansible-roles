@@ -1,7 +1,7 @@
 ---
 
 hardening_disable_http: true
-ansible_processor_cores: "1"
+hardening_processor_cores: "1"
 hardening_hsts: true
 hardening_apache2_ssl_tlsv13: true
 hardening_apache2_server_signature: "Off"

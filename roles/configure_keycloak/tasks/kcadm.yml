@@ -2,6 +2,9 @@
 
 - name: "Configure keycloak server using kcadm.sh"
   become: false
+  delegate_to: "{{ configure_keycloak_keycloak_server }}"
+  tags:
+    - "keycloak_config"
   block:
     - name: "Authenticate to keycloak server (KCADM)"
       ansible.builtin.command:
@@ -97,6 +100,9 @@
     - name: "Insert FQDN into CSP list"
       vars:
         configure_keycloak_host_url: "https://{{ configure_keycloak_fqdn }}/"
+      when: "configure_keycloak_display_matrix_in_iframe | bool"
+      tags:
+        - "configure_keycloak_insert_fqdn"
       block:
         - name: "Get keycloak realm info (KCADM)"
           ansible.builtin.command: "kcadm.sh get realms/{{ configure_keycloak_realm }}"
@@ -130,10 +136,6 @@
           when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms"
-
-      when: "configure_keycloak_display_matrix_in_iframe | bool"
-      tags:
-        - "configure_keycloak_insert_fqdn"
 
     - name: "Configure the import mapping for preferred_username (KCADM)"
       ansible.builtin.command: >
@@ -179,7 +181,7 @@
 
     - name: "Create new client (KCADM)"
       vars:
-        configure_keycloak_callback_url_list: "{{ [ configure_keycloak_client_callback_url ] }}"
+        configure_keycloak_callback_url_list: "{{ [configure_keycloak_client_callback_url] }}"
       ansible.builtin.command: >
         kcadm.sh create clients
         -r {{ configure_keycloak_realm }}
@@ -226,8 +228,5 @@
       failed_when:
         - "configure_keycloak_kcadm_create_mapper_output.rc == 1"
         - "'Protocol mapper exists' not in configure_keycloak_kcadm_create_mapper_output.stderr"
-  delegate_to: "{{ configure_keycloak_keycloak_server }}"
-  tags:
-    - "keycloak_config"
 
 ...

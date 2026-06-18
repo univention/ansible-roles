@@ -24,6 +24,10 @@
     - "configure_office_suite_install"
 
 - name: "configure_office_suite | Configure onlyoffice"
+  when: "configure_office_suite_office_suite == 'onlyoffice'"
+  tags:
+    - "configure_office_suite"
+    - "configure_office_suite_only_office"
   block:
     - name: "configure_office_suite | NextCloud: Set DocumentServerUrl"
       ansible.builtin.command:
@@ -63,12 +67,11 @@
         - "configure_office_suite_only_office_nextcloud"
         - "configure_office_suite_only_office_nextcloud_fileformat"
 
-  when: "configure_office_suite_office_suite == 'onlyoffice'"
+- name: "configure_office_suite | Configure collabora-online"
+  when: "configure_office_suite_office_suite == 'collabora-online'"
   tags:
     - "configure_office_suite"
-    - "configure_office_suite_only_office"
-
-- name: "configure_office_suite | Configure collabora-online"
+    - "configure_office_suite_collabora_online"
   block:
     - name: "configure_office_suite | NextCloud: Disable certificate validation for CODE server"
       ansible.builtin.command:
@@ -102,11 +105,6 @@
       tags:
         - "configure_office_suite_collabora_online_nextcloud"
         - "configure_office_suite_collabora_online_nextcloud_collabora_license_key"
-
-  when: "configure_office_suite_office_suite == 'collabora-online'"
-  tags:
-    - "configure_office_suite"
-    - "configure_office_suite_collabora_online"
 
 - name: "configure_office_suite | Flush handlers to restart collabora"
   ansible.builtin.meta: "flush_handlers"

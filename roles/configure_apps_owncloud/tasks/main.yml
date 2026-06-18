@@ -1,5 +1,7 @@
 ---
 - name: "Configure OwnCloud SSO"
+  tags:
+    - "configure_apps_owncloud"
   block:
     - name: "Refresh facts"
       ansible.builtin.setup:
@@ -63,5 +65,3 @@
 
     - name: "Flush handlers to restart owncloud"
       ansible.builtin.meta: "flush_handlers"
-  tags:
-    - "configure_apps_owncloud"
