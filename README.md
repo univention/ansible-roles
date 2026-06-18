@@ -1,3 +1,20 @@
+# univention.ucs_roles
+
+<https://galaxy.ansible.com/ui/repo/published/univention/ucs_roles/>
+
+[TOC]
+
+## Version compatibility
+
+These roles had been tested with Ansible 12 / ansible.core 2.19 and UCS5.2 / Python 3.11.
+They are not compatible with UCS5.0 and older.
+
+## Development
+
+To get the required dependencies, [create a Python virtualenv](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#create-and-use-virtual-environments) and run:
+
+`pip install -r requirements.txt`
+
 # Modules
 
 - [add_local_user](roles/add_local_user/README.md#rolesadd_local_userreadmemd)
@@ -77,7 +94,7 @@
 
 ---
 
-# add_local_user
+## add_local_user
 
 Add local user
 =========
@@ -130,7 +147,7 @@ www.univention.com
 
 ---
 
-# cleanup_portal
+## cleanup_portal
 
 Cleanup Portal
 =========
@@ -174,7 +191,7 @@ www.univention.com
 
 ---
 
-# configure_amazon_metadata_server
+## configure_amazon_metadata_server
 
 
 Configure amazon metadata server
@@ -215,7 +232,7 @@ www.univention.com
 
 ---
 
-# configure_apps_nextcloud
+## configure_apps_nextcloud
 
 Configure Nextcloud (apps)
 =========
@@ -255,7 +272,7 @@ www.univention.com
 
 ---
 
-# configure_apps_owncloud
+## configure_apps_owncloud
 
 Configure Owncloud (apps)
 =========
@@ -295,7 +312,7 @@ www.univention.com
 
 ---
 
-# configure_apps_postfix
+## configure_apps_postfix
 
 Configure Postfix (apps)
 =========
@@ -342,7 +359,7 @@ www.univention.com
 
 ---
 
-# configure_apps_postfix_relay
+## configure_apps_postfix_relay
 
 Configure Postfix relay (apps)
 =========
@@ -388,7 +405,7 @@ www.univention.com
 
 ---
 
-# configure_directory_manager
+## configure_directory_manager
 
 Configure directory manager
 =========
@@ -437,7 +454,7 @@ www.univention.com
 
 ---
 
-# configure_error_detail_show
+## configure_error_detail_show
 
 Configure error detail show
 =========
@@ -480,7 +497,7 @@ www.univention.com
 
 ---
 
-# configure_group_syntax
+## configure_group_syntax
 
 Configure group syntax
 =========
@@ -521,7 +538,7 @@ www.univention.com
 
 ---
 
-# configure_keycloak
+## configure_keycloak
 
 Configure Keycloak
 =========
@@ -581,7 +598,7 @@ www.univention.com
 
 ---
 
-# configure_keycloak_client
+## configure_keycloak_client
 
 Configure keycloak client
 =========
@@ -627,7 +644,7 @@ www.univention.com
 
 ---
 
-# configure_keycloak_saml
+## configure_keycloak_saml
 
 Configure Keycloak SAML
 =========
@@ -668,7 +685,7 @@ www.univention.com
 
 ---
 
-# configure_license
+## configure_license
 
 Configure UCS license
 =========
@@ -724,7 +741,7 @@ www.univention.com
 
 ---
 
-# configure_logrotate
+## configure_logrotate
 
 Configure Logrotate
 =========
@@ -773,7 +790,7 @@ www.univention.com
 
 ---
 
-# configure_monitoring
+## configure_monitoring
 
 Configure Monitoring
 =========
@@ -813,7 +830,7 @@ www.univention.com
 
 ---
 
-# configure_network_interface_names
+## configure_network_interface_names
 
 Configure network interface names
 =========
@@ -853,7 +870,7 @@ www.univention.com
 
 ---
 
-# configure_network_proxy
+## configure_network_proxy
 
 Configure network proxy
 =========
@@ -896,7 +913,7 @@ www.univention.com
 
 ---
 
-# configure_nextcloud_saml
+## configure_nextcloud_saml
 
 Configure nextcloud SAML
 =========
@@ -935,7 +952,7 @@ www.univention.com
 
 ---
 
-# configure_nextcloud_turn
+## configure_nextcloud_turn
 
 Configure TURN server of Nextcloud Talk
 =========
@@ -974,7 +991,7 @@ www.univention.com
 
 ---
 
-# configure_ntp_servers
+## configure_ntp_servers
 
 Configure NTP servers
 =========
@@ -1015,7 +1032,7 @@ www.univention.com
 
 ---
 
-# configure_office_suite
+## configure_office_suite
 
 Configure office suite
 =========
@@ -1060,7 +1077,7 @@ www.univention.com
 
 ---
 
-# configure_password_policies
+## configure_password_policies
 
 Configure UCS Password Policies
 ===============================
@@ -1110,7 +1127,7 @@ www.univention.com
 
 ---
 
-# configure_repository
+## configure_repository
 
 Configure repository
 =========
@@ -1154,7 +1171,7 @@ www.univention.com
 
 ---
 
-# configure_saml_single_server
+## configure_saml_single_server
 
 Configure SAML single server
 =========
@@ -1202,7 +1219,7 @@ www.univention.com
 
 ---
 
-# configure_sso_openid
+## configure_sso_openid
 
 Configure SSO OpenID Connect
 =========
@@ -1268,7 +1285,7 @@ www.univention.com
 
 ---
 
-# custom_facts
+## custom_facts
 
 Custom facts
 =========
@@ -1307,7 +1324,7 @@ www.univention.com
 
 ---
 
-# custom_facts_finished
+## custom_facts_finished
 
 Custom facts (finished)
 =========
@@ -1346,7 +1363,7 @@ www.univention.com
 
 ---
 
-# deployment_message
+## deployment_message
 
 Print a deployment message
 =========
@@ -1392,7 +1409,7 @@ www.univention.com
 
 ---
 
-# disable_ipv6
+## disable_ipv6
 
 Disable IPv6
 =========
@@ -1432,7 +1449,7 @@ www.univention.com
 
 ---
 
-# disable_piwik_tracking
+## disable_piwik_tracking
 
 Toogle piwik tracking
 =========
@@ -1472,7 +1489,7 @@ www.univention.com
 
 ---
 
-# dovecot_connector
+## dovecot_connector
 
 DC Connector
 =========
@@ -1528,7 +1545,7 @@ www.univention.com
 
 ---
 
-# extend_root_lvm_volume
+## extend_root_lvm_volume
 
 Extend root LVM volume
 =========
@@ -1574,7 +1591,7 @@ www.univention.com
 
 ---
 
-# force_package_list_update
+## force_package_list_update
 
 Force package list update
 =========
@@ -1614,7 +1631,7 @@ www.univention.com
 
 ---
 
-# get_installed_apps
+## get_installed_apps
 
 Get installed univention apps
 =========
@@ -1654,7 +1671,7 @@ www.univention.com
 
 ---
 
-# hardening
+## hardening
 
 Hardening system
 =========
@@ -1712,7 +1729,7 @@ www.univention.com
 
 ---
 
-# improve_usability_nextcloud
+## improve_usability_nextcloud
 
 Improve usability nextcloud
 =========
@@ -1751,7 +1768,7 @@ www.univention.com
 
 ---
 
-# improve_usability_ui_changes
+## improve_usability_ui_changes
 
 Improve usability ui changes.
 =========
@@ -1790,7 +1807,7 @@ www.univention.com
 
 ---
 
-# improve_usability_user_config
+## improve_usability_user_config
 
 Improve usability user configuration
 =========
@@ -1832,7 +1849,7 @@ www.univention.com
 
 ---
 
-# install_apps_ox_post
+## install_apps_ox_post
 
 Post installation steps of OpenXchange (OX)
 =========
@@ -1879,7 +1896,7 @@ www.univention.com
 
 ---
 
-# install_apps_ox_pre
+## install_apps_ox_pre
 
 Pre installation steps of OpenXchange (OX)
 =========
@@ -1921,7 +1938,7 @@ www.univention.com
 
 ---
 
-# install_branding
+## install_branding
 
 Install branding package
 =========
@@ -1966,7 +1983,7 @@ www.univention.com
 
 ---
 
-# install_lets_encrypt
+## install_lets_encrypt
 
 Install letsencrypt
 =========
@@ -2013,7 +2030,7 @@ www.univention.com
 
 ---
 
-# install_multitenant_acls
+## install_multitenant_acls
 
 Install multitenant ACLs
 =========
@@ -2077,7 +2094,7 @@ www.univention.com
 
 ---
 
-# install_nextcloud_app
+## install_nextcloud_app
 
 Install app for nextcloud
 =========
@@ -2117,7 +2134,7 @@ www.univention.com
 
 ---
 
-# install_packages
+## install_packages
 
 Install packages
 =========
@@ -2161,7 +2178,7 @@ www.univention.com
 
 ---
 
-# install_service_new_portal
+## install_service_new_portal
 
 Install new portal (service)
 =========
@@ -2202,7 +2219,7 @@ www.univention.com
 
 ---
 
-# install_service_selfservice
+## install_service_selfservice
 
 Install selfservice service
 =========
@@ -2247,7 +2264,7 @@ Univention GmbH
 
 ---
 
-# intercom_service
+## intercom_service
 
 Intercom Service
 =========
@@ -2321,7 +2338,7 @@ www.univention.com
 
 ---
 
-# ldapsearch_user
+## ldapsearch_user
 
 LDAPSearch user
 =========
@@ -2396,7 +2413,7 @@ www.univention.com
 
 ---
 
-# modify_ucs_ca
+## modify_ucs_ca
 
 Modify UCS certs
 =========
@@ -2437,7 +2454,7 @@ www.univention.com
 
 ---
 
-# ox_connector
+## ox_connector
 
 OX Connector
 =========
@@ -2492,7 +2509,7 @@ www.univention.com
 
 ---
 
-# portal_category
+## portal_category
 
 Portal category
 =========
@@ -2588,7 +2605,7 @@ www.univention.com
 
 ---
 
-# portal_configure_title
+## portal_configure_title
 
 Configure Portal Title
 =========
@@ -2628,7 +2645,7 @@ www.univention.com
 
 ---
 
-# portal_cookie_banner
+## portal_cookie_banner
 
 Toggle portal cookie banner
 =========
@@ -2675,7 +2692,7 @@ www.univention.com
 
 ---
 
-# portal_entry
+## portal_entry
 
 Portal entry
 =========
@@ -2808,7 +2825,7 @@ www.univention.com
 
 ---
 
-# remove_packages
+## remove_packages
 
 Remove packages
 =========
@@ -2852,7 +2869,7 @@ www.univention.com
 
 ---
 
-# set_dns_glue_record
+## set_dns_glue_record
 
 Set DNS Glue record
 =========
@@ -2897,7 +2914,7 @@ www.univention.com
 
 ---
 
-# set_feedback_mail_address
+## set_feedback_mail_address
 
 Set feedback mail address
 =========
@@ -2936,7 +2953,7 @@ www.univention.com
 
 ---
 
-# set_ldap_index
+## set_ldap_index
 
 Configure LDAP Index
 =========
@@ -2993,7 +3010,7 @@ www.univention.com
 
 ---
 
-# ucs_add_admin_user
+## ucs_add_admin_user
 
 Add UCS admin user
 =========
@@ -3039,7 +3056,7 @@ www.univention.com
 
 ---
 
-# ucs_join
+## ucs_join
 
 UCS join
 =========
@@ -3175,7 +3192,7 @@ www.univention.com
 
 ---
 
-# umc_permissions
+## umc_permissions
 
 Update UMC permissions
 =========
@@ -3217,7 +3234,7 @@ www.univention.com
 
 ---
 
-# umc_policies_maintenance
+## umc_policies_maintenance
 
 UMC maintenance policies
 =========
@@ -3262,7 +3279,7 @@ www.univention.com
 
 ---
 
-# univention_firewall
+## univention_firewall
 
 Univention firewall rules.
 
@@ -3302,7 +3319,7 @@ www.univention.com
 
 ---
 
-# univention_install
+## univention_install
 
 Install packages with univention-install
 =========
@@ -3342,7 +3359,7 @@ www.univention.com
 
 ---
 
-# univention_prune_kernels
+## univention_prune_kernels
 
 Prune Kernels Univention UCS
 =========
@@ -3379,7 +3396,7 @@ www.univention.com
 
 ---
 
-# univention_remove
+## univention_remove
 
 Remove packages with univention-remove
 =========
@@ -3418,7 +3435,7 @@ www.univention.com
 
 ---
 
-# univention_repository_component
+## univention_repository_component
 
 Univention Repository Component
 =========
@@ -3464,7 +3481,7 @@ www.univention.com
 
 ---
 
-# univention_upgrade
+## univention_upgrade
 
 Upgrade Univention UCS
 =========
@@ -3509,7 +3526,7 @@ www.univention.com
 
 ---
 
-# update_users_ssh_keys
+## update_users_ssh_keys
 
 Update users SSH keys
 =========
@@ -3566,7 +3583,7 @@ www.univention.com
 
 ---
 
-# use_trusted_cert
+## use_trusted_cert
 
 Use trusted SSL certificate
 =========
@@ -3608,7 +3625,7 @@ www.univention.com
 
 ---
 
-# workaround_acmetiny_upgrade
+## workaround_acmetiny_upgrade
 
 Workaround: Use specific acme tiny version
 =========
@@ -3648,7 +3665,7 @@ www.univention.com
 
 ---
 
-# workaround_high_mtu
+## workaround_high_mtu
 
 Workaround: Fix MTU for Docker
 =========

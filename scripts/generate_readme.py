@@ -3,6 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 README_PATH = ROOT / "README.md"
+README_IN_PATH = ROOT / "README.in"
 ROLES_DIR = ROOT / "roles"
 
 
@@ -24,10 +25,19 @@ def generate_anchor(path):
     return f"- [{path.parent.name}]({rel_path.as_posix()}#{anchor})"
 
 
+def read_head(path) -> str:
+    """Read a specific path and return ist contents"""
+    content = ""
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+    return content
+
+
 def combine_readmes():
     role_readmes = find_role_readmes()
     with open(README_PATH, "w", encoding="utf-8") as out:
-        out.write("# Modules\n\n")
+        out.write(read_head(README_IN_PATH))
+        out.write("\n# Modules\n\n")
         # Table of modules
         for path in role_readmes:
             if has_content(path):
@@ -37,7 +47,7 @@ def combine_readmes():
         for path in role_readmes:
             if has_content(path):
                 out.write("\n---\n\n")
-                out.write(f"# {path.parent.name}\n\n")
+                out.write(f"## {path.parent.name}\n\n")
                 with open(path, "r", encoding="utf-8") as f:
                     lines = f.readlines()
                     # Skip the first line if it's a level-1 heading

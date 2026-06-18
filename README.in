@@ -1,0 +1,16 @@
+# univention.ucs_roles
+
+<https://galaxy.ansible.com/ui/repo/published/univention/ucs_roles/>
+
+[TOC]
+
+## Version compatibility
+
+These roles had been tested with Ansible 12 / ansible.core 2.19 and UCS5.2 / Python 3.11.
+They are not compatible with UCS5.0 and older.
+
+## Development
+
+To get the required dependencies, [create a Python virtualenv](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#create-and-use-virtual-environments) and run:
+
+`pip install -r requirements.txt`
