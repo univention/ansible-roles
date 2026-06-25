@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.configure_network_proxy"
+      vars:
+        configure_network_proxy_enabled: false

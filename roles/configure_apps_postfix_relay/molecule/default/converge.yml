@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.configure_apps_postfix_relay"
+      vars:
+        configure_apps_postfix_relay_enabled: false

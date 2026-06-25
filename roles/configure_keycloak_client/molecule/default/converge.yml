@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.configure_keycloak_client"
+      vars:
+        configure_keycloak_client_keycloak_server: "ucs-test"

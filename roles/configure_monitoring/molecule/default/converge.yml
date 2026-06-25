@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.configure_monitoring"
+      vars:
+        configure_monitoring_ldap_enabled: false

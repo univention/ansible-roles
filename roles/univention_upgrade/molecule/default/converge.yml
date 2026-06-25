@@ -1,0 +1,19 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  tasks:
+    - name: "Get current UCS version"
+      ansible.builtin.command: "ucr get version/version"
+      register: "ucs_version_major"
+      changed_when: false
+    - name: "Get current UCS patch level"
+      ansible.builtin.command: "ucr get version/patchlevel"
+      register: "ucs_version_patch"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.univention_upgrade"
+      vars:
+        univention_upgrade_version: "{{ ucs_version_major.stdout }}-{{ ucs_version_patch.stdout }}"
+        univention_upgrade_app_updates: false
+        univention_upgrade_reboot_after_upgrade: false

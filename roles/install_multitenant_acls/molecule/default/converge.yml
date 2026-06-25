@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.install_multitenant_acls"
+      vars:
+        install_multitenant_acls_multitenant_acls: []

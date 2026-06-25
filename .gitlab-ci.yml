@@ -4,7 +4,7 @@
 
 variables:
   ENV_CFG: "${CI_PROJECT_DIR}/tests/ucs-kvm.cfg"
-  TDP_VERSION: &TDP_VERSION "v6.1.1"
+  TDP_VERSION: &TDP_VERSION "v8.2.0"
   UCS_VERSION:
     value: "5.2-5"
     description: "UCS version to be used X.Y-Z"
@@ -44,7 +44,6 @@ create_vms:
     - when: never
   resource_group: env-${CI_COMMIT_REF_SLUG}
 
-
 manage_vms:
   stage: deploy
   extends: .tdp_manage_deployment
@@ -80,10 +79,99 @@ run_molecule_tests:
   environment:
     name: test/${CI_COMMIT_REF_SLUG}
   script:
-    - section_start "install_requirements" "Installing requirements  - EXPAND"
+    - section_start "install_requirements" "Installing requirements"
+    - python3 -m venv .venv
+    - .venv/bin/pip install -r requirements.txt
+    - .venv/bin/ansible-galaxy collection install . --force -p .collections
+    - .venv/bin/ansible-galaxy collection install -r molecule-requirements.yml -p .collections
+    - section_end "install_requirements"
+    - section_start "run_molecule_tests" "Running molecule tests"
+    - export PATH="${CI_PROJECT_DIR}/.venv/bin:${PATH}"
+    # Parse VM IP from TDP-provided inventory
+    - export ANSIBLE_INVENTORY="${TDP_DEPLOYMENT_RESULTS_DIR}/inventory.ini"
+    - export MOLECULE_TEST_HOST=$(grep 'ansible_host' "${ANSIBLE_INVENTORY}" | sed 's/.*ansible_host=//')
+    - '[ -n "${MOLECULE_TEST_HOST}" ] || { echo "ERROR: MOLECULE_TEST_HOST is empty - ${ANSIBLE_INVENTORY} missing or malformed"; exit 1; }'
+    # ucs_join runs first to join the unjoined VM as UCS master, enabling all other roles
+    - (cd "${CI_PROJECT_DIR}/roles/ucs_join" && molecule test)
+    # All remaining roles are tested sequentially on the now-joined VM
     - |
-      echo "TODO: Install requirements for molecule"
-    - section_end "run_playbooks"
+      FAILED_ROLES=""
+      # Skipped (require external service pre-installed):
+      # configure_apps_nextcloud configure_apps_owncloud configure_nextcloud_saml
+      # configure_nextcloud_turn configure_office_suite configure_sso_openid
+      # dovecot_connector improve_usability_nextcloud install_apps_ox_post
+      # install_nextcloud_app intercom_service ox_connector
+      for role in \
+        add_local_user \
+        cleanup_portal \
+        configure_amazon_metadata_server \
+        configure_apps_postfix \
+        configure_apps_postfix_relay \
+        configure_directory_manager \
+        configure_error_detail_show \
+        configure_group_syntax \
+        configure_keycloak \
+        configure_keycloak_client \
+        configure_keycloak_saml \
+        configure_license \
+        configure_logrotate \
+        configure_monitoring \
+        configure_network_interface_names \
+        configure_network_proxy \
+        configure_ntp_servers \
+        configure_password_policies \
+        configure_repository \
+        configure_saml_single_server \
+        custom_facts \
+        custom_facts_finished \
+        deployment_message \
+        disable_ipv6 \
+        disable_piwik_tracking \
+        force_package_list_update \
+        get_installed_apps \
+        hardening \
+        improve_usability_ui_changes \
+        improve_usability_user_config \
+        install_apps_ox_pre \
+        install_branding \
+        install_lets_encrypt \
+        install_multitenant_acls \
+        install_packages \
+        install_service_new_portal \
+        install_service_selfservice \
+        ldapsearch_user \
+        modify_ucs_ca \
+        portal_category \
+        portal_configure_title \
+        portal_cookie_banner \
+        portal_entry \
+        remove_packages \
+        set_dns_glue_record \
+        set_feedback_mail_address \
+        set_ldap_index \
+        ucs_add_admin_user \
+        umc_permissions \
+        umc_policies_maintenance \
+        univention_firewall \
+        univention_install \
+        univention_prune_kernels \
+        univention_remove \
+        univention_repository_component \
+        univention_upgrade \
+        update_users_ssh_keys \
+        use_trusted_cert \
+        workaround_acmetiny_upgrade \
+        workaround_high_mtu; do
+        echo "=== Testing role: ${role} ==="
+        if ! (cd "${CI_PROJECT_DIR}/roles/${role}" && molecule test); then
+          FAILED_ROLES="${FAILED_ROLES} ${role}"
+        fi
+      done
+      if [ -n "${FAILED_ROLES}" ]; then
+        echo "The following roles FAILED:${FAILED_ROLES}"
+        exit 1
+      fi
+    - section_end "run_molecule_tests"
   timeout: 3 hours
   rules:
     - if: *MERGE_TO_MAIN

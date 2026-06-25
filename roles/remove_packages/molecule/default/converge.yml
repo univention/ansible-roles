@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.remove_packages"
+      vars:
+        remove_packages_remove_apps: []

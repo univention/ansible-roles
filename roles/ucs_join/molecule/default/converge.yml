@@ -1,0 +1,17 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.ucs_join"
+      vars:
+        ucs_join_server_type: "master"
+        ucs_join_domain_name: "test.ucs.example"
+        ucs_join_basedn: "dc=test,dc=ucs,dc=example"
+        ucs_join_admin_user_name: "Administrator"
+        ucs_join_derive_root_password_from_hostname: false
+        ucs_join_root_password: "univention"
+        ucs_join_nameservers:
+          nameserver1:
+            server: "127.0.0.1"
+            state: "present"

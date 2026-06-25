@@ -1,0 +1,14 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.cleanup_portal"
+      vars:
+        cleanup_portal_basedn: "{{ ucr_ldap_base.stdout }}"
+        cleanup_portal_install_services: []

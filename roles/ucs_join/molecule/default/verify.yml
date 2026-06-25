@@ -1,0 +1,12 @@
+---
+
+- name: "Verify"
+  hosts: "all"
+  tasks:
+    - name: "Check domain name is set in UCR"
+      ansible.builtin.command: "ucr get domainname"
+      register: "ucs_join_domain"
+      changed_when: false
+    - name: "Assert domainname is configured"
+      ansible.builtin.assert:
+        that: "ucs_join_domain.stdout | length > 0"

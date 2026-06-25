@@ -1,0 +1,20 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "ucr_ldap_base"
+      changed_when: false
+    - name: "Get domain name from UCR"
+      ansible.builtin.command: "ucr get domainname"
+      register: "ucr_domain_name"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.set_dns_glue_record"
+      vars:
+        set_dns_glue_record_basedn: "{{ ucr_ldap_base.stdout }}"
+        set_dns_glue_record_domain_name: "{{ ucr_domain_name.stdout }}"
+        set_dns_glue_record_fqdn: "primary.{{ ucr_domain_name.stdout }}"
+        set_dns_glue_record_create_external_hostname_glue_record: false

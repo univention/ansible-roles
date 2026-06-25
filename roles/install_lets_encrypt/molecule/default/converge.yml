@@ -1,0 +1,9 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.install_lets_encrypt"
+      vars:
+        install_lets_encrypt_external_hostname: "primary.test.ucs.example"
+        install_lets_encrypt_use_letsencrypt_staging: true

@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.install_service_selfservice"
+      vars:
+        install_service_selfservice_install_services: []

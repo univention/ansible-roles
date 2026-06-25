@@ -30,3 +30,6 @@ subprocess-tee==0.4.2
 typing_extensions==4.15.0
 wcmatch==10.1
 yamllint==1.38.0
+molecule>=6.0.0
+molecule-plugins>=23.0.0
+passlib>=1.7.4

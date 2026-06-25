@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.install_service_new_portal"
+      vars:
+        install_service_new_portal_install_services: []

@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.univention_repository_component"
+      vars:
+        univention_repository_component_name: ""

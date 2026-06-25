@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.extend_root_lvm_volume"
+      vars:
+        extend_root_lvm_volume_extend_lvm_to_whole_disk: false

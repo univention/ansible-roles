@@ -1,0 +1,8 @@
+---
+
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.install_nextcloud_app"
+      vars:
+        install_nextcloud_app_install_apps: []

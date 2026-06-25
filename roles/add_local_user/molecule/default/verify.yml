@@ -1,0 +1,9 @@
+---
+
+- name: "Verify"
+  hosts: "all"
+  tasks:
+    - name: "Check molecule-test user exists"
+      ansible.builtin.getent:
+        database: "passwd"
+        key: "molecule-test"
