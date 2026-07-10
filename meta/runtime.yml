@@ -1,3 +1,5 @@
 ---
-
+# we use ansible-core 2.19 here, as this version still gets security support
+# but is still compatible with python 3.11 (on the control node). Source:
+# https://docs.ansible.com/projects/ansible-core/devel/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix
 requires_ansible: ">=2.19.0"
