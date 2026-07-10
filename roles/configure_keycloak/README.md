@@ -1,15 +1,12 @@
-Configure Keycloak
-=========
+### Configure Keycloak
 
 This role configures keycloak, either via KCADM or REST.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_keycloak_generate_oidc_broker_secret`(bool): If set to true the client password used in the IDP creation is generated dynamically. If it is set to `false` the value in `configure_keycloak_oidc_broker_secret` is used instead. If `configure_keycloak_config_type` is set to `static` this variable implicitly is set to `false`; default: `true`
 - `configure_keycloak_oidc_broker_secret`(string): Client password used in the IDP creation. Only used when `configure_keycloak_generate_oidc_broker_secret`is set to false.
@@ -34,13 +31,11 @@ Role Variables
 - `configure_keycloak_import_mapper_name`(string): default: `"append IDP to username"`
 - `configure_keycloak_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -55,13 +50,11 @@ Example Playbook
         configure_keycloak_client_id: "ucs-client"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

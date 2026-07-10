@@ -1,25 +1,20 @@
-Improve usability ui changes.
-=========
+### Improve usability ui changes.
 
 This role will improve ui.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `improve_usability_ui_changes_basedn`(): The LDAP base domain name.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -31,13 +26,11 @@ Example Playbook
         improve_usability_ui_changes_basedn: "dc=example,dc=com"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

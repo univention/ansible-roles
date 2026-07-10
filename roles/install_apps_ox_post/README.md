@@ -1,10 +1,8 @@
-Post installation steps of OpenXchange (OX)
-=========
+### Post installation steps of OpenXchange (OX)
 
 This role configures OX.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
   - univention_config_registry
@@ -13,21 +11,18 @@ Requirements
 - community.general
   - java_cert
 
-Role Variables
---------------
+#### Role Variables
 
 - `install_apps_ox_post_basedn`(string): The LDAP base domain name.
 - `install_apps_ox_post_external_hostname`(string): The host name that is used to talk to the system.
 - `install_apps_ox_post_ox_keystore_passphrase`(string): The passphrase for ox keystore.
 - `install_apps_ox_post_ox_drive_default`(string): Toggle OXDrive by setting `0`for disabled and `1` for enabled; default: `0`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -41,13 +36,11 @@ Example Playbook
         install_apps_ox_post_ox_keystore_passphrase: "keystore-secret"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

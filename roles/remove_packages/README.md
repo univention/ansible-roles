@@ -1,15 +1,12 @@
-Remove packages
-=========
+### Remove packages
 
 This role removes univention apps with/without fixed versions.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `remove_packages_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. See also `install_packages_force_package_upgrade` for a way to upgrade already installed software.
 - `remove_packages_temp_pw_file`(map): Tempfile object where univention app password is stored.
@@ -18,13 +15,11 @@ Role Variables
 - `remove_packages_app_version_map`(map): A map of packages with/without version to be removed.
 - `remove_packages_service_name_list`(list): A list containing application names to be installed.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -38,13 +33,11 @@ Example Playbook
           - "nextcloud"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

@@ -1,23 +1,18 @@
-Prune Kernels Univention UCS
-=========
+### Prune Kernels Univention UCS
 
 This role prunes kernels for UCS servers in order to free space at /boot.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -27,13 +22,11 @@ Example Playbook
     - role: "univention_prune_kernels"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

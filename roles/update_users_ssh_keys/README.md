@@ -1,16 +1,13 @@
-Update users SSH keys
-=========
+### Update users SSH keys
 
 This role adds and removes SSH keys from user.
 
-Requirements
-------------
+#### Requirements
 
 - ansible.posix
   - authorized_key
 
-File Structure
---------------
+#### File Structure
 
 ```text
 files/
@@ -26,18 +23,15 @@ files/
  |       +-- *.pubkey
 ```
 
-Role Variables
---------------
+#### Role Variables
 
 - `update_users_ssh_keys_user`(string): Name of local user where SSH keys should be added/removed.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -49,13 +43,11 @@ Example Playbook
         update_users_ssh_keys_user: "root"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

@@ -1,15 +1,12 @@
-Univention Repository Component
-=========
+### Univention Repository Component
 
 This role enables a univention repository component.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `univention_repository_component_name`(string): The name of customer debian repository.
 - `univention_repository_component_parts`(string): The part of customer debian repository.
@@ -20,13 +17,11 @@ Role Variables
 - `univention_repository_component_version`(string): The version of customer debian repository.
 - `univention_repository_component_unmaintained`(bool): Toggle unmaintained status of customer debian repository.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -41,13 +36,11 @@ Example Playbook
         univention_repository_component_parts: "maintained"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

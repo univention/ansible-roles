@@ -1,26 +1,21 @@
-Workaround: Fix MTU for Docker
-=========
+### Workaround: Fix MTU for Docker
 
 When MTU in Docker `1500` is higher than the one for network interface, this
 role sets the Docker MTU to `1400`.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -30,13 +25,11 @@ Example Playbook
     - role: "workaround_high_mtu"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

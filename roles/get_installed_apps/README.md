@@ -1,26 +1,21 @@
-Get installed univention apps
-=========
+### Get installed univention apps
 
 This role sets a fact with installed univention apps.
 
-Requirements
-------------
+#### Requirements
 
 - ansible.utils
   - cli_parse
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -30,13 +25,11 @@ Example Playbook
     - role: "get_installed_apps"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

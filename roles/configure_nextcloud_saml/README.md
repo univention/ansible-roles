@@ -1,25 +1,20 @@
-Configure nextcloud SAML
-=========
+### Configure nextcloud SAML
 
 This role configures nextcloud for SAML single server.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -29,13 +24,11 @@ Example Playbook
     - role: "configure_nextcloud_saml"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

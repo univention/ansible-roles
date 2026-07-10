@@ -1,16 +1,13 @@
-Install selfservice service
-=========
+### Install selfservice service
 
 This role installs selfservice services.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
   - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `install_service_selfservice_service_version_map`(map): A dictionary that maps service names to specific versions that ought to be installed. See also `install_service_selfservice_force_package_upgrade` for a way to upgrade already installed software.
 - `install_service_selfservice_temp_file`(map): Ansible temporary dir.
@@ -20,13 +17,11 @@ Role Variables
 - `install_service_selfservice_domain_name`(string): The LDAP base domain name.
 - `install_service_selfservice_password_reset_filename`(string): The name of password reset template.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -38,13 +33,11 @@ Example Playbook
         install_service_selfservice_external_hostname: "ucs.example.com"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 <www.univention.com>

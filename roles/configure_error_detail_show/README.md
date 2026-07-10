@@ -1,29 +1,24 @@
-Configure error detail show
-=========
+### Configure error detail show
 
 This role configures if the error messages will display the details.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_error_detail_show_http_tracebacks`(bool): Defines whether tracebacks are shown to the user in error cases; default: `false`
 - `configure_error_detail_show_directory_manager_rest_tracebacks`(bool): Defines whether tracebacks are shown to the user in error cases; default: `false`
 - `configure_error_detail_show_saml_idp_errors`(bool): Defines if error information and stack traces allowed to be shown to the user; default: `false`
 - `configure_error_detail_show_saml_idp_error_reporting`(bool): Defines if error information and stack traces can be reported via email to the technical contact mail address; default: `false`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -33,13 +28,11 @@ Example Playbook
     - role: "configure_error_detail_show"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

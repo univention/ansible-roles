@@ -1,25 +1,20 @@
-Remove packages with univention-remove
-=========
+### Remove packages with univention-remove
 
 This role installs packages via `univention-remove` wrapper.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `univention_remove_name`(string): The name of the package to be removed.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -31,13 +26,11 @@ Example Playbook
         univention_remove_name: "nano"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

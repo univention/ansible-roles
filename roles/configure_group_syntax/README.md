@@ -1,26 +1,21 @@
-Configure group syntax
-=========
+### Configure group syntax
 
 Configure the group syntax and ensure the consistency on all nodes
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_group_syntax_group_syntax`(string): group syntax desired value; default: `gid`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -30,13 +25,11 @@ Example Playbook
     - role: "configure_group_syntax"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

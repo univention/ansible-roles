@@ -3,24 +3,20 @@ Univention firewall rules.
 =========
 Manage predefined univention-firewall rules.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `univention_firewall_telegraf`(string): Set firewall status of telegraf service; default: `"ACCEPT"`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -30,13 +26,11 @@ Example Playbook
     - role: "univention_firewall"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

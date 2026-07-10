@@ -1,15 +1,12 @@
-DC Connector
-=========
+### DC Connector
 
 This role configures and install Dovecot (DC) connector.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `dovecot_connector_basedn`(string): The LDAP base dn.
 - `dovecot_connector_domain_name`(string): The system's dns domain name.
@@ -30,13 +27,11 @@ If `backup` is chosen the following variable also has to be set; default: `maste
 - `dovecot_connector_loglevel`(string): Die Log-Stufe der Anwendung. Werte: `DEBUG`, `INFO`, `WARNING` und `ERROR`; default: `INFO`
 - `dovecot_connector_hide_logging`(bool): Toggle logging output; default: `true`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -51,13 +46,11 @@ Example Playbook
         dovecot_connector_domain_name: "example.com"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

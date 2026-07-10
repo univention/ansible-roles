@@ -1,15 +1,12 @@
-Install packages
-=========
+### Install packages
 
 This role installs univention apps with/without fixed versions.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `install_packages_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. See also `install_packages_force_package_upgrade` for a way to upgrade already installed software.
 - `install_packages_service_name_list`(list): A list containing application names to be installed.
@@ -18,13 +15,11 @@ Role Variables
 - `install_packages_install_apps`(list): A list of applications to install.
 - `install_packages_additional_options`(string): Additional option that could be set during install.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -38,13 +33,11 @@ Example Playbook
           - "nextcloud"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

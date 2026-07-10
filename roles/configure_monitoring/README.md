@@ -1,26 +1,21 @@
-Configure Monitoring
-=========
+### Configure Monitoring
 
 This role configures monitoring related settings.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_monitoring_ldap_enabled`(string): Toggle `ldap/monitor` ucr setting; default: `"true"`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -32,13 +27,11 @@ Example Playbook
         configure_monitoring_ldap_enabled: "true"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

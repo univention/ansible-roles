@@ -1,26 +1,21 @@
-Disable IPv6
-=========
+### Disable IPv6
 
 This role disables IPv6 on system via modprobe.
 
-Requirements
-------------
+#### Requirements
 
 - ansible.posix
   - sysctl
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -30,13 +25,11 @@ Example Playbook
     - role: "disable_ipv6"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

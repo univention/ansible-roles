@@ -1,15 +1,12 @@
-Portal entry
-=========
+### Portal entry
 
 Create, modify, delete and append portal entries.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `portal_entry_base_dn`(string): The base DN that has been used when setting up the UCS server
 - `portal_entry_entries`(list): The portal entries list.
@@ -17,15 +14,13 @@ Role Variables
 - `portal_entry_drift_detection`(bool): Toggle drift detection and only apply differences; default: `true`.
 - `portal_entry_remove_unscoped`(bool): Toggle removal of undefined entries; default: `false`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-### Create a public login and file store
+##### Create a public login and file store
 
 ```yaml
 ---
@@ -82,8 +77,7 @@ Example Playbook
           # ...
 ```
 
-Portal entries
-----------------
+#### Portal entries
 
 ```yaml
 portal_entry_entries:
@@ -113,19 +107,16 @@ portal_entry_entries:
                     #                    |  - "portal" > possible: "menuLinks", "userLinks"
 ```
 
-Limitations
-----------------
+#### Limitations
 
 - Modifying/Removing attributes with whitespaces are not supported by UCS 4.4
 - Drift detection does not detect changes in icons.
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

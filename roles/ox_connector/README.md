@@ -1,16 +1,13 @@
-OX Connector
-=========
+### OX Connector
 
 This role configures and install OX connector.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `ox_connector_basedn`(string): The LDAP base dn.
 - `ox_connector_domain_name`(string): The system's dns domain name.
@@ -29,13 +26,11 @@ Role Variables
 - `ox_connector_smtp_server`(string): How the user in OX will connect to the SMTP service, this value is relative to the OX AppSuite middleware server; default: `smtp://127.0.0.1:26`
 
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -50,13 +45,11 @@ Example Playbook
         ox_connector_domain_name: "example.com"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

@@ -1,25 +1,20 @@
-Configure Nextcloud (apps)
-=========
+### Configure Nextcloud (apps)
 
 Configure UCS app nextcloud.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -29,13 +24,11 @@ Example Playbook
     - role: "configure_apps_nextcloud"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

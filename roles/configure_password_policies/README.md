@@ -1,19 +1,16 @@
-Configure UCS Password Policies
-===============================
+### Configure UCS Password Policies
 
 This role configures password policies via UCR.
 A dn of a policy is required.
 All users with this plocicy referenced will get these settings.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
     - univention_directory_manager
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_password_policies_dn`(string): At least there should be one policy with activated Checks. The full dn is needed; default: not set
 - `configure_password_policies_quality_min_lenght`(string): Sets the minimum password length; default: `8`
@@ -25,13 +22,11 @@ Role Variables
 - `configure_password_policies_quality_credit_lower`(string): Sets the minimum number of lower case letters; default: `1`
 - `configure_password_policies_quality_mspolicy`(string): Sets the microsoft policy complexity criteria. If `1`,`true` or `yes` this will b eon top of the dafault python-cracklib. If `sufficient` only ms policy complexity will be used and if `false` only python-cracklib will be used. default: `1`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -44,13 +39,11 @@ Example Playbook
           cn=default-settings,cn=pwhistory,cn=users,cn=policies,cn=system,dc=example,dc=com
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

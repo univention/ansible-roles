@@ -1,15 +1,12 @@
-Cleanup Portal
-=========
+### Cleanup Portal
 
 Remove default and unused portal entries.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `cleanup_portal_basedn`(string): The LDAP base domain name.
 - `cleanup_portal_install_services`(list): A list of services to install.
@@ -18,13 +15,11 @@ Role Variables
 - `cleanup_portal_prometheus_dn`(string): default: `'cn=prometheus,cn=entry,{{ cleanup_portal_portal_dn }}'`.
 - `cleanup_portal_admin_dashboard_dn`(string): default: `'cn=admin-dashboard,cn=entry,{{ cleanup_portal_portal_dn }}'`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -38,13 +33,11 @@ Example Playbook
           - "dashboard"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

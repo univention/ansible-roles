@@ -1,16 +1,13 @@
-Add local user
-=========
+### Add local user
 
 This role creates a local user with ssh login permissions.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
   - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `add_local_user_user`(map): A map containing user information:
 
@@ -29,13 +26,11 @@ add_local_user_user:
   Possible values are `"on_create"` and `"always"`; default `"on_create"`.
 - `add_local_user_system_user`(bool): `true` if the user should be a system user instead of a human; default: `true`.
 
-Dependencies
-------------
+#### Dependencies
 
 `passlib`
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -50,13 +45,11 @@ Example Playbook
         add_local_user_user_state: "present"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

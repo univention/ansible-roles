@@ -1,26 +1,21 @@
-Configure Keycloak SAML
-=========
+### Configure Keycloak SAML
 
 This role configures Keycloak as SAML provider.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_keycloak_saml_basedn`(string): The LDAP base dn.
 - `configure_keycloak_saml_sp_base_url`(string): The Service Provider base url.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -33,13 +28,11 @@ Example Playbook
         configure_keycloak_saml_sp_base_url: "https://sp.example.com"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

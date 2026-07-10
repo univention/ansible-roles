@@ -1,18 +1,15 @@
-Extend root LVM volume
-=========
+### Extend root LVM volume
 
 Extend the root volume to all available space. Helpful when using a prebuild image and additional space is required.
 
-Requirements
-------------
+#### Requirements
 
 - community.general
   - parted
   - lvg
   - lvol
 
-Role Variables
---------------
+#### Role Variables
 
 - `extend_root_lvm_volume_extend_lvm_to_whole_disk`(bool): If true, root volume is extended to available space; default: `true`
 - `extend_root_lvm_volume_lvm_disk`(string): The "physical" disk to partition without the "/dev/" part, for instance "sda" for "/dev/sda". Defaults to what is used in the Univention QCOW image; default: `"vda"`
@@ -20,13 +17,11 @@ Role Variables
 - `extend_root_lvm_volume_lvm_data_volume`(string): The LVM name used for the data volume. Defaults to what is used in the Univention QCOW image; default: `"root"`
 - `extend_root_lvm_volume_existing_lvm_partition_number`(number): The existing lvm partition number. Defaults to what is used in the Univention QCOW image; default: `2`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -39,13 +34,11 @@ Example Playbook
         extend_root_lvm_volume_lvm_disk: "vda"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

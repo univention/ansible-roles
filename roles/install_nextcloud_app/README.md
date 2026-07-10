@@ -1,26 +1,21 @@
-Install app for nextcloud
-=========
+### Install app for nextcloud
 
 This role installs an app for nextcloud
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `install_nextcloud_app_name`(string): The name of nextcloud app to be installed from store.
 - `install_nextcloud_app_opertation`(string): Define operation mode; default: `"install"`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
 ---
@@ -32,13 +27,11 @@ Example Playbook
         install_nextcloud_app_name: "contacts"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

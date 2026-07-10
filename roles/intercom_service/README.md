@@ -1,16 +1,13 @@
-Intercom Service
-=========
+### Intercom Service
 
 This role installs and comfigures the intercom service.
 For further information have a look at https://docs.software-univention.de/intercom_service/latest/index.html
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `intercom_service_hide_logging`(boolean): Toggle template logging; default: `true`.
 - `intercom_service_domain_name`(string): The domain name. default: `""`
@@ -33,15 +30,13 @@ Role Variables
 - `intercom_service_nc_url`(string): The URL on which Nextcloud is listening on; default: `https://fs.{{ intercom_service_domain_name }}`
 - `intercom_service_nc_origin`(string): The Nextcloud CORS origin; default: `https://fs.{{ intercom_service_domain_name }}`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-## Intercom Service
+#### Intercom Service
 
 ```yaml
 ---
@@ -58,13 +53,11 @@ Example Playbook
         intercom_service_keycloak_realm_name: "your_keycloak_realm"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
