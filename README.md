@@ -1667,6 +1667,8 @@ www.univention.com
 
 This role reduces security risks by disabling default settings, like root login.
 
+It is inspired by <https://help.univention.com/t/ucs-and-security-hardening/6059>.
+
 #### Requirements
 
 - univention.ucs_modules

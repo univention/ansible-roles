@@ -14,7 +14,7 @@
   univention.ucs_modules.univention_config_registry:
     keys:
       apache2/ssl/tlsv13: "yes"
-  register: "hardening_apache2_ssl_tlsv13"
+  register: "hardening_apache2_ssl_tlsv13_result"
   when: "hardening_apache2_ssl_tlsv13 | bool"
   tags:
     - "hardening_apache2_ssl_tlsv13"
@@ -57,9 +57,8 @@
     - "hardening_disable_http | bool and hardening_disable_http_result.changed
       or hardening_hsts | bool and hardening_hsts_result.changed
       or hardening_honorcipherorder | bool and hardening_honorcipherorder_result.changed
-      or hardening_apache2_ssl_tlsv13 | bool and hardening_apache2_ssl_tlsv13.changed
+      or hardening_apache2_ssl_tlsv13 | bool and hardening_apache2_ssl_tlsv13_result.changed
       or hardening_apache2_result.changed"
-
   tags:
     - "hardening_restart_http"
     - "hardening"
