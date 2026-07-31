@@ -1,0 +1,7 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.intercom_service"
+      vars:
+        intercom_service_domain_name: "test.ucs.example"

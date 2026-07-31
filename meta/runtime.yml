@@ -1,3 +1,6 @@
 ---
-
-requires_ansible: ">=2.9.10"
+# Managed nodes (UCS, Python 3.11) are supported by every ansible-core version
+# in this range, so the floor here is set by control-node support and EOL
+# instead: 2.19 is EOL Nov 2026. Source:
+# https://docs.ansible.com/projects/ansible-core/devel/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix
+requires_ansible: ">=2.19.0"

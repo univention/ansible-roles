@@ -1,34 +1,34 @@
-Custom facts
-=========
+### Custom facts
 
 This role gathers release information and store them on remote system.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `custom_facts_templates`(list): filename(s) of templates which should be applied; default: `["deployment.fact.j2", "hotfixes.fact.j2"]`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Gather custom facts"
+  hosts: "all"
+  roles:
+    - role: "custom_facts"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

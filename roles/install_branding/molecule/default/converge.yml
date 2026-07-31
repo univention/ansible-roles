@@ -1,0 +1,7 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.install_branding"
+      vars:
+        install_branding_repos: []

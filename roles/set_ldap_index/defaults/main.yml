@@ -8,5 +8,3 @@ set_ldap_index_equality_rm: ""
 set_ldap_index_approx_rm: ""
 set_ldap_index_substring_rm: ""
 set_ldap_index_presence_rm: ""
-
-...

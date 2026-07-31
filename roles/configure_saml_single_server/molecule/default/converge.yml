@@ -1,0 +1,20 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "configure_saml_single_server_ucr_ldap_base"
+      changed_when: false
+    - name: "Get domain name from UCR"
+      ansible.builtin.command: "ucr get domainname"
+      register: "configure_saml_single_server_ucr_domain_name"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.configure_saml_single_server"
+      vars:
+        configure_saml_single_server_basedn: "{{ configure_saml_single_server_ucr_ldap_base.stdout }}"
+        configure_saml_single_server_domain_name: "{{ configure_saml_single_server_ucr_domain_name.stdout }}"
+        configure_saml_single_server_external_hostname: "primary.\
+          {{ configure_saml_single_server_ucr_domain_name.stdout }}"
+        configure_saml_single_server_type: "master"

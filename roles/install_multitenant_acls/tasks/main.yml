@@ -1,5 +1,4 @@
 ---
-
 - name: "install_multitenant_acls | Enable ACL repository"
   ansible.builtin.include_role:
     name: "univention_repository_component"
@@ -24,6 +23,9 @@
     - "install_multitenant_acls_disable_kerberos"
 
 - name: "install_multitenant_acls | Install Multitenat ACLs"
+  when: "install_multitenant_acls_server_type | default('master') != 'backup'"
+  tags:
+    - "install_multitenant_acls"
   block:
     - name: "install_multitenant_acls | Copy ACL template to machine"
       ansible.builtin.template:
@@ -45,8 +47,8 @@
 
     - name: "install_multitenant_acls | Create Mandant structure"
       ansible.builtin.command:
-        cmd: "/usr/share/{{ install_multitenant_acls_package_name }}/{{ install_multitenant_acls_script_name }}
-              {{ install_multitenant_acls_json_path }}"
+        cmd: "/usr/share/{{ install_multitenant_acls_package_name }}/{{ install_multitenant_acls_script_name }} {{
+          install_multitenant_acls_json_path }}"
       changed_when: "install_multitenant_acls_run_structure_creation.stdout is not search('No modification')"
       register: "install_multitenant_acls_run_structure_creation"
       tags:
@@ -60,9 +62,6 @@
       tags:
         - "always"
         - "install_multitenant_acls_copy_acl_template"
-  when: "install_multitenant_acls_server_type | default('master') != 'backup'"
-  tags:
-    - "install_multitenant_acls"
 
 - name: "install_multitenant_acls | Disable nested ACL groups"
   univention.ucs_modules.univention_config_registry:
@@ -71,5 +70,3 @@
   tags:
     - "install_multitenant_acls"
     - "install_multitenant_acls_disable_nested_acl_groups"
-
-...

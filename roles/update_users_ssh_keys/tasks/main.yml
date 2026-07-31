@@ -1,5 +1,4 @@
 ---
-
 - name: "Check if all vars are set"
   ansible.builtin.assert:
     that:
@@ -35,5 +34,3 @@
   tags:
     - "update_users_ssh_keys"
     - "update_users_ssh_keys_remove"
-
-...

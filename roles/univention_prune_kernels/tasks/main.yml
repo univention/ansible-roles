@@ -1,5 +1,4 @@
 ---
-
 - name: "univention_prune_kernels | check for purging kernels"
   ansible.builtin.command: "univention-prune-kernels --dry-run --verbose"
   register: "univention_prune_kernels_check"
@@ -15,5 +14,3 @@
   tags:
     - "univention_prune_kernels"
     - "univention_prune_kernels_do_it"
-
-...

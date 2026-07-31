@@ -1,7 +1,9 @@
 ---
-
 - name: "Configure keycloak server using the REST API"
   become: false
+  delegate_to: "{{ configure_keycloak_keycloak_server }}"
+  tags:
+    - "keycloak_config"
   block:
     - name: "Authenticate to keycloak server (REST)"
       ansible.builtin.uri:
@@ -172,6 +174,9 @@
     - name: "Insert FQDN into CSP list"
       vars:
         configure_keycloak_host_url: "https://{{ configure_keycloak_fqdn }}/"
+      when: "configure_keycloak_display_matrix_in_iframe | bool"
+      tags:
+        - "configure_keycloak_insert_fqdn"
       block:
         - name: "Get keycloak realm info (REST)"
           ansible.builtin.uri:
@@ -208,7 +213,7 @@
           vars:
             configure_keycloak_browsersecurity_changes:
               contentSecurityPolicy: >-
-                {{ configure_keycloak_current_csp_list[-1] }} {{ configure_keycloak_browsersecurity_changes }};
+                {{ configure_keycloak_current_csp_list }} {{ configure_keycloak_host_url }}
               xFrameOptions: ""
           ansible.builtin.uri:
             url: "{{ configure_keycloak_realm_base_url }}"
@@ -218,7 +223,8 @@
               Authorization: "Bearer {{ configure_keycloak_auth_token }}"
             body:
               # yamllint disable-line rule:line-length
-              browserSecurityHeaders: "{{ configure_keycloak_current_securityheaders_object | combine(configure_keycloak_browsersecurity_changes) }}"
+              browserSecurityHeaders: "{{ configure_keycloak_current_securityheaders_object | combine(configure_keycloak_browsersecurity_changes)
+                }}"
             follow_redirects: true
             validate_certs: false
             status_code:
@@ -229,10 +235,6 @@
           when: "configure_keycloak_host_url not in configure_keycloak_current_csp_list"
           tags:
             - "configure_keycloak_insert_fqdn_append_host_to_csp_list_update_realms"
-
-      when: "configure_keycloak_display_matrix_in_iframe | bool"
-      tags:
-        - "configure_keycloak_insert_fqdn"
 
     - name: "Get a list of existing import mappings (REST)"
       ansible.builtin.uri:
@@ -292,13 +294,14 @@
     - name: "Extract relevant client from list (if any)"
       ansible.builtin.set_fact:
         # yamllint disable-line rule:line-length
-        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json | selectattr('clientId', 'equalto', configure_keycloak_client_id) | list) | first | default({}) }}"
+        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json | selectattr('clientId',
+          'equalto', configure_keycloak_client_id) | list) | first | default({}) }}"
 
     - name: "Check that client secret is set (REST)"
       ansible.builtin.assert:
         that:
           - "configure_keycloak_client_secret is defined"
-          - "configure_keycloak_client_secret | bool"
+          - "configure_keycloak_client_secret | length > 0"
         fail_msg: >
           Client not configured but password not set.
           We can't continue with keycloak server configureation
@@ -307,7 +310,7 @@
     - name: "Check that client callback url is set (REST)"
       ansible.builtin.assert:
         that:
-          - "keycloak_client_callback_url | bool"
+          - "keycloak_client_callback_url | length > 0"
         fail_msg: >
           Client not configured but client callback url not set.
           We can't continue with keycloak server configureation
@@ -355,7 +358,8 @@
     - name: "Refresh kcadm client output variable (REST)"
       ansible.builtin.set_fact:
         # yamllint disable-line rule:line-length
-        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json | selectattr('clientId', 'equalto', configure_keycloak_client_id) | list) | first | default({}) }}"
+        configure_keycloak_configured_client: "{{ (configure_keycloak_kcadm_clients_list_output.json | selectattr('clientId',
+          'equalto', configure_keycloak_client_id) | list) | first | default({}) }}"
       when: "not configure_keycloak_kcadm_client_output_second is skipped"
 
     - name: "Get protocol mapper list (REST)"
@@ -377,14 +381,16 @@
     - name: "Extract protocol mapper object"
       ansible.builtin.set_fact:
         # yamllint disable-line rule:line-length
-        configure_keycloak_protocol_mapper_object: "{{ (configure_keycloak_protocol_mapper_list.json | selectattr('name', 'equalto', configure_keycloak_protocol_mapper_name) | list) | first | default({}) }}"
+        configure_keycloak_protocol_mapper_object: "{{ (configure_keycloak_protocol_mapper_list.json | selectattr('name',
+          'equalto', configure_keycloak_protocol_mapper_name) | list) | first | default({}) }}"
 
     - name: "Delete existing protocol-mapper (REST)"
       vars:
         client_uuid: "{{ configure_keycloak_configured_client['id'] }}"
       ansible.builtin.uri:
         # yamllint disable-line rule:line-length
-        url: "{{ configure_keycloak_realm_base_url }}/clients/{{ configure_keycloak_client_uuid }}/protocol-mappers/models/{{ configure_keycloak_protocol_mapper_object['id'] }}"
+        url: "{{ configure_keycloak_realm_base_url }}/clients/{{ configure_keycloak_client_uuid }}/protocol-mappers/models/{{
+          configure_keycloak_protocol_mapper_object['id'] }}"
         method: "DELETE"
         headers:
           Authorization: "Bearer {{ configure_keycloak_auth_token }}"
@@ -414,11 +420,11 @@
           protocolMapper: "oidc-usersessionmodel-note-mapper"
           consentRequired: false
           config:
-            'user.session.note': "identity_provider"
-            'id.token.claim': "true"
-            'access.token.claim': "true"
-            'claim.name': "sourceidp"
-            'jsonType.label': "String"
+            "user.session.note": "identity_provider"
+            "id.token.claim": "true"
+            "access.token.claim": "true"
+            "claim.name": "sourceidp"
+            "jsonType.label": "String"
         follow_redirects: true
         validate_certs: false
         status_code:
@@ -427,9 +433,3 @@
           - 202
       tags:
         - "keycloak_config_set_sourceidp_note"
-
-  delegate_to: "{{ configure_keycloak_keycloak_server }}"
-  tags:
-    - "keycloak_config"
-
-...

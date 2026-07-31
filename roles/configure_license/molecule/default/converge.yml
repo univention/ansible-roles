@@ -1,0 +1,14 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "configure_license_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.configure_license"
+      vars:
+        configure_license_basedn: "{{ configure_license_ucr_ldap_base.stdout }}"
+        configure_license_file: false
+        configure_license_type: "server_license"

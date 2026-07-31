@@ -1,0 +1,4 @@
+ansible>=13.1.0
+ansible-lint>=26.6.0
+molecule-plugins>=26.7.15
+passlib>=1.7.4

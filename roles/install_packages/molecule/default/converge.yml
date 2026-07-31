@@ -1,0 +1,7 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.install_packages"
+      vars:
+        install_packages_install_apps: []

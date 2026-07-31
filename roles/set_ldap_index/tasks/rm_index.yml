@@ -1,5 +1,4 @@
 ---
-
 - name: "set_ldap_index | remove {{ ldap_search_syntax }} "
   block:
     - name: "set_ldap_index | Check current indexes"
@@ -15,6 +14,9 @@
       register: "set_ldap_index_status"
 
     - name: "set_ldap_index | {{ ldap_search_syntax }} index"
+      when:
+        - "set_ldap_index_rm_index in set_ldap_index_status.stdout"
+        - "set_ldap_index_rm_index in set_ldap_index_check_schema_existence.stdout"
       block:
         - name: "set_ldap_index | Stop slapd.service"
           ansible.builtin.systemd:
@@ -32,6 +34,3 @@
           ansible.builtin.systemd:
             name: "slapd"
             state: "started"
-      when:
-        - "set_ldap_index_rm_index in set_ldap_index_status.stdout"
-        - "set_ldap_index_rm_index in set_ldap_index_check_schema_existence.stdout"

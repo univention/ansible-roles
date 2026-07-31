@@ -1,5 +1,8 @@
 ---
 - name: "Implement DNS glue record for external host name"
+  when: "set_dns_glue_record_create_external_hostname_glue_record | bool"
+  tags:
+    - "set_dns_glue_record"
   block:
     - name: "Check if all vars are set"
       ansible.builtin.assert:
@@ -23,8 +26,8 @@
 
     - name: "Turn udm list output into yaml"
       ansible.builtin.set_fact:
-        set_dns_glue_record_glue_record_entries: "{{
-          set_dns_glue_record_ns_record_list.stdout | default('') | from_yaml }}"
+        set_dns_glue_record_glue_record_entries: "{{ set_dns_glue_record_ns_record_list.stdout | default('') | from_yaml
+          }}"
         set_dns_glue_record_glue_record_counter: 0
         cacheable: false
       when: "'nameserver' in set_dns_glue_record_ns_record_list.stdout"
@@ -38,9 +41,8 @@
       loop: "{{ glue_record_entries | default([]) }}"
       loop_control:
         loop_var: "set_dns_glue_record_item"
-      when:
-        "item['nameserver'] == set_dns_glue_record_glue_record_nameserver and
-        item['zone'] == set_dns_glue_record_host_name"
+      when: "item['nameserver'] == set_dns_glue_record_glue_record_nameserver and item['zone'] ==
+        set_dns_glue_record_host_name"
       tags:
         - "set_dns_glue_record_check_record_already_exists"
 
@@ -54,7 +56,3 @@
       when: "set_dns_glue_record_glue_record_counter | default(0) == 0"
       tags:
         - "set_dns_glue_record_create_dns_record"
-
-  when: "set_dns_glue_record_create_external_hostname_glue_record | bool"
-  tags:
-    - "set_dns_glue_record"

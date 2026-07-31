@@ -1,5 +1,4 @@
 ---
-
 - name: "configure_sso_openid | Run UCS install apps: Install 'openid-connect-provider'"
   vars:
     install_packages_app_version_map: "{{ configure_sso_openid_app_version_map }}"
@@ -24,6 +23,12 @@
     - "configure_sso_openid_configure_signing_method"
 
 - name: "configure_sso_openid | Settings for nextcloud"
+  when:
+    - "'nextcloud' in configure_sso_openid_install_apps"
+    - "'nextcloud' in configure_sso_openid_clients"
+  tags:
+    - "configure_sso_openid"
+    - "configure_sso_openid_nextcloud"
   block:
     - name: "configure_sso_openid | Create OIDC provider for Nextcloud"
       ansible.builtin.command:
@@ -99,14 +104,13 @@
       tags:
         - "configure_sso_openid_nextcloud_remove_login_screen"
 
+- name: "configure_sso_openid | Settings for open-xchange"
   when:
-    - "'nextcloud' in configure_sso_openid_install_apps"
-    - "'nextcloud' in configure_sso_openid_clients"
+    - "'oxseforucs' in configure_sso_openid_install_apps"
+    - "'ox' in configure_sso_openid_clients"
   tags:
     - "configure_sso_openid"
-    - "configure_sso_openid_nextcloud"
-
-- name: "configure_sso_openid | Settings for open-xchange"
+    - "configure_sso_openid_ox"
   block:
     - name: "configure_sso_openid | Create OIDC provider for open-xchange"
       ansible.builtin.command:
@@ -212,11 +216,3 @@
         state: "restarted"
       tags:
         - "configure_sso_openid_ox_restart_ox"
-  when:
-    - "'oxseforucs' in configure_sso_openid_install_apps"
-    - "'ox' in configure_sso_openid_clients"
-  tags:
-    - "configure_sso_openid"
-    - "configure_sso_openid_ox"
-
-...

@@ -1,0 +1,8 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.configure_sso_openid"
+      vars:
+        configure_sso_openid_install_apps: []
+        configure_sso_openid_basedn: ""

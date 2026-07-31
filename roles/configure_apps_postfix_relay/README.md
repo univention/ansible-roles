@@ -1,16 +1,13 @@
-Configure Postfix relay (apps)
-=========
+### Configure Postfix relay (apps)
 
 This role modifies postfix relay configuration.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_apps_postfix_relay_enabled`(bool): Toggles if a SMTP relay host should be used; default: `false`.
 - `configure_apps_postfix_relay_port`(number): The port that is used to talk to the system; default: `25`.
@@ -19,23 +16,30 @@ Role Variables
 - `configure_apps_postfix_relay_password`(string): The SMTP relay password.
 - `configure_apps_postfix_relay_hide_logging`(boolean): Toggles output logging for sensible information; default: `true`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure Postfix relay"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_postfix_relay"
+      vars:
+        configure_apps_postfix_relay_enabled: true
+        configure_apps_postfix_relay_host: "smtp.example.com"
+        configure_apps_postfix_relay_username: "relayuser"
+        configure_apps_postfix_relay_password: "relaypassword"
+```
 
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

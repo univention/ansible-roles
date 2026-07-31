@@ -1,15 +1,12 @@
-Configure office suite
-=========
+### Configure office suite
 
 This role configures the chosen office suite and installs it.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_office_suite_office_suite`(string): Define the to be installed office suite. Defaults to `collabora-online`. A list of supported suites is defined in `configure_office_suite_supported_office_suites`; default: `"collabora-online"`.
 - `configure_office_suite_supported_office_suites`(list): A list of supported office suites that can be installed using this role. This variable is set in the role's `defaults/main.yml` and should not be changed.
@@ -19,22 +16,27 @@ Role Variables
 - `configure_office_suite_temp_pw_file`(map): Tempfile object where univention app password is stored.
 - `configure_office_suite_install_apps`(list): A list of applications to install.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure office suite"
+  hosts: "all"
+  roles:
+    - role: "configure_office_suite"
+      vars:
+        configure_office_suite_office_suite: "collabora-online"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

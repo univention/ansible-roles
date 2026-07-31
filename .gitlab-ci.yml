@@ -1,0 +1,276 @@
+---
+# #####################################
+# GitLab Pipelines for ansible-roles #
+# #####################################
+
+variables:
+  ENV_CFG: "${CI_PROJECT_DIR}/tests/ucs-kvm.cfg"
+  TDP_VERSION: &TDP_VERSION "v8.2.0"
+  UCS_VERSION:
+    value: "5.2-6"
+    description: "UCS version to be used X.Y-Z"
+  CI_REGISTRY:
+    value: "gitregistry.knut.univention.de"
+    description: "URI for GitLab CI Container Registry"
+
+
+workflow:
+  rules:
+    - if: &MERGE_TO_MAIN $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+    - if: &PUSH_TO_MAIN $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+
+include:
+  - project: univention/prof-services/internal/devops/test-dev-pipeline
+    ref: *TDP_VERSION
+    file:
+      - jobs-library.yml
+
+stages:
+  - deploy
+  - test
+  - version
+  - release
+
+########
+# DEPLOY
+########
+
+create_vms:
+  stage: deploy
+  extends: .tdp_create_vms
+  needs: []
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+    on_stop: terminate_deployment
+  artifacts:
+    when: always
+  rules:
+    - if: *MERGE_TO_MAIN
+      when: always
+    - when: never
+  resource_group: env-${CI_COMMIT_REF_SLUG}
+
+manage_vms:
+  stage: deploy
+  extends: .tdp_manage_deployment
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+  rules:
+    - if: *MERGE_TO_MAIN
+    - when: never
+  resource_group: env-${CI_COMMIT_REF_SLUG}
+
+terminate_deployment:
+  stage: deploy
+  extends: .tdp_stop_deployment
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+  needs:
+    - job: create_vms
+  rules:
+    - if: *MERGE_TO_MAIN
+      when: manual
+    - when: never
+  resource_group: env-${CI_COMMIT_REF_SLUG}
+
+######
+#TEST#
+######
+
+run_molecule_tests:
+  stage: test
+  extends: .tdp_run_playbooks
+  needs:
+    - create_vms
+  environment:
+    name: test/${CI_COMMIT_REF_SLUG}
+  script:
+    - section_start "install_requirements" "Installing requirements"
+    - python3 -m venv .venv
+    - .venv/bin/pip install -r requirements.txt
+    - .venv/bin/ansible-galaxy collection install . --force -p .collections
+    - .venv/bin/ansible-galaxy collection install -r molecule-requirements.yml -p .collections
+    - section_end "install_requirements"
+    - section_start "run_molecule_tests" "Running molecule tests"
+    - export PATH="${CI_PROJECT_DIR}/.venv/bin:${PATH}"
+    # Parse VM IP from TDP-provided inventory
+    - export ANSIBLE_INVENTORY="${TDP_DEPLOYMENT_RESULTS_DIR}/inventory.ini"
+    - export MOLECULE_TEST_HOST=$(grep 'ansible_host' "${ANSIBLE_INVENTORY}" | sed 's/.*ansible_host=//')
+    - '[ -n "${MOLECULE_TEST_HOST}" ] || { echo "ERROR: MOLECULE_TEST_HOST is empty - ${ANSIBLE_INVENTORY} missing or malformed";
+      exit 1; }'
+    # ucs_join runs first to join the unjoined VM as UCS master, enabling all other roles
+    - (cd "${CI_PROJECT_DIR}/roles/ucs_join" && molecule test)
+    # All remaining roles are tested sequentially on the now-joined VM
+    - |
+      FAILED_ROLES=""
+      # Skipped (require external service pre-installed):
+      # configure_apps_nextcloud configure_apps_owncloud configure_nextcloud_saml
+      # configure_nextcloud_turn configure_office_suite configure_sso_openid
+      # dovecot_connector improve_usability_nextcloud install_apps_ox_post
+      # install_nextcloud_app intercom_service ox_connector
+      # configure_keycloak, configure_keycloak_client, configure_keycloak_saml,
+      # configure_saml_single_server (require the SAML/Keycloak app actually
+      # installed on the test host - kcadm.sh / oidc/rpservice / saml/serviceprovider
+      # UDM modules / 91univention-saml.inst join script are all absent otherwise)
+      # Skipped (require real external credentials/service):
+      # configure_license (requires real Univention license-shop credentials)
+      # Skipped (require a licensed UCS instance - the shared test VM has no
+      # valid UCS license, so any univention-app install fails with
+      # must_have_valid_license):
+      # configure_monitoring install_lets_encrypt install_service_selfservice
+      for role in \
+        add_local_user \
+        cleanup_portal \
+        configure_amazon_metadata_server \
+        configure_apps_postfix \
+        configure_apps_postfix_relay \
+        configure_directory_manager \
+        configure_error_detail_show \
+        configure_group_syntax \
+        configure_logrotate \
+        configure_network_interface_names \
+        configure_network_proxy \
+        configure_ntp_servers \
+        configure_password_policies \
+        configure_repository \
+        custom_facts \
+        custom_facts_finished \
+        deployment_message \
+        disable_ipv6 \
+        disable_piwik_tracking \
+        force_package_list_update \
+        get_installed_apps \
+        hardening \
+        improve_usability_ui_changes \
+        improve_usability_user_config \
+        install_apps_ox_pre \
+        install_branding \
+        install_multitenant_acls \
+        install_packages \
+        install_service_new_portal \
+        ldapsearch_user \
+        modify_ucs_ca \
+        portal_category \
+        portal_configure_title \
+        portal_cookie_banner \
+        portal_entry \
+        remove_packages \
+        set_dns_glue_record \
+        set_feedback_mail_address \
+        set_ldap_index \
+        ucs_add_admin_user \
+        umc_permissions \
+        umc_policies_maintenance \
+        univention_firewall \
+        univention_install \
+        univention_prune_kernels \
+        univention_remove \
+        univention_repository_component \
+        univention_upgrade \
+        update_users_ssh_keys \
+        use_trusted_cert \
+        workaround_acmetiny_upgrade \
+        workaround_high_mtu; do
+        echo "=== Testing role: ${role} ==="
+        if ! (cd "${CI_PROJECT_DIR}/roles/${role}" && molecule test); then
+          FAILED_ROLES="${FAILED_ROLES} ${role}"
+        fi
+      done
+      if [ -n "${FAILED_ROLES}" ]; then
+        echo "The following roles FAILED:${FAILED_ROLES}"
+        exit 1
+      fi
+    - section_end "run_molecule_tests"
+  timeout: 3 hours
+  rules:
+    - if: *MERGE_TO_MAIN
+    - when: never
+  resource_group: env-${CI_COMMIT_REF_SLUG}
+  interruptible: false
+
+###########
+# VERSIONING
+###########
+
+.install-ca-cert: &install_ca_cert
+  - curl -k https://nissedal.knut.univention.de/ucs-root-ca.crt > /usr/local/share/ca-certificates/ucs-root-ca.crt
+  - update-ca-certificates
+
+# Runs semantic-release against the commit history since the last tag and
+# determines whether a new release is due. If so, it creates the git tag and
+# GitLab release, and exposes the computed version to downstream jobs via a
+# dotenv artifact. If no release is due, release.env stays empty and the
+# `.publish-common` guard in the downstream jobs turns them into a no-op.
+determine_version:
+  stage: version
+  image: node:20-alpine
+  before_script:
+    - apk add --no-cache ca-certificates curl git
+    - *install_ca_cert
+    - git remote set-url origin "https://gitlab-ci-token:${GITLAB_ANSIBLE_ROLES_PUBLIC_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+  script:
+    - touch release.env
+    - npm install --no-save semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/exec @semantic-release/gitlab
+    - npx semantic-release
+  variables:
+    GIT_DEPTH: "0"
+    GITLAB_TOKEN: $GITLAB_ANSIBLE_ROLES_PUBLIC_TOKEN
+  artifacts:
+    reports:
+      dotenv: release.env
+  rules:
+    - if: *PUSH_TO_MAIN
+    - when: never
+
+#########
+# RELEASE
+#########
+
+.publish-common:
+  stage: release
+  needs:
+    - job: determine_version
+      artifacts: true
+  rules:
+    - if: *PUSH_TO_MAIN
+    - when: never
+  artifacts:
+    paths:
+      - univention-ucs_roles-*
+    expire_in: 14 days
+  before_script:
+    # Check if release has to be built (determine_version found nothing to release)
+    - if [ -z "$RELEASE_VERSION" ]; then exit 0; fi
+    - VERSION=${RELEASE_VERSION}
+    - 'sed -i -E "/^version: \"[0-9]+\.[0-9]+\.[0-9]+\"/ s/[0-9]+\.[0-9]+\.[0-9]+/${VERSION}/" galaxy.yml'
+  variables:
+    GIT_DEPTH: "1"
+
+publish_on_galaxy:
+  extends: .publish-common
+  image: ${CI_REGISTRY}/knut/ansible:main
+  script:
+    - ansible-galaxy collection build
+    - ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} univention-ucs_roles-${VERSION}.tar.gz
+
+# Publishes the release to the real GitHub mirror (github.com/univention/ansible-roles).
+# Requires a GITHUB_ANSIBLE_ROLES_TOKEN CI/CD variable (a GitHub PAT or deploy
+# token with push access to that repo).
+sync_to_github:
+  extends: .publish-common
+  image: ${CI_REGISTRY}/alpine-curl:main
+  before_script:
+    - !reference [.publish-common, before_script]
+    - *install_ca_cert
+  script:
+    - rm -rf ${CI_BUILDS_DIR}/github-mirror || true
+    - git clone "https://x-access-token:${GITHUB_ANSIBLE_ROLES_TOKEN}@github.com/univention/ansible-roles.git" ${CI_BUILDS_DIR}/github-mirror
+    - rsync -aq --delete --exclude .git --exclude .gitlab-ci.yml ${CI_PROJECT_DIR}/ ${CI_BUILDS_DIR}/github-mirror
+    - cd ${CI_BUILDS_DIR}/github-mirror
+    - git config user.email "ucs@univention.de"
+    - git config user.name "Univention Commit Service"
+    - git add -A
+    - git commit -m "Release ${RELEASE_VERSION} ($(date +'%d.%m.%Y'))" || echo "Nothing to commit"
+    - git tag "v${RELEASE_VERSION}"
+    - git push origin HEAD:main
+    - git push origin "v${RELEASE_VERSION}"

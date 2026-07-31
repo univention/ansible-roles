@@ -1,5 +1,4 @@
 ---
-
 #
 #         _   _                 ____
 # __/\__ | | | | ___ _ __ ___  | __ )  ___
@@ -83,5 +82,3 @@
   tags:
     - "workaround_acmetiny_upgrade"
     - "workaround_acmetiny_upgrade_path_refresh"
-
-...

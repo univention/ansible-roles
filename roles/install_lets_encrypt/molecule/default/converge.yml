@@ -1,0 +1,22 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Create temporary file for the univention-app password"
+      ansible.builtin.tempfile:
+        state: "file"
+        suffix: ".pw"
+      register: "install_lets_encrypt_temp_pw_file"
+      changed_when: false
+
+    - name: "Write admin password to temporary file"
+      ansible.builtin.copy:
+        dest: "{{ install_lets_encrypt_temp_pw_file.path }}"
+        content: "univention"
+        mode: "0600"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.install_lets_encrypt"
+      vars:
+        install_lets_encrypt_external_hostname: "primary.test.ucs.example"
+        install_lets_encrypt_use_letsencrypt_staging: true

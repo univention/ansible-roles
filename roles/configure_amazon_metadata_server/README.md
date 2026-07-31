@@ -1,36 +1,36 @@
 
-Configure amazon metadata server
-================================
+### Configure amazon metadata server
 
 Enable or disable UCS calling Amazon's metadata server
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_amazon_metadata_server_call`(boolen): Defines if the amazon metadata server should be called; default: `false`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure Amazon metadata server"
+  hosts: "all"
+  roles:
+    - role: "configure_amazon_metadata_server"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

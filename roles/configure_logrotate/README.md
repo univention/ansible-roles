@@ -1,17 +1,14 @@
-Configure Logrotate
-=========
+### Configure Logrotate
 
 As is defined on the `ucr` the log files are rotated the set number of times
 before being removed. This role is used to set those numbers.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 - `configure_logrotate_compress`(bool): If this option is activated, log files are compressed during rotation; default: yes
 - `configure_logrotate_create`(string): Configures mode, owner and group of a log file after rotation; default: 640 root adm
 - `configure_logrotate_missingok`(bool): If this option is activated, proceed without printing an error message if a logfile is missing; default: yes
@@ -22,23 +19,25 @@ Role Variables
 - `configure_logrotate_syslog_rotate_handling`(string): Syslog file is rotated according to criterion described by `man logrotate.conf`; default: daily
 
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure logrotate"
+  hosts: "all"
+  roles:
+    - role: "configure_logrotate"
+```
 
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

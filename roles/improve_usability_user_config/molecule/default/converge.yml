@@ -1,0 +1,14 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "improve_usability_user_config_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.improve_usability_user_config"
+      vars:
+        improve_usability_user_config_basedn: "{{ improve_usability_user_config_ucr_ldap_base.stdout }}"
+        improve_usability_user_config_external_hostname: "primary.test.ucs.example"
+        improve_usability_user_config_install_apps: []

@@ -1,16 +1,13 @@
-Configure directory manager
-=========
+### Configure directory manager
 
 This role configures directory manager settings.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_directory_manager_mailprimaryaddress_required`(bool): Toggles if mailPrimaryAddress should be required; default: `false`.
 - `configure_directory_manager_firstname_required`(bool): Toggles if forename should be required; default: `false`.
@@ -23,22 +20,25 @@ Role Variables
 - `configure_directory_manager_autosearch`(string): Toggles wether the user autosearch is enabled; default: `"False"`.
 - `configure_directory_manager_username_syntax`(string): Set the username syntax; default `"uid"`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure directory manager"
+  hosts: "all"
+  roles:
+    - role: "configure_directory_manager"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

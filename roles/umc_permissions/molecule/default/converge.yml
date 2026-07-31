@@ -1,0 +1,12 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "umc_permissions_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.umc_permissions"
+      vars:
+        umc_permissions_basedn: "{{ umc_permissions_ucr_ldap_base.stdout }}"

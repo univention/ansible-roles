@@ -9,5 +9,3 @@ configure_license_basedn: ""
 configure_license_type: "server_license"
 configure_license_file: false
 configure_license_server_type: "master"
-
-...

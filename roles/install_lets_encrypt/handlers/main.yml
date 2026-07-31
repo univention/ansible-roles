@@ -1,5 +1,4 @@
 ---
-
 - name: "Restart postfix"
   ansible.builtin.service:
     name: "postfix"
@@ -24,5 +23,3 @@
   ansible.builtin.command: "univention-app restart openid-connect-provider"
   # noqa ignore-errors
   ignore_errors: true
-
-...

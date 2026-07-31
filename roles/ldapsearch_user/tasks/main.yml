@@ -1,6 +1,8 @@
 ---
-
 - name: "ldapsearch_user | Create LDAPSearch user"
+  when: "ldapsearch_user_server_type | default('master') != 'backup'"
+  tags:
+    - "ldapsearch_user"
   block:
     - name: "ldapsearch_user | Create LDAPSearch user"
       ansible.builtin.command: >
@@ -105,9 +107,3 @@
       register: "ldapsearch_user_update_password_tenantbased_result"
       tags:
         - "ldapsearch_user_update_password"
-
-  when: "ldapsearch_user_server_type | default('master') != 'backup'"
-  tags:
-    - "ldapsearch_user"
-
-...

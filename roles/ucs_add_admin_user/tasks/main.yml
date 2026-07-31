@@ -1,5 +1,4 @@
 ---
-
 - name: "ucs_add_admin_user | Add Admin User"
   ansible.builtin.command:
     argv:
@@ -97,5 +96,3 @@
   tags:
     - "ucs_add_admin_user"
     - "ucs_add_admin_user_trigger_password_recovery"
-
-...

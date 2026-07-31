@@ -1,0 +1,10 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.add_local_user"
+      vars:
+        add_local_user_user:
+          name: "molecule-test"
+          comment: "Molecule test user"
+          password: "{{ 'molecule' | password_hash('sha512') }}"

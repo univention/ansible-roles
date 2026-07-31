@@ -1,6 +1,8 @@
 ---
-
 - name: "configure_license | Import License"
+  when: "configure_license_server_type | default('master') != 'backup'"
+  tags:
+    - "configure_license"
   block:
     - name: "configure_license | Check current license status"
       ansible.builtin.command:
@@ -16,6 +18,10 @@
         - "configure_license_get_custom_facts"
 
     - name: "configure_license | Refresh expired license"
+      when: >
+        configure_license_status.rc > 0 or
+        configure_license_status.stdout is search('FAILED') or
+        ansible_local['ucr']['uuid/license'] is not defined
       block:
         - name: "configure_license | Create temporary directory"
           ansible.builtin.tempfile:
@@ -26,6 +32,9 @@
             - "configure_license_tempdir"
 
         - name: "configure_license | Get license from license server"
+          when: "configure_license_type == 'server_license'"
+          tags:
+            - "configure_license_server_license"
           block:
             - name: "configure_license | Check if all vars are set"
               ansible.builtin.assert:
@@ -86,9 +95,6 @@
                 creates: "{{ configure_license_temp_dir.path }}/license.ldif"
               tags:
                 - "configure_license_server_license_acquire"
-          when: "configure_license_type == 'server_license'"
-          tags:
-            - "configure_license_server_license"
 
         - name: "configure_license | Copy pre-prepared license file to server"
           ansible.builtin.copy:
@@ -115,12 +121,3 @@
             - "configure_license_tempdir"
             - "configure_license_cleanup"
             - "cleanup"
-      when: >
-        configure_license_status.rc > 0 or
-        configure_license_status.stdout is search('FAILED') or
-        ansible_local['ucr']['uuid/license'] is not defined
-  when: "configure_license_server_type | default('master') != 'backup'"
-  tags:
-    - "configure_license"
-
-...

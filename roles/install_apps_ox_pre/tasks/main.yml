@@ -1,5 +1,4 @@
 ---
-
 - name: "install_apps_ox_pre | Set default mail domain to host's FQDN"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -16,10 +15,7 @@
     --ignore_exists
   changed_when: "install_apps_ox_pre_external_domain_result.stdout is not search('Object exists')"
   register: "install_apps_ox_pre_external_domain_result"
-  when: "install_apps_ox_pre_mail_domain is defined and
-         install_apps_ox_pre_mail_domain|length > 0"
+  when: "install_apps_ox_pre_mail_domain is defined and install_apps_ox_pre_mail_domain|length > 0"
   tags:
     - "install_apps_ox_pre"
     - "install_apps_ox_pre_external_domain"
-
-...

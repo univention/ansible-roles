@@ -16,5 +16,3 @@ dovecot_connector_adm_uri: "https://{dcc_adm_host}:{dcc_adm_port:d}/doveadm/v1"
 dovecot_connector_dc_vmail_template: "/data/usr/local/dovecot/vmail/{uuid[0]}{uuid[1]}/{uuid}"
 dovecot_connector_loglevel: "INFO"
 dovecot_connector_hide_logging: true
-
-...

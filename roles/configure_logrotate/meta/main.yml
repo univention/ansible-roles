@@ -3,8 +3,8 @@
 galaxy_info:
   role_name: "configure_logrotate"
   author: "Univention"
-  description: "As is defined on the `ucr` the log files are rotated the set
-  number of times before being removed. This role is used to set those numbers."
+  description: "As is defined on the `ucr` the log files are rotated the set number of times before being
+    removed. This role is used to set those numbers."
   company: "Univention GmbH"
 
   issue_tracker_url: "https://forge.univention.org"
@@ -27,5 +27,3 @@ galaxy_info:
     - "rotate"
 
 dependencies: []
-
-...

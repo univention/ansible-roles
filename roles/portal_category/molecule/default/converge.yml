@@ -1,0 +1,13 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "portal_category_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.portal_category"
+      vars:
+        portal_category_base_dn: "{{ portal_category_ucr_ldap_base.stdout }}"
+        portal_category_categories: []

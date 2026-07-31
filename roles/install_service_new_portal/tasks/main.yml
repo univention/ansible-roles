@@ -1,5 +1,4 @@
 ---
-
 - name: "Install New Portal app"
   ansible.builtin.include_role:
     name: "install_packages"
@@ -33,5 +32,3 @@
   tags:
     - "install_service_new_portal"
     - "install_service_new_portal_install_icons"
-
-...

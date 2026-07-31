@@ -1,0 +1,5 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.disable_piwik_tracking"

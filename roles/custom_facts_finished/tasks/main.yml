@@ -1,7 +1,5 @@
 ---
-
-- name: "custom_facts_finished | Create deployment_finished file and do not mark it as
-         changed in ansible"
+- name: "custom_facts_finished | Create deployment_finished file and do not mark it as changed in ansible"
   ansible.builtin.template:
     dest: "/etc/ansible/facts.d/deployment_finished.fact"
     src: "deployment_finished.fact.j2"
@@ -10,5 +8,3 @@
   failed_when: false
   tags:
     - "custom_facts_finished"
-
-...

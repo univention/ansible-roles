@@ -1,5 +1,4 @@
 ---
-
 - name: "Restart dovecot"
   ansible.builtin.service:
     name: "dovecot"
@@ -9,5 +8,3 @@
   ansible.builtin.service:
     name: "open-xchange"
     state: "restarted"
-
-...

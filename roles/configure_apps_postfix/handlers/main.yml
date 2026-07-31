@@ -1,5 +1,4 @@
 ---
-
 - name: "Restart postfix"
   ansible.builtin.service:
     name: "postfix"
@@ -7,5 +6,3 @@
   tags:
     - "configure_apps_postfix"
     - "configure_apps_postfix_restart_postfix"
-
-...

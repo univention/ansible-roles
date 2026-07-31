@@ -1,34 +1,34 @@
-Improve usability nextcloud
-=========
+### Improve usability nextcloud
 
 This role disables some unused functionality like: `contacts`, `spreed`, `mail`, `calendar`.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Improve Nextcloud usability"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_nextcloud"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

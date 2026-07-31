@@ -1,15 +1,12 @@
-Upgrade Univention UCS
-=========
+### Upgrade Univention UCS
 
 This role upgrade UCS to a specific version.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `univention_upgrade_version`(string): The UCS' version number to upgrade to; default: `"4.4-99"`.
 - `univention_upgrade_clear_apt_cache`(bool): Clear all downloaded packages to reduce package conflicts; default: `false`.
@@ -19,22 +16,27 @@ Role Variables
 - `univention_upgrade_username`(string): Username of administrative user for app updates; default: `Administrator`.
 - `univention_upgrade_password_file`(string): Path to the file on the server that contains the user password if `univention_upgrade_app_updates=true`; default: `""`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Upgrade UCS"
+  hosts: "all"
+  roles:
+    - role: "univention_upgrade"
+      vars:
+        univention_upgrade_version: "5.2-99"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

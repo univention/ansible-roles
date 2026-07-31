@@ -1,5 +1,4 @@
 ---
-
 - name: "configure_password_policies | Assert policy is given"
   ansible.builtin.assert:
     that:
@@ -36,5 +35,3 @@
   tags:
     - "configure_password_policies"
     - "configure_password_policies_set_ucr_variables"
-
-...

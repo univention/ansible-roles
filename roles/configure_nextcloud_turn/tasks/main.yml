@@ -1,5 +1,4 @@
 ---
-
 - name: "NextCloud: Configure TURN server for Talk"
   ansible.builtin.command:
     argv:
@@ -21,5 +20,3 @@
   register: "configure_nextcloud_turn_result"
   tags:
     - "configure_nextcloud_turn"
-
-...

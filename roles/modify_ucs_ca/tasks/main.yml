@@ -1,5 +1,4 @@
 ---
-
 - name: "Get existing ssl configuration"
   ansible.builtin.slurp:
     src: "/etc/univention/ssl/{{ modify_ucs_ca_external_domain_name }}/openssl.cnf"
@@ -10,9 +9,9 @@
 
 - name: "Generate subjectAltName List"
   ansible.builtin.set_fact:
-    modify_ucs_ca_current_alternative_names_list: "{{ modify_ucs_ca_current_alternative_names_list | default([])
-                                                        + ['DNS:' + modify_ucs_ca_item] }}"
-  with_items:
+    modify_ucs_ca_current_alternative_names_list: "{{ modify_ucs_ca_current_alternative_names_list | default([]) +
+      ['DNS:' + modify_ucs_ca_item] }}"
+  loop:
     - "{{ inventory_hostname_short }}"
     - "{{ inventory_hostname_short }}.{{ modify_ucs_ca_external_domain_part }}"
     - "{{ inventory_hostname }}"
@@ -23,41 +22,47 @@
 
 - name: "Build new subjectAltName line"
   ansible.builtin.set_fact:
-    modify_ucs_ca_current_alternative_name_new: "subjectAltName =
-        {{ modify_ucs_ca_current_alternative_names_list | select() | join(', ') }}"
+    modify_ucs_ca_current_alternative_name_new: "subjectAltName = {{ modify_ucs_ca_current_alternative_names_list |
+      select() | join(', ') }}"
   tags:
     - "modify_ucs_ca"
     - "modify_ucs_ca_build_alternative_name"
 
 - name: "Get current alternative names"
   ansible.builtin.set_fact:
-    modify_ucs_ca_current_alternative_name: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode
-      | regex_search('(?sm)\\[ v3_req \\][^\\[]+') | regex_search('subjectAltName *= *([^\\n]+)') }}"
+    modify_ucs_ca_current_alternative_name: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode | \
+      regex_search('(?sm)\\ [ v3_req \\][^\\[]+') | regex_search('subjectAltName *= *([^\\n]+)') }}"
   tags:
     - "modify_ucs_ca"
     - "modify_ucs_ca_get_current_alternative_name"
 
 - name: "Modify existing certitifactes"
+  when: |
+    modify_ucs_ca_current_alternative_name | length == 0 or
+    modify_ucs_ca_current_alternative_name_new != modify_ucs_ca_current_alternative_name
+  tags:
+    - "modify_ucs_ca"
+    - "modify_ucs_ca_modify"
   block:
     - name: "Replace existing subjectAltName line"
       vars:
-        modify_ucs_ca_current_new_file_content_section: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode
-          | regex_search('(?sm)\\[ v3_req \\][^\\[]+')
-          | regex_replace('subjectAltName *= *([^\\n]+)', modify_ucs_ca_current_alternative_name_new) }}"
+        modify_ucs_ca_current_new_file_content_section: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode | \
+          regex_search('(?sm)\\ [ v3_req \\][^\\[]+') | regex_replace('subjectAltName *= *([^\\n]+)', \
+          modify_ucs_ca_current_alternative_name_new) }}"
       ansible.builtin.set_fact:
-        modify_ucs_ca_current_new_file_content: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode
-          | regex_replace('(?sm)\\[ v3_req \\][^\\[]+', modify_ucs_ca_current_new_file_content_section) }}"
+        modify_ucs_ca_current_new_file_content: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode | \
+          regex_replace('(?sm)\\ [ v3_req \\][^\\[]+', modify_ucs_ca_current_new_file_content_section) }}"
       when: "modify_ucs_ca_current_alternative_name | length > 0"
       tags:
         - "modify_ucs_ca_modify_replace_existing_line"
 
     - name: "Add subjectAltName to file"
       vars:
-        modify_ucs_ca_current_new_file_content_section: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode
-          | regex_search('(?sm)\\[ v3_req \\][^\\[]+') + '\n' + modify_ucs_ca_current_alternative_name_new + '\n\n' }}"
+        modify_ucs_ca_current_new_file_content_section: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode | \
+          regex_search('(?sm)\\ [ v3_req \\][^\\[]+') + '\n' + modify_ucs_ca_current_alternative_name_new + '\n\n' }}"
       ansible.builtin.set_fact:
-        modify_ucs_ca_current_new_file_content: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode
-          | regex_replace('(?sm)\\[ v3_req \\][^\\[]+', modify_ucs_ca_current_new_file_content_section) }}"
+        modify_ucs_ca_current_new_file_content: "{{ modify_ucs_ca_existing_openssl['content'] | b64decode | \
+          regex_replace('(?sm)\\ [ v3_req \\][^\\[]+', modify_ucs_ca_current_new_file_content_section) }}"
       when: "modify_ucs_ca_current_alternative_name | length == 0"
       tags:
         - "modify_ucs_ca_modify_add_new_line"
@@ -93,11 +98,3 @@
         cmd: "univention-certificate renew -name {{ modify_ucs_ca_external_domain_name }} -days 7300"
       tags:
         - "modify_ucs_ca_modify_create_new_csr"
-  when: |
-    modify_ucs_ca_current_alternative_name | length == 0 or
-    modify_ucs_ca_current_alternative_name_new != modify_ucs_ca_current_alternative_name
-  tags:
-    - "modify_ucs_ca"
-    - "modify_ucs_ca_modify"
-
-...

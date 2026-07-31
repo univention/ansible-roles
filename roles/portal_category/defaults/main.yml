@@ -6,5 +6,3 @@ portal_category_categories: []
 portal_category_install_list: []
 portal_category_drift_detection: true
 portal_category_remove_unscoped: false
-
-...

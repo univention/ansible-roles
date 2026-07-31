@@ -1,0 +1,29 @@
+---
+dependency:
+  name: "galaxy"
+  requirements_file: "../../../../molecule-requirements.yml"
+
+driver:
+  name: "default"
+  options:
+    managed: false
+
+platforms:
+  - name: "ucs-test"
+
+provisioner:
+  name: "ansible"
+  inventory:
+    hosts:
+      all:
+        hosts:
+          ucs-test:
+            ansible_host: "${MOLECULE_TEST_HOST}"
+            ansible_user: "root"
+  env:
+    ANSIBLE_COLLECTIONS_PATHS: "$MOLECULE_PROJECT_DIRECTORY/../../.collections"
+  options:
+    skip-tags: "hardening_disable_ssh_root_password_login_ssh_config,hardening_restart_ssh"
+
+verifier:
+  name: "ansible"

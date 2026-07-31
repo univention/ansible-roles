@@ -7,5 +7,3 @@ configure_keycloak_client_keycloak_server_id: ""
 configure_keycloak_client_keycloak_server: ""
 configure_keycloak_client_config_type: "dynamic"
 configure_keycloak_client_hostname: "{{ inventory_hostname }}"
-
-...

@@ -1,15 +1,12 @@
-Configure keycloak client
-=========
+### Configure keycloak client
 
 This role configures ucs to properly use keycloak.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_keycloak_client_oidc_broker_secret`(string): The client password used in the IDP creation.
 - `configure_keycloak_client_keycloak_password`(string): The keycloaks password.
@@ -19,23 +16,29 @@ Role Variables
 - `configure_keycloak_client_config_type`(string): This variable determines if the keycloak server configuration is done using this role (`dynamic`) or if things already have been configured and only the UCS side has to be configured (`static`). `dynamic` usually is used for setups with a lot of turnover, `static` is used in a more static environment. If set to 'none' keycloak configuration as a whole will be skipped, including the "client" side; default: `dynamic`.
 - `configure_keycloak_client_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure Keycloak client"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak_client"
+      vars:
+        configure_keycloak_client_basedn: "dc=example,dc=com"
+        configure_keycloak_client_keycloak_server_id: "keycloak"
+        configure_keycloak_client_keycloak_server: "keycloak.example.com"
+```
 
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

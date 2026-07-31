@@ -1,0 +1,16 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "ucs_add_admin_user_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.ucs_add_admin_user"
+      vars:
+        ucs_add_admin_user_basedn: "{{ ucs_add_admin_user_ucr_ldap_base.stdout }}"
+        ucs_add_admin_user_username: "molecule-admin"
+        ucs_add_admin_user_firstname: "Molecule"
+        ucs_add_admin_user_lastname: "Admin"
+        ucs_add_admin_user_password: "Univention.99!"

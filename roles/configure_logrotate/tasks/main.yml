@@ -1,5 +1,4 @@
 ---
-
 - name: "configure_logrotate | Set logrotate compress"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -63,5 +62,3 @@
   tags:
     - "configure_logrotate_syslog_rotate_handling"
     - "configure_logrotate"
-
-...

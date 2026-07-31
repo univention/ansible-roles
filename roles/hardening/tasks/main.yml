@@ -1,5 +1,4 @@
 ---
-
 - name: "hardening | Disable HTTP"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -54,11 +53,10 @@
     state: "restarted"
   changed_when: false
   when:
-    - "hardening_disable_http | bool and hardening_disable_http_result.changed
-      or hardening_hsts | bool and hardening_hsts_result.changed
-      or hardening_honorcipherorder | bool and hardening_honorcipherorder_result.changed
-      or hardening_apache2_ssl_tlsv13 | bool and hardening_apache2_ssl_tlsv13.changed
-      or hardening_apache2_result.changed"
+    - "hardening_disable_http | bool and hardening_disable_http_result.changed or hardening_hsts | bool and
+      hardening_hsts_result.changed or hardening_honorcipherorder | bool and hardening_honorcipherorder_result.changed
+      or hardening_apache2_ssl_tlsv13 | bool and hardening_apache2_ssl_tlsv13.changed or
+      hardening_apache2_result.changed"
 
   tags:
     - "hardening_restart_http"
@@ -116,7 +114,7 @@
 - name: "hardening | Set processes limit to cpu cores"
   univention.ucs_modules.univention_config_registry:
     keys:
-      umc/server/processes: "{{ ansible_processor_cores | quote }}"
+      umc/server/processes: "{{ hardening_processor_cores | quote }}"
   tags:
     - "hardening_set_processes_limit"
     - "hardening"
@@ -200,5 +198,3 @@
   tags:
     - "hardening_disable_saml_idp_error_reporting"
     - "hardening"
-
-...

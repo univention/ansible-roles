@@ -1,15 +1,12 @@
-Portal category
-=========
+### Portal category
 
 Create, modify and delete portal categories
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `portal_category_base_dn`(string): The base DN that has been used when setting up the UCS server
 - `portal_category_categories`(list): The portal categories list.
@@ -17,18 +14,19 @@ Role Variables
 - `portal_category_drift_detection`(bool): Toggle drift detection and only apply differences; default: `true`.
 - `portal_category_remove_unscoped`(bool): Toggle removal of undefined categories; default: `false`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
-- hosts: all
+---
+- name: "Manage portal categories"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Manage portal categories"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.portal_category"
       vars:
         portal_category_base_dn: "dc=ansible,dc=univention,dc=de"
@@ -57,8 +55,7 @@ Example Playbook
           # ...
 ```
 
-Portal categories
-----------------
+#### Portal categories
 
 ```yaml
 portal_category_categories:
@@ -74,18 +71,15 @@ portal_category_categories:
 ```
 
 
-Limitations
-----------------
+#### Limitations
 
 - Modifying/Removing attributes with whitespaces are not supported by UCS 4.4
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

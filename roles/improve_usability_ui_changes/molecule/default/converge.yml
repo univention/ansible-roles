@@ -1,0 +1,12 @@
+---
+- name: "Converge"
+  hosts: "all"
+  tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "improve_usability_ui_changes_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.improve_usability_ui_changes"
+      vars:
+        improve_usability_ui_changes_basedn: "{{ improve_usability_ui_changes_ucr_ldap_base.stdout }}"

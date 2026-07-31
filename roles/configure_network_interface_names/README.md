@@ -1,35 +1,35 @@
-Configure network interface names
-=========
+### Configure network interface names
 
 This role configures network interface names as GRUB boot parameter, resulting in network interface names like eth0.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_network_interface_names_use_old_names`(boolean): Set the GRUB parameter for old interface names; default: `true`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure network interface names"
+  hosts: "all"
+  roles:
+    - role: "configure_network_interface_names"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

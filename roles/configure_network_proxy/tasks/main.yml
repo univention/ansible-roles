@@ -1,5 +1,4 @@
 ---
-
 - name: "configure_network_proxy | Configure http network proxy"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -29,5 +28,3 @@
   tags:
     - "configure_network_proxy"
     - "configure_network_proxy_no_proxy"
-
-...

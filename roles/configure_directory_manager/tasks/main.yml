@@ -1,5 +1,4 @@
 ---
-
 - name: "configure_directory_manager | Set properties as required"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -52,5 +51,3 @@
   tags:
     - "configure_directory_manager"
     - "configure_directory_manager_username_syntax"
-
-...

@@ -1,5 +1,4 @@
 ---
-
 - name: "custom_facts | Refresh date_time facts"
   ansible.builtin.setup:
     filter: "ansible_date_time"
@@ -59,8 +58,7 @@
     - "custom_facts"
     - "custom_facts_deployment"
 
-- name: "custom_facts | Create deployment_meta file and do not mark it as \
-         changed in ansible"
+- name: "custom_facts | Create deployment_meta file and do not mark it as changed in ansible"
   ansible.builtin.template:
     dest: "/etc/ansible/facts.d/deployment_meta.fact"
     src: "deployment_meta.fact.j2"
@@ -96,5 +94,3 @@
   tags:
     - "custom_facts"
     - "custom_facts_refresh_ucr_facts"
-
-...

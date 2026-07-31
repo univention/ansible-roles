@@ -1,35 +1,37 @@
-Workaround: Use specific acme tiny version
-=========
+### Workaround: Use specific acme tiny version
 
 This role downloads and patches acme-tiny.
 
-Requirements
-------------
+#### Requirements
 
 - ansible.posix
   - patch
 
-Role Variables
---------------
+#### Role Variables
 
 `workaround_acmetiny_upgrade_temp_dir`(map): Ansible temporary dir for workaround files.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Workaround acme-tiny upgrade"
+  hosts: "all"
+  roles:
+    - role: "workaround_acmetiny_upgrade"
+      vars:
+        workaround_acmetiny_upgrade_temp_dir: "/tmp/acme-workaround"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

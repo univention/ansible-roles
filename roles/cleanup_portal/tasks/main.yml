@@ -1,6 +1,8 @@
 ---
-
 - name: "cleanup_portal | Install Dashboard"
+  when: "'dashboard' in cleanup_portal_install_services"
+  tags:
+    - "cleanup_portal"
   block:
     - name: "Allow Domain Admin group access to dashboard features"
       # exit codes
@@ -21,7 +23,7 @@
       loop_control:
         loop_var: "cleanup_portal_item"
       register: "cleanup_portal_output1"
-      changed_when: "cleanup_portal_output1 | regex_search('Object modified: cn=')"
+      changed_when: "cleanup_portal_output1.stdout is search('Object modified: cn=')"
       tags:
         - "cleanup_portal_domain_admin_permissions"
 
@@ -38,7 +40,7 @@
           - "--append"
           - "{{ cleanup_portal_admin_dashboard_dn }}"
       register: "cleanup_portal_output2"
-      changed_when: "cleanup_portal_output2 | regex_search('Object modified: cn=')"
+      changed_when: "cleanup_portal_output2.stdout is search('Object modified: cn=')"
       tags:
         - "cleanup_portal_add_portal_entries"
 
@@ -55,7 +57,7 @@
           - "--remove"
           - "{{ cleanup_portal_admin_dashboard_dn }}"
       register: "cleanup_portal_output3"
-      changed_when: "cleanup_portal_output3 | regex_search('Object modified: cn=')"
+      changed_when: "cleanup_portal_output3.stdout is search('Object modified: cn=')"
       tags:
         - "cleanup_portal_remove_portal_entries"
 
@@ -75,11 +77,6 @@
       loop_control:
         loop_var: "cleanup_portal_item"
       register: "cleanup_portal_output4"
-      changed_when: "cleanup_portal_output4 | regex_search('Object modified: cn=')"
+      changed_when: "cleanup_portal_output4.stdout is search('Object modified: cn=')"
       tags:
         - "cleanup_portal_deactivate_portal_entries"
-  when: "'dashboard' in cleanup_portal_install_services"
-  tags:
-    - "cleanup_portal"
-
-...

@@ -1,16 +1,13 @@
-UCS join
-=========
+### UCS join
 
 This role runs a UCS Join on master or backup servers.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `ucs_join_derive_root_password_from_hostname`(bool): Creates a unique root/admin password that is derived from the host name, or rather the numeric part of it.
 - `ucs_join_derive_root_password_prefix`(string): The prefix that is used before the numeric part in derived passwords.
@@ -31,20 +28,21 @@ Role Variables
 - `ucs_join_network_config_static_routes`(list): A list of static routes, which should be attached to interfaces.
 - `ucs_join_hide_logging`(boolean): Toggle template logging; default: `true`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-### Configure static network interface
+##### Configure static network interface
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_type: "static"
@@ -57,12 +55,15 @@ Example Playbook
         # ...
 ```
 
-### Configure additional network interfaces
+##### Configure additional network interfaces
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_type: "static"
@@ -72,12 +73,15 @@ Example Playbook
         # ...
 ```
 
-### Configure additional network routes
+##### Configure additional network routes
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_static_routes:
@@ -90,7 +94,7 @@ Example Playbook
         # ...
 ```
 
-### Configure nameservers
+##### Configure nameservers
 
 Matrix: How the nameservers should configured.
 
@@ -103,29 +107,31 @@ All domaincontroller_* has a dns server installed.
 | nameserver3 |                         | fallback_nameserver     | domaincontroller_backup | domaincontroller_slave  |
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_nameservers:
           nameserver1:
             # local ip
+            # yamllint disable-line rule:line-length
             server: "{{ ansible_local['ucr']['interfaces/' + ansible_local['ucr']['interfaces/primary'] + '/address'] }}"
           nameserver2:
             server: "8.8.8.8"
-            state: 'present'
+            state: "present"
           nameserver3:
-            state: 'absent'
+            state: "absent"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

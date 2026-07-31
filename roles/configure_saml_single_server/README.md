@@ -1,16 +1,13 @@
-Configure SAML single server
-=========
+### Configure SAML single server
 
 This role configures SAML single server.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
   - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_saml_single_server_external_hostname`(string): The external hostname that is used to talk to the system.
 - `configure_saml_single_server_domain_name`(string): The systems domain name.
@@ -22,22 +19,29 @@ Role Variables
 - `configure_saml_single_server_external_loadbalancer_ip`(string): IP address of external load balancer if used.
 - `configure_saml_single_server_domain_prefix`(string): The external prefix of load balancer
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure SAML single server"
+  hosts: "all"
+  roles:
+    - role: "configure_saml_single_server"
+      vars:
+        configure_saml_single_server_external_hostname: "ucs.example.com"
+        configure_saml_single_server_domain_name: "example.com"
+        configure_saml_single_server_basedn: "dc=example,dc=com"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

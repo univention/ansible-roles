@@ -6,5 +6,3 @@ install_packages_temp_pw_file: ""
 install_packages_force_package_upgrade: false
 install_packages_install_apps: []
 install_packages_additional_options: ""
-
-...

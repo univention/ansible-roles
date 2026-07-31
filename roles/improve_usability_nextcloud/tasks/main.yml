@@ -1,5 +1,4 @@
 ---
-
 - name: "NextCloud: Disable unneeded functionality"
   ansible.builtin.command:
     argv:
@@ -19,5 +18,3 @@
     - "improve_usability"
     - "improve_usability_nextcloud"
     - "improve_usability_nextcloud_disable_functionality"
-
-...

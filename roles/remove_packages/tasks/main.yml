@@ -1,12 +1,10 @@
 ---
-
 - name: "Remove Univention app packages"
   vars:
-    remove_packages_package_version: "{{ '=' + remove_packages_app_version_map[remove_packages_item]
-          if remove_packages_item in remove_packages_app_version_map
-          else '' }}"
-    remove_packages_package_name: "{{ remove_packages_service_name_list[remove_packages_item]
-                                        | default(remove_packages_item) }}"
+    remove_packages_package_version: "{{ '=' + remove_packages_app_version_map[remove_packages_item] if
+      remove_packages_item in remove_packages_app_version_map else '' }}"
+    remove_packages_package_name: "{{ remove_packages_service_name_list[remove_packages_item] |
+      default(remove_packages_item) }}"
   ansible.builtin.command:
     cmd: |
       univention-app
@@ -28,5 +26,3 @@
   until: "remove_packages_package_removal.rc == 0"
   tags:
     - "remove_packages"
-
-...

@@ -1,35 +1,34 @@
-Configure Owncloud (apps)
-=========
+### Configure Owncloud (apps)
 
 Configure UCS app owncloud.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure OwnCloud app"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_owncloud"
+```
 
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

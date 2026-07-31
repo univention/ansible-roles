@@ -21,7 +21,8 @@
   ansible.builtin.command: >
     udm computers/ipmanagedclient create \
       --position "cn=computers,{{ configure_saml_single_server_basedn }}" \
-      --set dnsEntryZoneForward="zoneName={{ configure_saml_single_server_domain_name }},cn=dns,{{ configure_saml_single_server_basedn }}" \
+      --set dnsEntryZoneForward="zoneName={{ configure_saml_single_server_domain_name }},cn=dns,{{ configure_saml_single_server_basedn
+    }}" \
       --set name={{ configure_saml_single_server_domain_prefix | default("portal") }} \
       --set ip={{ configure_saml_single_server_external_loadbalancer_ip }} \
       --set domain={{ configure_saml_single_server_domain_name }} \
@@ -49,7 +50,8 @@
   ansible.builtin.command: >
     univention-run-join-scripts --force
     {% if configure_saml_single_server_type == "backup" %}
-    -dcaccount "{{ configure_saml_single_server_admin_user_name }}" -dcpwd "{{ configure_saml_single_server_temp_file.path }}"
+    -dcaccount "{{ configure_saml_single_server_admin_user_name }}" -dcpwd "{{ configure_saml_single_server_temp_file.path
+    }}"
     {% endif %}
     --run-scripts 91univention-saml.inst
   # yamllint enable rule:line-length
@@ -94,7 +96,8 @@
   ansible.builtin.command: >
     univention-run-join-scripts --force
     {% if configure_saml_single_server_type == "backup" %}
-    -dcaccount "{{ configure_saml_single_server_admin_user_name }}" -dcpwd "{{ configure_saml_single_server_temp_file.path }}"
+    -dcaccount "{{ configure_saml_single_server_admin_user_name }}" -dcpwd "{{ configure_saml_single_server_temp_file.path
+    }}"
     {% endif %}
     --run-scripts 92univention-management-console-web-server.inst
   # yamllint enable rule:line-length
@@ -131,11 +134,15 @@
   register: "configure_saml_single_server_remove_default_saml_provider_result"
   loop:
     # yamllint disable rule:line-length
-    - "SAMLServiceProviderIdentifier=openid-connect-provider,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
-    - "SAMLServiceProviderIdentifier=google.com,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
-    - "SAMLServiceProviderIdentifier=https://sp.testshib.org/shibboleth-sp,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
-    - "SAMLServiceProviderIdentifier=https://saml.salesforce.com,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn }}"
-    # yamllint enable rule:line-length
+    - "SAMLServiceProviderIdentifier=openid-connect-provider,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn
+      }}"
+    - "SAMLServiceProviderIdentifier=google.com,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn
+      }}"
+    - "SAMLServiceProviderIdentifier=https://sp.testshib.org/shibboleth-sp,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn
+      }}"
+    - "SAMLServiceProviderIdentifier=https://saml.salesforce.com,cn=saml-serviceprovider,cn=univention,{{ configure_saml_single_server_basedn
+      }}"
+  # yamllint enable rule:line-length
   loop_control:
     loop_var: "configure_saml_single_server_item"
   when:

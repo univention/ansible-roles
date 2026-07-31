@@ -1,6 +1,8 @@
 ---
-
 - name: "dovecot_connector | Install DC connector"
+  when: "dovecot_connector_server_type | default('master') != 'backup'"
+  tags:
+    - "dovecot_connector"
   block:
     - name: "Assert variables"
       ansible.builtin.assert:
@@ -60,9 +62,8 @@
       vars:
         dovecot_connector_settings_correct: true
       ansible.builtin.set_fact:
-        dovecot_connector_settings_correct: "{{ dovecot_connector_settings_correct
-          if (dovecot_connector_get_current_settings_result.stdout is search(dovecot_connector_config_item))
-          else false }}"
+        dovecot_connector_settings_correct: "{{ dovecot_connector_settings_correct if
+          (dovecot_connector_get_current_settings_result.stdout is search(dovecot_connector_config_item)) else false }}"
       loop:
         - "DCC_ADM_ACCEPTED_EXIT_CODES: '{{ dovecot_connector_adm_accepted_exit_codes }}'"
         - "DCC_ADM_HOST: '{{ dovecot_connector_adm_host }}'"
@@ -95,8 +96,3 @@
       when: "not dovecot_connector_settings_correct"
       tags:
         - "dovecot_connector_configure"
-  when: "dovecot_connector_server_type | default('master') != 'backup'"
-  tags:
-    - "dovecot_connector"
-
-...
