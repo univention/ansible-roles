@@ -1,36 +1,36 @@
-Configure NTP servers
-=========
+### Configure NTP servers
 
 This role configures NTP timeservers.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
   - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_ntp_servers_timeservers`(list): A list of ntp server addresses; default `["ptbtime1.ptb.de", "ptbtime2.ptb.de", "ptbtime3.ptb.de"]`
 
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure NTP servers"
+  hosts: "all"
+  roles:
+    - role: "configure_ntp_servers"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

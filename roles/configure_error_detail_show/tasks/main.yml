@@ -1,5 +1,4 @@
 ---
-
 - name: "configure_error_detail_show | Enable or disable http show tracebacks"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -27,5 +26,3 @@
       saml/idp/show-error-reporting: "{{ configure_error_detail_show_saml_idp_error_reporting }}"
   tags:
     - "configure_error_detail_show"
-
-...

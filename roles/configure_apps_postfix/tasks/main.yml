@@ -1,5 +1,4 @@
 ---
-
 - name: "Create domain rewrite map"
   ansible.builtin.lineinfile:
     path: "/etc/postfix/generic"
@@ -38,5 +37,3 @@
   tags:
     - "configure_apps_postfix"
     - "configure_apps_postfix_set_mail_destination"
-
-...

@@ -1,7 +1,14 @@
 {
+  "branches": ["main"],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "echo \"RELEASE_VERSION=${nextRelease.version}\" >> release.env"
+      }
+    ],
     "@semantic-release/gitlab"
   ]
 }

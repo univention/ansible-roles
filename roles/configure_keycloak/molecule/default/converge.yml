@@ -1,0 +1,10 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.configure_keycloak"
+      vars:
+        configure_keycloak_config_method: "kcadm"
+        configure_keycloak_keycloak_server: "ucs-test"
+        configure_keycloak_admin_username: "admin"
+        configure_keycloak_admin_password: "univention"

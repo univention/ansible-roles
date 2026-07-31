@@ -1,34 +1,38 @@
-Configure TURN server of Nextcloud Talk
-=========
+### Configure TURN server of Nextcloud Talk
 
 This role configures the Nextcloud Talk TURN server.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_nextcloud_turn_secret`(string): The TURN server secret.
 - `configure_nextcloud_turn_url`(string): The URL of the TURN server.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-License
--------
+```yaml
+---
+- name: "Configure Nextcloud TURN server"
+  hosts: "all"
+  roles:
+    - role: "configure_nextcloud_turn"
+      vars:
+        configure_nextcloud_turn_secret: "turn-secret"
+        configure_nextcloud_turn_url: "turn:turn.example.com:3478"
+```
+
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

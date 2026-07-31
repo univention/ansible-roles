@@ -2,5 +2,3 @@
 
 configure_apps_postfix_domain_name: ""
 configure_apps_postfix_external_hostname: ""
-
-...

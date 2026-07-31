@@ -2,5 +2,3 @@
 
 univention_install_name: ""
 univention_install_clear_apt_cache: false
-
-...

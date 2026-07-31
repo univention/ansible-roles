@@ -1,5 +1,4 @@
 ---
-
 - name: "portal_configure_title | Get current title"
   ansible.builtin.command: >
     udm portals/portal list
@@ -15,8 +14,7 @@
   vars:
     portal_configure_title_existing: true
   ansible.builtin.set_fact:
-    portal_configure_title_existing: "{{ portal_configure_title_existing
-      if (portal_configure_title_get_titles.stdout is
+    portal_configure_title_existing: "{{ portal_configure_title_existing if (portal_configure_title_get_titles.stdout is
       search(portal_configure_title_item.key + ': ' + portal_configure_title_item.value)) else false }}"
   loop: "{{ portal_configure_title_titles | dict2items }}"
   loop_control:
@@ -26,6 +24,10 @@
     - "portal_configure_title_check_titles"
 
 - name: "portal_configure_title | Update portal title"
+  when: "portal_configure_title_existing is not defined or not portal_configure_title_existing"
+  tags:
+    - "portal_configure_title"
+    - "portal_configure_title_update"
   block:
     - name: "portal_configure_title | Change portal title"
       ansible.builtin.command: >
@@ -53,9 +55,3 @@
       register: "portal_configure_title_append_title_result"
       tags:
         - "portal_configure_title_update_append_title"
-  when: "portal_configure_title_existing is not defined or not portal_configure_title_existing"
-  tags:
-    - "portal_configure_title"
-    - "portal_configure_title_update"
-
-...

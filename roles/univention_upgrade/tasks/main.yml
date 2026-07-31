@@ -1,5 +1,4 @@
 ---
-
 - name: "univention_upgrade | Allow modified apache templates"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -14,7 +13,7 @@
   ansible.builtin.command:
     cmd: "apt clean"
   changed_when: false
-  when: "univention_upgrade_clear_apt_cache"
+  when: "univention_upgrade_clear_apt_cache | bool"
   tags:
     - "univention_upgrade"
     - "univention_upgrade_clean_package_cache"
@@ -87,11 +86,10 @@
   changed_when: false
   # noqa ignore-errors
   ignore_errors: true
+  ignore_unreachable: true
   when:
     - "univention_upgrade_upgrade_check.stdout is not search('No update available')"
     - "univention_upgrade_reboot_after_upgrade|bool"
   tags:
     - "univention_upgrade"
     - "univention_upgrade_reboot"
-
-...

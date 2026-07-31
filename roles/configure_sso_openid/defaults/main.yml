@@ -15,5 +15,3 @@ configure_sso_openid_clients:
     name: "open-xchange"
     clientid: "open-xchange"
     clientsecret: "notverysafe"
-
-...

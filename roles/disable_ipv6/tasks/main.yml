@@ -1,5 +1,4 @@
 ---
-
 - name: "disable_ipv6 | Disable IPv6 with sysctl"
   ansible.posix.sysctl:
     name: "{{ disable_ipv6_item }}"
@@ -25,5 +24,3 @@
   tags:
     - "disable_ipv6"
     - "disable_ipv6_modprobe"
-
-...

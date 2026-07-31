@@ -1,6 +1,8 @@
 ---
-
 - name: "extend_root_lvm_volume | Extend system space to cover the whole disk"
+  when: "extend_root_lvm_volume_extend_lvm_to_whole_disk|bool"
+  tags:
+    - "extend_root_lvm_volume"
   block:
     - name: "extend_root_lvm_volume | Ensure that lvm commands are available"
       ansible.builtin.package:
@@ -25,7 +27,8 @@
         device: "/dev/{{ extend_root_lvm_volume_lvm_disk }}"
         number: 3
         # yamllint disable-line rule:line-length
-        part_start: "{{ extend_root_lvm_volume_disk_device_info.partitions[extend_root_lvm_volume_existing_lvm_partition_number].end + 1 }}MiB"
+        part_start: "{{ extend_root_lvm_volume_disk_device_info.partitions[extend_root_lvm_volume_existing_lvm_partition_number].end
+          + 1 }}MiB"
         part_end: "100%"
         flags: ["lvm"]
         state: "present"
@@ -47,9 +50,3 @@
         size: "+100%FREE"
       tags:
         - "extend_root_lvm_volume_resize"
-
-  when: "extend_root_lvm_volume_extend_lvm_to_whole_disk|bool"
-  tags:
-    - "extend_root_lvm_volume"
-
-...

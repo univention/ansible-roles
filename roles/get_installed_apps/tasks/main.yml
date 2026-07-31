@@ -1,5 +1,4 @@
 ---
-
 - name: "get_installed_apps | Get app list"
   ansible.utils.cli_parse:
     command: "univention-app info"
@@ -18,5 +17,3 @@
   tags:
     - "get_installed_apps_convert_list_to_dict"
     - "get_installed_apps"
-
-...

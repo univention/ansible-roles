@@ -1,5 +1,4 @@
 ---
-
 - name: "install_packages | Update package list"
   ansible.builtin.include_role:
     name: "force_package_list_update"
@@ -23,11 +22,10 @@
 
 - name: "install_packages | Install Univention app packages"
   vars:
-    install_packages_package_version: "{{ '=' + install_packages_app_version_map[install_packages_item]
-      if install_packages_item in install_packages_app_version_map
-      else '' }}"
-    install_packages_package_name: "{{ install_packages_service_name_list[install_packages_item]
-                                         | default(install_packages_item) }}"
+    install_packages_package_version: "{{ '=' + install_packages_app_version_map[install_packages_item] if
+      install_packages_item in install_packages_app_version_map else '' }}"
+    install_packages_package_name: "{{ install_packages_service_name_list[install_packages_item] |
+      default(install_packages_item) }}"
   ansible.builtin.command: >
     univention-app
     install
@@ -60,5 +58,3 @@
   tags:
     - "install_apps"
     - "install_apps_install_app"
-
-...

@@ -1,5 +1,4 @@
 ---
-
 - name: "improve_usability_ui_changes | Remove setupSettingsContextMenu from setupMenus()"
   ansible.builtin.lineinfile:
     path: "/usr/share/univention-web/js/umc/hooks/default_menu_entries.js"
@@ -26,5 +25,3 @@
   tags:
     - "improve_usability_ui_changes"
     - "improve_usability_ui_changes_username_max_length"
-
-...

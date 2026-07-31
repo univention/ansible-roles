@@ -1,5 +1,3 @@
 ---
 
 univention_firewall_telegraf: "ACCEPT"
-
-...

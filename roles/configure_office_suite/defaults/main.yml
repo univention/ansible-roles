@@ -38,5 +38,3 @@ configure_office_suite_collabora_license_key: ""
 configure_office_suite_app_version_map: {}
 configure_office_suite_temp_pw_file: ""
 configure_office_suite_install_apps: []
-
-...

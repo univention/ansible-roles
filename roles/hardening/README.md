@@ -1,16 +1,13 @@
-Hardening system
-=========
+### Hardening system
 
 This role reduces security risks by disabling default settings, like root login.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `hardening_disable_http`(bool): If set to `true`, `http` will be disabled in apache2. Only `https` will be available; default: `true`
 - `hardening_hsts`(bool): If set to `true` HTTP Strict Transport Security is enabled for apache2 ; default: `true`
@@ -32,22 +29,31 @@ Role Variables
 - `hardening_disable_saml_idp_error_reporting`(bool): If set to `true` error information and stack traces can not be reported via email to the technical contact mail address; default: `true`
 
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Harden UCS system"
+  hosts: "all"
+  roles:
+    - role: "hardening"
+      vars:
+        # hardening_disable_root_login: false  # uncomment to keep root login enabled
+        hardening_disable_http: true
+        hardening_hsts: true
+        hardening_umc_session_cookie: true
+        hardening_umc_secure_cookie: true
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

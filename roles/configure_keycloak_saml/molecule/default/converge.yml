@@ -1,0 +1,14 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "configure_keycloak_saml_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.configure_keycloak_saml"
+      vars:
+        configure_keycloak_saml_keycloak_server: "ucs-test"
+        configure_keycloak_saml_basedn: "{{ configure_keycloak_saml_ucr_ldap_base.stdout }}"
+        configure_keycloak_saml_sp_base_url: "https://ucs-test/auth/realms/test"

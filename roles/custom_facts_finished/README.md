@@ -1,34 +1,34 @@
-Custom facts (finished)
-=========
+### Custom facts (finished)
 
 Store rollout finished information in custom facts directory.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Mark deployment finished"
+  hosts: "all"
+  roles:
+    - role: "custom_facts_finished"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

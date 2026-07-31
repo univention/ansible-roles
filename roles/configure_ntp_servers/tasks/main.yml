@@ -1,5 +1,4 @@
 ---
-
 - name: "configure_ntp_servers | Install NTP"
   ansible.builtin.include_role:
     name: "univention.ucs_roles.univention_install"
@@ -12,14 +11,14 @@
 - name: "configure_ntp_servers | Configure NTP servers"
   univention.ucs_modules.univention_config_registry:
     kvlist:
-      - key: "timeserver{{ '' if configure_ntp_servers_index == 0 else configure_ntp_servers_index+1 }}"
+      - key: "timeserver{{ '' if configure_ntp_servers_index == 0 else configure_ntp_servers_index + 1 }}"
         value: "{{ configure_ntp_servers_item }}"
   loop: "{{ configure_ntp_servers_timeservers | default([]) }}"
   loop_control:
     index_var: "configure_ntp_servers_index"
     loop_var: "configure_ntp_servers_item"
   register: "configure_ntp_servers_result"
-  when: "configure_ntp_servers_timeservers | default(false)"
+  when: "configure_ntp_servers_timeservers | default([]) | length > 0"
   tags:
     - "configure_ntp_servers"
     - "configure_ntp_servers_set_ucr"
@@ -32,5 +31,3 @@
   tags:
     - "configure_ntp_servers"
     - "configure_ntp_servers_restart_ntp_deamon"
-
-...

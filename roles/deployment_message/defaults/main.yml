@@ -6,5 +6,3 @@ deployment_message_domain_name: ""
 deployment_message_basedn: ""
 deployment_message_server_type: ""
 deployment_message_saml_config_type: ""
-
-...

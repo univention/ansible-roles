@@ -1,0 +1,13 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "configure_password_policies_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.configure_password_policies"
+      vars:
+        configure_password_policies_dn: "cn=default-settings,cn=pwhistory,cn=auth,cn=univention,\
+          {{ configure_password_policies_ucr_ldap_base.stdout }}"

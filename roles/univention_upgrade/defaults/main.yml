@@ -7,5 +7,3 @@ univention_upgrade_reboot_after_upgrade: false
 univention_upgrade_app_updates: false
 univention_upgrade_password_file: ""
 univention_upgrade_username: "Administrator"
-
-...

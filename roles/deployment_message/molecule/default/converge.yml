@@ -1,0 +1,11 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.deployment_message"
+      vars:
+        deployment_message_external_hostname: "primary.test.ucs.example"
+        deployment_message_domain_name: "test.ucs.example"
+        deployment_message_basedn: "dc=test,dc=ucs,dc=example"
+        deployment_message_server_type: "master"
+        deployment_message_saml_config_type: "none"

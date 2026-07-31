@@ -1,16 +1,13 @@
-Configure Postfix (apps)
-=========
+### Configure Postfix (apps)
 
 This role modifies postfix configuration.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_apps_postfix_domain_name`(string): The system's dns domain name.
 - `configure_apps_postfix_external_hostname`(string): The host name that is used to talk to the system.
@@ -20,23 +17,28 @@ Role Variables
 - `configure_apps_postfix_relay_username`(string): The SMTP relay username.
 - `configure_apps_postfix_relay_password`(string): The SMTP relay password.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure Postfix"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_postfix"
+      vars:
+        configure_apps_postfix_domain_name: "example.com"
+        configure_apps_postfix_external_hostname: "mail.example.com"
+```
 
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

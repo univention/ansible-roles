@@ -1,5 +1,4 @@
 ---
-
 - name: "univention_remove | Remove via univention-remove"
   ansible.builtin.command: "univention-remove --yes {{ univention_remove_name }}"
   changed_when: "univention_remove_run.stdout is not search('is not installed')"
@@ -11,5 +10,3 @@
   tags:
     - "univention_remove"
     - "univention_remove_run"
-
-...

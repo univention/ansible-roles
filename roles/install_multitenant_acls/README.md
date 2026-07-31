@@ -1,16 +1,13 @@
-Install multitenant ACLs
-=========
+### Install multitenant ACLs
 
 Install and configure ACL package.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
   - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `install_multitenant_acls_customer_name`(string): The name of customer used inside ACL package.
 - `install_multitenant_acls_multitenant_acls`(list): A list of acl settings.
@@ -38,22 +35,27 @@ Role Variables
 - `install_multitenant_acls_customer_repo_username`(string): The username of customer debian repository.
 
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Install multitenant ACLs"
+  hosts: "all"
+  roles:
+    - role: "install_multitenant_acls"
+      vars:
+        install_multitenant_acls_customer_name: "example-customer"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

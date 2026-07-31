@@ -1,0 +1,8 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.configure_apps_postfix"
+      vars:
+        configure_apps_postfix_domain_name: "test.ucs.example"
+        configure_apps_postfix_external_hostname: "mail.test.ucs.example"

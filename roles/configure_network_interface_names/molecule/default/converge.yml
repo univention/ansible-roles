@@ -1,0 +1,7 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.configure_network_interface_names"
+      vars:
+        configure_network_interface_names_use_old_names: true

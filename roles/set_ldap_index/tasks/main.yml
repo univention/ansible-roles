@@ -1,5 +1,4 @@
 ---
-
 - name: "set_ldap_index | add index eq"
   ansible.builtin.include_tasks: "add_index.yml"
   vars:
@@ -63,5 +62,3 @@
     set_ldap_index_rm_index: "{{ set_ldap_index_substring_rm }}"
   when:
     - "set_ldap_index_substring_rm | length > 0"
-
-...

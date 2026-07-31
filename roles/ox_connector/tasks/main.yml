@@ -1,6 +1,8 @@
 ---
-
 - name: "ox_connector | Install OX connector"
+  when: "ox_connector_server_type|default('master') != 'backup'"
+  tags:
+    - "ox_connector"
   block:
     - name: "ox_connector | Create DNS Alias"
       ansible.builtin.command: |
@@ -49,8 +51,8 @@
       vars:
         ox_connector_settings_correct: true
       ansible.builtin.set_fact:
-        ox_connector_settings_correct: "{{ ox_connector_settings_correct
-          if (ox_connector_get_current_settings_result.stdout is search(ox_connector_item)) else false }}"
+        ox_connector_settings_correct: "{{ ox_connector_settings_correct if
+          (ox_connector_get_current_settings_result.stdout is search(ox_connector_item)) else false }}"
       loop:
         - "OX_SOAP_SERVER: 'https://{{ ox_connector_soap_prefix }}.{{ ox_connector_domain_name }}'"
         - "OX_MASTER_ADMIN: '{{ ox_connector_master_admin }}'"
@@ -172,8 +174,8 @@
       changed_when: "ox_connector_modify_usertemplate.stdout is search('Object modified')"
       failed_when:
         - "ox_connector_modify_usertemplate.rc != 0"
-        - "ox_connector_modify_usertemplate.rc == 3 and
-            'object not found' not in ox_connector_modify_usertemplate.stdout"
+        - "ox_connector_modify_usertemplate.rc == 3 and 'object not found' not in
+          ox_connector_modify_usertemplate.stdout"
         - "ox_connector_modify_usertemplate.stderr is not search('Already exists')"
       register: "ox_connector_modify_usertemplate"
       tags:
@@ -258,10 +260,6 @@
       tags:
         - "ox_connector_disable_udmweb_user"
 
-  when: "ox_connector_server_type|default('master') != 'backup'"
-  tags:
-    - "ox_connector"
-
 - name: "ox_connector | Add default dn to users"
   univention.ucs_modules.univention_config_registry:
     kvlist:
@@ -269,5 +267,3 @@
         value: "cn={{ ox_connector_usertemplate_name }},cn=templates,cn=univention,{{ ox_connector_basedn }}"
   tags:
     - "ox_connector_default_dn"
-
-...

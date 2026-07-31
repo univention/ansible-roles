@@ -1,5 +1,4 @@
 ---
-
 - name: "ucs_join | Check if all mandatory common vars are set"
   ansible.builtin.assert:
     that:
@@ -279,13 +278,13 @@
       univention.ucs_modules.univention_config_registry:
         kvlist:
           - key: "interfaces/{{ ucs_join_network_settings_static_additional_interfaces_broadcast_item.key }}/broadcast"
-            value: "{{ ucs_join_network_settings_static_additional_interfaces_broadcast_item.value
-                        | ansible.utils.ipaddr('broadcast') }}"
+            value: "{{ ucs_join_network_settings_static_additional_interfaces_broadcast_item.value |
+              ansible.utils.ipaddr('broadcast') }}"
       check_mode: false
       when:
         - "ucs_join_network_config_type == 'static'"
-        - "ucs_join_network_settings_static_additional_interfaces_broadcast_item.value
-              | ansible.utils.ipaddr('broadcast')"
+        - "ucs_join_network_settings_static_additional_interfaces_broadcast_item.value |
+          ansible.utils.ipaddr('broadcast')"
       loop: "{{ ucs_join_network_config_static_additional_interfaces | default({}) | dict2items }}"
       loop_control:
         loop_var: "ucs_join_network_settings_static_additional_interfaces_broadcast_item"
@@ -365,10 +364,10 @@
     - name: "ucs_join | Assert that unchangeable vars are the same"
       ansible.builtin.assert:
         that:
-          - "'{{ ucs_join_system_setup_vars.ucs_join_hostname }}' == '{{ ucs_join_hostname }}'"
-          - "'{{ ucs_join_system_setup_vars.ucs_join_domain_name }}' == '{{ ucs_join_domain_name }}'"
-          - "'{{ ucs_join_system_setup_vars.ucs_join_basedn }}' == '{{ ucs_join_basedn }}'"
-          - "'{{ ucs_join_system_setup_vars.ucs_join_server_type }}' == '{{ ucs_join_server_type }}'"
+          - "ucs_join_system_setup_vars.ucs_join_hostname == ucs_join_hostname"
+          - "ucs_join_system_setup_vars.ucs_join_domain_name == ucs_join_domain_name"
+          - "ucs_join_system_setup_vars.ucs_join_basedn == ucs_join_basedn"
+          - "ucs_join_system_setup_vars.ucs_join_server_type == ucs_join_server_type"
         fail_msg: "You've tried to change variables which will afterwards damage your exising installation."
       changed_when: false
       check_mode: false
@@ -395,7 +394,7 @@
   loop_control:
     loop_var: "ucs_join_nameservers_item"
   when:
-    - "ucs_join_nameservers_item.key | regex_search('^nameserver[1-3]$')"
+    - "ucs_join_nameservers_item.key is match('^nameserver[1-3]$')"
   tags:
     - "always"
     - "ucs_join"
@@ -446,5 +445,3 @@
       tags:
         - "ucs_join_run_join_script_cleanup_admin_pw_file"
         - "cleanup"
-
-...

@@ -9,7 +9,6 @@ exclude_paths:
 # Mock modules or roles in order to pass ansible-playbook --syntax-check
 mock_modules: []
 mock_roles: []
-
 # Enable checking of loop variable prefixes in roles
 loop_var_prefix: "{role}_"
 
@@ -91,7 +90,6 @@ offline: false
 
 # Define required Ansible's variables to satisfy syntax check
 extra_vars: {}
-
 # Uncomment to enforce action validation with tasks, usually is not
 # needed as Ansible syntax check also covers it.
 # skip_action_validation: false

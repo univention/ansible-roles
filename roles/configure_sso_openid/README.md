@@ -1,16 +1,13 @@
-Configure SSO OpenID Connect
-=========
+### Configure SSO OpenID Connect
 
 This role configures OpenID Connect OIDC for apps like open-xchange or nextcloud.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_sso_openid_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
 - `configure_sso_openid_temp_pw_file`(map): Tempfile object where univention app password is stored.
@@ -21,20 +18,21 @@ Role Variables
 - `configure_sso_openid_clients`(map): A map of client configurations, supported `nexcloud` and `ox`.
 
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-### Configure OpenID clients
+##### Configure OpenID clients
 
 ```yaml
-- hosts: all
+---
+- name: "Configure SSO OpenID Connect"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Configure SSO OpenID Connect"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.configure_sso_openid"
       vars:
         configure_sso_openid_clients:
@@ -49,13 +47,11 @@ Example Playbook
         # ...
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

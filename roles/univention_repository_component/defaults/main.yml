@@ -9,5 +9,3 @@ univention_repository_component_password: ""
 univention_repository_component_version: ""
 univention_repository_component_unmaintained: ""
 univention_repository_component_hide_logging: true
-
-...

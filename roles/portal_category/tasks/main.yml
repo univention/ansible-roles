@@ -1,5 +1,4 @@
 ---
-
 - name: "portal_category | Validate portal category fields"
   ansible.builtin.assert:
     that:
@@ -40,8 +39,8 @@
   vars:
     portal_category_portal_categories_stdout_lines: "{{ portal_category_portal_categories.stdout_lines | default([]) }}"
   ansible.builtin.set_fact:
-    portal_category_portal_categories_fact: "{{
-      lookup('template', 'category_parse_udm_out_to_ansible.j2') | from_yaml }}"
+    portal_category_portal_categories_fact: "{{ lookup('template', 'category_parse_udm_out_to_ansible.j2') | from_yaml
+      }}"
   changed_when: false
   tags:
     - "portal_category"
@@ -49,10 +48,8 @@
 
 - name: "portal_category | Update category in portal"
   vars:
-    portal_category_update_drift_detection: "{{
-      lookup('template', 'category_drift_detection.j2')
-      | regex_replace('\n','')
-      if portal_category_drift_detection | bool else 'yes' }}"
+    portal_category_update_drift_detection: "{{ lookup('template', 'category_drift_detection.j2') |
+      regex_replace('\n','') if portal_category_drift_detection | bool else 'yes' }}"
   ansible.builtin.command: >-
     udm portals/category
     {% if portal_category_update_item['state'] is defined and portal_category_update_item['state'] == 'absent' %}
@@ -90,12 +87,10 @@
   register: "portal_category_create_category_result"
   when:
     - "portal_category_update_drift_detection == 'yes'"
-    - "portal_category_update_item['ucs_versions'] is not defined or
-          ansible_local['ucr']['version/version'] | default('99') is in portal_category_update_item['ucs_versions']"
-    - "('only' not in portal_category_update_item) or
-              ('only' in portal_category_update_item and
-                portal_category_install_list | intersect([portal_category_update_item['only']] | flatten)
-              )"
+    - "portal_category_update_item['ucs_versions'] is not defined or ansible_local['ucr']['version/version'] |
+      default('99') is in portal_category_update_item['ucs_versions']"
+    - "('only' not in portal_category_update_item) or ('only' in portal_category_update_item and
+      portal_category_install_list | intersect([portal_category_update_item['only']] | flatten) )"
   tags:
     - "portal_category"
     - "portal_category_update_category"
@@ -125,7 +120,7 @@
 - name: "portal_category | Append category to portal"
   vars:
     portal_category_append_drift_detection: "{{ lookup('template', 'append_drift_detection.j2') | regex_replace('\n','')
-                                                 if portal_category_drift_detection | bool else 'yes' }}"
+      if portal_category_drift_detection | bool else 'yes' }}"
   ansible.builtin.command:
     # yamllint disable rule:line-length
     cmd: |
@@ -136,7 +131,7 @@
       cn={{ portal_category_append_item['parent'] }},cn=portal,{{ portal_category_portal_dn }}
       --append
       categories=cn={{ portal_category_append_item['name'] }},cn=category,{{ portal_category_portal_dn }}
-    # yamllint enable rule:line-length
+  # yamllint enable rule:line-length
   changed_when: "portal_category_append_category_result.stdout is not search('No modification')"
   loop: "{{ portal_category_categories | selectattr('state', 'equalto', 'present') | default([]) | flatten }}"
   loop_control:
@@ -144,8 +139,8 @@
   register: "portal_category_append_category_result"
   when:
     - "portal_category_append_drift_detection == 'yes'"
-    - "portal_category_append_item['ucs_versions'] is not defined or
-          ansible_local['ucr']['version/version'] | default('99') is in portal_category_append_item['ucs_versions']"
+    - "portal_category_append_item['ucs_versions'] is not defined or ansible_local['ucr']['version/version'] |
+      default('99') is in portal_category_append_item['ucs_versions']"
   tags:
     - "portal_category"
     - "portal_category_append_category"
@@ -164,5 +159,3 @@
   tags:
     - "portal_category"
     - "portal_category_remove_unscoped"
-
-...

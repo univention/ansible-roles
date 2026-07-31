@@ -1,5 +1,4 @@
 ---
-
 - name: "set_feedback_mail_address | Set web feedback mail"
   univention.ucs_modules.univention_config_registry:
     keys:
@@ -7,5 +6,3 @@
   tags:
     - "set_feedback_mail_address_web_feedback_mail"
     - "set_feedback_mail_address"
-
-...

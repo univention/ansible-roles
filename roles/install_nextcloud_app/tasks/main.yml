@@ -1,5 +1,4 @@
 ---
-
 - name: "NextCloud: Install given app"
   ansible.builtin.command:
     argv:
@@ -20,5 +19,3 @@
   register: "install_nextcloud_app_result"
   tags:
     - "install_nextcloud_app"
-
-...

@@ -1,16 +1,13 @@
-Configure repository
-=========
+### Configure repository
 
 Configure repository URLs to use own apt repository server.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_repository_default_repository_prefix`(string): Define access method, either `"http://"` or `"https://"`; default: `"https://"`.
 - `configure_repository_default_repository_server`(string): The repository server without any prefix or suffix or path.
@@ -18,22 +15,28 @@ Role Variables
 - `configure_repository_default_repository_username`(string): Optionally configure username for authentication.
 - `configure_repository_default_repository_password`(string): Optionally configure password for authentication.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure repository"
+  hosts: "all"
+  roles:
+    - role: "configure_repository"
+      vars:
+        configure_repository_default_repository_server: "repo.example.com"
+        configure_repository_default_repository_path: "/univention-repository"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

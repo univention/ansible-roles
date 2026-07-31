@@ -8,5 +8,3 @@ configure_password_policies_quality_credit_upper: "1"
 configure_password_policies_quality_credit_other: "1"
 configure_password_policies_quality_credit_lower: "1"
 configure_password_policies_quality_mspolicy: "1"
-
-...

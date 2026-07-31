@@ -1,449 +1,373 @@
-# UCS Ansible Roles
+# univention.ucs_roles
 
-This repository only contains ansible roles usable in an ansible-playbook to install and bootstrap UCS.
+<https://galaxy.ansible.com/ui/repo/published/univention/ucs_roles/>
 
-# Modules
+[TOC]
 
-- [modify_ucs_ca](https://github.com/univention/ansible-roles#rolesmodify_ucs_careadmemd)
-- [improve_usability_ui_changes](https://github.com/univention/ansible-roles#rolesimprove_usability_ui_changesreadmemd)
-- [ox_connector](https://github.com/univention/ansible-roles#rolesox_connectorreadmemd)
-- [configure_network_proxy](https://github.com/univention/ansible-roles#rolesconfigure_network_proxyreadmemd)
-- [install_nextcloud_app](https://github.com/univention/ansible-roles#rolesinstall_nextcloud_appreadmemd)
-- [univention_firewall](https://github.com/univention/ansible-roles#rolesunivention_firewallreadmemd)
-- [install_service_selfservices](https://github.com/univention/ansible-roles#rolesinstall_service_selfservicesreadmemd)
-- [remove_packages](https://github.com/univention/ansible-roles#rolesremove_packagesreadmemd)
-- [configure_apps_postfix_relay](https://github.com/univention/ansible-roles#rolesconfigure_apps_postfix_relayreadmemd)
-- [configure_directory_manager](https://github.com/univention/ansible-roles#rolesconfigure_directory_managerreadmemd)
-- [configure_error_detail_show](https://github.com/univention/ansible-roles#rolesconfigure_error_detail_showreadmemd)
-- [umc_policies_maintenance](https://github.com/univention/ansible-roles#rolesumc_policies_maintenancereadmemd)
-- [cleanup_portal](https://github.com/univention/ansible-roles#rolescleanup_portalreadmemd)
-- [dovecot_connector](https://github.com/univention/ansible-roles#rolesdovecot_connectorreadmemd)
-- [install_apps_ox_pre](https://github.com/univention/ansible-roles#rolesinstall_apps_ox_prereadmemd)
-- [configure_keycloak](https://github.com/univention/ansible-roles#rolesconfigure_keycloakreadmemd)
-- [use_trusted_cert](https://github.com/univention/ansible-roles#rolesuse_trusted_certreadmemd)
-- [install_packages](https://github.com/univention/ansible-roles#rolesinstall_packagesreadmemd)
-- [deployment_message](https://github.com/univention/ansible-roles#rolesdeployment_messagereadmemd)
-- [portal_cookie_banner](https://github.com/univention/ansible-roles#rolesportal_cookie_bannerreadmemd)
-- [univention_repository_component](https://github.com/univention/ansible-roles#rolesunivention_repository_componentreadmemd)
-- [configure_office_suite](https://github.com/univention/ansible-roles#rolesconfigure_office_suitereadmemd)
-- [configure_repository](https://github.com/univention/ansible-roles#rolesconfigure_repositoryreadmemd)
-- [configure_apps_postfix](https://github.com/univention/ansible-roles#rolesconfigure_apps_postfixreadmemd)
-- [univention_remove](https://github.com/univention/ansible-roles#rolesunivention_removereadmemd)
-- [univention_prune_kernels](https://github.com/univention/ansible-roles#rolesunivention_prune_kernelsreadmemd)
-- [set_ldap_index](https://github.com/univention/ansible-roles#rolesset_ldap_indexreadmemd)
-- [improve_usability_nextcloud](https://github.com/univention/ansible-roles#rolesimprove_usability_nextcloudreadmemd)
-- [portal_configure_title](https://github.com/univention/ansible-roles#rolesportal_configure_titlereadmemd)
-- [portal_entry](https://github.com/univention/ansible-roles#rolesportal_entryreadmemd)
-- [get_installed_apps](https://github.com/univention/ansible-roles#rolesget_installed_appsreadmemd)
-- [configure_logrotate](https://github.com/univention/ansible-roles#rolesconfigure_logrotatereadmemd)
-- [configure_group_syntax](https://github.com/univention/ansible-roles#rolesconfigure_group_syntaxreadmemd)
-- [configure_saml_single_server](https://github.com/univention/ansible-roles#rolesconfigure_saml_single_serverreadmemd)
-- [workaround_acmetiny_upgrade](https://github.com/univention/ansible-roles#rolesworkaround_acmetiny_upgradereadmemd)
-- [install_multitenant_acls](https://github.com/univention/ansible-roles#rolesinstall_multitenant_aclsreadmemd)
-- [configure_keycloak_saml](https://github.com/univention/ansible-roles#rolesconfigure_keycloak_samlreadmemd)
-- [custom_facts](https://github.com/univention/ansible-roles#rolescustom_factsreadmemd)
-- [intercom_service](https://github.com/univention/ansible-roles#rolesintercom_servicereadmemd)
-- [ucs_join](https://github.com/univention/ansible-roles#rolesucs_joinreadmemd)
-- [univention_install](https://github.com/univention/ansible-roles#rolesunivention_installreadmemd)
-- [configure_amazon_metadata_server](https://github.com/univention/ansible-roles#rolesconfigure_amazon_metadata_serverreadmemd)
-- [univention_upgrade](https://github.com/univention/ansible-roles#rolesunivention_upgradereadmemd)
-- [umc_permissions](https://github.com/univention/ansible-roles#rolesumc_permissionsreadmemd)
-- [ldapsearch_user](https://github.com/univention/ansible-roles#rolesldapsearch_userreadmemd)
-- [configure_apps_owncloud](https://github.com/univention/ansible-roles#rolesconfigure_apps_owncloudreadmemd)
-- [hardening](https://github.com/univention/ansible-roles#roleshardeningreadmemd)
-- [configure_ntp_servers](https://github.com/univention/ansible-roles#rolesconfigure_ntp_serversreadmemd)
-- [configure_keycloak_client](https://github.com/univention/ansible-roles#rolesconfigure_keycloak_clientreadmemd)
-- [extend_root_lvm_volume](https://github.com/univention/ansible-roles#rolesextend_root_lvm_volumereadmemd)
-- [ucs_add_admin_user](https://github.com/univention/ansible-roles#rolesucs_add_admin_userreadmemd)
-- [improve_usability_user_config](https://github.com/univention/ansible-roles#rolesimprove_usability_user_configreadmemd)
-- [force_package_list_update](https://github.com/univention/ansible-roles#rolesforce_package_list_updatereadmemd)
-- [set_feedback_mail_address](https://github.com/univention/ansible-roles#rolesset_feedback_mail_addressreadmemd)
-- [configure_monitoring](https://github.com/univention/ansible-roles#rolesconfigure_monitoringreadmemd)
-- [set_dns_glue_record](https://github.com/univention/ansible-roles#rolesset_dns_glue_recordreadmemd)
-- [configure_sso_openid](https://github.com/univention/ansible-roles#rolesconfigure_sso_openidreadmemd)
-- [install_lets_encrypt](https://github.com/univention/ansible-roles#rolesinstall_lets_encryptreadmemd)
-- [install_service_new_portal](https://github.com/univention/ansible-roles#rolesinstall_service_new_portalreadmemd)
-- [configure_password_policies](https://github.com/univention/ansible-roles#rolesconfigure_password_policiesreadmemd)
-- [workaround_high_mtu](https://github.com/univention/ansible-roles#rolesworkaround_high_mtureadmemd)
-- [configure_network_interface_names](https://github.com/univention/ansible-roles#rolesconfigure_network_interface_namesreadmemd)
-- [disable_ipv6](https://github.com/univention/ansible-roles#rolesdisable_ipv6readmemd)
-- [install_apps_ox_post](https://github.com/univention/ansible-roles#rolesinstall_apps_ox_postreadmemd)
-- [update_users_ssh_keys](https://github.com/univention/ansible-roles#rolesupdate_users_ssh_keysreadmemd)
-- [add_local_user](https://github.com/univention/ansible-roles#rolesadd_local_userreadmemd)
-- [install_branding](https://github.com/univention/ansible-roles#rolesinstall_brandingreadmemd)
-- [configure_license](https://github.com/univention/ansible-roles#rolesconfigure_licensereadmemd)
-- [portal_category](https://github.com/univention/ansible-roles#rolesportal_categoryreadmemd)
-- [configure_nextcloud_turn](https://github.com/univention/ansible-roles#rolesconfigure_nextcloud_turnreadmemd)
-- [disable_piwik_tracking](https://github.com/univention/ansible-roles#rolesdisable_piwik_trackingreadmemd)
-- [configure_nextcloud_saml](https://github.com/univention/ansible-roles#rolesconfigure_nextcloud_samlreadmemd)
-- [configure_apps_nextcloud](https://github.com/univention/ansible-roles#rolesconfigure_apps_nextcloudreadmemd)
-- [custom_facts_finished](https://github.com/univention/ansible-roles#rolescustom_facts_finishedreadmemd)
+## Version compatibility
 
----
+These roles had been tested with Ansible 12-14 / ansible.core 2.19-2.21 and UCS5.2 / Python 3.11 as target node.
+They are **not compatible with UCS 5.0** and older.
 
-# roles/modify_ucs_ca/README.md
+## Development
 
-Modify UCS certs
-=========
+To get the required dependencies, [create a Python virtualenv](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#create-and-use-virtual-environments) and run:
 
-Modify exisiting univention certificates.
+`pip install -r requirements.txt`
 
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `modify_ucs_ca_external_domain_name`(string): The external domain name.
-- `modify_ucs_ca_external_domain_part`(string): The part of an external domain eventually excluding fist subdomain.
-- `modify_ucs_ca_external_domain_prefix`(string): The first subdomain if exists.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
+## Modules
+- [add_local_user](roles/add_local_user/README.md#rolesadd_local_userreadmemd)
+- [cleanup_portal](roles/cleanup_portal/README.md#rolescleanup_portalreadmemd)
+- [configure_amazon_metadata_server](roles/configure_amazon_metadata_server/README.md#rolesconfigure_amazon_metadata_serverreadmemd)
+- [configure_apps_nextcloud](roles/configure_apps_nextcloud/README.md#rolesconfigure_apps_nextcloudreadmemd)
+- [configure_apps_owncloud](roles/configure_apps_owncloud/README.md#rolesconfigure_apps_owncloudreadmemd)
+- [configure_apps_postfix](roles/configure_apps_postfix/README.md#rolesconfigure_apps_postfixreadmemd)
+- [configure_apps_postfix_relay](roles/configure_apps_postfix_relay/README.md#rolesconfigure_apps_postfix_relayreadmemd)
+- [configure_directory_manager](roles/configure_directory_manager/README.md#rolesconfigure_directory_managerreadmemd)
+- [configure_error_detail_show](roles/configure_error_detail_show/README.md#rolesconfigure_error_detail_showreadmemd)
+- [configure_group_syntax](roles/configure_group_syntax/README.md#rolesconfigure_group_syntaxreadmemd)
+- [configure_keycloak](roles/configure_keycloak/README.md#rolesconfigure_keycloakreadmemd)
+- [configure_keycloak_client](roles/configure_keycloak_client/README.md#rolesconfigure_keycloak_clientreadmemd)
+- [configure_keycloak_saml](roles/configure_keycloak_saml/README.md#rolesconfigure_keycloak_samlreadmemd)
+- [configure_license](roles/configure_license/README.md#rolesconfigure_licensereadmemd)
+- [configure_logrotate](roles/configure_logrotate/README.md#rolesconfigure_logrotatereadmemd)
+- [configure_monitoring](roles/configure_monitoring/README.md#rolesconfigure_monitoringreadmemd)
+- [configure_network_interface_names](roles/configure_network_interface_names/README.md#rolesconfigure_network_interface_namesreadmemd)
+- [configure_network_proxy](roles/configure_network_proxy/README.md#rolesconfigure_network_proxyreadmemd)
+- [configure_nextcloud_saml](roles/configure_nextcloud_saml/README.md#rolesconfigure_nextcloud_samlreadmemd)
+- [configure_nextcloud_turn](roles/configure_nextcloud_turn/README.md#rolesconfigure_nextcloud_turnreadmemd)
+- [configure_ntp_servers](roles/configure_ntp_servers/README.md#rolesconfigure_ntp_serversreadmemd)
+- [configure_office_suite](roles/configure_office_suite/README.md#rolesconfigure_office_suitereadmemd)
+- [configure_password_policies](roles/configure_password_policies/README.md#rolesconfigure_password_policiesreadmemd)
+- [configure_repository](roles/configure_repository/README.md#rolesconfigure_repositoryreadmemd)
+- [configure_saml_single_server](roles/configure_saml_single_server/README.md#rolesconfigure_saml_single_serverreadmemd)
+- [configure_sso_openid](roles/configure_sso_openid/README.md#rolesconfigure_sso_openidreadmemd)
+- [custom_facts](roles/custom_facts/README.md#rolescustom_factsreadmemd)
+- [custom_facts_finished](roles/custom_facts_finished/README.md#rolescustom_facts_finishedreadmemd)
+- [deployment_message](roles/deployment_message/README.md#rolesdeployment_messagereadmemd)
+- [disable_ipv6](roles/disable_ipv6/README.md#rolesdisable_ipv6readmemd)
+- [disable_piwik_tracking](roles/disable_piwik_tracking/README.md#rolesdisable_piwik_trackingreadmemd)
+- [dovecot_connector](roles/dovecot_connector/README.md#rolesdovecot_connectorreadmemd)
+- [extend_root_lvm_volume](roles/extend_root_lvm_volume/README.md#rolesextend_root_lvm_volumereadmemd)
+- [force_package_list_update](roles/force_package_list_update/README.md#rolesforce_package_list_updatereadmemd)
+- [get_installed_apps](roles/get_installed_apps/README.md#rolesget_installed_appsreadmemd)
+- [hardening](roles/hardening/README.md#roleshardeningreadmemd)
+- [improve_usability_nextcloud](roles/improve_usability_nextcloud/README.md#rolesimprove_usability_nextcloudreadmemd)
+- [improve_usability_ui_changes](roles/improve_usability_ui_changes/README.md#rolesimprove_usability_ui_changesreadmemd)
+- [improve_usability_user_config](roles/improve_usability_user_config/README.md#rolesimprove_usability_user_configreadmemd)
+- [install_apps_ox_post](roles/install_apps_ox_post/README.md#rolesinstall_apps_ox_postreadmemd)
+- [install_apps_ox_pre](roles/install_apps_ox_pre/README.md#rolesinstall_apps_ox_prereadmemd)
+- [install_branding](roles/install_branding/README.md#rolesinstall_brandingreadmemd)
+- [install_lets_encrypt](roles/install_lets_encrypt/README.md#rolesinstall_lets_encryptreadmemd)
+- [install_multitenant_acls](roles/install_multitenant_acls/README.md#rolesinstall_multitenant_aclsreadmemd)
+- [install_nextcloud_app](roles/install_nextcloud_app/README.md#rolesinstall_nextcloud_appreadmemd)
+- [install_packages](roles/install_packages/README.md#rolesinstall_packagesreadmemd)
+- [install_service_new_portal](roles/install_service_new_portal/README.md#rolesinstall_service_new_portalreadmemd)
+- [install_service_selfservice](roles/install_service_selfservice/README.md#rolesinstall_service_selfservicereadmemd)
+- [intercom_service](roles/intercom_service/README.md#rolesintercom_servicereadmemd)
+- [ldapsearch_user](roles/ldapsearch_user/README.md#rolesldapsearch_userreadmemd)
+- [modify_ucs_ca](roles/modify_ucs_ca/README.md#rolesmodify_ucs_careadmemd)
+- [ox_connector](roles/ox_connector/README.md#rolesox_connectorreadmemd)
+- [portal_category](roles/portal_category/README.md#rolesportal_categoryreadmemd)
+- [portal_configure_title](roles/portal_configure_title/README.md#rolesportal_configure_titlereadmemd)
+- [portal_cookie_banner](roles/portal_cookie_banner/README.md#rolesportal_cookie_bannerreadmemd)
+- [portal_entry](roles/portal_entry/README.md#rolesportal_entryreadmemd)
+- [remove_packages](roles/remove_packages/README.md#rolesremove_packagesreadmemd)
+- [set_dns_glue_record](roles/set_dns_glue_record/README.md#rolesset_dns_glue_recordreadmemd)
+- [set_feedback_mail_address](roles/set_feedback_mail_address/README.md#rolesset_feedback_mail_addressreadmemd)
+- [set_ldap_index](roles/set_ldap_index/README.md#rolesset_ldap_indexreadmemd)
+- [ucs_add_admin_user](roles/ucs_add_admin_user/README.md#rolesucs_add_admin_userreadmemd)
+- [ucs_join](roles/ucs_join/README.md#rolesucs_joinreadmemd)
+- [umc_permissions](roles/umc_permissions/README.md#rolesumc_permissionsreadmemd)
+- [umc_policies_maintenance](roles/umc_policies_maintenance/README.md#rolesumc_policies_maintenancereadmemd)
+- [univention_firewall](roles/univention_firewall/README.md#rolesunivention_firewallreadmemd)
+- [univention_install](roles/univention_install/README.md#rolesunivention_installreadmemd)
+- [univention_prune_kernels](roles/univention_prune_kernels/README.md#rolesunivention_prune_kernelsreadmemd)
+- [univention_remove](roles/univention_remove/README.md#rolesunivention_removereadmemd)
+- [univention_repository_component](roles/univention_repository_component/README.md#rolesunivention_repository_componentreadmemd)
+- [univention_upgrade](roles/univention_upgrade/README.md#rolesunivention_upgradereadmemd)
+- [update_users_ssh_keys](roles/update_users_ssh_keys/README.md#rolesupdate_users_ssh_keysreadmemd)
+- [use_trusted_cert](roles/use_trusted_cert/README.md#rolesuse_trusted_certreadmemd)
+- [workaround_acmetiny_upgrade](roles/workaround_acmetiny_upgrade/README.md#rolesworkaround_acmetiny_upgradereadmemd)
+- [workaround_high_mtu](roles/workaround_high_mtu/README.md#rolesworkaround_high_mtureadmemd)
 
 ---
 
-# roles/improve_usability_ui_changes/README.md
+### add_local_user
 
-Improve usability ui changes.
-=========
+This role creates a local user with ssh login permissions.
 
-This role will improve ui.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `improve_usability_ui_changes_basedn`(): The LDAP base domain name.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/ox_connector/README.md
-
-OX Connector
-=========
-
-This role configures and install OX connector.
-
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
-    - univention_config_registry
+  - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
-- `ox_connector_basedn`(string): The LDAP base dn.
-- `ox_connector_domain_name`(string): The system's dns domain name.
-- `ox_connector_domain_prefix`(string): The system's dns domain prefix. Useful when OX server is in same network
-- `ox_connector_default_context` (string): The default context that is being assigned to objects when there is no explicit definition; default: `9999`
-- `ox_connector_soap_prefix`(string): The ox soap server prefix; default: `ox-provisioning`.
-- `ox_connector_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
-- `ox_connector_temp_pw_file`(map): Tempfile object where univention app password is stored.
-- `ox_connector_master_admin`(string): The name of OX administrator.
-- `ox_connector_master_password`(string): The password of OX administrator.
-- `ox_connector_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
-- `ox_connector_template_name`(string): The name of default ox access template; default: `"standard"`.
-- `ox_connector_hide_logging`(boolean): Toggle logging of sensitive information like password; default: `true`.
-- `ox_connector_usertemplate_name`(string): Name of the User Template to be used, while creating a new user; default: "Benutzer mit Groupware-Konto".
-- `ox_connector_imap_server`(string): How the user in OX will connect to the IMAP backend, this value is relative to the OX AppSuite middleware server; default: `imap://127.0.0.1:143`
-- `ox_connector_smtp_server`(string): How the user in OX will connect to the SMTP service, this value is relative to the OX AppSuite middleware server; default: `smtp://127.0.0.1:26`
+- `add_local_user_user`(map): A map containing user information:
 
+```
+add_local_user_user:
+    name:         # username; default; "ansible"
+    comment:      # user comment; default: "ansible user"
+    password:     # hashed password of user; default:  "{{ 'ansible'|password_hash('sha512') }}"
+    sshkey_file:  # ssh key filename; default: empty
+    sshkey:       # ssh key as string; default: empty
+    state:        # toggle if user should be present or absent; default: present
+```
 
-Dependencies
-------------
+- `add_local_user_default_shell`(string): Default user shell; default: `/bin/bash`
+- `add_local_user_default_password_policy`(string): Default password update policy.
+  Possible values are `"on_create"` and `"always"`; default `"on_create"`.
+- `add_local_user_system_user`(bool): `true` if the user should be a system user instead of a human; default: `true`.
 
-none
+#### Dependencies
 
-Example Playbook
-----------------
+`passlib`
 
+#### Example Playbook
 
-License
--------
+```yaml
+---
+- name: "Add a testuser"
+  hosts: "all"
+  roles:
+    - role: "add_local_user"
+      vars:
+        add_local_user_user_name: "testuser"
+        add_local_user_user_comment: "For testing the add_local_user_user role"
+        add_local_user_user_password: "{{ 'univention' | password_hash('sha512') }}"
+        add_local_user_user_state: "present"
+```
+
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_network_proxy/README.md
+### cleanup_portal
 
-Configure network proxy
-=========
+Remove default and unused portal entries.
 
-This role configures network proxy via UCR.
-
-Requirements
-------------
-
-- univention.ucs_modules
-    - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_network_proxy_enabled`(boolean): Toggle network proxy usage
-- `configure_network_proxy_http_proxy`(string): The HTTP proxy server, e.g. `http://192.168.1.100:3128`. If the proxy requires authentication, the username and the password can be provided in the format `http://username:password@192.168.1.100:3128`.
-- `configure_network_proxy_https_proxy`(string): The HTTPS proxy server, e.g. `https://192.168.1.100:3128`. If the proxy requires authentication, the username and the password can be provided in the format `https://username:password@192.168.1.100:3128`.
-- `configure_network_proxy_no_proxy`(string): A comma-separated list of domain names for which the proxy should not be consulted. An exception for a domain like univention.de also applies to a subdomain like apt.univention.de.
-
-Dependencies
-------------
+#### Requirements
 
 none
 
-Example Playbook
-----------------
+#### Role Variables
 
+- `cleanup_portal_basedn`(string): The LDAP base domain name.
+- `cleanup_portal_install_services`(list): A list of services to install.
+- `cleanup_portal_domain_admin_group`(string): default: `"cn=Domain Admins,cn=groups,{{ cleanup_portal_basedn }}"`.
+- `cleanup_portal_portal_dn`(string): default: `"cn=portals,cn=univention,{{ cleanup_portal_basedn }}"`.
+- `cleanup_portal_prometheus_dn`(string): default: `'cn=prometheus,cn=entry,{{ cleanup_portal_portal_dn }}'`.
+- `cleanup_portal_admin_dashboard_dn`(string): default: `'cn=admin-dashboard,cn=entry,{{ cleanup_portal_portal_dn }}'`.
 
-License
--------
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Cleanup portal entries"
+  hosts: "all"
+  roles:
+    - role: "cleanup_portal"
+      vars:
+        cleanup_portal_basedn: "dc=example,dc=com"
+        cleanup_portal_install_services:
+          - "dashboard"
+```
+
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/install_nextcloud_app/README.md
+### configure_amazon_metadata_server
 
-Install app for nextcloud
-=========
+### Configure amazon metadata server
 
-This role installs an app for nextcloud
+Enable or disable UCS calling Amazon's metadata server
 
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `install_nextcloud_app_name`(string): The name of nextcloud app to be installed from store.
-- `install_nextcloud_app_opertation`(string): Define operation mode; default: `"install"`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/univention_firewall/README.md
-
-Univention firewall rules.
-
-=========
-Manage predefined univention-firewall rules.
-
-Requirements
-------------
-
-- univention.ucs_modules
-    - univention_config_registry
-
-Role Variables
---------------
-
-- `univention_firewall_telegraf`(string): Set firewall status of telegraf service; default: `"ACCEPT"`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/install_service_selfservices/README.md
-
-Install selfservices service
-=========
-
-This role installs selfservice services.
-
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
-- `install_service_selfservice_service_version_map`(map): A dictionary that maps service names to specific versions that ought to be installed. See also `install_service_selfservice_force_package_upgrade` for a way to upgrade already installed software.
-- `install_service_selfservice_temp_file`(map): Ansible temporary dir.
-- `install_service_selfservice_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_service_selfservice_service_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
-- `install_service_selfservice_external_hostname`(string): The host name that is used to talk to the system.
-- `install_service_selfservice_install_services`(list): A list of services to install.
-- `install_service_selfservice_domain_name`(string): The LDAP base domain name.
-- `install_service_selfservice_password_reset_filename`(string): The name of password reset template.
+- `configure_amazon_metadata_server_call`(boolen): Defines if the amazon metadata server should be called; default: `false`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure Amazon metadata server"
+  hosts: "all"
+  roles:
+    - role: "configure_amazon_metadata_server"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/remove_packages/README.md
+### configure_apps_nextcloud
 
-Remove packages
-=========
+Configure UCS app nextcloud.
 
-This role removes univention apps with/without fixed versions.
-
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
-
-- `remove_packages_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. See also `install_packages_force_package_upgrade` for a way to upgrade already installed software.
-- `remove_packages_temp_pw_file`(map): Tempfile object where univention app password is stored.
-- `remove_packages_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_packages_app_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false
-- `remove_packages_remove_apps`(list): A list of applications to install.
-- `remove_packages_app_version_map`(map): A map of packages with/without version to be removed.
-- `remove_packages_service_name_list`(list): A list containing application names to be installed.
-
-Dependencies
-------------
+#### Role Variables
 
 none
 
-Example Playbook
-----------------
+#### Dependencies
 
+none
 
-License
--------
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure Nextcloud app"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_nextcloud"
+```
+
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_apps_postfix_relay/README.md
+### configure_apps_owncloud
 
-Configure Postfix relay (apps)
-=========
+Configure UCS app owncloud.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+none
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure OwnCloud app"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_owncloud"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_apps_postfix
+
+This role modifies postfix configuration.
+
+#### Requirements
+
+- univention.ucs_modules
+   - univention_config_registry
+
+#### Role Variables
+
+- `configure_apps_postfix_domain_name`(string): The system's dns domain name.
+- `configure_apps_postfix_external_hostname`(string): The host name that is used to talk to the system.
+- `configure_apps_postfix_relay_port`(number): The port that is used to talk to the system; default: `25`.
+- `configure_apps_postfix_use_relay_host`(bool): Toggles if a SMTP relay host should be used; default: `false`.
+- `configure_apps_postfix_relay_host`(string): The SMTP relay hostname.
+- `configure_apps_postfix_relay_username`(string): The SMTP relay username.
+- `configure_apps_postfix_relay_password`(string): The SMTP relay password.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure Postfix"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_postfix"
+      vars:
+        configure_apps_postfix_domain_name: "example.com"
+        configure_apps_postfix_external_hostname: "mail.example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_apps_postfix_relay
 
 This role modifies postfix relay configuration.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_apps_postfix_relay_enabled`(bool): Toggles if a SMTP relay host should be used; default: `false`.
 - `configure_apps_postfix_relay_port`(number): The port that is used to talk to the system; default: `25`.
@@ -452,44 +376,46 @@ Role Variables
 - `configure_apps_postfix_relay_password`(string): The SMTP relay password.
 - `configure_apps_postfix_relay_hide_logging`(boolean): Toggles output logging for sensible information; default: `true`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure Postfix relay"
+  hosts: "all"
+  roles:
+    - role: "configure_apps_postfix_relay"
+      vars:
+        configure_apps_postfix_relay_enabled: true
+        configure_apps_postfix_relay_host: "smtp.example.com"
+        configure_apps_postfix_relay_username: "relayuser"
+        configure_apps_postfix_relay_password: "relaypassword"
+```
 
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_directory_manager/README.md
-
-Configure directory manager
-=========
+### configure_directory_manager
 
 This role configures directory manager settings.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_directory_manager_mailprimaryaddress_required`(bool): Toggles if mailPrimaryAddress should be required; default: `false`.
 - `configure_directory_manager_firstname_required`(bool): Toggles if forename should be required; default: `false`.
@@ -502,272 +428,119 @@ Role Variables
 - `configure_directory_manager_autosearch`(string): Toggles wether the user autosearch is enabled; default: `"False"`.
 - `configure_directory_manager_username_syntax`(string): Set the username syntax; default `"uid"`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure directory manager"
+  hosts: "all"
+  roles:
+    - role: "configure_directory_manager"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_error_detail_show/README.md
-
-Configure error detail show
-=========
+### configure_error_detail_show
 
 This role configures if the error messages will display the details.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_error_detail_show_http_tracebacks`(bool): Defines whether tracebacks are shown to the user in error cases; default: `false`
 - `configure_error_detail_show_directory_manager_rest_tracebacks`(bool): Defines whether tracebacks are shown to the user in error cases; default: `false`
 - `configure_error_detail_show_saml_idp_errors`(bool): Defines if error information and stack traces allowed to be shown to the user; default: `false`
 - `configure_error_detail_show_saml_idp_error_reporting`(bool): Defines if error information and stack traces can be reported via email to the technical contact mail address; default: `false`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure error detail display"
+  hosts: "all"
+  roles:
+    - role: "configure_error_detail_show"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/umc_policies_maintenance/README.md
+### configure_group_syntax
 
-UMC maintenance policies
-=========
+Configure the group syntax and ensure the consistency on all nodes
 
-This role sets UMC maintenance policies.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `umc_policies_maintenance_autoupdate_enabled`(bool): Toogle autoupdate status; default: `true`.
-- `umc_policies_maintenance_basedn`(string): The LDAP base domain name.
-- `umc_policies_maintenance_patchhour`(string): The chosen hour for univention-update; default: `5`.
-- `umc_policies_maintenance_patchminute`(string): The choosen minute for univention-update; default: `00`.
-- `umc_policies_maintenance_patchday`(String): The chosen day for univention-update; default: `Tuesday`.
-- `umc_policies_maintenance_release_version`(string): The univention release version.
-- `umc_policies_maintenance_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/cleanup_portal/README.md
-
-Cleanup Portal
-=========
-
-Remove default and unused portal entries.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `cleanup_portal_basedn`(string): The LDAP base domain name.
-- `cleanup_portal_install_services`(list): A list of services to install.
-- `cleanup_portal_domain_admin_group`(string): default: `"cn=Domain Admins,cn=groups,{{ cleanup_portal_basedn }}"`.
-- `cleanup_portal_portal_dn`(string): default: `"cn=portals,cn=univention,{{ cleanup_portal_basedn }}"`.
-- `cleanup_portal_prometheus_dn`(string): default: `'cn=prometheus,cn=entry,{{ cleanup_portal_portal_dn }}'`.
-- `cleanup_portal_admin_dashboard_dn`(string): default: `'cn=admin-dashboard,cn=entry,{{ cleanup_portal_portal_dn }}'`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/dovecot_connector/README.md
-
-DC Connector
-=========
-
-This role configures and install Dovecot (DC) connector.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `dovecot_connector_basedn`(string): The LDAP base dn.
-- `dovecot_connector_domain_name`(string): The system's dns domain name.
-- `dovecot_connector_domain_prefix`(string): The system's dns domain prefix. Useful when dovecot server is in same network.
-- `dovecot_connector_soap_prefix`(string): The ox soap server prefix; default: `ox-provisioning`.
-- `dovecot_connector_server_type`(string): Which type of UCS server to set up. The possible options are `master` and `backup`.
-The default is `master`, which also means "standalone".
-If `backup` is chosen the following variable also has to be set; default: `master`.
-- `dovecot_connector_app_version_map`(map): A dictionary that maps application names to specific version of dovecot connector. default: `""`
-- `dovecot_connector_temp_pw_file`: The tmp file within the administrator password.
-- `dovecot_connector_adm_accepted_exit_codes`(string): DoveAdm-exitCode-Werte, die nicht zum Abbruch führen; default: `68 75`
-- `dovecot_connector_adm_host`(string): Der Domänenname des Servers auf dem DoveAdm aktiviert wurde; default: `dc-provisioning.dovecot_connector_domain_name`
-- `dovecot_connector_adm_port`(string): Der Port auf dem DoveAdm erreichbar ist; default: `443`
-- `dovecot_connector_adm_username`(string): Benutzername des DoveAdm; default: `""`
-- `dovecot_connector_adm_password`(string): Passwort des DoveAdm; default: `""`
-- `dovecot_connector_adm_uri`(string): DoveAdm URL Vorlage. Mögliche Variablen `{dcc_adm_host}` und `{dcc_adm_port}`; default: `https://{dcc_adm_host}:{dcc_adm_port:d}/doveadm/v1`
-- `dovecot_connector_dc_vmail_template`(string): Das vmail Verzeichnis welches Dovecot nutzt. Mögliche Variablen `{uuid}`, `{email}`, `{domain}` und `{username}`; default: `/data/usr/local/dovecot/vmail/{uuid[0]}{uuid[1]}/{uuid}`
-- `dovecot_connector_loglevel`(string): Die Log-Stufe der Anwendung. Werte: `DEBUG`, `INFO`, `WARNING` und `ERROR`; default: `INFO`
-- `dovecot_connector_hide_logging`(bool): Toggle logging output; default: `true`
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/install_apps_ox_pre/README.md
-
-Pre installation steps of OpenXchange (OX)
-=========
-
-This role prepares OX installation.
-
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
-    - univention_config_registry
+   - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
-- `install_apps_ox_pre_external_hostname`(string): The host name that is used to talk to the system.
-- `install_apps_ox_pre_mail_domain`(string): The externally managed mail domain.
-- `install_apps_ox_pre_basedn`(string): The LDAP base domain name.
+- `configure_group_syntax_group_syntax`(string): group syntax desired value; default: `gid`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure group syntax"
+  hosts: "all"
+  roles:
+    - role: "configure_group_syntax"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_keycloak/README.md
-
-Configure Keycloak
-=========
+### configure_keycloak
 
 This role configures keycloak, either via KCADM or REST.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_keycloak_generate_oidc_broker_secret`(bool): If set to true the client password used in the IDP creation is generated dynamically. If it is set to `false` the value in `configure_keycloak_oidc_broker_secret` is used instead. If `configure_keycloak_config_type` is set to `static` this variable implicitly is set to `false`; default: `true`
 - `configure_keycloak_oidc_broker_secret`(string): Client password used in the IDP creation. Only used when `configure_keycloak_generate_oidc_broker_secret`is set to false.
@@ -792,129 +565,808 @@ Role Variables
 - `configure_keycloak_import_mapper_name`(string): default: `"append IDP to username"`
 - `configure_keycloak_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure Keycloak"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak"
+      vars:
+        configure_keycloak_keycloak_server: "keycloak.example.com"
+        configure_keycloak_admin_username: "admin"
+        configure_keycloak_admin_password: "secret"
+        configure_keycloak_client_id: "ucs-client"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/use_trusted_cert/README.md
+### configure_keycloak_client
 
-Use trusted SSL certificate
-=========
+This role configures ucs to properly use keycloak.
 
-This role configures an issues SSL certificate from trusted authorities.
+#### Requirements
 
-Requirements
-------------
+none
+
+#### Role Variables
+
+- `configure_keycloak_client_oidc_broker_secret`(string): The client password used in the IDP creation.
+- `configure_keycloak_client_keycloak_password`(string): The keycloaks password.
+- `configure_keycloak_client_basedn`(string): The LDAP base domain name.
+- `configure_keycloak_client_keycloak_server_id`(string): The OpenID Connect IDP broker ID. This is used in both config modes.
+- `configure_keycloak_client_keycloak_server`(string): The server the UCS system with authenticate against.
+- `configure_keycloak_client_config_type`(string): This variable determines if the keycloak server configuration is done using this role (`dynamic`) or if things already have been configured and only the UCS side has to be configured (`static`). `dynamic` usually is used for setups with a lot of turnover, `static` is used in a more static environment. If set to 'none' keycloak configuration as a whole will be skipped, including the "client" side; default: `dynamic`.
+- `configure_keycloak_client_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure Keycloak client"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak_client"
+      vars:
+        configure_keycloak_client_basedn: "dc=example,dc=com"
+        configure_keycloak_client_keycloak_server_id: "keycloak"
+        configure_keycloak_client_keycloak_server: "keycloak.example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_keycloak_saml
+
+This role configures Keycloak as SAML provider.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `configure_keycloak_saml_basedn`(string): The LDAP base dn.
+- `configure_keycloak_saml_sp_base_url`(string): The Service Provider base url.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure Keycloak SAML"
+  hosts: "all"
+  roles:
+    - role: "configure_keycloak_saml"
+      vars:
+        configure_keycloak_saml_basedn: "dc=example,dc=com"
+        configure_keycloak_saml_sp_base_url: "https://sp.example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_license
+
+This role helps to apply an existing license file or claims a new license from shop.
+
+#### Requirements
+
+none
+
+#### File Structure
+
+```text
+files/
+ |
+ +-- license_client.py
+```
+
+#### Role Variables
+
+- `configure_license_validity`(string): The validity period for the license in a format GNU date is able to understand as a time period, like "12 weeks".
+- `configure_license_shop_password`(string): The shop user's password, best stored in a secrets manager or encrypted via ansible-vault.
+- `configure_license_shop_id`(number): Which license shop to use when obtaining a new license for the server.
+- `configure_license_shop_username`(string): The shop's user name, needed for authentication.
+- `configure_license_max_users`(number): How many users to allow on the server.
+- `configure_license_basedn`(string): The LDAP base domain name.
+- `configure_license_type`(string): Choose one of `local_license` or `server_license`. When choosing `local_license` a license file name has to be provided otherwise choose `server_license` and one is generated; default: `server_license`.
+- `configure_license_file`(string): If `configure_license_type` set to `local_license` then provide license file name here; default: `false`.
+- `configure_license_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure UCS license"
+  hosts: "all"
+  roles:
+    - role: "configure_license"
+      vars:
+        configure_license_type: "server_license"
+        configure_license_basedn: "dc=example,dc=com"
+        configure_license_max_users: 500
+        configure_license_shop_id: 12345
+        configure_license_shop_username: "shopuser"
+        configure_license_shop_password: "shoppassword"
+        configure_license_validity: "12 weeks"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_logrotate
+
+As is defined on the `ucr` the log files are rotated the set number of times
+before being removed. This role is used to set those numbers.
+
+#### Requirements
+
+- univention.ucs_modules
+   - univention_config_registry
+
+#### Role Variables
+- `configure_logrotate_compress`(bool): If this option is activated, log files are compressed during rotation; default: yes
+- `configure_logrotate_create`(string): Configures mode, owner and group of a log file after rotation; default: 640 root adm
+- `configure_logrotate_missingok`(bool): If this option is activated, proceed without printing an error message if a logfile is missing; default: yes
+- `configure_logrotate_notifempty`(bool): If this option is activated, empty logfiles are not rotated; default: yes
+- `configure_logrotate_rotate_count`(number): The rotation interval for system log files; default: 12
+- `configure_logrotate_rotate_handling`(string): Log files are rotated according to criterion described by `man logrotate.conf`; default: weekly
+- `configure_logrotate_syslog_rotate_count`(number): The rotation interval for syslog file; default: 7 * "rotate/count"
+- `configure_logrotate_syslog_rotate_handling`(string): Syslog file is rotated according to criterion described by `man logrotate.conf`; default: daily
+
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure logrotate"
+  hosts: "all"
+  roles:
+    - role: "configure_logrotate"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_monitoring
+
+This role configures monitoring related settings.
+
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
+#### Role Variables
 
-Role Variables
---------------
+- `configure_monitoring_ldap_enabled`(string): Toggle `ldap/monitor` ucr setting; default: `"true"`.
 
-- `use_trusted_cert_path_cert`(string): Local path to SSL (chained) certificate file.
-- `use_trusted_cert_path_key`(string): Local path to SSL key file.
-
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure monitoring"
+  hosts: "all"
+  roles:
+    - role: "configure_monitoring"
+      vars:
+        configure_monitoring_ldap_enabled: "true"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/install_packages/README.md
+### configure_network_interface_names
 
-Install packages
-=========
+This role configures network interface names as GRUB boot parameter, resulting in network interface names like eth0.
 
-This role installs univention apps with/without fixed versions.
+#### Requirements
 
-Requirements
-------------
+- univention.ucs_modules
+    - univention_config_registry
 
-none
+#### Role Variables
 
-Role Variables
---------------
+- `configure_network_interface_names_use_old_names`(boolean): Set the GRUB parameter for old interface names; default: `true`.
 
-- `install_packages_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. See also `install_packages_force_package_upgrade` for a way to upgrade already installed software.
-- `install_packages_service_name_list`(list): A list containing application names to be installed.
-- `install_packages_temp_pw_file`(map): Tempfile object where univention app password is stored.
-- `install_packages_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_packages_app_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
-- `install_packages_install_apps`(list): A list of applications to install.
-- `install_packages_additional_options`(string): Additional option that could be set during install.
-
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure network interface names"
+  hosts: "all"
+  roles:
+    - role: "configure_network_interface_names"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/deployment_message/README.md
+### configure_network_proxy
 
-Print a deployment message
-=========
+This role configures network proxy via UCR.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+
+#### Role Variables
+
+- `configure_network_proxy_enabled`(boolean): Toggle network proxy usage
+- `configure_network_proxy_http_proxy`(string): The HTTP proxy server, e.g. `http://192.168.1.100:3128`. If the proxy requires authentication, the username and the password can be provided in the format `http://username:password@192.168.1.100:3128`.
+- `configure_network_proxy_https_proxy`(string): The HTTPS proxy server, e.g. `https://192.168.1.100:3128`. If the proxy requires authentication, the username and the password can be provided in the format `https://username:password@192.168.1.100:3128`.
+- `configure_network_proxy_no_proxy`(string): A comma-separated list of domain names for which the proxy should not be consulted. An exception for a domain like univention.de also applies to a subdomain like apt.univention.de.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure network proxy"
+  hosts: "all"
+  roles:
+    - role: "configure_network_proxy"
+      vars:
+        configure_network_proxy_enabled: true
+        configure_network_proxy_http_proxy: "http://192.168.1.100:3128"
+        configure_network_proxy_https_proxy: "https://192.168.1.100:3128"
+        configure_network_proxy_no_proxy: "localhost,127.0.0.1,univention.de"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_nextcloud_saml
+
+This role configures nextcloud for SAML single server.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+none
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure Nextcloud SAML"
+  hosts: "all"
+  roles:
+    - role: "configure_nextcloud_saml"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_nextcloud_turn
+
+This role configures the Nextcloud Talk TURN server.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `configure_nextcloud_turn_secret`(string): The TURN server secret.
+- `configure_nextcloud_turn_url`(string): The URL of the TURN server.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure Nextcloud TURN server"
+  hosts: "all"
+  roles:
+    - role: "configure_nextcloud_turn"
+      vars:
+        configure_nextcloud_turn_secret: "turn-secret"
+        configure_nextcloud_turn_url: "turn:turn.example.com:3478"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_ntp_servers
+
+This role configures NTP timeservers.
+
+#### Requirements
+
+- univention.ucs_modules
+  - univention_config_registry
+
+#### Role Variables
+
+- `configure_ntp_servers_timeservers`(list): A list of ntp server addresses; default `["ptbtime1.ptb.de", "ptbtime2.ptb.de", "ptbtime3.ptb.de"]`
+
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure NTP servers"
+  hosts: "all"
+  roles:
+    - role: "configure_ntp_servers"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_office_suite
+
+This role configures the chosen office suite and installs it.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `configure_office_suite_office_suite`(string): Define the to be installed office suite. Defaults to `collabora-online`. A list of supported suites is defined in `configure_office_suite_supported_office_suites`; default: `"collabora-online"`.
+- `configure_office_suite_supported_office_suites`(list): A list of supported office suites that can be installed using this role. This variable is set in the role's `defaults/main.yml` and should not be changed.
+- `configure_office_suite_onlyoffice_formats`(map): A map of onlyoffice file formats to be enabled or disabled.
+- `configure_office_suite_collabora_license_key`(string): Include a valid license for collabora-online.
+- `configure_office_suite_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
+- `configure_office_suite_temp_pw_file`(map): Tempfile object where univention app password is stored.
+- `configure_office_suite_install_apps`(list): A list of applications to install.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure office suite"
+  hosts: "all"
+  roles:
+    - role: "configure_office_suite"
+      vars:
+        configure_office_suite_office_suite: "collabora-online"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_password_policies
+
+This role configures password policies via UCR.
+A dn of a policy is required.
+All users with this plocicy referenced will get these settings.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+    - univention_directory_manager
+
+#### Role Variables
+
+- `configure_password_policies_dn`(string): At least there should be one policy with activated Checks. The full dn is needed; default: not set
+- `configure_password_policies_quality_min_lenght`(string): Sets the minimum password length; default: `8`
+- `configure_password_policies_quality_required_chars`(string): Sets required chars for setting new passwords; default: `none`
+- `configure_password_policies_quality_forbidden_chars`(string): Sets forbidden chars for setting new passwords; default: `none`
+- `configure_password_policies_quality_credit_digits`(string): Sets the minimum number of digits in the new password; ; default: `1`
+- `configure_password_policies_quality_credit_upper`(string): Sets the minimum number of upper case letters; default: `1`
+- `configure_password_policies_quality_credit_other`(string): Sets the minimum number of chars wich are neither digits nor letters; default: `1`
+- `configure_password_policies_quality_credit_lower`(string): Sets the minimum number of lower case letters; default: `1`
+- `configure_password_policies_quality_mspolicy`(string): Sets the microsoft policy complexity criteria. If `1`,`true` or `yes` this will b eon top of the dafault python-cracklib. If `sufficient` only ms policy complexity will be used and if `false` only python-cracklib will be used. default: `1`
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure password policies"
+  hosts: "all"
+  roles:
+    - role: "configure_password_policies"
+      vars:
+        configure_password_policies_dn: >-
+          cn=default-settings,cn=pwhistory,cn=users,cn=policies,cn=system,dc=example,dc=com
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_repository
+
+Configure repository URLs to use own apt repository server.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+
+#### Role Variables
+
+- `configure_repository_default_repository_prefix`(string): Define access method, either `"http://"` or `"https://"`; default: `"https://"`.
+- `configure_repository_default_repository_server`(string): The repository server without any prefix or suffix or path.
+- `configure_repository_default_repository_path`(string): The repository path/suffix where repository could be found on server.
+- `configure_repository_default_repository_username`(string): Optionally configure username for authentication.
+- `configure_repository_default_repository_password`(string): Optionally configure password for authentication.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure repository"
+  hosts: "all"
+  roles:
+    - role: "configure_repository"
+      vars:
+        configure_repository_default_repository_server: "repo.example.com"
+        configure_repository_default_repository_path: "/univention-repository"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_saml_single_server
+
+This role configures SAML single server.
+
+#### Requirements
+
+- univention.ucs_modules
+  - univention_config_registry
+
+#### Role Variables
+
+- `configure_saml_single_server_external_hostname`(string): The external hostname that is used to talk to the system.
+- `configure_saml_single_server_domain_name`(string): The systems domain name.
+- `configure_saml_single_server_admin_user_name`(string): The UCS administrator's user name, defaults to "Administrator". This variable only is used when joining a backup server. Changing this will NOT change the UCS admin user name, it will only break the backup join scenario.
+- `configure_saml_single_server_temp_file`(map): Tempfile object where univention app password is stored.
+- `configure_saml_single_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. If `backup` is chosen the following variable also has to be set; default: `"master"`.
+- `configure_saml_single_server_basedn`(string): The LDAP base dn.
+- `configure_saml_single_server_remove_default_saml_provider`(bool): When set to `true` all builtin SAML provider will be removed; default: `true`.
+- `configure_saml_single_server_external_loadbalancer_ip`(string): IP address of external load balancer if used.
+- `configure_saml_single_server_domain_prefix`(string): The external prefix of load balancer
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure SAML single server"
+  hosts: "all"
+  roles:
+    - role: "configure_saml_single_server"
+      vars:
+        configure_saml_single_server_external_hostname: "ucs.example.com"
+        configure_saml_single_server_domain_name: "example.com"
+        configure_saml_single_server_basedn: "dc=example,dc=com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### configure_sso_openid
+
+This role configures OpenID Connect OIDC for apps like open-xchange or nextcloud.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+
+#### Role Variables
+
+- `configure_sso_openid_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
+- `configure_sso_openid_temp_pw_file`(map): Tempfile object where univention app password is stored.
+- `configure_sso_openid_install_apps`(list): A list of applications to install.
+- `configure_sso_openid_basedn`(string): The systems base dn.
+- `configure_sso_openid_signing_method`(string): The signing method; default: `"RS256"`.
+- `configure_sso_openid_external_hostname`(string): The external hostname that is used to talk to the system.
+- `configure_sso_openid_clients`(map): A map of client configurations, supported `nexcloud` and `ox`.
+
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+##### Configure OpenID clients
+
+```yaml
+---
+- name: "Configure SSO OpenID Connect"
+  hosts: "all"
+  tasks:
+    - name: "Configure SSO OpenID Connect"
+      ansible.builtin.include_role:
+        name: "univention.ucs_roles.configure_sso_openid"
+      vars:
+        configure_sso_openid_clients:
+          nextcloud:
+            name: "nextcloud"
+            clientid: "nextcloud"
+            clientsecret: "notverysafe"
+          ox:
+            name: "open-xchange"
+            clientid: "open-xchange"
+            clientsecret: "notverysafe"
+        # ...
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### custom_facts
+
+This role gathers release information and store them on remote system.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `custom_facts_templates`(list): filename(s) of templates which should be applied; default: `["deployment.fact.j2", "hotfixes.fact.j2"]`
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Gather custom facts"
+  hosts: "all"
+  roles:
+    - role: "custom_facts"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### custom_facts_finished
+
+Store rollout finished information in custom facts directory.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+none
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Mark deployment finished"
+  hosts: "all"
+  roles:
+    - role: "custom_facts_finished"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### deployment_message
 
 This role prints information about playbook, its dependencies and configuration.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `deployment_message_verification_pause_duration`(number): 20
 - `deployment_message_external_hostname`(string): the host name that is used to talk to the system
@@ -923,44 +1375,1276 @@ Role Variables
 - `deployment_message_server_type`(string): type of UCS server to set up. The possible options are `master`and `backup`.
 - `deployment_message_saml_config_type`(string): can be set to "failover" or basically anything else. In "failover" mode a part of the SAML configuration is omitted. "failover" in this case refers to a UCS native SAML failover mode. Any other value will result in the same configuration being deployed, the value therefore is more of a descriptive nature. Recommended values are "loadbalancer", "primary-secondary" or "standalone" with the latter being the default value.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Print deployment message"
+  hosts: "all"
+  roles:
+    - role: "deployment_message"
+      vars:
+        deployment_message_external_hostname: "ucs.example.com"
+        deployment_message_domain_name: "example.com"
+        deployment_message_basedn: "dc=example,dc=com"
+        deployment_message_server_type: "master"
+        deployment_message_saml_config_type: "standalone"
+```
 
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/portal_cookie_banner/README.md
+### disable_ipv6
 
-Toggle portal cookie banner
-=========
+This role disables IPv6 on system via modprobe.
 
-This roles enables/disables a cookie banner in portal frontend.
+#### Requirements
 
-Requirements
-------------
+- ansible.posix
+  - sysctl
+
+#### Role Variables
+
+none
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Disable IPv6"
+  hosts: "all"
+  roles:
+    - role: "disable_ipv6"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### disable_piwik_tracking
+
+This role enables/disables piwik tracking of UCS.
+
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
+
+- `disable_piwik_tracking_disable`(bool): Toggles piwik tracking of installation. When set to `true`, tracking is disabled; default: `true`.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Disable Piwik tracking"
+  hosts: "all"
+  roles:
+    - role: "disable_piwik_tracking"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### dovecot_connector
+
+This role configures and install Dovecot (DC) connector.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `dovecot_connector_basedn`(string): The LDAP base dn.
+- `dovecot_connector_domain_name`(string): The system's dns domain name.
+- `dovecot_connector_domain_prefix`(string): The system's dns domain prefix. Useful when dovecot server is in same network.
+- `dovecot_connector_soap_prefix`(string): The ox soap server prefix; default: `ox-provisioning`.
+- `dovecot_connector_server_type`(string): Which type of UCS server to set up. The possible options are `master` and `backup`.
+The default is `master`, which also means "standalone".
+If `backup` is chosen the following variable also has to be set; default: `master`.
+- `dovecot_connector_app_version_map`(map): A dictionary that maps application names to specific version of dovecot connector. default: `""`
+- `dovecot_connector_temp_pw_file`: The tmp file within the administrator password.
+- `dovecot_connector_adm_accepted_exit_codes`(string): DoveAdm-exitCode-Werte, die nicht zum Abbruch führen; default: `68 75`
+- `dovecot_connector_adm_host`(string): Der Domänenname des Servers auf dem DoveAdm aktiviert wurde; default: `dc-provisioning.dovecot_connector_domain_name`
+- `dovecot_connector_adm_port`(string): Der Port auf dem DoveAdm erreichbar ist; default: `443`
+- `dovecot_connector_adm_username`(string): Benutzername des DoveAdm; default: `""`
+- `dovecot_connector_adm_password`(string): Passwort des DoveAdm; default: `""`
+- `dovecot_connector_adm_uri`(string): DoveAdm URL Vorlage. Mögliche Variablen `{dcc_adm_host}` und `{dcc_adm_port}`; default: `https://{dcc_adm_host}:{dcc_adm_port:d}/doveadm/v1`
+- `dovecot_connector_dc_vmail_template`(string): Das vmail Verzeichnis welches Dovecot nutzt. Mögliche Variablen `{uuid}`, `{email}`, `{domain}` und `{username}`; default: `/data/usr/local/dovecot/vmail/{uuid[0]}{uuid[1]}/{uuid}`
+- `dovecot_connector_loglevel`(string): Die Log-Stufe der Anwendung. Werte: `DEBUG`, `INFO`, `WARNING` und `ERROR`; default: `INFO`
+- `dovecot_connector_hide_logging`(bool): Toggle logging output; default: `true`
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure Dovecot connector"
+  hosts: "all"
+  roles:
+    - role: "dovecot_connector"
+      vars:
+        dovecot_connector_basedn: "dc=example,dc=com"
+        dovecot_connector_adm_password: "secret"
+        dovecot_connector_adm_username: "doveadm"
+        dovecot_connector_domain_name: "example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### extend_root_lvm_volume
+
+Extend the root volume to all available space. Helpful when using a prebuild image and additional space is required.
+
+#### Requirements
+
+- community.general
+  - parted
+  - lvg
+  - lvol
+
+#### Role Variables
+
+- `extend_root_lvm_volume_extend_lvm_to_whole_disk`(bool): If true, root volume is extended to available space; default: `true`
+- `extend_root_lvm_volume_lvm_disk`(string): The "physical" disk to partition without the "/dev/" part, for instance "sda" for "/dev/sda". Defaults to what is used in the Univention QCOW image; default: `"vda"`
+- `extend_root_lvm_volume_lvm_vg_name`(string): The volume group the data volume resides in.  Defaults to what is used in the Univention QCOW image; default: `"vg_ucs"`
+- `extend_root_lvm_volume_lvm_data_volume`(string): The LVM name used for the data volume. Defaults to what is used in the Univention QCOW image; default: `"root"`
+- `extend_root_lvm_volume_existing_lvm_partition_number`(number): The existing lvm partition number. Defaults to what is used in the Univention QCOW image; default: `2`
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Extend root LVM volume"
+  hosts: "all"
+  roles:
+    - role: "extend_root_lvm_volume"
+      vars:
+        extend_root_lvm_volume_extend_lvm_to_whole_disk: true
+        extend_root_lvm_volume_lvm_disk: "vda"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### force_package_list_update
+
+This role updates univention and apt package lists.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+none
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Update package lists"
+  hosts: "all"
+  roles:
+    - role: "force_package_list_update"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### get_installed_apps
+
+This role sets a fact with installed univention apps.
+
+#### Requirements
+
+- ansible.utils
+  - cli_parse
+
+#### Role Variables
+
+none
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Get installed apps"
+  hosts: "all"
+  roles:
+    - role: "get_installed_apps"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### hardening
+
+This role reduces security risks by disabling default settings, like root login.
+
+#### Requirements
+
+- univention.ucs_modules
+   - univention_config_registry
+
+#### Role Variables
+
+- `hardening_disable_http`(bool): If set to `true`, `http` will be disabled in apache2. Only `https` will be available; default: `true`
+- `hardening_hsts`(bool): If set to `true` HTTP Strict Transport Security is enabled for apache2 ; default: `true`
+- `hardening_apache2_ssl_tlsv13`(bool): If set to `true` ssl tlsv11 and tlsv12 are disabled for apache2; default: `true`
+- `hardening_apache2_server_tokens`(string): Set apache2 configuration to `Prod`, `Major`, `Minor`, `Min`, `OS`or `Full`. Details: https://httpd.apache.org/docs/2.4/mod/core.html#servertokens ; default: `Prod`
+- `hardening_apache2_server_signature`(string): Set apache2 configuration to `Off` , `EMail` or `On`. Details: https://httpd.apache.org/docs/2.4/mod/core.html#serversignature ; default: `Off`
+- `hardening_honorcipherorder`(string): During the negotiation of cryptographic algorithms during the setup of a SSL/TLS connection the preference of the client is used by default. If this option is enabled, the preference of the server is used instead. The list of algorithms offered by Apache can be configured with the variable 'apache2/ssl/ciphersuite'; default: `true`
+- `hardening_ciphersuite`(string): his configures the cryptopgraphic algorithms which are offered to clients during a SSL handshake. The format is described at <http://httpd.apache.org/docs/2.4/mod/mod_ssl.html#sslciphersuite>; default: `HIGH`
+- `hardening_umc_session_cookie`(bool): If set to `true` the login cookie is a session cookie. Closing the browser will delete the cookie, effectively logging out the user; default: `true`
+- `hardening_umc_secure_cookie`(bool): If set, cookies are set with the secure attribute if the connection is using HTTPS; default: `true`
+- `hardening_umc_cookie_samesite`(string): Set the SameSite cookie attribute for UMC cookies. Possible values: `Strict`, `Lax` and `None`; default: `Strict`
+- `hardening_saml_idp_language_cookie_samesite`(string): Set the SameSite attribute in sthe language cookie attribute of SAML IDP. Possible values: `Strict`, `Lax` and `None`; default: `Strict`
+- `hardening_saml_idp_session_cookie_samesite`(string): Set the "SameSite" attribute in the session cookie of SAML IDP. Possible values: `Strict`, `Lax` and `None`; default: `Strict`
+- `hardening_saml_idp_session_cookie`(bool): If set to `true` the "Secure" attribute in the session cookie is activated. default: `true`
+- `hardening_saml_idp_language_cookie`(bool): If set to `true` the "Secure" attribute in the language cookie is activated. default: `true`
+- `hardening_disable_umc_http_tracebacks`(bool): If set to `true` tracebacks are no longer shown to the user in error case for umc; default: `true`
+- `hardening_disable_udm_rest_tracebacks`(bool): If set to `true` tracebacks are no longer shown to the user in ror case for udm REST; default: `true`
+- `hardening_disable_saml_idp_errors`(bool): If set to `true` tracebacks are no longer shown to the user in error case for the saml idp; default: `true`
+- `hardening_disable_saml_idp_error_reporting`(bool): If set to `true` error information and stack traces can not be reported via email to the technical contact mail address; default: `true`
+
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Harden UCS system"
+  hosts: "all"
+  roles:
+    - role: "hardening"
+      vars:
+        # hardening_disable_root_login: false  # uncomment to keep root login enabled
+        hardening_disable_http: true
+        hardening_hsts: true
+        hardening_umc_session_cookie: true
+        hardening_umc_secure_cookie: true
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### improve_usability_nextcloud
+
+This role disables some unused functionality like: `contacts`, `spreed`, `mail`, `calendar`.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+none
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Improve Nextcloud usability"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_nextcloud"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### improve_usability_ui_changes
+
+This role will improve ui.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `improve_usability_ui_changes_basedn`(): The LDAP base domain name.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Improve UI usability"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_ui_changes"
+      vars:
+        improve_usability_ui_changes_basedn: "dc=example,dc=com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### improve_usability_user_config
+
+This role improves user configuration.
+
+#### Requirements
+
+- univention.ucs_modules
+  - univention_config_registry
+
+#### Role Variables
+
+- `improve_usability_user_config_basedn`(string): The LDAP base domain name.
+- `improve_usability_user_config_external_hostname`(string): The host name that is used to talk to the system.
+- `improve_usability_user_config_install_apps`(list):  A list of applications to install.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Improve user configuration"
+  hosts: "all"
+  roles:
+    - role: "improve_usability_user_config"
+      vars:
+        improve_usability_user_config_basedn: "dc=example,dc=com"
+        improve_usability_user_config_external_hostname: "ucs.example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_apps_ox_post
+
+This role configures OX.
+
+#### Requirements
+
+- univention.ucs_modules
+  - univention_config_registry
+- community.crypto
+  - openssl_pkcs12
+- community.general
+  - java_cert
+
+#### Role Variables
+
+- `install_apps_ox_post_basedn`(string): The LDAP base domain name.
+- `install_apps_ox_post_external_hostname`(string): The host name that is used to talk to the system.
+- `install_apps_ox_post_ox_keystore_passphrase`(string): The passphrase for ox keystore.
+- `install_apps_ox_post_ox_drive_default`(string): Toggle OXDrive by setting `0`for disabled and `1` for enabled; default: `0`.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Post-install Open-Xchange"
+  hosts: "all"
+  roles:
+    - role: "install_apps_ox_post"
+      vars:
+        install_apps_ox_post_basedn: "dc=example,dc=com"
+        install_apps_ox_post_external_hostname: "ox.example.com"
+        install_apps_ox_post_ox_keystore_passphrase: "keystore-secret"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_apps_ox_pre
+
+This role prepares OX installation.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+
+#### Role Variables
+
+- `install_apps_ox_pre_external_hostname`(string): The host name that is used to talk to the system.
+- `install_apps_ox_pre_mail_domain`(string): The externally managed mail domain.
+- `install_apps_ox_pre_basedn`(string): The LDAP base domain name.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Pre-install Open-Xchange"
+  hosts: "all"
+  roles:
+    - role: "install_apps_ox_pre"
+      vars:
+        install_apps_ox_pre_external_hostname: "ox.example.com"
+        install_apps_ox_pre_basedn: "dc=example,dc=com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_branding
+
+This role installs a customer branding package.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+
+#### Role Variables
+
+- `install_branding_customer_repo_name`(string): The name of customer debian repository.
+- `install_branding_customer_repo_parts`(string): The part of customer debian repository.
+- `install_branding_customer_repo_password`(string): The password of customer debian repository.
+- `install_branding_customer_repo_server`(string): The server of customer debian repository.
+- `install_branding_customer_repo_username`(string): The username of customer debian repository.
+- `install_branding_customer_branding_package`(string): Set the name of the Debian Branding Package in the Univention Customer Repository.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Install branding package"
+  hosts: "all"
+  roles:
+    - role: "install_branding"
+      vars:
+        install_branding_customer_repo_name: "customer-repo"
+        install_branding_customer_repo_server: "repo.example.com"
+        install_branding_customer_branding_package: "customer-branding"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_lets_encrypt
+
+This role installs letsencrypt and configures it. It supports letsencrypt staging as well.
+
+#### Requirements
+
+- univention.ucs_modules
+  - univention_config_registry
+
+#### Role Variables
+
+- `install_lets_encrypt_use_letsencrypt_staging`(bool): When `false` it uses regular let's encrypt certificates, `true` switches to the staging area for testing purposes; default: `false`.
+- `install_lets_encrypt_implement_ugly_letsencrypt_workaround`(bool): Work around bugs in the let's encrypt staging implementation. This patches files in the univention letsencrypt app; default: `false`.
+- `install_lets_encrypt_temp_pw_file`(map): Ansible temporary password file.
+- `install_lets_encrypt_temp_dir`(map): Ansible temporary dir.
+- `install_lets_encrypt_service_version_map`(map): A dictionary that maps service names to specific versions that ought to be installed. See also `install_packages_force_package_upgrade` for a way to upgrade already installed software.
+- `install_lets_encrypt_service_name_list`(list): A list containing service names to be installed.
+- `install_lets_encrypt_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_lets_encrypt_service_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
+- `install_lets_encrypt_external_hostname`(string): The host name that is used to talk to the system.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Install Let's Encrypt"
+  hosts: "all"
+  roles:
+    - role: "install_lets_encrypt"
+      vars:
+        install_lets_encrypt_external_hostname: "ucs.example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_multitenant_acls
+
+Install and configure ACL package.
+
+#### Requirements
+
+- univention.ucs_modules
+  - univention_config_registry
+
+#### Role Variables
+
+- `install_multitenant_acls_customer_name`(string): The name of customer used inside ACL package.
+- `install_multitenant_acls_multitenant_acls`(list): A list of acl settings.
+    ```
+    multitenant_acls:
+      - tenant_id: "0000"
+        admin_password: ""
+      - tenant_id: "0001"
+        admin_password: ""
+      - tenant_id: "0002"
+        tenant_short_name: "test"
+        admin_password: ""
+        mail_domains: []
+    ```
+- `install_multitenant_acls_json_path`(string): The local path for ACL structure json file.
+- `install_multitenant_acls_package_name`(string): The customer specific debian package name.
+- `install_multitenant_acls_script_name`(string): The name of create acl structure script.
+- `install_multitenant_acls_keycloak_base`(string): The base url for keycloak.
+- `install_multitenant_acls_hide_logging`(boolean): Toggle template logging; default: `true`.
+- `install_multitenant_acls_server_type`(string): The ucs server type; default `"master"`.
+- `install_multitenant_acls_customer_repo_name`(string): The name of customer debian repository.
+- `install_multitenant_acls_customer_repo_parts`(string): The part of customer debian repository.
+- `install_multitenant_acls_customer_repo_password`(string): The password of customer debian repository.
+- `install_multitenant_acls_customer_repo_server`(string): The server of customer debian repository.
+- `install_multitenant_acls_customer_repo_username`(string): The username of customer debian repository.
+
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Install multitenant ACLs"
+  hosts: "all"
+  roles:
+    - role: "install_multitenant_acls"
+      vars:
+        install_multitenant_acls_customer_name: "example-customer"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_nextcloud_app
+
+This role installs an app for nextcloud
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `install_nextcloud_app_name`(string): The name of nextcloud app to be installed from store.
+- `install_nextcloud_app_opertation`(string): Define operation mode; default: `"install"`.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Install Nextcloud app"
+  hosts: "all"
+  roles:
+    - role: "install_nextcloud_app"
+      vars:
+        install_nextcloud_app_name: "contacts"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_packages
+
+This role installs univention apps with/without fixed versions.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `install_packages_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. See also `install_packages_force_package_upgrade` for a way to upgrade already installed software.
+- `install_packages_service_name_list`(list): A list containing application names to be installed.
+- `install_packages_temp_pw_file`(map): Tempfile object where univention app password is stored.
+- `install_packages_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_packages_app_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
+- `install_packages_install_apps`(list): A list of applications to install.
+- `install_packages_additional_options`(string): Additional option that could be set during install.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Install Univention apps"
+  hosts: "all"
+  roles:
+    - role: "install_packages"
+      vars:
+        install_packages_temp_pw_file: "{{ temp_pw_file }}"
+        install_packages_install_apps:
+          - "nextcloud"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_service_new_portal
+
+This role installs and configures new portal.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `install_service_new_portal_service_version_map`(map): A dictionary that maps service names to specific versions that ought to be installed. See also `install_service_new_portal_force_package_upgrade` for a way to upgrade already installed software.
+- `install_service_new_portal_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_service_new_portal_service_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
+- `install_service_new_portal_temp_file`(map): Ansible temporary dir.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Install new portal service"
+  hosts: "all"
+  roles:
+    - role: "install_service_new_portal"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### install_service_selfservice
+
+This role installs selfservice services.
+
+#### Requirements
+
+- univention.ucs_modules
+  - univention_config_registry
+
+#### Role Variables
+
+- `install_service_selfservice_service_version_map`(map): A dictionary that maps service names to specific versions that ought to be installed. See also `install_service_selfservice_force_package_upgrade` for a way to upgrade already installed software.
+- `install_service_selfservice_temp_file`(map): Ansible temporary dir.
+- `install_service_selfservice_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_service_selfservice_service_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
+- `install_service_selfservice_external_hostname`(string): The host name that is used to talk to the system.
+- `install_service_selfservice_install_services`(list): A list of services to install.
+- `install_service_selfservice_domain_name`(string): The LDAP base domain name.
+- `install_service_selfservice_password_reset_filename`(string): The name of password reset template.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Install self-service"
+  hosts: "all"
+  roles:
+    - role: "install_service_selfservice"
+      vars:
+        install_service_selfservice_external_hostname: "ucs.example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+<www.univention.com>
+
+---
+
+### intercom_service
+
+This role installs and comfigures the intercom service.
+For further information have a look at https://docs.software-univention.de/intercom_service/latest/index.html
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `intercom_service_hide_logging`(boolean): Toggle template logging; default: `true`.
+- `intercom_service_domain_name`(string): The domain name. default: `""`
+- `intercom_service_temp_pw_file`: The tmp file within the administrator password.
+- `intercom_service_settings_proxy`(string): Wether to allow connections via proxy server instead of backend directly; default: `"False"`
+- `intercom_service_settings_client_id`(string): The keycloak client ID; default: `intercom`
+- `intercom_service_settings_intercom_url`(string): URL where ICS is reachable; default: `https://ics.{{ intercom_service_domain_name }}`
+- `intercom_service_settings_base_url`(string): Base URL used to identify with the IdP; default: `https://ics.{{ intercom_service_domain_name }}`
+- `intercom_service_settings_origin_regex`(string): Defines the origin CORS regex; default: `{{ intercom_service_domain_name }}`
+- `intercom_service_keycloak_url`(string): URL of the Keycloak instance to be used as the IdP; default: `https://id.{{ intercom_service_domain_name }}`
+- `intercom_service_keycloak_realm_name`(string): Name of the realm containing the configured OIDC Intercom client; default: `ucs`
+- `intercom_service_matrix_url`(string): The URL on which the Matrix server is reachable default: `https://matrix.{{ intercom_service_domain_name }}`
+- `intercom_service_matrix_server_name`(string): The server name of the matrix server; default: `https://matrix.{{ intercom_service_domain_name }}`
+- `intercom_service_matrix_login_type`(string): The login-type ICS should use on the matrix server; default: `uk.half-shot.msc2778.login.application_service`
+- `intercom_service_matrix_nordeck_mode`(string): The connection mode of the Nordeck-bot; default: `test`
+- `intercom_service_nordeck_url`(string): The URL on which Nordeck-bot is listening; default: `https://meetings-widget-bot.{{ intercom_service_domain_name }}`
+- `intercom_service_portal_url`(string): The URL on which the Univention-Portal is listening; default: `https://portal.{{ intercom_service_domain_name }}`
+- `intercom_service_ox_origin`(string): The OX CORS origin setting; default: `https://webmail.{{ intercom_service_domain_name }}`
+- `intercom_service_ox_audience`(string): The OIDC audience settings for the OX token request send to the IdP; default: `oxoidc`
+- `intercom_service_nc_url`(string): The URL on which Nextcloud is listening on; default: `https://fs.{{ intercom_service_domain_name }}`
+- `intercom_service_nc_origin`(string): The Nextcloud CORS origin; default: `https://fs.{{ intercom_service_domain_name }}`
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+#### Intercom Service
+
+```yaml
+---
+- name: "Install Intercom Service"
+  hosts: "all"
+  tasks:
+    - name: "Install Intercom Service via Appcenter"
+      ansible.builtin.include_role:
+        name: "univention.ucs_roles.intercom_service"
+      vars:
+        intercom_service_hide_logging: false
+        intercom_service_domain_name: "ucs.test.intranet"
+        intercom_service_temp_pw_file: "{{ temp_file }}"
+        intercom_service_keycloak_realm_name: "your_keycloak_realm"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### ldapsearch_user
+
+This role adds specific LDAPSearch users.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `ldapsearch_user_basedn`(string): The LDAP base DN.
+- `ldapsearch_user_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
+- `ldapsearch_user_hide_logging`(boolean): Toggle template logging; default: `true`.
+- `ldapsearch_user_list`(list): A list of ldapsearch users to create.
+- `ldapsearch_user_list_tenantbased`(list): A list of LDAPSearch users to create.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+##### Configure LDAPSearch user
+
+```yaml
+---
+- name: "Configure LDAPSearch users"
+  hosts: "all"
+  tasks:
+    - name: "Configure LDAPSearch users"
+      ansible.builtin.include_role:
+        name: "univention.ucs_roles.ldapsearch_user"
+      vars:
+        ldapsearch_user_list:
+          - username: "ldapsearch_example"
+            name: "Name of LDAPSearch user"           # optional; default value from username
+            lastname: "Lastname of LDAPSearch user"   # optional; default value from username
+            password: "SuperSecretPassword"
+        # ...
+```
+
+##### Configure LDAPSearch user (per tenant)
+
+```yaml
+---
+- name: "Configure LDAPSearch users"
+  hosts: "all"
+  tasks:
+    - name: "Configure LDAPSearch users"
+      ansible.builtin.include_role:
+        name: "univention.ucs_roles.ldapsearch_user"
+      vars:
+        ldapsearch_user_list_tenantbased:
+          - username: "ldapsearch_example"
+            name: "Name of LDAPSearch user"                  # optional; default value from username
+            lastname: "Lastname of LDAPSearch user"          # optional; default value from username
+            password: "SuperSecretPassword"
+            tenant_ou: "ou=users,ou=root,ou=0001,ou=tenants" # position in LDAP
+        # ...
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### modify_ucs_ca
+
+Modify exisiting univention certificates.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `modify_ucs_ca_external_domain_name`(string): The external domain name.
+- `modify_ucs_ca_external_domain_part`(string): The part of an external domain eventually excluding fist subdomain.
+- `modify_ucs_ca_external_domain_prefix`(string): The first subdomain if exists.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Modify UCS certificates"
+  hosts: "all"
+  roles:
+    - role: "modify_ucs_ca"
+      vars:
+        modify_ucs_ca_external_domain_name: "portal.example.com"
+        modify_ucs_ca_external_domain_part: "example.com"
+        modify_ucs_ca_external_domain_prefix: "portal"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### ox_connector
+
+This role configures and install OX connector.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+
+#### Role Variables
+
+- `ox_connector_basedn`(string): The LDAP base dn.
+- `ox_connector_domain_name`(string): The system's dns domain name.
+- `ox_connector_domain_prefix`(string): The system's dns domain prefix. Useful when OX server is in same network
+- `ox_connector_default_context` (string): The default context that is being assigned to objects when there is no explicit definition; default: `9999`
+- `ox_connector_soap_prefix`(string): The ox soap server prefix; default: `ox-provisioning`.
+- `ox_connector_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
+- `ox_connector_temp_pw_file`(map): Tempfile object where univention app password is stored.
+- `ox_connector_master_admin`(string): The name of OX administrator.
+- `ox_connector_master_password`(string): The password of OX administrator.
+- `ox_connector_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
+- `ox_connector_template_name`(string): The name of default ox access template; default: `"standard"`.
+- `ox_connector_hide_logging`(boolean): Toggle logging of sensitive information like password; default: `true`.
+- `ox_connector_usertemplate_name`(string): Name of the User Template to be used, while creating a new user; default: "Benutzer mit Groupware-Konto".
+- `ox_connector_imap_server`(string): How the user in OX will connect to the IMAP backend, this value is relative to the OX AppSuite middleware server; default: `imap://127.0.0.1:143`
+- `ox_connector_smtp_server`(string): How the user in OX will connect to the SMTP service, this value is relative to the OX AppSuite middleware server; default: `smtp://127.0.0.1:26`
+
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure OX connector"
+  hosts: "all"
+  roles:
+    - role: "ox_connector"
+      vars:
+        ox_connector_basedn: "dc=example,dc=com"
+        ox_connector_master_admin: "oxadmin"
+        ox_connector_master_password: "secret"
+        ox_connector_domain_name: "example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### portal_category
+
+Create, modify and delete portal categories
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `portal_category_base_dn`(string): The base DN that has been used when setting up the UCS server
+- `portal_category_categories`(list): The portal categories list.
+- `portal_category_install_list`(list): Combined apps/services/customization lists.
+- `portal_category_drift_detection`(bool): Toggle drift detection and only apply differences; default: `true`.
+- `portal_category_remove_unscoped`(bool): Toggle removal of undefined categories; default: `false`.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Manage portal categories"
+  hosts: "all"
+  tasks:
+    - name: "Manage portal categories"
+      ansible.builtin.include_role:
+        name: "univention.ucs_roles.portal_category"
+      vars:
+        portal_category_base_dn: "dc=ansible,dc=univention,dc=de"
+        portal_category_install_list: ["nextcloud"]
+        portal_category_drift_detection: true
+        portal_category_remove_unscoped: false
+        portal_category_categories:
+          - name: "domain-service"
+            display_name:
+              de_DE: "Applikationen"
+              en_US: "Applications"
+            state: "present"
+            parent: "domain"
+          - name: "domain-admin"
+            display_name:
+              de_DE: "Verwaltung"
+              en_US: "Administration"
+            state: "present"
+            parent: "domain"
+          - name: "local-admin"
+            display_name:
+              de_DE: "Verwaltung"
+              en_US: "Administration"
+            state: "present"
+            parent: "local"
+          # ...
+```
+
+#### Portal categories
+
+```yaml
+portal_category_categories:
+  - name:           # (string, required) | Name of portal category.
+    display_name:   # (map)              | I18n name displayed in portal.
+      de_DE:        # (string)           | F.e. german translation.
+      en_US:        # (string)           | F.e. english translation.
+    only:           # (string)           | Modify when app defined is in `portal_category_install_list`.
+    parent:         # (string)           | The name of portal where the category should be appended to, f.e. "domain".
+    state:          # (string, required) | State of entry, should be "present" or "absent".
+    ucs_versions:   # (list)             | A list of UCS version in which the category should be modified. When no
+                    #                    |   version is omitted, category will be modified on ALL ucs versions.
+```
+
+
+#### Limitations
+
+- Modifying/Removing attributes with whitespaces are not supported by UCS 4.4
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### portal_configure_title
+
+This role configures portal title.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `portal_configure_title_basedn`(string): The LDAP base domain name.
+- `portal_configure_title_titles`(list): The new portal titles with locale in format like `de_DE "Cool Portal (Univention)"`.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure portal title"
+  hosts: "all"
+  roles:
+    - role: "portal_configure_title"
+      vars:
+        portal_configure_title_basedn: "dc=example,dc=com"
+        portal_configure_title_titles:
+          - "en_US \"My Portal (Univention)\""
+          - "de_DE \"Mein Portal (Univention)\""
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### portal_cookie_banner
+
+This roles enables/disables a cookie banner in portal frontend.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+
+#### Role Variables
 
 - `portal_configure_title_basedn`(string): The base DN that has been used when setting up the UCS server
 - `portal_configure_title_titles`(list): The cookie banner title and body.
@@ -971,436 +2655,48 @@ portal_configure_title_titles:
     text: ""
 ```
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
+```yaml
 ---
-
-# roles/univention_repository_component/README.md
-
-Univention Repository Component
-=========
-
-This role enables a univention repository component.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `univention_repository_component_name`(string): The name of customer debian repository.
-- `univention_repository_component_parts`(string): The part of customer debian repository.
-- `univention_repository_component_prefix`(string): The prefix of customer debian repository.
-- `univention_repository_component_server`(string): The server of customer debian repository.
-- `univention_repository_component_username`(string): The username of customer debian repository.
-- `univention_repository_component_password`(string): The password of customer debian repository.
-- `univention_repository_component_version`(string): The version of customer debian repository.
-- `univention_repository_component_unmaintained`(bool): Toggle unmaintained status of customer debian repository.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_office_suite/README.md
-
-Configure office suite
-=========
-
-This role configures the chosen office suite and installs it.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `configure_office_suite_office_suite`(string): Define the to be installed office suite. Defaults to `collabora-online`. A list of supported suites is defined in `configure_office_suite_supported_office_suites`; default: `"collabora-online"`.
-- `configure_office_suite_supported_office_suites`(list): A list of supported office suites that can be installed using this role. This variable is set in the role's `defaults/main.yml` and should not be changed.
-- `configure_office_suite_onlyoffice_formats`(map): A map of onlyoffice file formats to be enabled or disabled.
-- `configure_office_suite_collabora_license_key`(string): Include a valid license for collabora-online.
-- `configure_office_suite_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
-- `configure_office_suite_temp_pw_file`(map): Tempfile object where univention app password is stored.
-- `configure_office_suite_install_apps`(list): A list of applications to install.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_repository/README.md
-
-Configure repository
-=========
-
-Configure repository URLs to use own apt repository server.
-
-Requirements
-------------
-
-- univention.ucs_modules
-    - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_repository_default_repository_prefix`(string): Define access method, either `"http://"` or `"https://"`; default: `"https://"`.
-- `configure_repository_default_repository_server`(string): The repository server without any prefix or suffix or path.
-- `configure_repository_default_repository_path`(string): The repository path/suffix where repository could be found on server.
-- `configure_repository_default_repository_username`(string): Optionally configure username for authentication.
-- `configure_repository_default_repository_password`(string): Optionally configure password for authentication.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_apps_postfix/README.md
-
-Configure Postfix (apps)
-=========
-
-This role modifies postfix configuration.
-
-Requirements
-------------
-
-- univention.ucs_modules
-   - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_apps_postfix_domain_name`(string): The system's dns domain name.
-- `configure_apps_postfix_external_hostname`(string): The host name that is used to talk to the system.
-- `configure_apps_postfix_relay_port`(number): The port that is used to talk to the system; default: `25`.
-- `configure_apps_postfix_use_relay_host`(bool): Toggles if a SMTP relay host should be used; default: `false`.
-- `configure_apps_postfix_relay_host`(string): The SMTP relay hostname.
-- `configure_apps_postfix_relay_username`(string): The SMTP relay username.
-- `configure_apps_postfix_relay_password`(string): The SMTP relay password.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/univention_remove/README.md
-
-Remove packages with univention-remove
-=========
-
-This role installs packages via `univention-remove` wrapper.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `univention_remove_name`(string): The name of the package to be removed.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/univention_prune_kernels/README.md
-
-Prune Kernels Univention UCS
-=========
-
-This role prunes kernels for UCS servers in order to free space at /boot.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/set_ldap_index/README.md
-
-Configure LDAP Index
-=========
-
-This role adds/removes additional ldap indexes. Slapd.service is stopped. Run this role only in maintenance.
-Without extra vars nothing will happen.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `set_ldap_index_equality_add`(string): The name of the ldap attribute for equality searches to add; default: ""
-- `set_ldap_index_presence_add`(string): The name of the ldap attribute for presence searches to add; default: ""
-- `set_ldap_index_approx_add`(string): The name of the ldap attribute for approx searches to add; default: ""
-- `set_ldap_index_substring_add`(string): The name of the ldap attribute for substring searches to add; default: ""
-- `set_ldap_index_equality_rm`(string): The name of the ldap attribute for equality searches to remove; default: ""
-- `set_ldap_index_presence_rm`(string): The name of the ldap attribute for presence searches to remove; default: ""
-- `set_ldap_index_approx_rm`(string): The name of the ldap attribute for approx searches to remove; default: ""
-- `set_ldap_index_substring_rm`(string): The name of the ldap attribute for substring searches to remove; default: ""
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-- hosts: ucs_master
-  become: true
-  tasks:
-    - name: "include role for setting ldap index"
-      ansible.builtin.include_role:
-        name: "roles/set_ldap_index"
+- name: "Configure cookie banner"
+  hosts: "all"
+  roles:
+    - role: "portal_cookie_banner"
       vars:
-        set_ldap_index_equality_add: "isOxUser"
-        set_ldap_index_approx_rm "aAAARecord"
+        portal_cookie_banner_data:
+          de:
+            title: "Wir verwenden Cookies"
+            text: "Diese Website verwendet Cookies."
+          en:
+            title: "We are using cookies"
+            text: "This website uses cookies."
+```
 
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/improve_usability_nextcloud/README.md
-
-Improve usability nextcloud
-=========
-
-This role disables some unused functionality like: `contacts`, `spreed`, `mail`, `calendar`.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-none
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/portal_configure_title/README.md
-
-Configure Portal Title
-=========
-
-This role configures portal title.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `portal_configure_title_basedn`(string): The LDAP base domain name.
-- `portal_configure_title_titles`(list): The new portal titles with locale in format like `de_DE "Cool Portal (Univention)"`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/portal_entry/README.md
-
-Portal entry
-=========
+### portal_entry
 
 Create, modify, delete and append portal entries.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `portal_entry_base_dn`(string): The base DN that has been used when setting up the UCS server
 - `portal_entry_entries`(list): The portal entries list.
@@ -1408,20 +2704,21 @@ Role Variables
 - `portal_entry_drift_detection`(bool): Toggle drift detection and only apply differences; default: `true`.
 - `portal_entry_remove_unscoped`(bool): Toggle removal of undefined entries; default: `false`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-### Create a public login and file store
+##### Create a public login and file store
 
 ```yaml
-- hosts: all
+---
+- name: "Manage portal entries"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Manage portal entries"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.portal_entry"
       vars:
         portal_entry_base_dn: "dc=ansible,dc=univention,dc=de"
@@ -1470,8 +2767,7 @@ Example Playbook
           # ...
 ```
 
-Portal entries
-----------------
+#### Portal entries
 
 ```yaml
 portal_entry_entries:
@@ -1501,476 +2797,262 @@ portal_entry_entries:
                     #                    |  - "portal" > possible: "menuLinks", "userLinks"
 ```
 
-Limitations
-----------------
+#### Limitations
 
 - Modifying/Removing attributes with whitespaces are not supported by UCS 4.4
 - Drift detection does not detect changes in icons.
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/get_installed_apps/README.md
+### remove_packages
 
-Get installed univention apps
-=========
+This role removes univention apps with/without fixed versions.
 
-This role sets a fact with installed univention apps.
-
-Requirements
-------------
-
-- ansible.utils
-  - cli_parse
-
-Role Variables
---------------
+#### Requirements
 
 none
 
-Dependencies
-------------
+#### Role Variables
+
+- `remove_packages_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed. See also `install_packages_force_package_upgrade` for a way to upgrade already installed software.
+- `remove_packages_temp_pw_file`(map): Tempfile object where univention app password is stored.
+- `remove_packages_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_packages_app_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false
+- `remove_packages_remove_apps`(list): A list of applications to install.
+- `remove_packages_app_version_map`(map): A map of packages with/without version to be removed.
+- `remove_packages_service_name_list`(list): A list containing application names to be installed.
+
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_logrotate/README.md
-
-Configure Logrotate
-=========
-
-As is defined on the `ucr` the log files are rotated the set number of times
-before being removed. This role is used to set those numbers.
-
-Requirements
-------------
-
-- univention.ucs_modules
-   - univention_config_registry
-
-Role Variables
---------------
-- `configure_logrotate_compress`(bool): If this option is activated, log files are compressed during rotation; default: yes
-- `configure_logrotate_create`(string): Configures mode, owner and group of a log file after rotation; default: 640 root adm
-- `configure_logrotate_missingok`(bool): If this option is activated, proceed without printing an error message if a logfile is missing; default: yes
-- `configure_logrotate_notifempty`(bool): If this option is activated, empty logfiles are not rotated; default: yes
-- `configure_logrotate_rotate_count`(number): The rotation interval for system log files; default: 12
-- `configure_logrotate_rotate_handling`(string): Log files are rotated according to criterion described by `man logrotate.conf`; default: weekly
-- `configure_logrotate_syslog_rotate_count`(number): The rotation interval for syslog file; default: 7 * "rotate/count"
-- `configure_logrotate_syslog_rotate_handling`(string): Syslog file is rotated according to criterion described by `man logrotate.conf`; default: daily
-
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_group_syntax/README.md
-
-Configure group syntax
-=========
-
-Configure the group syntax and ensure the consistency on all nodes
-
-Requirements
-------------
-
-- univention.ucs_modules
-   - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_group_syntax_group_syntax`(string): group syntax desired value; default: `gid`
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_saml_single_server/README.md
-
-Configure SAML single server
-=========
-
-This role configures SAML single server.
-
-Requirements
-------------
-
-- univention.ucs_modules
-  - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_saml_single_server_external_hostname`(string): The external hostname that is used to talk to the system.
-- `configure_saml_single_server_domain_name`(string): The systems domain name.
-- `configure_saml_single_server_admin_user_name`(string): The UCS administrator's user name, defaults to "Administrator". This variable only is used when joining a backup server. Changing this will NOT change the UCS admin user name, it will only break the backup join scenario.
-- `configure_saml_single_server_temp_file`(map): Tempfile object where univention app password is stored.
-- `configure_saml_single_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. If `backup` is chosen the following variable also has to be set; default: `"master"`.
-- `configure_saml_single_server_basedn`(string): The LDAP base dn.
-- `configure_saml_single_server_remove_default_saml_provider`(bool): When set to `true` all builtin SAML provider will be removed; default: `true`.
-- `configure_saml_single_server_external_loadbalancer_ip`(string): IP address of external load balancer if used.
-- `configure_saml_single_server_domain_prefix`(string): The external prefix of load balancer
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/workaround_acmetiny_upgrade/README.md
-
-Workaround: Use specific acme tiny version
-=========
-
-This role downloads and patches acme-tiny.
-
-Requirements
-------------
-
-- ansible.posix
-  - patch
-
-Role Variables
---------------
-
-`workaround_acmetiny_upgrade_temp_dir`(map): Ansible temporary dir for workaround files.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/install_multitenant_acls/README.md
-
-Install multitenant ACLs
-=========
-
-Install and configure ACL package.
-
-Requirements
-------------
-
-- univention.ucs_modules
-  - univention_config_registry
-
-Role Variables
---------------
-
-- `install_multitenant_acls_customer_name`(string): The name of customer used inside ACL package.
-- `install_multitenant_acls_multitenant_acls`(list): A list of acl settings.
-    ```
-    multitenant_acls:
-      - tenant_id: "0000"
-        admin_password: ""
-      - tenant_id: "0001"
-        admin_password: ""
-      - tenant_id: "0002"
-        tenant_short_name: "test"
-        admin_password: ""
-        mail_domains: []
-    ```
-- `install_multitenant_acls_json_path`(string): The local path for ACL structure json file.
-- `install_multitenant_acls_package_name`(string): The customer specific debian package name.
-- `install_multitenant_acls_script_name`(string): The name of create acl structure script.
-- `install_multitenant_acls_keycloak_base`(string): The base url for keycloak.
-- `install_multitenant_acls_hide_logging`(boolean): Toggle template logging; default: `true`.
-- `install_multitenant_acls_server_type`(string): The ucs server type; default `"master"`.
-- `install_multitenant_acls_customer_repo_name`(string): The name of customer debian repository.
-- `install_multitenant_acls_customer_repo_parts`(string): The part of customer debian repository.
-- `install_multitenant_acls_customer_repo_password`(string): The password of customer debian repository.
-- `install_multitenant_acls_customer_repo_server`(string): The server of customer debian repository.
-- `install_multitenant_acls_customer_repo_username`(string): The username of customer debian repository.
-
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_keycloak_saml/README.md
-
-Configure Keycloak SAML
-=========
-
-This role configures Keycloak as SAML provider.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `configure_keycloak_saml_basedn`(string): The LDAP base dn.
-- `configure_keycloak_saml_sp_base_url`(string): The Service Provider base url.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/custom_facts/README.md
-
-Custom facts
-=========
-
-This role gathers release information and store them on remote system.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `custom_facts_templates`(list): filename(s) of templates which should be applied; default: `["deployment.fact.j2", "hotfixes.fact.j2"]`
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/intercom_service/README.md
-
-Intercom Service
-=========
-
-This role installs and comfigures the intercom service.
-For further information have a look at https://docs.software-univention.de/intercom_service/latest/index.html
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `intercom_service_hide_logging`(boolean): Toggle template logging; default: `true`.
-- `intercom_service_domain_name`(string): The domain name. default: `""`
-- `intercom_service_temp_pw_file`: The tmp file within the administrator password.
-- `intercom_service_settings_proxy`(string): Wether to allow connections via proxy server instead of backend directly; default: `"False"`
-- `intercom_service_settings_client_id`(string): The keycloak client ID; default: `intercom`
-- `intercom_service_settings_intercom_url`(string): URL where ICS is reachable; default: `https://ics.{{ intercom_service_domain_name }}`
-- `intercom_service_settings_base_url`(string): Base URL used to identify with the IdP; default: `https://ics.{{ intercom_service_domain_name }}`
-- `intercom_service_settings_origin_regex`(string): Defines the origin CORS regex; default: `{{ intercom_service_domain_name }}`
-- `intercom_service_keycloak_url`(string): URL of the Keycloak instance to be used as the IdP; default: `https://id.{{ intercom_service_domain_name }}`
-- `intercom_service_keycloak_realm_name`(string): Name of the realm containing the configured OIDC Intercom client; default: `ucs`
-- `intercom_service_matrix_url`(string): The URL on which the Matrix server is reachable default: `https://matrix.{{ intercom_service_domain_name }}`
-- `intercom_service_matrix_server_name`(string): The server name of the matrix server; default: `https://matrix.{{ intercom_service_domain_name }}`
-- `intercom_service_matrix_login_type`(string): The login-type ICS should use on the matrix server; default: `uk.half-shot.msc2778.login.application_service`
-- `intercom_service_matrix_nordeck_mode`(string): The connection mode of the Nordeck-bot; default: `test`
-- `intercom_service_nordeck_url`(string): The URL on which Nordeck-bot is listening; default: `https://meetings-widget-bot.{{ intercom_service_domain_name }}`
-- `intercom_service_portal_url`(string): The URL on which the Univention-Portal is listening; default: `https://portal.{{ intercom_service_domain_name }}`
-- `intercom_service_ox_origin`(string): The OX CORS origin setting; default: `https://webmail.{{ intercom_service_domain_name }}`
-- `intercom_service_ox_audience`(string): The OIDC audience settings for the OX token request send to the IdP; default: `oxoidc`
-- `intercom_service_nc_url`(string): The URL on which Nextcloud is listening on; default: `https://fs.{{ intercom_service_domain_name }}`
-- `intercom_service_nc_origin`(string): The Nextcloud CORS origin; default: `https://fs.{{ intercom_service_domain_name }}`
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-## Intercom Service
+#### Example Playbook
 
 ```yaml
-- hosts: all
-  tasks:
-    - name: "Install Intercom Service via Appcenter"
-      ansible.builtin.include_role:
-        name: "univention.ucs_roles.intercom_service"
+---
+- name: "Remove Univention apps"
+  hosts: "all"
+  roles:
+    - role: "remove_packages"
       vars:
-        intercom_service_hide_logging: false
-        intercom_service_domain_name: "ucs.test.intranet"
-        intercom_service_temp_pw_file: "{{ temp_file }}"
-        intercom_service_keycloak_realm_name: "your_keycloak_realm"
-
+        remove_packages_temp_pw_file: "{{ temp_pw_file }}"
+        remove_packages_remove_apps:
+          - "nextcloud"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/ucs_join/README.md
+### set_dns_glue_record
 
-UCS join
-=========
+Set a DNS Nameserver Glue record.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `set_dns_glue_record_create_external_hostname_glue_record`(bool): If set to `true` a DNS Glue record is set if not already exists; default: `true
+- `set_dns_glue_record_fqdn`(string): Use this variable if remotes hostname is only available as FQDN or set `set_dns_glue_record_host_name`directly.
+- `set_dns_glue_record_host_name`(string): Use this variable for remotes hostname otherwise use `set_dns_glue_record_fqdn` for FQDN hostnames.
+- `set_dns_glue_record_domain_name`(string): Use this variable to set remotes domain name or set `set_dns_glue_record_superordinate`directly.
+- `set_dns_glue_record_basedn`(string):  Use this variable to set remotes base domain name or set `set_dns_glue_record_superordinate`directly.
+- `set_dns_glue_record_superordinate`(string): Define superordinate user use `set_dns_glue_record_domain_name` and `set_dns_glue_record_basedn`.
+- `set_dns_glue_record_glue_record_nameserver`(string): The target nameserver as FQDN that is used to resolve the external hostname.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Set DNS glue record"
+  hosts: "all"
+  roles:
+    - role: "set_dns_glue_record"
+      vars:
+        set_dns_glue_record_glue_record_nameserver: "ns1.example.com"
+        set_dns_glue_record_domain_name: "example.com"
+        set_dns_glue_record_basedn: "dc=example,dc=com"
+        set_dns_glue_record_host_name: "ucs"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### set_feedback_mail_address
+
+
+#### Requirements
+
+- univention.ucs_modules
+   - univention_config_registry
+
+#### Role Variables
+- `set_feedback_mail_address_web_feedback_mail`(string): Email address configured to send the traceback if occurs an error in the Univention Management Console; default: `feedback@univention.de`
+
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Set feedback mail address"
+  hosts: "all"
+  roles:
+    - role: "set_feedback_mail_address"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### set_ldap_index
+
+This role adds/removes additional ldap indexes. Slapd.service is stopped. Run this role only in maintenance.
+Without extra vars nothing will happen.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `set_ldap_index_equality_add`(string): The name of the ldap attribute for equality searches to add; default: ""
+- `set_ldap_index_presence_add`(string): The name of the ldap attribute for presence searches to add; default: ""
+- `set_ldap_index_approx_add`(string): The name of the ldap attribute for approx searches to add; default: ""
+- `set_ldap_index_substring_add`(string): The name of the ldap attribute for substring searches to add; default: ""
+- `set_ldap_index_equality_rm`(string): The name of the ldap attribute for equality searches to remove; default: ""
+- `set_ldap_index_presence_rm`(string): The name of the ldap attribute for presence searches to remove; default: ""
+- `set_ldap_index_approx_rm`(string): The name of the ldap attribute for approx searches to remove; default: ""
+- `set_ldap_index_substring_rm`(string): The name of the ldap attribute for substring searches to remove; default: ""
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Set LDAP index"
+  hosts: "all"
+  roles:
+    - role: "set_ldap_index"
+      vars:
+        set_ldap_index_equality_add: "isOxUser"
+        set_ldap_index_approx_rm: "aAAARecord"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### ucs_add_admin_user
+
+This role adds an administrative UCS user.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `ucs_add_admin_user_basedn`(string): The LDAP base domain name.
+- `ucs_add_admin_user_username`(string): The username for the administrative user.
+- `ucs_add_admin_user_firstname`(string): The firstname for the administrative user.
+- `ucs_add_admin_user_lastname`(string): The lastname for the administrative user.
+- `ucs_add_admin_user_password`(string): The password for the administrative user.
+- `ucs_add_admin_user_recoveryemail`(string): The recovery email address for the administrative user.
+- `ucs_add_admin_user_attrib_list`(map): A map of attributes & values to set for the administrative user.
+- `ucs_add_admin_user_group_list`(list): A list of group names to append the administrative user to.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Add admin user"
+  hosts: "all"
+  roles:
+    - role: "ucs_add_admin_user"
+      vars:
+        ucs_add_admin_user_basedn: "dc=example,dc=com"
+        ucs_add_admin_user_username: "adminuser"
+        ucs_add_admin_user_firstname: "Admin"
+        ucs_add_admin_user_lastname: "User"
+        ucs_add_admin_user_password: "secret"
+        ucs_add_admin_user_recoveryemail: "admin@example.com"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### ucs_join
 
 This role runs a UCS Join on master or backup servers.
 
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
 - `ucs_join_derive_root_password_from_hostname`(bool): Creates a unique root/admin password that is derived from the host name, or rather the numeric part of it.
 - `ucs_join_derive_root_password_prefix`(string): The prefix that is used before the numeric part in derived passwords.
@@ -1991,20 +3073,21 @@ Role Variables
 - `ucs_join_network_config_static_routes`(list): A list of static routes, which should be attached to interfaces.
 - `ucs_join_hide_logging`(boolean): Toggle template logging; default: `true`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-### Configure static network interface
+##### Configure static network interface
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_type: "static"
@@ -2017,12 +3100,15 @@ Example Playbook
         # ...
 ```
 
-### Configure additional network interfaces
+##### Configure additional network interfaces
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_type: "static"
@@ -2032,12 +3118,15 @@ Example Playbook
         # ...
 ```
 
-### Configure additional network routes
+##### Configure additional network routes
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_network_config_static_routes:
@@ -2050,7 +3139,7 @@ Example Playbook
         # ...
 ```
 
-### Configure nameservers
+##### Configure nameservers
 
 Matrix: How the nameservers should configured.
 
@@ -2063,130 +3152,337 @@ All domaincontroller_* has a dns server installed.
 | nameserver3 |                         | fallback_nameserver     | domaincontroller_backup | domaincontroller_slave  |
 
 ```yaml
-- hosts: all
+---
+- name: "Join UCS domain"
+  hosts: "all"
   tasks:
-    - ansible.builtin.include_role:
+    - name: "Join UCS domain"
+      ansible.builtin.include_role:
         name: "univention.ucs_roles.ucs_join"
       vars:
         ucs_join_nameservers:
           nameserver1:
             # local ip
+            # yamllint disable-line rule:line-length
             server: "{{ ansible_local['ucr']['interfaces/' + ansible_local['ucr']['interfaces/primary'] + '/address'] }}"
           nameserver2:
             server: "8.8.8.8"
-            state: 'present'
+            state: "present"
           nameserver3:
-            state: 'absent'
+            state: "absent"
 ```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/univention_install/README.md
+### umc_permissions
 
-Install packages with univention-install
-=========
+This role updates UMC permissions.
 
-This role installs packages via `univention-install` wrapper.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `univention_install_name`(string): The name of the package to be installed.
-- `univention_install_clear_apt_cache`(bool): Clear all downloaded packages to reduce package conflicts; default: `false`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_amazon_metadata_server/README.md
-
-
-Configure amazon metadata server
-================================
-
-Enable or disable UCS calling Amazon's metadata server
-
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
    - univention_config_registry
 
-Role Variables
---------------
+#### Role Variables
 
-- `configure_amazon_metadata_server_call`(boolen): Defines if the amazon metadata server should be called; default: `false`
+- `umc_permissions_basedn`(string): The LDAP base domain name.
+- `umc_permissions_passwordreset_blacklist_groups`(string): The name of LDAP groups which are not allowed to reset their password.
+- `umc_permissions_passwordreset_whitelist_groups`(string): The name of LDAP groups which are allowed to reset their password.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure UMC permissions"
+  hosts: "all"
+  roles:
+    - role: "umc_permissions"
+      vars:
+        umc_permissions_basedn: "dc=example,dc=com"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/univention_upgrade/README.md
+### umc_policies_maintenance
 
-Upgrade Univention UCS
-=========
+This role sets UMC maintenance policies.
 
-This role upgrade UCS to a specific version.
-
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
+
+- `umc_policies_maintenance_autoupdate_enabled`(bool): Toogle autoupdate status; default: `true`.
+- `umc_policies_maintenance_basedn`(string): The LDAP base domain name.
+- `umc_policies_maintenance_patchhour`(string): The chosen hour for univention-update; default: `5`.
+- `umc_policies_maintenance_patchminute`(string): The choosen minute for univention-update; default: `00`.
+- `umc_policies_maintenance_patchday`(String): The chosen day for univention-update; default: `Tuesday`.
+- `umc_policies_maintenance_release_version`(string): The univention release version.
+- `umc_policies_maintenance_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure maintenance policies"
+  hosts: "all"
+  roles:
+    - role: "umc_policies_maintenance"
+      vars:
+        umc_policies_maintenance_basedn: "dc=example,dc=com"
+        umc_policies_maintenance_release_version: "5.2-0"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### univention_firewall
+Univention firewall rules.
+
+=========
+Manage predefined univention-firewall rules.
+
+#### Requirements
+
+- univention.ucs_modules
+    - univention_config_registry
+
+#### Role Variables
+
+- `univention_firewall_telegraf`(string): Set firewall status of telegraf service; default: `"ACCEPT"`.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Configure firewall rules"
+  hosts: "all"
+  roles:
+    - role: "univention_firewall"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### univention_install
+
+This role installs packages via `univention-install` wrapper.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `univention_install_name`(string): The name of the package to be installed.
+- `univention_install_clear_apt_cache`(bool): Clear all downloaded packages to reduce package conflicts; default: `false`.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Install package"
+  hosts: "all"
+  roles:
+    - role: "univention_install"
+      vars:
+        univention_install_name: "ntp"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### univention_prune_kernels
+
+This role prunes kernels for UCS servers in order to free space at /boot.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Prune old kernels"
+  hosts: "all"
+  roles:
+    - role: "univention_prune_kernels"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### univention_remove
+
+This role installs packages via `univention-remove` wrapper.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `univention_remove_name`(string): The name of the package to be removed.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Remove package"
+  hosts: "all"
+  roles:
+    - role: "univention_remove"
+      vars:
+        univention_remove_name: "nano"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### univention_repository_component
+
+This role enables a univention repository component.
+
+#### Requirements
+
+none
+
+#### Role Variables
+
+- `univention_repository_component_name`(string): The name of customer debian repository.
+- `univention_repository_component_parts`(string): The part of customer debian repository.
+- `univention_repository_component_prefix`(string): The prefix of customer debian repository.
+- `univention_repository_component_server`(string): The server of customer debian repository.
+- `univention_repository_component_username`(string): The username of customer debian repository.
+- `univention_repository_component_password`(string): The password of customer debian repository.
+- `univention_repository_component_version`(string): The version of customer debian repository.
+- `univention_repository_component_unmaintained`(bool): Toggle unmaintained status of customer debian repository.
+
+#### Dependencies
+
+none
+
+#### Example Playbook
+
+```yaml
+---
+- name: "Enable repository component"
+  hosts: "all"
+  roles:
+    - role: "univention_repository_component"
+      vars:
+        univention_repository_component_name: "my-custom-repo"
+        univention_repository_component_server: "repo.example.com"
+        univention_repository_component_prefix: "https://"
+        univention_repository_component_parts: "maintained"
+```
+
+#### License
+
+GNU General Public License v3.0
+
+#### Author Information
+
+Univention GmbH
+www.univention.com
+
+---
+
+### univention_upgrade
+
+This role upgrade UCS to a specific version.
+
+#### Requirements
+
+none
+
+#### Role Variables
 
 - `univention_upgrade_version`(string): The UCS' version number to upgrade to; default: `"4.4-99"`.
 - `univention_upgrade_clear_apt_cache`(bool): Clear all downloaded packages to reduce package conflicts; default: `false`.
@@ -2196,1014 +3492,43 @@ Role Variables
 - `univention_upgrade_username`(string): Username of administrative user for app updates; default: `Administrator`.
 - `univention_upgrade_password_file`(string): Path to the file on the server that contains the user password if `univention_upgrade_app_updates=true`; default: `""`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/umc_permissions/README.md
-
-Update UMC permissions
-=========
-
-This role updates UMC permissions.
-
-Requirements
-------------
-
-- univention.ucs_modules
-   - univention_config_registry
-
-Role Variables
---------------
-
-- `umc_permissions_basedn`(string): The LDAP base domain name.
-- `umc_permissions_passwordreset_blacklist_groups`(string): The name of LDAP groups which are not allowed to reset their password.
-- `umc_permissions_passwordreset_whitelist_groups`(string): The name of LDAP groups which are allowed to reset their password.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/ldapsearch_user/README.md
-
-LDAPSearch user
-=========
-
-This role adds specific LDAPSearch users.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `ldapsearch_user_basedn`(string): The LDAP base DN.
-- `ldapsearch_user_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
-- `ldapsearch_user_hide_logging`(boolean): Toggle template logging; default: `true`.
-- `ldapsearch_user_list`(list): A list of ldapsearch users to create.
-- `ldapsearch_user_list_tenantbased`(list): A list of LDAPSearch users to create.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-### Configure LDAPSearch user
+#### Example Playbook
 
 ```yaml
-- hosts: all
-  tasks:
-    - ansible.builtin.include_role:
-        name: "univention.ucs_roles.ldapsearch_user"
+---
+- name: "Upgrade UCS"
+  hosts: "all"
+  roles:
+    - role: "univention_upgrade"
       vars:
-        ldapsearch_user_list:
-          - username: "ldapsearch_example"
-            name: "Name of LDAPSearch user"           # optional; default value from username
-            lastname: "Lastname of LDAPSearch user"   # optional; default value from username
-            password: "SuperSecretPassword"
-        # ...
+        univention_upgrade_version: "5.2-99"
 ```
 
-### Configure LDAPSearch user (per tenant)
-
-```yaml
-- hosts: all
-  tasks:
-    - ansible.builtin.include_role:
-        name: "univention.ucs_roles.ldapsearch_user"
-      vars:
-        ldapsearch_user_list_tenantbased:
-          - username: "ldapsearch_example"
-            name: "Name of LDAPSearch user"                  # optional; default value from username
-            lastname: "Lastname of LDAPSearch user"          # optional; default value from username
-            password: "SuperSecretPassword"
-            tenant_ou: "ou=users,ou=root,ou=0001,ou=tenants" # position in LDAP
-        # ...
-```
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_apps_owncloud/README.md
-
-Configure Owncloud (apps)
-=========
-
-Configure UCS app owncloud.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-none
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/hardening/README.md
-
-Hardening system
-=========
-
-This role reduces security risks by disabling default settings, like root login.
-
-Requirements
-------------
-
-- univention.ucs_modules
-   - univention_config_registry
-
-Role Variables
---------------
-
-- `hardening_disable_http`(bool): If set to `true`, `http` will be disabled in apache2. Only `https` will be available; default: `true`
-- `hardening_hsts`(bool): If set to `true` HTTP Strict Transport Security is enabled for apache2 ; default: `true`
-- `hardening_apache2_ssl_tlsv13`(bool): If set to `true` ssl tlsv11 and tlsv12 are disabled for apache2; default: `true`
-- `hardening_apache2_server_tokens`(string): Set apache2 configuration to `Prod`, `Major`, `Minor`, `Min`, `OS`or `Full`. Details: https://httpd.apache.org/docs/2.4/mod/core.html#servertokens ; default: `Prod`
-- `hardening_apache2_server_signature`(string): Set apache2 configuration to `Off` , `EMail` or `On`. Details: https://httpd.apache.org/docs/2.4/mod/core.html#serversignature ; default: `Off`
-- `hardening_honorcipherorder`(string): During the negotiation of cryptographic algorithms during the setup of a SSL/TLS connection the preference of the client is used by default. If this option is enabled, the preference of the server is used instead. The list of algorithms offered by Apache can be configured with the variable 'apache2/ssl/ciphersuite'; default: `true`
-- `hardening_ciphersuite`(string): his configures the cryptopgraphic algorithms which are offered to clients during a SSL handshake. The format is described at <http://httpd.apache.org/docs/2.4/mod/mod_ssl.html#sslciphersuite>; default: `HIGH`
-- `hardening_umc_session_cookie`(bool): If set to `true` the login cookie is a session cookie. Closing the browser will delete the cookie, effectively logging out the user; default: `true`
-- `hardening_umc_secure_cookie`(bool): If set, cookies are set with the secure attribute if the connection is using HTTPS; default: `true`
-- `hardening_umc_cookie_samesite`(string): Set the SameSite cookie attribute for UMC cookies. Possible values: `Strict`, `Lax` and `None`; default: `Strict`
-- `hardening_saml_idp_language_cookie_samesite`(string): Set the SameSite attribute in sthe language cookie attribute of SAML IDP. Possible values: `Strict`, `Lax` and `None`; default: `Strict`
-- `hardening_saml_idp_session_cookie_samesite`(string): Set the "SameSite" attribute in the session cookie of SAML IDP. Possible values: `Strict`, `Lax` and `None`; default: `Strict`
-- `hardening_saml_idp_session_cookie`(bool): If set to `true` the "Secure" attribute in the session cookie is activated. default: `true`
-- `hardening_saml_idp_language_cookie`(bool): If set to `true` the "Secure" attribute in the language cookie is activated. default: `true`
-- `hardening_disable_umc_http_tracebacks`(bool): If set to `true` tracebacks are no longer shown to the user in error case for umc; default: `true`
-- `hardening_disable_udm_rest_tracebacks`(bool): If set to `true` tracebacks are no longer shown to the user in ror case for udm REST; default: `true`
-- `hardening_disable_saml_idp_errors`(bool): If set to `true` tracebacks are no longer shown to the user in error case for the saml idp; default: `true`
-- `hardening_disable_saml_idp_error_reporting`(bool): If set to `true` error information and stack traces can not be reported via email to the technical contact mail address; default: `true`
-
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_ntp_servers/README.md
-
-Configure NTP servers
-=========
-
-This role configures NTP timeservers.
-
-Requirements
-------------
-
-- univention.ucs_modules
-  - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_ntp_servers_timeservers`(list): A list of ntp server addresses; default `["ptbtime1.ptb.de", "ptbtime2.ptb.de", "ptbtime3.ptb.de"]`
-
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_keycloak_client/README.md
-
-Configure keycloak client
-=========
-
-This role configures ucs to properly use keycloak.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `configure_keycloak_client_oidc_broker_secret`(string): The client password used in the IDP creation.
-- `configure_keycloak_client_keycloak_password`(string): The keycloaks password.
-- `configure_keycloak_client_basedn`(string): The LDAP base domain name.
-- `configure_keycloak_client_keycloak_server_id`(string): The OpenID Connect IDP broker ID. This is used in both config modes.
-- `configure_keycloak_client_keycloak_server`(string): The server the UCS system with authenticate against.
-- `configure_keycloak_client_config_type`(string): This variable determines if the keycloak server configuration is done using this role (`dynamic`) or if things already have been configured and only the UCS side has to be configured (`static`). `dynamic` usually is used for setups with a lot of turnover, `static` is used in a more static environment. If set to 'none' keycloak configuration as a whole will be skipped, including the "client" side; default: `dynamic`.
-- `configure_keycloak_client_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/extend_root_lvm_volume/README.md
-
-Extend root LVM volume
-=========
-
-Extend the root volume to all available space. Helpful when using a prebuild image and additional space is required.
-
-Requirements
-------------
-
-- community.general
-  - parted
-  - lvg
-  - lvol
-
-Role Variables
---------------
-
-- `extend_root_lvm_volume_extend_lvm_to_whole_disk`(bool): If true, root volume is extended to available space; default: `true`
-- `extend_root_lvm_volume_lvm_disk`(string): The "physical" disk to partition without the "/dev/" part, for instance "sda" for "/dev/sda". Defaults to what is used in the Univention QCOW image; default: `"vda"`
-- `extend_root_lvm_volume_lvm_vg_name`(string): The volume group the data volume resides in.  Defaults to what is used in the Univention QCOW image; default: `"vg_ucs"`
-- `extend_root_lvm_volume_lvm_data_volume`(string): The LVM name used for the data volume. Defaults to what is used in the Univention QCOW image; default: `"root"`
-- `extend_root_lvm_volume_existing_lvm_partition_number`(number): The existing lvm partition number. Defaults to what is used in the Univention QCOW image; default: `2`
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/ucs_add_admin_user/README.md
-
-Add UCS admin user
-=========
-
-This role adds an administrative UCS user.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `ucs_add_admin_user_basedn`(string): The LDAP base domain name.
-- `ucs_add_admin_user_username`(string): The username for the administrative user.
-- `ucs_add_admin_user_firstname`(string): The firstname for the administrative user.
-- `ucs_add_admin_user_lastname`(string): The lastname for the administrative user.
-- `ucs_add_admin_user_password`(string): The password for the administrative user.
-- `ucs_add_admin_user_recoveryemail`(string): The recovery email address for the administrative user.
-- `ucs_add_admin_user_attrib_list`(map): A map of attributes & values to set for the administrative user.
-- `ucs_add_admin_user_group_list`(list): A list of group names to append the administrative user to.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/improve_usability_user_config/README.md
-
-Improve usability user configuration
-=========
-
-This role improves user configuration.
-
-Requirements
-------------
-
-- univention.ucs_modules
-  - univention_config_registry
-
-Role Variables
---------------
-
-- `improve_usability_user_config_basedn`(string): The LDAP base domain name.
-- `improve_usability_user_config_external_hostname`(string): The host name that is used to talk to the system.
-- `improve_usability_user_config_install_apps`(list):  A list of applications to install.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/force_package_list_update/README.md
-
-Force package list update
-=========
-
-This role updates univention and apt package lists.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-none
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/set_feedback_mail_address/README.md
-
-Set feedback mail address
-=========
-
-
-Requirements
-------------
-
-- univention.ucs_modules
-   - univention_config_registry
-
-Role Variables
---------------
-- `set_feedback_mail_address_web_feedback_mail`(string): Email address configured to send the traceback if occurs an error in the Univention Management Console; default: `feedback@univention.de`
-
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_monitoring/README.md
-
-Configure Monitoring
-=========
-
-This role configures monitoring related settings.
-
-Requirements
-------------
-
-- univention.ucs_modules
-    - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_monitoring_ldap_enabled`(string): Toggle `ldap/monitor` ucr setting; default: `"true"`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/set_dns_glue_record/README.md
-
-Set DNS Glue record
-=========
-
-Set a DNS Nameserver Glue record.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `set_dns_glue_record_create_external_hostname_glue_record`(bool): If set to `true` a DNS Glue record is set if not already exists; default: `true
-- `set_dns_glue_record_fqdn`(string): Use this variable if remotes hostname is only available as FQDN or set `set_dns_glue_record_host_name`directly.
-- `set_dns_glue_record_host_name`(string): Use this variable for remotes hostname otherwise use `set_dns_glue_record_fqdn` for FQDN hostnames.
-- `set_dns_glue_record_domain_name`(string): Use this variable to set remotes domain name or set `set_dns_glue_record_superordinate`directly.
-- `set_dns_glue_record_basedn`(string):  Use this variable to set remotes base domain name or set `set_dns_glue_record_superordinate`directly.
-- `set_dns_glue_record_superordinate`(string): Define superordinate user use `set_dns_glue_record_domain_name` and `set_dns_glue_record_basedn`.
-- `set_dns_glue_record_glue_record_nameserver`(string): The target nameserver as FQDN that is used to resolve the external hostname.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_sso_openid/README.md
-
-Configure SSO OpenID Connect
-=========
-
-This role configures OpenID Connect OIDC for apps like open-xchange or nextcloud.
-
-Requirements
-------------
-
-- univention.ucs_modules
-    - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_sso_openid_app_version_map`(map): A dictionary that maps application names to specific versions that ought to be installed.
-- `configure_sso_openid_temp_pw_file`(map): Tempfile object where univention app password is stored.
-- `configure_sso_openid_install_apps`(list): A list of applications to install.
-- `configure_sso_openid_basedn`(string): The systems base dn.
-- `configure_sso_openid_signing_method`(string): The signing method; default: `"RS256"`.
-- `configure_sso_openid_external_hostname`(string): The external hostname that is used to talk to the system.
-- `configure_sso_openid_clients`(map): A map of client configurations, supported `nexcloud` and `ox`.
-
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-### Configure OpenID clients
-
-```yaml
-- hosts: all
-  tasks:
-    - ansible.builtin.include_role:
-        name: "univention.ucs_roles.configure_sso_openid"
-      vars:
-        configure_sso_openid_clients:
-          nextcloud:
-            name: "nextcloud"
-            clientid: "nextcloud"
-            clientsecret: "notverysafe"
-          ox:
-            name: "open-xchange"
-            clientid: "open-xchange"
-            clientsecret: "notverysafe"
-        # ...
-```
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/install_lets_encrypt/README.md
-
-Install letsencrypt
-=========
-
-This role installs letsencrypt and configures it. It supports letsencrypt staging as well.
-
-Requirements
-------------
-
-- univention.ucs_modules
-  - univention_config_registry
-
-Role Variables
---------------
-
-- `install_lets_encrypt_use_letsencrypt_staging`(bool): When `false` it uses regular let's encrypt certificates, `true` switches to the staging area for testing purposes; default: `false`.
-- `install_lets_encrypt_implement_ugly_letsencrypt_workaround`(bool): Work around bugs in the let's encrypt staging implementation. This patches files in the univention letsencrypt app; default: `false`.
-- `install_lets_encrypt_temp_pw_file`(map): Ansible temporary password file.
-- `install_lets_encrypt_temp_dir`(map): Ansible temporary dir.
-- `install_lets_encrypt_service_version_map`(map): A dictionary that maps service names to specific versions that ought to be installed. See also `install_packages_force_package_upgrade` for a way to upgrade already installed software.
-- `install_lets_encrypt_service_name_list`(list): A list containing service names to be installed.
-- `install_lets_encrypt_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_lets_encrypt_service_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
-- `install_lets_encrypt_external_hostname`(string): The host name that is used to talk to the system.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/install_service_new_portal/README.md
-
-Install new portal (service)
-=========
-
-This role installs and configures new portal.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `install_service_new_portal_service_version_map`(map): A dictionary that maps service names to specific versions that ought to be installed. See also `install_service_new_portal_force_package_upgrade` for a way to upgrade already installed software.
-- `install_service_new_portal_force_package_upgrade`(bool): If set to true already installed application versions are checked and if the installed version differs from what has been specified in `install_service_new_portal_service_version_map` that version is installed instead. Choosing `false` results in the role ignoring already installed software and skip installation; default: `false`.
-- `install_service_new_portal_temp_file`(map): Ansible temporary dir.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_password_policies/README.md
-
-Configure UCS Password Policies
-===============================
-
-This role configures password policies via UCR.
-A dn of a policy is required.
-All users with this plocicy referenced will get these settings.
-
-Requirements
-------------
-
-- univention.ucs_modules
-    - univention_config_registry
-    - univention_directory_manager
-
-Role Variables
---------------
-
-- `configure_password_policies_dn`(string): At least there should be one policy with activated Checks. The full dn is needed; default: not set
-- `configure_password_policies_quality_min_lenght`(string): Sets the minimum password length; default: `8`
-- `configure_password_policies_quality_required_chars`(string): Sets required chars for setting new passwords; default: `none`
-- `configure_password_policies_quality_forbidden_chars`(string): Sets forbidden chars for setting new passwords; default: `none`
-- `configure_password_policies_quality_credit_digits`(string): Sets the minimum number of digits in the new password; ; default: `1`
-- `configure_password_policies_quality_credit_upper`(string): Sets the minimum number of upper case letters; default: `1`
-- `configure_password_policies_quality_credit_other`(string): Sets the minimum number of chars wich are neither digits nor letters; default: `1`
-- `configure_password_policies_quality_credit_lower`(string): Sets the minimum number of lower case letters; default: `1`
-- `configure_password_policies_quality_mspolicy`(string): Sets the microsoft policy complexity criteria. If `1`,`true` or `yes` this will b eon top of the dafault python-cracklib. If `sufficient` only ms policy complexity will be used and if `false` only python-cracklib will be used. default: `1`
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/workaround_high_mtu/README.md
-
-Workaround: Fix MTU for Docker
-=========
-
-When MTU in Docker `1500` is higher than the one for network interface, this
-role sets the Docker MTU to `1400`.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-none
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_network_interface_names/README.md
-
-Configure network interface names
-=========
-
-This role configures network interface names as GRUB boot parameter, resulting in network interface names like eth0.
-
-Requirements
-------------
-
-- univention.ucs_modules
-    - univention_config_registry
-
-Role Variables
---------------
-
-- `configure_network_interface_names_use_old_names`(boolean): Set the GRUB parameter for old interface names; default: `true`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/disable_ipv6/README.md
-
-Disable IPv6
-=========
-
-This role disables IPv6 on system via modprobe.
-
-Requirements
-------------
-
-- ansible.posix
-  - sysctl
-
-Role Variables
---------------
-
-none
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/install_apps_ox_post/README.md
-
-Post installation steps of OpenXchange (OX)
-=========
-
-This role configures OX.
-
-Requirements
-------------
-
-- univention.ucs_modules
-  - univention_config_registry
-- community.crypto
-  - openssl_pkcs12
-- community.general
-  - java_cert
-
-Role Variables
---------------
-
-- `install_apps_ox_post_basedn`(string): The LDAP base domain name.
-- `install_apps_ox_post_external_hostname`(string): The host name that is used to talk to the system.
-- `install_apps_ox_post_ox_keystore_passphrase`(string): The passphrase for ox keystore.
-- `install_apps_ox_post_ox_drive_default`(string): Toggle OXDrive by setting `0`for disabled and `1` for enabled; default: `0`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/update_users_ssh_keys/README.md
-
-Update users SSH keys
-=========
+### update_users_ssh_keys
 
 This role adds and removes SSH keys from user.
 
-Requirements
-------------
+#### Requirements
 
 - ansible.posix
   - authorized_key
 
-File Structure
---------------
+#### File Structure
 
 ```text
 files/
@@ -3219,474 +3544,152 @@ files/
  |       +-- *.pubkey
 ```
 
-Role Variables
---------------
+#### Role Variables
 
 - `update_users_ssh_keys_user`(string): Name of local user where SSH keys should be added/removed.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/add_local_user/README.md
-
-Add local user
-=========
-
-This role creates a local user with ssh login permissions.
-
-Requirements
-------------
-
-- univention.ucs_modules
-  - univention_config_registry
-
-Role Variables
---------------
-
-- `add_local_user_user`(map): A map containing user information:
-```
-add_local_user_user:
-    name:         # username; default; "ansible"
-    comment:      # user comment; default: "ansible user"
-    password:     # hashed password of user; default:  "{{ "ansible"|password_hash('sha512') }}"
-    sshkey_file:  # ssh key filename; default: empty
-    sshkey:       # ssh key as string; default: empty
-    state:        # toggle if user should be present or absent; default: present
-```
-- `add_local_user_default_shell`(string): Default user shell; default: `/bin/bash`
-- `add_local_user_default_password_policy`(string): Default password update policy.
-  Possible values are `"on_create"` and `"always"`; default `"on_create"`.
-- `add_local_user_system_user`(bool): `true` if the user should be a system user instead of a human; default: `true`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/install_branding/README.md
-
-Install branding package
-=========
-
-This role installs a customer branding package.
-
-Requirements
-------------
-
-- univention.ucs_modules
-    - univention_config_registry
-
-Role Variables
---------------
-
-- `install_branding_customer_repo_name`(string): The name of customer debian repository.
-- `install_branding_customer_repo_parts`(string): The part of customer debian repository.
-- `install_branding_customer_repo_password`(string): The password of customer debian repository.
-- `install_branding_customer_repo_server`(string): The server of customer debian repository.
-- `install_branding_customer_repo_username`(string): The username of customer debian repository.
-- `install_branding_customer_branding_package`(string): Set the name of the Debian Branding Package in the Univention Customer Repository.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/configure_license/README.md
-
-Configure UCS license
-=========
-
-This role helps to apply an existing license file or claims a new license from shop.
-
-Requirements
-------------
-
-none
-
-File Structure
---------------
-
-```text
-files/
- |
- +-- license_client.py
-```
-
-Role Variables
---------------
-
-- `configure_license_validity`(string): The validity period for the license in a format GNU date is able to understand as a time period, like "12 weeks".
-- `configure_license_shop_password`(string): The shop user's password, best stored in a secrets manager or encrypted via ansible-vault.
-- `configure_license_shop_id`(number): Which license shop to use when obtaining a new license for the server.
-- `configure_license_shop_username`(string): The shop's user name, needed for authentication.
-- `configure_license_max_users`(number): How many users to allow on the server.
-- `configure_license_basedn`(string): The LDAP base domain name.
-- `configure_license_type`(string): Choose one of `local_license` or `server_license`. When choosing `local_license` a license file name has to be provided otherwise choose `server_license` and one is generated; default: `server_license`.
-- `configure_license_file`(string): If `configure_license_type` set to `local_license` then provide license file name here; default: `false`.
-- `configure_license_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/portal_category/README.md
-
-Portal category
-=========
-
-Create, modify and delete portal categories
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `portal_category_base_dn`(string): The base DN that has been used when setting up the UCS server
-- `portal_category_categories`(list): The portal categories list.
-- `portal_category_install_list`(list): Combined apps/services/customization lists.
-- `portal_category_drift_detection`(bool): Toggle drift detection and only apply differences; default: `true`.
-- `portal_category_remove_unscoped`(bool): Toggle removal of undefined categories; default: `false`.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
+#### Example Playbook
 
 ```yaml
-- hosts: all
-  tasks:
-    - ansible.builtin.include_role:
-        name: "univention.ucs_roles.portal_category"
+---
+- name: "Update SSH keys"
+  hosts: "all"
+  roles:
+    - role: "update_users_ssh_keys"
       vars:
-        portal_category_base_dn: "dc=ansible,dc=univention,dc=de"
-        portal_category_install_list: ["nextcloud"]
-        portal_category_drift_detection: true
-        portal_category_remove_unscoped: false
-        portal_category_categories:
-          - name: "domain-service"
-            display_name:
-              de_DE: "Applikationen"
-              en_US: "Applications"
-            state: "present"
-            parent: "domain"
-          - name: "domain-admin"
-            display_name:
-              de_DE: "Verwaltung"
-              en_US: "Administration"
-            state: "present"
-            parent: "domain"
-          - name: "local-admin"
-            display_name:
-              de_DE: "Verwaltung"
-              en_US: "Administration"
-            state: "present"
-            parent: "local"
-          # ...
+        update_users_ssh_keys_user: "root"
 ```
 
-Portal categories
-----------------
-
-```yaml
-portal_category_categories:
-  - name:           # (string, required) | Name of portal category.
-    display_name:   # (map)              | I18n name displayed in portal.
-      de_DE:        # (string)           | F.e. german translation.
-      en_US:        # (string)           | F.e. english translation.
-    only:           # (string)           | Modify when app defined is in `portal_category_install_list`.
-    parent:         # (string)           | The name of portal where the category should be appended to, f.e. "domain".
-    state:          # (string, required) | State of entry, should be "present" or "absent".
-    ucs_versions:   # (list)             | A list of UCS version in which the category should be modified. When no
-                    #                    |   version is omitted, category will be modified on ALL ucs versions.
-```
-
-
-Limitations
-----------------
-
-- Modifying/Removing attributes with whitespaces are not supported by UCS 4.4
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_nextcloud_turn/README.md
+### use_trusted_cert
 
-Configure TURN server of Nextcloud Talk
-=========
+This role configures an issues SSL certificate from trusted authorities.
 
-This role configures the Nextcloud Talk TURN server.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-- `configure_nextcloud_turn_secret`(string): The TURN server secret.
-- `configure_nextcloud_turn_url`(string): The URL of the TURN server.
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
----
-
-# roles/disable_piwik_tracking/README.md
-
-Toogle piwik tracking
-=========
-
-This role enables/disables piwik tracking of UCS.
-
-Requirements
-------------
+#### Requirements
 
 - univention.ucs_modules
     - univention_config_registry
 
-Role Variables
---------------
 
-- `disable_piwik_tracking_disable`(bool): Toggles piwik tracking of installation. When set to `true`, tracking is disabled; default: `true`.
+#### Role Variables
 
-Dependencies
-------------
+- `use_trusted_cert_path_cert`(string): Local path to SSL (chained) certificate file.
+- `use_trusted_cert_path_key`(string): Local path to SSL key file.
+
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Install trusted certificate"
+  hosts: "all"
+  roles:
+    - role: "use_trusted_cert"
+      vars:
+        use_trusted_cert_path_cert: "/path/to/certificate.pem"
+        use_trusted_cert_path_key: "/path/to/private.key"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_nextcloud_saml/README.md
+### workaround_acmetiny_upgrade
 
-Configure nextcloud SAML
-=========
+This role downloads and patches acme-tiny.
 
-This role configures nextcloud for SAML single server.
+#### Requirements
 
-Requirements
-------------
+- ansible.posix
+  - patch
 
-none
+#### Role Variables
 
-Role Variables
---------------
+`workaround_acmetiny_upgrade_temp_dir`(map): Ansible temporary dir for workaround files.
 
-none
-
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Workaround acme-tiny upgrade"
+  hosts: "all"
+  roles:
+    - role: "workaround_acmetiny_upgrade"
+      vars:
+        workaround_acmetiny_upgrade_temp_dir: "/tmp/acme-workaround"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
 
 ---
 
-# roles/configure_apps_nextcloud/README.md
+### workaround_high_mtu
 
-Configure Nextcloud (apps)
-=========
+When MTU in Docker `1500` is higher than the one for network interface, this
+role sets the Docker MTU to `1400`.
 
-Configure UCS app nextcloud.
-
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 none
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
-
-
-License
--------
-
-GNU General Public License v3.0
-
-Author Information
-------------------
-
-Univention GmbH
-www.univention.com
-
+```yaml
 ---
+- name: "Workaround high MTU"
+  hosts: "all"
+  roles:
+    - role: "workaround_high_mtu"
+```
 
-# roles/custom_facts_finished/README.md
-
-Custom facts (finished)
-=========
-
-Store rollout finished information in custom facts directory.
-
-Requirements
-------------
-
-none
-
-Role Variables
---------------
-
-none
-
-Dependencies
-------------
-
-none
-
-Example Playbook
-----------------
-
-
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

@@ -1,5 +1,4 @@
 ---
-
 - name: "Update package list"
   ansible.builtin.include_role:
     name: "force_package_list_update"
@@ -100,6 +99,9 @@
     - "install_apps_ox_post_ox_as_saml_provider"
 
 - name: "Cert File operations"
+  tags:
+    - "install_apps_ox_post_cert"
+    - "install_apps_ox_post"
   block:
     - name: "Create temporary directory for certificate operations"
       ansible.builtin.tempfile:
@@ -181,9 +183,6 @@
         state: "absent"
       tags:
         - "cleanup"
-  tags:
-    - "install_apps_ox_post_cert"
-    - "install_apps_ox_post"
 
 - name: "Add master_user user name fix to dovecot (https://dovecot.org/pipermail/dovecot/2019-April/115457.html)"
   ansible.builtin.blockinfile:
@@ -212,5 +211,3 @@
   tags:
     - "install_apps_ox_post"
     - "install_apps_ox_post_restart_services"
-
-...

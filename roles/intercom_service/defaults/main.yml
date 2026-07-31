@@ -19,5 +19,3 @@ intercom_service_ox_origin: "https://webmail.{{ intercom_service_domain_name }}"
 intercom_service_ox_audience: "oxoidc"
 intercom_service_nc_url: "https://fs.{{ intercom_service_domain_name }}"
 intercom_service_nc_origin: "https://fs.{{ intercom_service_domain_name }}"
-
-...

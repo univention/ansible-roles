@@ -1,0 +1,8 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.set_ldap_index"
+      vars:
+        set_ldap_index_equality_add: ""
+        set_ldap_index_equality_rm: ""

@@ -1,0 +1,21 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Create temporary file for the univention-app password"
+      ansible.builtin.tempfile:
+        state: "file"
+        suffix: ".pw"
+      register: "install_service_selfservice_temp_file"
+      changed_when: false
+
+    - name: "Write admin password to temporary file"
+      ansible.builtin.copy:
+        dest: "{{ install_service_selfservice_temp_file.path }}"
+        content: "univention"
+        mode: "0600"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.install_service_selfservice"
+      vars:
+        install_service_selfservice_install_services: []

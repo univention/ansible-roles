@@ -1,0 +1,15 @@
+---
+- name: "Converge"
+  hosts: "all"
+  pre_tasks:
+    - name: "Get LDAP base DN from UCR"
+      ansible.builtin.command: "ucr get ldap/base"
+      register: "configure_keycloak_client_ucr_ldap_base"
+      changed_when: false
+  roles:
+    - role: "univention.ucs_roles.configure_keycloak_client"
+      vars:
+        configure_keycloak_client_keycloak_server: "ucs-test"
+        configure_keycloak_client_basedn: "{{ configure_keycloak_client_ucr_ldap_base.stdout }}"
+        configure_keycloak_client_oidc_broker_secret: "molecule-test-broker-secret"
+        configure_keycloak_client_keycloak_server_id: "molecule-test-client-id"

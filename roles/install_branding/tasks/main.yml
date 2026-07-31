@@ -1,5 +1,4 @@
 ---
-
 - name: "install_branding | Enable branding repository"
   ansible.builtin.include_role:
     name: "univention_repository_component"
@@ -22,5 +21,3 @@
   tags:
     - "install_branding"
     - "install_branding_update_packages"
-
-...

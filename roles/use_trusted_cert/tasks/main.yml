@@ -1,5 +1,4 @@
 ---
-
 - name: "use_trusted_cert | Check if paths are set"
   ansible.builtin.assert:
     that:
@@ -51,5 +50,3 @@
   tags:
     - "use_trusted_cert"
     - "use_trusted_cert_restart_apache"
-
-...

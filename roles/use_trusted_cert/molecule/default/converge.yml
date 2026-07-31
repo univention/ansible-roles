@@ -1,0 +1,8 @@
+---
+- name: "Converge"
+  hosts: "all"
+  roles:
+    - role: "univention.ucs_roles.use_trusted_cert"
+      vars:
+        use_trusted_cert_path_cert: "test-trusted.crt"
+        use_trusted_cert_path_key: "test-trusted.key"

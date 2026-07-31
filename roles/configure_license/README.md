@@ -1,15 +1,12 @@
-Configure UCS license
-=========
+### Configure UCS license
 
 This role helps to apply an existing license file or claims a new license from shop.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-File Structure
---------------
+#### File Structure
 
 ```text
 files/
@@ -17,8 +14,7 @@ files/
  +-- license_client.py
 ```
 
-Role Variables
---------------
+#### Role Variables
 
 - `configure_license_validity`(string): The validity period for the license in a format GNU date is able to understand as a time period, like "12 weeks".
 - `configure_license_shop_password`(string): The shop user's password, best stored in a secrets manager or encrypted via ansible-vault.
@@ -30,22 +26,33 @@ Role Variables
 - `configure_license_file`(string): If `configure_license_type` set to `local_license` then provide license file name here; default: `false`.
 - `configure_license_server_type`(string): Which type of UCS server to set up. The possible options are `master`and `backup`. The default is `master`, which also means "standalone". If `backup` is chosen the following variable also has to be set; default: `master`.
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure UCS license"
+  hosts: "all"
+  roles:
+    - role: "configure_license"
+      vars:
+        configure_license_type: "server_license"
+        configure_license_basedn: "dc=example,dc=com"
+        configure_license_max_users: 500
+        configure_license_shop_id: 12345
+        configure_license_shop_username: "shopuser"
+        configure_license_shop_password: "shoppassword"
+        configure_license_validity: "12 weeks"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com

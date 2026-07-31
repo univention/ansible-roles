@@ -1,5 +1,4 @@
 ---
-
 - name: "deployment_message | Check if all vars are set"
   ansible.builtin.assert:
     that:
@@ -64,5 +63,3 @@
   tags:
     - "deployment_message"
     - "deployment_message_initial_pause"
-
-...

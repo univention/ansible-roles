@@ -1,0 +1,11 @@
+---
+- name: "Verify"
+  hosts: "all"
+  tasks:
+    - name: "Check UCR key timeserver"
+      ansible.builtin.command: "ucr get timeserver"
+      register: "configure_ntp_servers_ucr"
+      changed_when: false
+    - name: "Assert timeserver is set"
+      ansible.builtin.assert:
+        that: "configure_ntp_servers_ucr.stdout | length > 0"

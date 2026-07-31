@@ -14,5 +14,3 @@ ox_connector_usertemplate_name: "Benutzer mit Groupware-Konto"
 ox_connector_default_context: "9999"
 ox_connector_imap_server: "imap://127.0.0.1:143"
 ox_connector_smtp_server: "smtp://127.0.0.1:26"
-
-...

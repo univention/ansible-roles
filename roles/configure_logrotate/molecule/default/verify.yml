@@ -1,0 +1,11 @@
+---
+- name: "Verify"
+  hosts: "all"
+  tasks:
+    - name: "Check UCR key logrotate/compress"
+      ansible.builtin.command: "ucr get logrotate/compress"
+      register: "configure_logrotate_ucr"
+      changed_when: false
+    - name: "Assert logrotate/compress is set"
+      ansible.builtin.assert:
+        that: "configure_logrotate_ucr.stdout | length > 0"

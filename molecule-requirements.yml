@@ -1,0 +1,14 @@
+---
+# Collections required for the molecule test environment.
+# Install with: ansible-galaxy collection install -r molecule-requirements.yml -p .collections
+collections:
+  - name: "univention.ucs_modules"
+    version: ">=1.2.0"
+  - name: "ansible.posix"
+    version: ">=1.0.0"
+  - name: "ansible.utils"
+    version: ">=2.9.0"
+  - name: "community.general"
+    version: ">=6.5.0"
+  - name: "community.crypto"
+    version: ">=2.11.1"

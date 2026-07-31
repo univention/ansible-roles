@@ -6,5 +6,3 @@ portal_entry_entries: []
 portal_entry_install_list: []
 portal_entry_drift_detection: true
 portal_entry_remove_unscoped: false
-
-...

@@ -1,15 +1,12 @@
-UMC maintenance policies
-=========
+### UMC maintenance policies
 
 This role sets UMC maintenance policies.
 
-Requirements
-------------
+#### Requirements
 
 none
 
-Role Variables
---------------
+#### Role Variables
 
 - `umc_policies_maintenance_autoupdate_enabled`(bool): Toogle autoupdate status; default: `true`.
 - `umc_policies_maintenance_basedn`(string): The LDAP base domain name.
@@ -19,22 +16,28 @@ Role Variables
 - `umc_policies_maintenance_release_version`(string): The univention release version.
 - `umc_policies_maintenance_hostname`(string): The systems hostname; default: `"{{ inventory_hostname }}"`
 
-Dependencies
-------------
+#### Dependencies
 
 none
 
-Example Playbook
-----------------
+#### Example Playbook
 
+```yaml
+---
+- name: "Configure maintenance policies"
+  hosts: "all"
+  roles:
+    - role: "umc_policies_maintenance"
+      vars:
+        umc_policies_maintenance_basedn: "dc=example,dc=com"
+        umc_policies_maintenance_release_version: "5.2-0"
+```
 
-License
--------
+#### License
 
 GNU General Public License v3.0
 
-Author Information
-------------------
+#### Author Information
 
 Univention GmbH
 www.univention.com
