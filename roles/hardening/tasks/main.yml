@@ -2,7 +2,7 @@
 - name: "hardening | Disable HTTP"
   univention.ucs_modules.univention_config_registry:
     keys:
-      apache2/force_https: "yes"
+      apache2/force_https: "true"
   register: "hardening_disable_http_result"
   when: "hardening_disable_http | bool"
   tags:
@@ -12,8 +12,8 @@
 - name: "hardening | Disable apache ssl tlsv12 and tlsv11"
   univention.ucs_modules.univention_config_registry:
     keys:
-      apache2/ssl/tlsv13: "yes"
-  register: "hardening_apache2_ssl_tlsv13"
+      apache2/ssl/tlsv13: "true"
+  register: "hardening_apache2_ssl_tlsv13_result"
   when: "hardening_apache2_ssl_tlsv13 | bool"
   tags:
     - "hardening_apache2_ssl_tlsv13"
@@ -22,7 +22,7 @@
 - name: "hardening | Apache2 Enable HTTP Strict Transport Security"
   univention.ucs_modules.univention_config_registry:
     keys:
-      apache2/hsts: "yes"
+      apache2/hsts: "true"
   register: "hardening_hsts_result"
   when: "hardening_hsts | bool"
   tags:
@@ -32,7 +32,7 @@
 - name: "hardening | Apache2 honorcipherorder"
   univention.ucs_modules.univention_config_registry:
     keys:
-      apache2/ssl/honorcipherorder: "yes"
+      apache2/ssl/honorcipherorder: "true"
   register: "hardening_honorcipherorder_result"
   when: "hardening_honorcipherorder | bool"
   tags:
@@ -52,11 +52,12 @@
     name: "apache2"
     state: "restarted"
   changed_when: false
-  when:
-    - "hardening_disable_http | bool and hardening_disable_http_result.changed or hardening_hsts | bool and
-      hardening_hsts_result.changed or hardening_honorcipherorder | bool and hardening_honorcipherorder_result.changed
-      or hardening_apache2_ssl_tlsv13 | bool and hardening_apache2_ssl_tlsv13.changed or
-      hardening_apache2_result.changed"
+  when: >
+    (hardening_disable_http | bool and hardening_disable_http_result.changed) or
+    (hardening_hsts | bool and hardening_hsts_result.changed) or
+    (hardening_honorcipherorder | bool and hardening_honorcipherorder_result.changed) or
+    (hardening_apache2_ssl_tlsv13 | bool and hardening_apache2_ssl_tlsv13_result.changed) or
+    (hardening_apache2_result.changed)
 
   tags:
     - "hardening_restart_http"
@@ -139,22 +140,22 @@
     - "hardening_disable_umc_http_tracebacks"
     - "hardening"
 
-- name: "hardening | Ser secure saml idp language-cookie (and saml/idp/https)"
+- name: "hardening | Set secure saml idp language-cookie (and saml/idp/https)"
   univention.ucs_modules.univention_config_registry:
     keys:
       saml/idp/https: "true"
-      saml/idp/language-cookie/secure: "yes"
+      saml/idp/language-cookie/secure: "true"
   register: "hardening_saml_idp_language_cookie"
   when: "hardening_saml_idp_language_cookie | bool"
   tags:
     - "hardening_saml_idp_language_cookie"
     - "hardening"
 
-- name: "hardening | Ser secure saml idp session-cookie (and saml/idp/https)"
+- name: "hardening | Set secure saml idp session-cookie (and saml/idp/https)"
   univention.ucs_modules.univention_config_registry:
     keys:
       saml/idp/https: "true"
-      saml/idp/session-cookie/secure: "yes"
+      saml/idp/session-cookie/secure: "true"
   register: "hardening_saml_idp_session_cookie"
   when: "hardening_saml_idp_session_cookie | bool"
   tags:
@@ -182,7 +183,7 @@
 - name: "hardening | Disable saml idp show error"
   univention.ucs_modules.univention_config_registry:
     keys:
-      saml/idp/show-errors: "False"
+      saml/idp/show-errors: "false"
   register: "hardening_disable_saml_idp_show_errors"
   when: "hardening_disable_saml_idp_show_errors | bool"
   tags:
@@ -192,7 +193,7 @@
 - name: "hardening | Disable saml idp error reporting"
   univention.ucs_modules.univention_config_registry:
     keys:
-      saml/idp/show-error-reporting: "False"
+      saml/idp/show-error-reporting: "false"
   register: "hardening_disable_saml_idp_error_reporting"
   when: "hardening_disable_saml_idp_error_reporting | bool"
   tags:
