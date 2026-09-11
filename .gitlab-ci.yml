@@ -13,7 +13,6 @@ variables:
     value: "gitregistry.knut.univention.de"
     description: "URI for GitLab CI Container Registry"
 
-
 workflow:
   rules:
     - if: &MERGE_TO_MAIN $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
@@ -203,15 +202,19 @@ run_molecule_tests:
 # `.publish-common` guard in the downstream jobs turns them into a no-op.
 determine_version:
   stage: version
-  image: node:20-alpine
+  image: node:12-buster-slim
   before_script:
-    - apk add --no-cache ca-certificates curl git
+    - apt-get update && apt-get install -y --no-install-recommends git-core ca-certificates
     - *install_ca_cert
-    - git remote set-url origin "https://gitlab-ci-token:${GITLAB_ANSIBLE_ROLES_PUBLIC_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
-  script:
+    - >
+      npm install --no-save semantic-release
+      @semantic-release/commit-analyzer
+      @semantic-release/release-notes-generator
+      @semantic-release/exec
+      @semantic-release/gitlab
     - touch release.env
-    - npm install --no-save semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/exec @semantic-release/gitlab
-    - npx semantic-release
+  script:
+    - semantic-release
   variables:
     GIT_DEPTH: "0"
     GITLAB_TOKEN: $GITLAB_ANSIBLE_ROLES_PUBLIC_TOKEN

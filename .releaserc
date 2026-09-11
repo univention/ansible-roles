@@ -1,5 +1,7 @@
 {
-  "branches": ["main"],
+  "branches": [
+    "main"
+  ],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -9,6 +11,13 @@
         "prepareCmd": "echo \"RELEASE_VERSION=${nextRelease.version}\" >> release.env"
       }
     ],
-    "@semantic-release/gitlab"
+    [
+      "@semantic-release/gitlab",
+      {
+        "assets": [],
+        "gitlabUrl": "https://git.knut.univention.de",
+        "gitlabApiPathPrefix": "api/v4"
+      }
+    ]
   ]
 }

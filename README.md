@@ -1285,7 +1285,7 @@ www.univention.com
 
 ### custom_facts
 
-This role gathers release information and store them on remote system.
+This role gathers release & ucr information and stores them in `/etc/ansible/facts.d/` on the remote system, making them available via the `ansible_local` namespace.
 
 #### Requirements
 
@@ -1309,6 +1309,20 @@ none
     - role: "custom_facts"
 ```
 
+After this, you can access the custom facts via the `ansible_local.` namespace, like so:
+
+```yaml
+---
+- hosts: "all"
+  tasks:
+    - name: "Install htop on primary"
+      pkg:
+        - htop
+      when: ansible_local.server/role="domaincontroller_master"
+```
+
+(This can be done better by limiting the task to the primary node in the inventory, but as an example it's fine)
+
 #### License
 
 GNU General Public License v3.0
@@ -1316,7 +1330,7 @@ GNU General Public License v3.0
 #### Author Information
 
 Univention GmbH
-www.univention.com
+<www.univention.com>
 
 ---
 
