@@ -251,29 +251,7 @@ determine_version:
 
 publish_on_galaxy:
   extends: .publish-common
-  image: ${CI_REGISTRY}/knut/ansible:main
+  image: docker-registry.knut.univention.de/knut/ansible:latest
   script:
     - ansible-galaxy collection build
     - ansible-galaxy collection publish --api-key ${ANSIBLE_GALAXY_API_KEY} univention-ucs_roles-${VERSION}.tar.gz
-
-# Publishes the release to the real GitHub mirror (github.com/univention/ansible-roles).
-# Requires a GITHUB_ANSIBLE_ROLES_TOKEN CI/CD variable (a GitHub PAT or deploy
-# token with push access to that repo).
-sync_to_github:
-  extends: .publish-common
-  image: ${CI_REGISTRY}/alpine-curl:main
-  before_script:
-    - !reference [.publish-common, before_script]
-    - *install_ca_cert
-  script:
-    - rm -rf ${CI_BUILDS_DIR}/github-mirror || true
-    - git clone "https://x-access-token:${GITHUB_ANSIBLE_ROLES_TOKEN}@github.com/univention/ansible-roles.git" ${CI_BUILDS_DIR}/github-mirror
-    - rsync -aq --delete --exclude .git --exclude .gitlab-ci.yml ${CI_PROJECT_DIR}/ ${CI_BUILDS_DIR}/github-mirror
-    - cd ${CI_BUILDS_DIR}/github-mirror
-    - git config user.email "ucs@univention.de"
-    - git config user.name "Univention Commit Service"
-    - git add -A
-    - git commit -m "Release ${RELEASE_VERSION} ($(date +'%d.%m.%Y'))" || echo "Nothing to commit"
-    - git tag "v${RELEASE_VERSION}"
-    - git push origin HEAD:main
-    - git push origin "v${RELEASE_VERSION}"
