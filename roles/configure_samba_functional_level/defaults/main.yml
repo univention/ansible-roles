@@ -1,0 +1,10 @@
+---
+
+# Target functional level. Only "2016" is supported by this role.
+configure_samba_functional_level_target: "2016"
+
+# Minimum objectVersion of the AD schema required for functional level 2016 (Windows Server 2019 schema).
+configure_samba_functional_level_schema_object_version: 88
+
+# Restart Samba on every DC after setting the DC functional level (required by the procedure).
+configure_samba_functional_level_restart_samba: true

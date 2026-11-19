@@ -1,0 +1,201 @@
+---
+# See https://help.univention.com/t/how-to-samba-raise-domain-functional-level-to-2016/24110
+# The role has to run against ALL Samba/AD domain controllers of the domain in one play.
+
+- name: "configure_samba_functional_level | Assert supported target level"
+  ansible.builtin.assert:
+    that: "configure_samba_functional_level_target | string == '2016'"
+    fail_msg: "Only functional level 2016 is supported by this role."
+    quiet: true
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Check that samba-tool is installed"
+  ansible.builtin.command: "which samba-tool"
+  register: "configure_samba_functional_level_samba_tool"
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Check that the Samba AD DC package is installed"
+  ansible.builtin.command: "dpkg-query --show --showformat='${db:Status-Status}' univention-samba4"
+  register: "configure_samba_functional_level_samba_package"
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Assert Samba is installed"
+  ansible.builtin.assert:
+    that:
+      - "configure_samba_functional_level_samba_tool.rc == 0"
+      - "configure_samba_functional_level_samba_package.stdout == 'installed'"
+    fail_msg: >-
+      Samba AD DC is not installed on {{ inventory_hostname }}.
+      Install it first (univention-app install samba4).
+    quiet: true
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Get hostname"
+  ansible.builtin.command: "ucr get hostname"
+  register: "configure_samba_functional_level_hostname"
+  changed_when: false
+  check_mode: false
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Get FSMO roles"
+  ansible.builtin.command: "samba-tool fsmo show"
+  register: "configure_samba_functional_level_fsmo"
+  changed_when: false
+  check_mode: false
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Get current functional levels"
+  ansible.builtin.command: "samba-tool domain level show"
+  register: "configure_samba_functional_level_current"
+  changed_when: false
+  check_mode: false
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Evaluate prerequisites"
+  ansible.builtin.set_fact:
+    configure_samba_functional_level_schema_master: >-
+      {{ (configure_samba_functional_level_fsmo.stdout
+          | regex_search('SchemaMasterRole owner:.*?CN=NTDS Settings,CN=([^,]+),', '\1', multiline=False)
+          | default([''], true) | first) | lower }}
+    configure_samba_functional_level_infrastructure_master: >-
+      {{ (configure_samba_functional_level_fsmo.stdout
+          | regex_search('InfrastructureMasterRole owner:.*?CN=NTDS Settings,CN=([^,]+),', '\1', multiline=False)
+          | default([''], true) | first) | lower }}
+    configure_samba_functional_level_already_raised: >-
+      {{ (configure_samba_functional_level_current.stdout_lines | select('search', configure_samba_functional_level_target) | list | length) == 3 }}
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Set role facts"
+  ansible.builtin.set_fact:
+    configure_samba_functional_level_is_schema_master: >-
+      {{ configure_samba_functional_level_hostname.stdout | trim | lower == configure_samba_functional_level_schema_master }}
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Assert FSMO prerequisites"
+  ansible.builtin.assert:
+    that:
+      - "configure_samba_functional_level_schema_master | length > 0"
+      - "configure_samba_functional_level_schema_master == configure_samba_functional_level_infrastructure_master"
+      - "(ansible_play_hosts_all | map('extract', hostvars, 'configure_samba_functional_level_is_schema_master') | select | list | length) == 1"
+    fail_msg: >-
+      SchemaMaster ({{ configure_samba_functional_level_schema_master }}) and InfrastructureMaster
+      ({{ configure_samba_functional_level_infrastructure_master }}) must be the same server, and that server
+      must be part of this play. Otherwise see 'samba-tool domain functionalprep --help'.
+    quiet: true
+  run_once: true
+  when: "not configure_samba_functional_level_already_raised | bool"
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_prerequisites"
+
+- name: "configure_samba_functional_level | Raise the functional level"
+  when: "not configure_samba_functional_level_already_raised | bool"
+  tags:
+    - "configure_samba_functional_level"
+    - "configure_samba_functional_level_raise"
+  block:
+    - name: "configure_samba_functional_level | Allow schema updates on the SchemaMaster"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "samba4/schema/update/allowed"
+            value: "yes"
+      when: "configure_samba_functional_level_is_schema_master | bool"
+
+    - name: "configure_samba_functional_level | Set DC functional level on every DC"
+      univention.ucs_modules.univention_config_registry:
+        kvlist:
+          - key: "samba/global/options/ad dc functional level"
+            value: "{{ configure_samba_functional_level_target }}"
+          - key: "samba4/function/level"
+            value: "{{ configure_samba_functional_level_target }}"
+      register: "configure_samba_functional_level_dc_level"
+
+    - name: "configure_samba_functional_level | Restart Samba on every DC"
+      ansible.builtin.command: "/etc/init.d/samba restart"
+      changed_when: true
+      when: "configure_samba_functional_level_restart_samba | bool"
+
+    - name: "configure_samba_functional_level | Get AD schema version"
+      ansible.builtin.command: >-
+        univention-s4search -b "CN=Schema,CN=Configuration,$(ucr get samba4/ldap/base)"
+        -s base '(objectClass=*)' objectVersion
+      register: "configure_samba_functional_level_schema"
+      changed_when: false
+      check_mode: false
+      when: "configure_samba_functional_level_is_schema_master | bool"
+
+    - name: "configure_samba_functional_level | Upgrade AD schema to 2019"
+      ansible.builtin.command: "samba-tool domain schemaupgrade --schema=2019"
+      changed_when: true
+      when:
+        - "configure_samba_functional_level_is_schema_master | bool"
+        - >-
+          (configure_samba_functional_level_schema.stdout | regex_search('objectVersion: (\d+)', '\1') | first | int)
+          < configure_samba_functional_level_schema_object_version
+
+    - name: "configure_samba_functional_level | Prepare the functional level raise"
+      ansible.builtin.command: "samba-tool domain functionalprep --function-level={{ configure_samba_functional_level_target }}"
+      changed_when: true
+      when: "configure_samba_functional_level_is_schema_master | bool"
+
+    - name: "configure_samba_functional_level | Raise domain and forest level"
+      ansible.builtin.command: >-
+        samba-tool domain level raise
+        --domain-level={{ configure_samba_functional_level_target }}
+        --forest-level={{ configure_samba_functional_level_target }}
+      changed_when: true
+      when: "configure_samba_functional_level_is_schema_master | bool"
+
+    - name: "configure_samba_functional_level | Verify functional levels"
+      ansible.builtin.command: "samba-tool domain level show"
+      register: "configure_samba_functional_level_verify"
+      changed_when: false
+      failed_when: "(configure_samba_functional_level_verify.stdout_lines | select('search', configure_samba_functional_level_target) | list | length) != 3"
+      check_mode: false
+
+    - name: "configure_samba_functional_level | Verify msDS-Behavior-Version of the DCs"
+      ansible.builtin.command: "univention-s4search --cross-ncs '(objectClass=nTDSDSA)' msDS-Behavior-Version"
+      register: "configure_samba_functional_level_behavior"
+      changed_when: false
+      failed_when: >-
+        configure_samba_functional_level_behavior.stdout_lines
+        | select('match', 'msDS-Behavior-Version:') | reject('match', 'msDS-Behavior-Version: 7$') | list | length > 0
+      check_mode: false
+
+    - name: "configure_samba_functional_level | Disallow schema updates on the SchemaMaster"
+      univention.ucs_modules.univention_config_registry:
+        keys:
+          samba4/schema/update/allowed: ""
+        state: "absent"
+      when: "configure_samba_functional_level_is_schema_master | bool"
+
+    - name: "configure_samba_functional_level | Restart Samba on the SchemaMaster"
+      ansible.builtin.command: "/etc/init.d/samba restart"
+      changed_when: true
+      when:
+        - "configure_samba_functional_level_is_schema_master | bool"
+        - "configure_samba_functional_level_restart_samba | bool"

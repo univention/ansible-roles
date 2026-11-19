@@ -1,0 +1,26 @@
+---
+
+galaxy_info:
+  role_name: "configure_samba_functional_level"
+  author: "Univention"
+  description: "Raise the Samba/AD domain and forest functional level from 2008 R2 to 2016."
+  company: "Univention GmbH"
+
+  issue_tracker_url: "https://forge.univention.org"
+
+  license: "GPL-3.0-or-later"
+
+  min_ansible_version: "2.10"
+
+  platforms:
+    - name: "Debian"
+      versions:
+        - "all"
+
+  galaxy_tags:
+    - "univention"
+    - "ucs"
+    - "samba"
+    - "active_directory"
+
+dependencies: []

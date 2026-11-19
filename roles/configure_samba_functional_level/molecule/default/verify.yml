@@ -1,0 +1,16 @@
+---
+- name: "Verify"
+  hosts: "all"
+  tasks:
+    - name: "Show domain level"
+      ansible.builtin.command: "samba-tool domain level show"
+      register: "configure_samba_functional_level_verify"
+      changed_when: false
+    - name: "Assert all levels are 2016"
+      ansible.builtin.assert:
+        that: "(configure_samba_functional_level_verify.stdout_lines | select('search', '2016') | list | length) == 3"
+    - name: "Assert schema update is disabled again"
+      ansible.builtin.command: "ucr get samba4/schema/update/allowed"
+      register: "configure_samba_functional_level_verify_schema"
+      changed_when: false
+      failed_when: "configure_samba_functional_level_verify_schema.stdout | trim | length > 0"
