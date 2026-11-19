@@ -1,0 +1,31 @@
+---
+- name: "Verify"
+  hosts: "all"
+  tasks:
+    - name: "Check SSH restriction is active"
+      ansible.builtin.command: "ucr get auth/sshd/restrict"
+      register: "configure_tier_model_verify_restrict"
+      changed_when: false
+    - name: "Assert SSH restriction is active"
+      ansible.builtin.assert:
+        that: "configure_tier_model_verify_restrict.stdout == 'yes'"
+    - name: "Check delegative administration on directory nodes"
+      ansible.builtin.command: "ucr get directory/manager/rest/delegative-administration/enabled"
+      register: "configure_tier_model_verify_delegation"
+      changed_when: false
+      when: "inventory_hostname == groups['all'][0]"
+    - name: "Assert delegative administration is enabled"
+      ansible.builtin.assert:
+        that: "configure_tier_model_verify_delegation.stdout == 'true'"
+      when: "inventory_hostname == groups['all'][0]"
+    - name: "Check that the tier groups exist"
+      ansible.builtin.command: "udm groups/group list --filter 'cn=Tier*Admins'"
+      register: "configure_tier_model_verify_groups"
+      changed_when: false
+      when: "inventory_hostname == groups['all'][0]"
+    - name: "Assert tier groups exist"
+      ansible.builtin.assert:
+        that:
+          - "'cn=Tier1 Admins' in configure_tier_model_verify_groups.stdout"
+          - "'cn=Tier2 Admins' in configure_tier_model_verify_groups.stdout"
+      when: "inventory_hostname == groups['all'][0]"

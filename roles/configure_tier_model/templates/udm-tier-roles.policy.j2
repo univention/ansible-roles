@@ -1,0 +1,70 @@
+# {{ ansible_managed }}
+# Tier model roles for UDM delegative administration. Tier 0 uses udm:default-roles:domain-administrator.
+
+access by role="udm:custom-roles:tier1-server-admin"
+  description="Tier 1: manage servers (member servers), nothing else"
+
+  to objecttype="container/dc" position.base="{ldap/base}"
+    name="tier1-read-base" description="Read LDAP base"
+    grant actions="search,read"
+    grant properties="*" permission="read"
+
+  to objecttype="container/cn"
+    name="tier1-read-containers" description="Read containers"
+    grant actions="search,read"
+    grant properties="*" permission="read"
+{% for type in configure_tier_model_tier1_computer_types %}
+
+  to objecttype="{{ type }}"
+    name="tier1-write-{{ type | replace('/', '-') }}" description="Manage {{ type }} objects"
+    grant actions="search,read,{{ 'create,' if configure_tier_model_allow_computer_create | bool else '' }}modify,rename,remove,move"
+    grant properties="guardianRoles,guardianInheritedRoles,groups" permission="none"
+{% if not configure_tier_model_allow_computer_create | bool %}
+    grant properties="primaryGroup" permission="readonly"
+{% endif %}
+    grant properties="*" permission="write"
+{% endfor %}
+
+access by role="udm:custom-roles:tier2-workstation-admin"
+  description="Tier 2: manage clients and support standard users, nothing else"
+
+  to objecttype="container/dc" position.base="{ldap/base}"
+    name="tier2-read-base" description="Read LDAP base"
+    grant actions="search,read"
+    grant properties="*" permission="read"
+
+  to objecttype="container/cn"
+    name="tier2-read-containers" description="Read containers"
+    grant actions="search,read"
+    grant properties="*" permission="read"
+{% for type in configure_tier_model_tier2_computer_types %}
+
+  to objecttype="{{ type }}"
+    name="tier2-write-{{ type | replace('/', '-') }}" description="Manage {{ type }} objects"
+    grant actions="search,read,{{ 'create,' if configure_tier_model_allow_computer_create | bool else '' }}modify,rename,remove,move"
+    grant properties="guardianRoles,guardianInheritedRoles,groups" permission="none"
+{% if not configure_tier_model_allow_computer_create | bool %}
+    grant properties="primaryGroup" permission="readonly"
+{% endif %}
+    grant properties="*" permission="write"
+{% endfor %}
+
+  to objecttype="users/user" position.subtree="{{ configure_tier_model_tier2_user_container }},{ldap/base}"
+    name="tier2-helpdesk-users" description="Reset passwords of standard users"
+    grant actions="search,read,modify"
+    grant properties="overridePWHistory,overridePWLength,password,unlock" permission="write"
+    grant properties="password" permission="writeonly"
+    grant properties="homeSharePath" permission="write"
+    grant properties="primaryGroup,mailForwardCopyToSelf,username,lastname,unixhome,entryUUID" permission="read"
+
+  to objecttype="groups/group"
+    name="tier2-read-group-names" description="Read group names"
+    grant actions="search,read"
+    grant properties="name" permission="read"
+{% for policy in ['policies/desktop', 'policies/pwhistory', 'policies/umc'] %}
+
+  to objecttype="{{ policy }}"
+    name="tier2-read-{{ policy | replace('/', '-') }}" description="Policies applying to users must be readable"
+    grant actions="search,read"
+    grant properties="*" permission="read"
+{% endfor %}

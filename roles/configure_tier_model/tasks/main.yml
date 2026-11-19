@@ -1,0 +1,34 @@
+---
+# Order matters: with the "linear" strategy every task finishes on all hosts before the next starts.
+# Delegative administration is only enabled once all roles and the Domain Admins assignment exist.
+
+- name: "configure_tier_model | Prerequisites"
+  ansible.builtin.include_tasks: "prerequisites.yml"
+  tags:
+    - "configure_tier_model"
+    - "configure_tier_model_prerequisites"
+
+- name: "configure_tier_model | Delegated administration (UDM roles)"
+  ansible.builtin.include_tasks: "delegation.yml"
+  # Delegative administration is only supported on Primary and Backup Directory Nodes (needs /etc/ldap.secret).
+  when:
+    - "configure_tier_model_enable_delegative_administration | bool"
+    - "configure_tier_model_server_role in ['domaincontroller_master', 'domaincontroller_backup']"
+  tags:
+    - "configure_tier_model"
+    - "configure_tier_model_delegation"
+
+- name: "configure_tier_model | Logon restrictions"
+  ansible.builtin.include_tasks: "logon.yml"
+  tags:
+    - "configure_tier_model"
+    - "configure_tier_model_logon"
+
+- name: "configure_tier_model | Samba/AD (OUs, ACLs, authentication policies)"
+  ansible.builtin.include_tasks: "samba.yml"
+  when:
+    - "configure_tier_model_enable_samba | bool"
+    - "ansible_play_hosts_all | map('extract', hostvars, 'configure_tier_model_is_samba_dc') | select | list | length > 0"
+  tags:
+    - "configure_tier_model"
+    - "configure_tier_model_samba"

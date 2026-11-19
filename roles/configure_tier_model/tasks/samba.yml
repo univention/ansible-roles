@@ -1,0 +1,126 @@
+---
+# Samba/AD part. The OUs are created in UDM on the Primary Directory Node (the S4 connector replicates them to AD).
+# Everything else runs on the Samba DC that holds the PDC emulator role (AD changes replicate to the other DCs).
+
+# The UDM module can not be used here: it looks objects up by name only, so the same sub OU name (e.g. "Admins")
+# below different tiers would be treated as one object.
+- name: "configure_tier_model | Tier OUs in UDM"
+  when: "configure_tier_model_server_role == 'domaincontroller_master'"
+  block:
+    - name: "configure_tier_model | List existing OUs"
+      ansible.builtin.command: "udm container/ou list"
+      register: "configure_tier_model_udm_ous"
+      changed_when: false
+      check_mode: false
+
+    - name: "configure_tier_model | Create tier OUs"
+      ansible.builtin.command: >-
+        udm container/ou create --position "{{ configure_tier_model_ldap_base }}" --set name="{{ item.ou }}"
+      loop: "{{ configure_tier_model_samba_tiers }}"
+      loop_control:
+        label: "{{ item.ou }}"
+      changed_when: true
+      when: "('DN: ou=' ~ item.ou ~ ',' ~ configure_tier_model_ldap_base) | lower not in configure_tier_model_udm_ous.stdout_lines | map('lower') | list"
+
+    - name: "configure_tier_model | Create tier sub OUs"
+      ansible.builtin.command: >-
+        udm container/ou create --position "ou={{ item.0.ou }},{{ configure_tier_model_ldap_base }}" --set name="{{ item.1 }}"
+      loop: "{{ configure_tier_model_samba_tiers | subelements('sub_ous') }}"
+      loop_control:
+        label: "{{ item.1 }},{{ item.0.ou }}"
+      changed_when: true
+      when: >-
+        ('DN: ou=' ~ item.1 ~ ',ou=' ~ item.0.ou ~ ',' ~ configure_tier_model_ldap_base) | lower
+        not in configure_tier_model_udm_ous.stdout_lines | map('lower') | list
+
+- name: "configure_tier_model | Find the Samba DC that holds the PDC emulator role"
+  ansible.builtin.command: "samba-tool fsmo show"
+  register: "configure_tier_model_samba_fsmo"
+  changed_when: false
+  check_mode: false
+  when: "configure_tier_model_is_samba_dc | bool"
+
+- name: "configure_tier_model | Select the Samba DC that applies the changes"
+  ansible.builtin.set_fact:
+    configure_tier_model_samba_executor: >-
+      {{ configure_tier_model_is_samba_dc | bool and
+         (configure_tier_model_samba_fsmo.stdout
+          | regex_search('PdcEmulationMasterRole owner:.*?CN=NTDS Settings,CN=([^,]+),', '\1') | default([''], true) | first | lower)
+         == (configure_tier_model_ucr_hostname | default(inventory_hostname_short) | lower) }}
+
+- name: "configure_tier_model | Assert exactly one Samba DC holds the PDC emulator role in this play"
+  ansible.builtin.assert:
+    that: "(ansible_play_hosts_all | map('extract', hostvars, 'configure_tier_model_samba_executor') | select | list | length) == 1"
+    fail_msg: "The Samba DC with the PDC emulator role must be part of the play (and its UCR hostname must match the inventory short name)."
+    quiet: true
+  run_once: true
+
+- name: "configure_tier_model | Apply AD changes"
+  when: "configure_tier_model_samba_executor | bool"
+  block:
+    - name: "configure_tier_model | Calculate the expected AD OUs"
+      ansible.builtin.set_fact:
+        configure_tier_model_samba_expected_ous: >-
+          {%- set ns = namespace(out=[]) -%}
+          {%- for t in configure_tier_model_samba_tiers -%}
+          {%- set ns.out = ns.out + ['OU=' ~ t.ou] -%}
+          {%- for sub in t.sub_ous -%}
+          {%- set ns.out = ns.out + ['OU=' ~ sub ~ ',OU=' ~ t.ou] -%}
+          {%- endfor -%}
+          {%- endfor -%}
+          {{ ns.out }}
+
+    - name: "configure_tier_model | Wait until the OUs are replicated to AD"
+      ansible.builtin.command: "samba-tool ou list"
+      register: "configure_tier_model_samba_ous"
+      until: "configure_tier_model_samba_expected_ous | difference(configure_tier_model_samba_ous.stdout_lines) | length == 0"
+      retries: 30
+      delay: 5
+      changed_when: false
+      check_mode: false
+
+    - name: "configure_tier_model | Get SIDs of the tier groups"
+      ansible.builtin.command: "samba-tool group show '{{ item.group }}' --attributes=objectSid"
+      loop: "{{ configure_tier_model_samba_tiers }}"
+      loop_control:
+        label: "{{ item.group }}"
+      register: "configure_tier_model_samba_sids"
+      until: "configure_tier_model_samba_sids.rc == 0"
+      retries: 30
+      delay: 5
+      changed_when: false
+      check_mode: false
+
+    - name: "configure_tier_model | Get current ACLs of the tier OUs"
+      ansible.builtin.command: "samba-tool dsacl get --objectdn='OU={{ item.item.ou }},{{ configure_tier_model_samba_base_dn }}'"
+      loop: "{{ configure_tier_model_samba_sids.results }}"
+      loop_control:
+        label: "{{ item.item.ou }}"
+      register: "configure_tier_model_samba_acls"
+      changed_when: false
+      check_mode: false
+      vars:
+        configure_tier_model_samba_base_dn: "{{ configure_tier_model_ldap_base | regex_replace('dc=', 'DC=') }}"
+
+    # Tier 0 relies on the built-in Domain Admins ACEs. Tier 1 may manage computer objects, Tier 2 additionally
+    # resets passwords of users in its OU. ACEs are only added if the tier group has no ACE on the OU yet.
+    - name: "configure_tier_model | Delegate rights on the tier OUs"
+      ansible.builtin.command: >-
+        samba-tool dsacl set --objectdn='OU={{ item.item.item.ou }},{{ configure_tier_model_samba_base_dn }}'
+        --sddl='{{ (configure_tier_model_samba_computer_aces
+                    + (configure_tier_model_samba_user_support_aces if item.item.item.tier == 2 else []))
+                   | map('replace', '{sid}', configure_tier_model_samba_sid) | join }}'
+      loop: "{{ configure_tier_model_samba_acls.results }}"
+      loop_control:
+        label: "{{ item.item.item.ou }}"
+      vars:
+        configure_tier_model_samba_base_dn: "{{ configure_tier_model_ldap_base | regex_replace('dc=', 'DC=') }}"
+        configure_tier_model_samba_sid: "{{ item.item.stdout | regex_search('objectSid: (S-[0-9-]+)', '\\1') | first }}"
+      changed_when: true
+      when:
+        - "item.item.item.tier != 0"
+        - "configure_tier_model_samba_sid not in item.stdout"
+
+    - name: "configure_tier_model | Authentication policies and silos"
+      ansible.builtin.include_tasks: "samba_auth_policies.yml"
+      when: "configure_tier_model_samba_auth_policies | bool"

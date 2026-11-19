@@ -1,0 +1,27 @@
+---
+
+galaxy_info:
+  role_name: "configure_tier_model"
+  author: "Univention"
+  description: "Apply an Active Directory style tier model (Tier 0/1/2) to UCS with delegative administration and logon restrictions."
+  company: "Univention GmbH"
+
+  issue_tracker_url: "https://forge.univention.org"
+
+  license: "GPL-3.0-or-later"
+
+  min_ansible_version: "2.10"
+
+  platforms:
+    - name: "Debian"
+      versions:
+        - "all"
+
+  galaxy_tags:
+    - "univention"
+    - "ucs"
+    - "security"
+    - "hardening"
+    - "tiering"
+
+dependencies: []

@@ -1,0 +1,169 @@
+---
+- name: "configure_tier_model | Set path facts"
+  ansible.builtin.set_fact:
+    configure_tier_model_authz_tool_path: "/usr/share/univention-directory-manager-tools/univention-configure-udm-authorization"
+    configure_tier_model_guardian_dir: "/var/lib/univention-directory-manager-modules/guardian"
+    configure_tier_model_is_primary: "{{ configure_tier_model_server_role == 'domaincontroller_master' }}"
+
+# --- Local authorization store (needed on every node that runs UMC / UDM REST) ---
+
+- name: "configure_tier_model | Check for the roles in the local store"
+  ansible.builtin.stat:
+    path: "{{ configure_tier_model_guardian_dir }}/roles/udm/{{ item }}.json"
+  loop:
+    - "default-roles/domain-administrator"
+    - "custom-roles/tier1-server-admin"
+    - "custom-roles/tier2-workstation-admin"
+  register: "configure_tier_model_stored_roles"
+
+- name: "configure_tier_model | Install custom role policy"
+  ansible.builtin.template:
+    src: "udm-tier-roles.policy.j2"
+    dest: "/etc/custom-udm-roles.policy"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  register: "configure_tier_model_policy"
+
+# create-roles does not remove stale capabilities of an older policy. Therefore the store is rebuilt completely
+# whenever the policy changed. All roles are recreated from the files, no directory objects are touched.
+- name: "configure_tier_model | Rebuild the local authorization store"
+  ansible.builtin.command: "{{ configure_tier_model_authz_tool_path }} --store-local {{ item }}"
+  loop:
+    - "prune"
+    - "create-permissions"
+    - "create-default-roles"
+    - "create-roles --config /etc/custom-udm-roles.policy"
+  changed_when: true
+  when: "configure_tier_model_policy.changed or not (configure_tier_model_stored_roles.results | map(attribute='stat.exists') | min)"
+
+# --- Directory objects (Primary Directory Node only) ---
+
+- name: "configure_tier_model | Directory objects"
+  when: "configure_tier_model_is_primary | bool"
+  block:
+    - name: "configure_tier_model | Create tier 1 and tier 2 groups"
+      univention.ucs_modules.univention_directory_manager:
+        module: "groups/group"
+        position: "cn=groups,{{ configure_tier_model_ldap_base }}"
+        state: "present"
+        set_properties:
+          - property: "name"
+            value: "{{ item }}"
+      loop:
+        - "{{ configure_tier_model_tier1_group }}"
+        - "{{ configure_tier_model_tier2_group }}"
+
+    - name: "configure_tier_model | Create container for standard users of tier 2"
+      univention.ucs_modules.univention_directory_manager:
+        module: "container/cn"
+        position: "{{ configure_tier_model_tier2_user_container.split(',', 1)[1] }},{{ configure_tier_model_ldap_base }}"
+        state: "present"
+        set_properties:
+          - property: "name"
+            value: "{{ configure_tier_model_tier2_user_container.split(',', 1)[0] | regex_replace('^cn=', '') }}"
+          - property: "userPath"
+            value: "1"
+
+    - name: "configure_tier_model | Get current roles of the tier groups"
+      ansible.builtin.command: "udm groups/group list --filter 'cn={{ item.group }}' --properties guardianMemberRoles"
+      loop:
+        - { group: "{{ configure_tier_model_tier0_group }}", role: "udm:default-roles:domain-administrator" }
+        - { group: "{{ configure_tier_model_tier1_group }}", role: "udm:custom-roles:tier1-server-admin" }
+        - { group: "{{ configure_tier_model_tier2_group }}", role: "udm:custom-roles:tier2-workstation-admin" }
+      loop_control:
+        label: "{{ item.group }}"
+      register: "configure_tier_model_group_roles"
+      changed_when: false
+      check_mode: false
+
+    - name: "configure_tier_model | Assign roles to the tier groups"
+      ansible.builtin.command: >-
+        udm groups/group modify --dn "cn={{ item.item.group }},cn=groups,{{ configure_tier_model_ldap_base }}"
+        --append guardianMemberRoles="{{ item.item.role }}"
+      loop: "{{ configure_tier_model_group_roles.results }}"
+      loop_control:
+        label: "{{ item.item.group }}"
+      changed_when: true
+      when: "item.stdout is not search('(: |^ +)' ~ item.item.role ~ '$', multiline=True)"
+
+    - name: "configure_tier_model | Create UMC policies for tier 1 and 2"
+      univention.ucs_modules.univention_directory_manager:
+        module: "policies/umc"
+        position: "cn=UMC,cn=policies,{{ configure_tier_model_ldap_base }}"
+        state: "present"
+        set_properties:
+          - property: "name"
+            value: "{{ item.name }}"
+          - property: "allow"
+            value: "{{ item.ops | map('regex_replace', '^(.*)$', 'cn=\\1,cn=operations,cn=UMC,cn=univention,' ~ configure_tier_model_ldap_base) | list }}"
+      loop:
+        - { name: "tier1-umc", ops: "{{ configure_tier_model_tier1_umc_operations }}" }
+        - { name: "tier2-umc", ops: "{{ configure_tier_model_tier2_umc_operations }}" }
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: "configure_tier_model | Assign UMC policies to the tier groups"
+      ansible.builtin.command: >-
+        udm groups/group modify --dn "cn={{ item.group }},cn=groups,{{ configure_tier_model_ldap_base }}"
+        --policy-reference "cn={{ item.name }},cn=UMC,cn=policies,{{ configure_tier_model_ldap_base }}"
+      loop:
+        - { group: "{{ configure_tier_model_tier1_group }}", name: "tier1-umc" }
+        - { group: "{{ configure_tier_model_tier2_group }}", name: "tier2-umc" }
+      loop_control:
+        label: "{{ item.name }}"
+      register: "configure_tier_model_umc_assign"
+      changed_when: "'Object modified' in configure_tier_model_umc_assign.stdout"
+
+# --- Safety: do not activate before the Domain Admins group carries the domain-administrator role on this node ---
+
+- name: "configure_tier_model | Wait until the tier 0 role assignment is visible on this node"
+  ansible.builtin.command: "udm groups/group list --filter 'cn={{ configure_tier_model_tier0_group }}' --properties guardianMemberRoles"
+  register: "configure_tier_model_wait_t0"
+  until: "'udm:default-roles:domain-administrator' in configure_tier_model_wait_t0.stdout"
+  retries: 30
+  delay: 5
+  changed_when: false
+  check_mode: false
+
+# --- Activation ---
+
+- name: "configure_tier_model | Authorize the tier groups for the UDM REST API"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "directory/manager/rest/authorized-groups/tier{{ item.0 }}"
+        value: "cn={{ item.1 }},cn=groups,{{ configure_tier_model_ldap_base }}"
+  loop:
+    - [0, "{{ configure_tier_model_tier0_group }}"]
+    - [1, "{{ configure_tier_model_tier1_group }}"]
+    - [2, "{{ configure_tier_model_tier2_group }}"]
+  loop_control:
+    label: "tier{{ item.0 }}"
+
+- name: "configure_tier_model | Enable delegative administration"
+  univention.ucs_modules.univention_config_registry:
+    keys:
+      directory/manager/web/delegative-administration/enabled: "true"
+      directory/manager/rest/delegative-administration/enabled: "true"
+  register: "configure_tier_model_enable"
+
+- name: "configure_tier_model | Restart UMC server"
+  ansible.builtin.service:
+    name: "univention-management-console-server"
+    state: "restarted"
+  when: "configure_tier_model_enable.changed or configure_tier_model_policy.changed"
+
+- name: "configure_tier_model | Check whether the UDM REST API is installed"
+  ansible.builtin.command: "systemctl cat univention-directory-manager-rest"
+  register: "configure_tier_model_rest_unit"
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: "configure_tier_model | Restart UDM REST API"
+  ansible.builtin.service:
+    name: "univention-directory-manager-rest"
+    state: "restarted"
+  when:
+    - "configure_tier_model_rest_unit.rc == 0"
+    - "configure_tier_model_enable.changed or configure_tier_model_policy.changed"

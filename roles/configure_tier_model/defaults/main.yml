@@ -1,0 +1,98 @@
+---
+
+# Groups that represent the tiers. Members of a group are the administrators of that tier.
+# Tier 0 reuses the built-in "Domain Admins" group. Tier 1 and 2 groups are created by the role.
+configure_tier_model_tier0_group: "Domain Admins"
+configure_tier_model_tier1_group: "Tier1 Admins"
+configure_tier_model_tier2_group: "Tier2 Admins"
+
+# Container (relative to the LDAP base) that holds the standard users the Tier 2 helpdesk may support.
+# Accounts outside of this container (e.g. "Administrator", any tier 0/1 admin) can not be touched by Tier 2.
+configure_tier_model_tier2_user_container: "cn=standard,cn=users"
+
+# UDM object types that belong to Tier 1 (servers) and Tier 2 (clients).
+# Everything else (domain controller objects, users, groups, policies, ...) is Tier 0.
+configure_tier_model_tier1_computer_types:
+  - "computers/memberserver"
+configure_tier_model_tier2_computer_types:
+  - "computers/linux"
+  - "computers/ubuntu"
+  - "computers/macos"
+  - "computers/windows"
+  - "computers/ipmanagedclient"
+
+# Tier of the host the role runs on: 0, 1, 2 or "auto".
+# auto: domain controllers (primary/backup/replica) -> 0, member servers -> 1, everything else -> 2
+configure_tier_model_host_tier: "auto"
+
+# PAM services whose access is restricted by UCR (auth/<service>/...).
+configure_tier_model_auth_services:
+  - "login"
+  - "sshd"
+  - "other"
+  - "rlogin"
+  - "screen"
+  - "ppp"
+
+# If true, administrators of a more privileged tier may log on to hosts of a less privileged tier.
+# This breaks the tier model (credential exposure) and is off by default. "root" is always allowed.
+configure_tier_model_allow_higher_tier_logon: false
+
+# Enable delegative administration (UMC + UDM REST API) on all nodes.
+# EXPERIMENTAL feature of UCS 5.2-2+, not supported for production.
+configure_tier_model_enable_delegative_administration: true
+
+# UMC operation sets (cn=<name>,cn=operations,cn=UMC,cn=univention) the Tier 1/2 groups may use.
+configure_tier_model_tier1_umc_operations:
+  - "udm-computers"
+  - "udm-validate"
+  - "udm-syntax"
+  - "udm-navigation"
+configure_tier_model_tier2_umc_operations:
+  - "udm-computers"
+  - "udm-users"
+  - "udm-validate"
+  - "udm-syntax"
+  - "udm-navigation"
+
+# Allow Tier 1/2 administrators to CREATE computer objects.
+# WARNING: UDM sets a default primary group on creation, so the property can not be protected in that case.
+# A Tier 1/2 admin could then create a computer with the primary group "Domain Admins" and use its machine
+# account to escalate to Tier 0. Keep this false and create/join computers with a Tier 0 (or join) account.
+configure_tier_model_allow_computer_create: false
+
+# --- Samba/AD ---------------------------------------------------------------------------------------------------
+# Applies the tier model inside Active Directory. Only acts if a Samba AD DC is part of the play.
+configure_tier_model_enable_samba: true
+
+# Tier OUs, created through UDM (the S4 connector replicates them to AD).
+configure_tier_model_samba_tiers:
+  - tier: 0
+    ou: "Tier0"
+    group: "{{ configure_tier_model_tier0_group }}"
+    sub_ous: ["Admins", "Groups"]
+    tgt_lifetime_mins: 240
+  - tier: 1
+    ou: "Tier1"
+    group: "{{ configure_tier_model_tier1_group }}"
+    sub_ous: ["Admins", "Servers", "Groups"]
+    tgt_lifetime_mins: 480
+  - tier: 2
+    ou: "Tier2"
+    group: "{{ configure_tier_model_tier2_group }}"
+    sub_ous: ["Admins", "Workstations", "Users"]
+    tgt_lifetime_mins: 600
+
+# ACEs ({sid} is replaced by the SID of the tier group) set on the tier OU and inherited by its sub OUs.
+# GUIDs: bf967a86 computer, bf967aba user, 00299570 Reset-Password, bf967a0a pwdLastSet, 28630ebf lockoutTime
+configure_tier_model_samba_computer_aces:
+  - "(OA;CI;CCDC;bf967a86-0de6-11d0-a285-00aa003049e2;;{sid})"
+  - "(OA;CIIO;GA;;bf967a86-0de6-11d0-a285-00aa003049e2;{sid})"
+configure_tier_model_samba_user_support_aces:
+  - "(OA;CIIO;CR;00299570-246d-11d0-a768-00aa006e0529;bf967aba-0de6-11d0-a285-00aa003049e2;{sid})"
+  - "(OA;CIIO;WP;bf967a0a-0de6-11d0-a285-00aa003049e2;bf967aba-0de6-11d0-a285-00aa003049e2;{sid})"
+  - "(OA;CIIO;WP;28630ebf-41d5-11d1-a9c1-0000f80367c1;bf967aba-0de6-11d0-a285-00aa003049e2;{sid})"
+
+# Authentication policies/silos: tier admins get a TGT lifetime per tier. Members are the *current* members of the
+# tier groups at the time the role runs.
+configure_tier_model_samba_auth_policies: true

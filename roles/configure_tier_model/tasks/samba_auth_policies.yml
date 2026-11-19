@@ -1,0 +1,74 @@
+---
+- name: "configure_tier_model | Get existing authentication policies and silos"
+  ansible.builtin.command: "samba-tool domain auth {{ item }} list"
+  loop:
+    - "policy"
+    - "silo"
+  register: "configure_tier_model_samba_existing"
+  changed_when: false
+  check_mode: false
+
+- name: "configure_tier_model | Create authentication policies"
+  ansible.builtin.command: >-
+    samba-tool domain auth policy create --name=Tier{{ item.tier }}-Policy
+    --user-tgt-lifetime-mins={{ item.tgt_lifetime_mins }} --enforce
+  loop: "{{ configure_tier_model_samba_tiers }}"
+  loop_control:
+    label: "Tier{{ item.tier }}-Policy"
+  changed_when: true
+  when: "('Tier' ~ item.tier ~ '-Policy') not in configure_tier_model_samba_existing.results[0].stdout_lines"
+
+- name: "configure_tier_model | Create authentication silos"
+  ansible.builtin.command: >-
+    samba-tool domain auth silo create --name=Tier{{ item.tier }}-Silo
+    --user-authentication-policy=Tier{{ item.tier }}-Policy --enforce
+  loop: "{{ configure_tier_model_samba_tiers }}"
+  loop_control:
+    label: "Tier{{ item.tier }}-Silo"
+  changed_when: true
+  when: "('Tier' ~ item.tier ~ '-Silo') not in configure_tier_model_samba_existing.results[1].stdout_lines"
+
+- name: "configure_tier_model | Get members of the tier groups"
+  ansible.builtin.command: "samba-tool group listmembers '{{ item.group }}'"
+  loop: "{{ configure_tier_model_samba_tiers }}"
+  loop_control:
+    label: "{{ item.group }}"
+  register: "configure_tier_model_samba_members"
+  changed_when: false
+  check_mode: false
+
+# A user in several tier groups gets the silo of the most privileged (lowest) tier: the tiers are processed in
+# order and only the first occurrence of a user is kept.
+- name: "configure_tier_model | Build user/silo list"
+  ansible.builtin.set_fact:
+    configure_tier_model_samba_silo_users: >-
+      {%- set ns = namespace(seen=[], out=[]) -%}
+      {%- for r in configure_tier_model_samba_members.results -%}
+      {%- for u in r.stdout_lines if not u.endswith('$') and u not in ns.seen -%}
+      {%- set ns.seen = ns.seen + [u] -%}
+      {%- set ns.out = ns.out + [{'user': u, 'tier': r.item.tier}] -%}
+      {%- endfor -%}
+      {%- endfor -%}
+      {{ ns.out }}
+
+- name: "configure_tier_model | Get current silo assignment of the users"
+  ansible.builtin.command: "samba-tool user auth silo view '{{ item.user }}'"
+  loop: "{{ configure_tier_model_samba_silo_users }}"
+  loop_control:
+    label: "{{ item.user }}"
+  register: "configure_tier_model_samba_assigned"
+  changed_when: false
+  check_mode: false
+
+- name: "configure_tier_model | Grant silo access and assign silo to users without silo"
+  ansible.builtin.shell: >-
+    set -e;
+    samba-tool domain auth silo member grant --name=Tier{{ item.item.tier }}-Silo --member='{{ item.item.user }}';
+    samba-tool user auth silo assign '{{ item.item.user }}' --silo=Tier{{ item.item.tier }}-Silo
+  args:
+    executable: "/bin/bash"
+  loop: "{{ configure_tier_model_samba_assigned.results }}"
+  loop_control:
+    label: "{{ item.item.user }} -> Tier{{ item.item.tier }}-Silo"
+  changed_when: true
+  when: "'has no assigned' in item.stdout"

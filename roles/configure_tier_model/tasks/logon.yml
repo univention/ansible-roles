@@ -1,0 +1,47 @@
+---
+# Credentials of a tier must not be exposed on hosts of a less privileged tier.
+# Therefore only the tier group of the host's own tier (plus root and the host/computer accounts) may log on.
+
+- name: "configure_tier_model | Calculate allowed and denied groups for this host"
+  ansible.builtin.set_fact:
+    configure_tier_model_allowed_groups: >-
+      {{ ([configure_tier_model_tier0_group, 'Administrators'] if configure_tier_model_effective_host_tier | int == 0
+           else [configure_tier_model_tier1_group] if configure_tier_model_effective_host_tier | int == 1
+           else [configure_tier_model_tier2_group])
+         + ([configure_tier_model_tier0_group, 'Administrators'] if
+              configure_tier_model_allow_higher_tier_logon | bool and configure_tier_model_effective_host_tier | int > 0 else [])
+         + ([configure_tier_model_tier1_group] if
+              configure_tier_model_allow_higher_tier_logon | bool and configure_tier_model_effective_host_tier | int > 1 else []) }}
+    configure_tier_model_all_tier_groups: >-
+      {{ [configure_tier_model_tier0_group, 'Domain Admins', 'Administrators',
+          configure_tier_model_tier1_group, configure_tier_model_tier2_group] | unique }}
+
+- name: "configure_tier_model | Enable logon restriction and keep root"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "auth/{{ item }}/restrict"
+        value: "yes"
+      - key: "auth/{{ item }}/user/root"
+        value: "yes"
+  loop: "{{ configure_tier_model_auth_services }}"
+
+- name: "configure_tier_model | Allow the groups of this tier"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "auth/{{ item.0 }}/group/{{ item.1 }}"
+        value: "yes"
+  loop: "{{ configure_tier_model_auth_services | product(configure_tier_model_allowed_groups) | list }}"
+  loop_control:
+    label: "{{ item.0 }}: {{ item.1 }}"
+
+- name: "configure_tier_model | Remove the groups of all other tiers"
+  univention.ucs_modules.univention_config_registry:
+    kvlist:
+      - key: "auth/{{ item.0 }}/group/{{ item.1 }}"
+        value: ""
+    state: "absent"
+  loop: >-
+    {{ configure_tier_model_auth_services
+       | product(configure_tier_model_all_tier_groups | difference(configure_tier_model_allowed_groups)) | list }}
+  loop_control:
+    label: "{{ item.0 }}: {{ item.1 }}"

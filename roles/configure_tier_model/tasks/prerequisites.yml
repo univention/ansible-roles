@@ -1,0 +1,58 @@
+---
+- name: "configure_tier_model | Get server role, LDAP base and version"
+  ansible.builtin.command: "ucr get {{ item }}"
+  loop:
+    - "server/role"
+    - "ldap/base"
+    - "version/version"
+    - "hostname"
+  register: "configure_tier_model_ucr"
+  changed_when: false
+  check_mode: false
+
+- name: "configure_tier_model | Detect Samba AD DC"
+  ansible.builtin.command: "ucr get samba4/role"
+  register: "configure_tier_model_samba_role"
+  changed_when: false
+  check_mode: false
+
+- name: "configure_tier_model | Set role facts"
+  ansible.builtin.set_fact:
+    configure_tier_model_server_role: "{{ configure_tier_model_ucr.results[0].stdout }}"
+    configure_tier_model_ldap_base: "{{ configure_tier_model_ucr.results[1].stdout }}"
+    configure_tier_model_ucs_version: "{{ configure_tier_model_ucr.results[2].stdout }}"
+    configure_tier_model_ucr_hostname: "{{ configure_tier_model_ucr.results[3].stdout }}"
+    configure_tier_model_is_samba_dc: "{{ configure_tier_model_samba_role.stdout == 'DC' }}"
+
+- name: "configure_tier_model | Set tier of this host"
+  ansible.builtin.set_fact:
+    configure_tier_model_effective_host_tier: >-
+      {{ (0 if configure_tier_model_server_role in ['domaincontroller_master', 'domaincontroller_backup', 'domaincontroller_slave']
+          else 1 if configure_tier_model_server_role == 'memberserver'
+          else 2)
+         if configure_tier_model_host_tier | string == 'auto' else configure_tier_model_host_tier | int }}
+
+- name: "configure_tier_model | Assert supported platform"
+  ansible.builtin.assert:
+    that:
+      - "configure_tier_model_ucs_version is version('5.2', '>=')"
+      - "configure_tier_model_effective_host_tier | int in [0, 1, 2]"
+      - "'domaincontroller_master' in (ansible_play_hosts_all | map('extract', hostvars, 'configure_tier_model_server_role') | list)"
+    fail_msg: "UCS 5.2 required, the tier must be 0, 1 or 2 and the Primary Directory Node must be part of the play."
+    quiet: true
+  run_once: true
+
+- name: "configure_tier_model | Check that the authorization tooling is available"
+  ansible.builtin.stat:
+    path: "/usr/share/univention-directory-manager-tools/univention-configure-udm-authorization"
+  register: "configure_tier_model_authz_tool"
+  when: "configure_tier_model_server_role in ['domaincontroller_master', 'domaincontroller_backup']"
+
+- name: "configure_tier_model | Assert authorization tooling is available"
+  ansible.builtin.assert:
+    that: "configure_tier_model_authz_tool.stat.exists"
+    fail_msg: "univention-configure-udm-authorization not found. Update to UCS 5.2-2 or later."
+    quiet: true
+  when:
+    - "configure_tier_model_enable_delegative_administration | bool"
+    - "configure_tier_model_server_role in ['domaincontroller_master', 'domaincontroller_backup']"
