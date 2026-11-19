@@ -18,6 +18,42 @@ The linked Microsoft page is only an index of the deployment tooling, so the tie
 | 1 | Member servers | `Tier1 Admins` | custom role `tier1-server-admin` |
 | 2 | Clients, standard users | `Tier2 Admins` | custom role `tier2-workstation-admin`, users limited to the container `cn=standard,cn=users` |
 
+```mermaid
+flowchart TB
+    subgraph T0["Tier 0 - identity / domain control"]
+        direction LR
+        G0["Group: Domain Admins<br/>role domain-administrator"]
+        O0["Primary, backup, replica, Samba DCs<br/>users, groups, policies, DNS<br/>AD: Domain Admins, OU=Tier0<br/>TGT 4 h"]
+    end
+    subgraph T1["Tier 1 - servers and applications"]
+        direction LR
+        G1["Group: Tier1 Admins<br/>role tier1-server-admin"]
+        O1["Member servers<br/>AD: OU=Tier1<br/>TGT 8 h"]
+    end
+    subgraph T2["Tier 2 - workstations and standard users"]
+        direction LR
+        G2["Group: Tier2 Admins<br/>role tier2-workstation-admin"]
+        O2["Clients, standard users<br/>cn=standard,cn=users<br/>AD: OU=Tier2<br/>TGT 10 h"]
+    end
+
+    G0 -- "may administer" --> O0
+    G0 -- "may administer" --> O1
+    G0 -- "may administer" --> O2
+    G1 -- "may administer" --> O1
+    G2 -- "may administer" --> O2
+
+    G1 -. "denied: no write access" .-> O0
+    G2 -. "denied: no write access" .-> O0
+    G2 -. "denied" .-> O1
+
+    G0 -. "logon denied on T1/T2 hosts" .-> O1
+    G0 -. "logon denied on T1/T2 hosts" .-> O2
+    G1 -. "logon denied on T0/T2 hosts" .-> O0
+    G2 -. "logon denied on T0/T1 hosts" .-> O0
+```
+
+Solid arrows show the administration plane (delegation, AD ACLs). Dotted arrows show what is denied, including the logon restrictions per host.
+
 Two mechanisms are combined:
 
 1. **Delegation (administration plane).** Roles are assigned to groups via `guardianMemberRoles`. A role only grants capabilities for UDM object types (and positions); everything not granted is invisible and read-only denied. Tier 1/2 roles explicitly deny `guardianRoles`, `guardianInheritedRoles` and `groups` so that a lower tier can not give itself or a computer higher privileges. The tier groups themselves are only changeable by Tier 0.
